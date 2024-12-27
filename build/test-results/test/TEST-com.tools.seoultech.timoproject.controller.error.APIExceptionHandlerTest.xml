@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="[API Exception Handler]" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-12-03T13:03:03" hostname="louis5103.local" time="0.131">
+  <properties/>
+  <testcase name="RiotAPIException 오류 예외처리 검증" classname="com.tools.seoultech.timoproject.controller.error.APIExceptionHandlerTest" time="0.128"/>
+  <testcase name="ConstraintViolation 오류 예외처리 검증" classname="com.tools.seoultech.timoproject.controller.error.APIExceptionHandlerTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[<500 INTERNAL_SERVER_ERROR Internal Server Error,APIErrorResponse(success=false, errorCode=6, message=RIOT API ACCESS error : test),[]>
+]]></system-err>
+</testsuite>

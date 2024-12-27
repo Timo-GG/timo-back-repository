@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Timo.GG</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <h1>User View Test Page.</h1>
+    <ul>
+        <li>puuid: <span th:text="${puuid} ?:_">?</span></li>
+        <li>gameName: <span th:text="${gameName} ?:_">?</span></li>
+        <li>tagLine: <span th:text="${tagLine} ?:_">?</span></li>
+    </ul>
+</body>
+</html>
