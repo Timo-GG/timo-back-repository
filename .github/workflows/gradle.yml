@@ -43,7 +43,12 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: docker build
-      run : docker buildx build \ --platform linux/amd64,linux/arm64 \ -t menten4859/timo-back \ --push \ .
+      run: |
+        docker buildx build \
+        --platform linux/amd64,linux/arm64 \
+        -t menten4859/timo-back \
+        --push \
+        .
       
     - name: Docker Push
       run: docker push menten4859/timo-back
