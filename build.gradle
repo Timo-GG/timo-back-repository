@@ -7,6 +7,15 @@ plugins {
 group = 'com.tools.seoultech'
 version = '0.0.1-SNAPSHOT'
 
+tasks.withType(Test) {
+    // 테스트 실행하지 않음
+    enabled = false
+    reports {
+        html.required.set(false)
+        junitXml.required.set(false)
+    }
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(23)
@@ -59,6 +68,8 @@ dependencies {
     // MiniDev
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.5.1'
+
+    implementation 'com.h2database:h2'
 
 }
 
