@@ -43,7 +43,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     
     - name : Docker Hub push
-      run : docker push ${{ secrets.DOCKER_USERNAME }}/timo-back-repository
+      run : docker push ${{ secrets.DOCKER_USERNAME }}/timo-back-repository:latest
   
     - name: Connect to EC2 and run docker
       uses: appleboy/ssh-action@master
