@@ -27,6 +27,13 @@ jobs:
         java-version: '23'
         distribution: 'temurin'
         
+      # application.properties 파일 생성
+    - name: Make application.properties
+      run: touch ./src/main/resources/application.properties
+
+    - name: Deliver application.properties
+      run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
+        
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
