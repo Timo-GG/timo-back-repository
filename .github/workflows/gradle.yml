@@ -36,12 +36,12 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build
     
-    - name: Docker build, push
-      run: |
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }} .
-        docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}
-    
+    - name: docker login
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+  
     - name: Connect to EC2 and run docker
       uses: appleboy/ssh-action@master
       with:
