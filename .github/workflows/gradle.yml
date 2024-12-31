@@ -53,7 +53,7 @@ jobs:
         key: ${{ secrets.EC2_PEM }}
         port: 22
         script: |
-          sudo docker stop timo-back-repository || true
-          sudo docker rm timo-back-repository || true
+          sudo docker stop $(docker ps -q --filter "ancestor=menten4859/timo-back") || true
+          sudo docker rm $(docker ps -q --filter "ancestor=menten4859/timo-back") || true
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}
           sudo docker run --name=timo-back-repository -d -p 80:8080 --restart=always ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}
