@@ -42,8 +42,11 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     
-    - name : Docker Hub push
-      run : docker push menten4859/timo-back-repository:latest
+    - name: Docker Build
+      run: docker build -t menten4859/timo-back-repository:latest .
+    
+    - name: Docker Push
+      run: docker push menten4859/timo-back-repository:latest
   
     - name: Connect to EC2 and run docker
       uses: appleboy/ssh-action@master
