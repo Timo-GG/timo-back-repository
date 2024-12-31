@@ -70,5 +70,5 @@ jobs:
         script: |
           sudo docker stop $(sudo docker ps -qa)
           sudo docker rm $(sudo docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}
-          sudo docker run --name=timo-back -d -p 80:8080 --restart=always ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}
+          sudo docker pull menten4859/timo-back
+          sudo docker run --name=timo-back -d -p 80:8080 --restart=always menten4859/timo-back
