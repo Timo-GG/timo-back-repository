@@ -1,4 +1,26 @@
-# Welcome to your organization's demo respository
-This code repository (or "repo") is designed to demonstrate the best GitHub has to offer with the least amount of noise.
+# 🕹️ Timo.gg - This Is My Opportunity
 
-The repo includes an `index.html` file (so it can render a web page), two GitHub Actions workflows, and a CSS stylesheet dependency.
+![Timo.gg Banner](https://github.com/user-attachments/assets/159b962c-0e71-4b94-83e7-96a9d463767e)
+
+---
+
+🎮 **Timo.gg**는 League of Legends 플레이어를 위한 전적 검색, 듀오 매칭, 그리고 커뮤니티 기능을 제공하는 플랫폼입니다.  
+**'이곳에서 나의 기회를 찾다!'** 라는 철학을 바탕으로, 유저들이 자신만의 특별한 듀오를 만나고 함께 성장할 수 있는 최고의 경험을 제공합니다.
+
+---
+
+## 🚀 주요 기능
+
+### 📊 전적 검색 서비스
+- 소환사의 **전적**과 **챔피언 통계**를 빠르게 확인.
+- 팀 구성과 전략에 유용한 데이터 제공.
+
+### 🤝 매칭 서비스
+- 원하는 조건(티어, 마이크 유무 등)을 설정하여 **듀오 매칭** 가능.
+- 매칭 성공 시 실시간 **채팅방**으로 연결.
+
+### 💬 커뮤니티
+- **게시판**과 **댓글**을 통해 유저 간 소통.
+- 롤 관련 **팁 공유**와 **친목 도모**.
+
+---
