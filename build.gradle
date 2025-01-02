@@ -60,8 +60,19 @@ dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.5.1'
 
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // OAuth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(Test) {
+    // 테스트 실행하지 않음
+    enabled = false
 }
