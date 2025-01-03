@@ -1,6 +1,5 @@
 package com.tools.seoultech.timoproject.controller;
 
-import com.sun.jna.platform.win32.Advapi32Util;
 import com.tools.seoultech.timoproject.dto.APIDataResponse;
 import com.tools.seoultech.timoproject.dto.AccountDto;
 
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static java.lang.Thread.sleep;
 
 @RestController
 @RequiredArgsConstructor
