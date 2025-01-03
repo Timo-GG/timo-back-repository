@@ -62,13 +62,16 @@ jobs:
       
     - name: Connect to EC2 and run docker
       uses: appleboy/ssh-action@master
+      env:
+        COMPOSE: "/home/ubuntu/compose/docker-compose.yml"
       with:
         host: 3.34.183.7
         username: ubuntu
         key: ${{ secrets.EC2_PEM }}
         port: 22
+        envs: COMPOSE
         script: |
           sudo docker stop $(sudo docker ps -qa)
-          sudo docker rm $(sudo docker ps -qa)
+          sudo docker-compose -f $COMPOSE down --rmi all 
           sudo docker pull menten4859/{{ DOCKER_IMAGENAME }}
-          sudo docker run --name={{ DOCKER_IMAGENAME }} -d -p 80:8080 --restart=always menten4859/{{ DOCKER_IMAGENAME }}
+          sudo docker-compose -f $COMPOSE up -d
