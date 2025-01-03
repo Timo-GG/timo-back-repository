@@ -52,13 +52,16 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
     
-    - name: Build and Push Multi-Arch Docker Image
-      run: |
-        docker buildx build \
-        --platform linux/amd64,linux/arm64 \
-        -t menten4859/timo-repo
-        --push \
-        .
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: menten4859/timo-repo
+        platforms: |
+          linux/amd64
+          linux/arm64
+          linux/arm/v7
       
     - name: Connect to EC2 and run docker
       uses: appleboy/ssh-action@master
