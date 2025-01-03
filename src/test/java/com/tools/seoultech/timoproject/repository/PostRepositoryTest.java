@@ -2,10 +2,16 @@ package com.tools.seoultech.timoproject.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tools.seoultech.timoproject.domain.Post;
+import com.tools.seoultech.timoproject.domain.UserAccount;
+import com.tools.seoultech.timoproject.dto.AccountDto;
+import com.tools.seoultech.timoproject.service.BasicAPIService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,13 +20,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class PostRepositoryTest {
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private BasicAPIService bas;
 
     @Autowired
     private JPAQueryFactory queryFactory;
 
     @Test
     public void insertDummies(){
-        IntStream.rangeClosed(1, 300).forEach(i -> {
+        List<String> userList = Arrays.asList("롤찍먹만할게요#5103", "YORUSHlKA#KR1", "트리오브세이비어아시는구나#TOS");
+        IntStream.rangeClosed(1, 30).forEach(i -> {
             Post post = Post.builder()
                     .title("[test]아칼리 상향좀...")
                     .content("\n" +
@@ -31,9 +40,24 @@ class PostRepositoryTest {
                             "다른 챔피언들한테 밀림: 요즘 카사딘, 피즈 같은 챔피언들이 너무 강력해서 아칼리가 ᄅᄋ 한없이 약해 보임.\n" +
                             "그런 챔피언들은 안정감도 좋고 딜도 훨씬 강력해서 아칼리랑 비교되면 ᄅᄋ 너무 약해 보임.\n" +
                             "진짜 이 상태로는 아칼리로 게임하기 힘듬. 밸런스 좀 조정해서 아칼리 다시 제대로 플레이할 수 있게 해줬으면 좋겠음. 반박시 니말이 다 맞음." + i)
-                    .writer("User["+ (i % 10)+"]")
+                    .userAccount(getUserAccount(userList.get(i%3)))
                     .build();
             System.out.println(postRepository.save(post));
         });
+    }
+    public UserAccount getUserAccount(String stringName) {
+        StringTokenizer st = new StringTokenizer(stringName, "#");
+        AccountDto.Request request = AccountDto.Request.of(st.nextToken(), st.nextToken());
+        try {
+            AccountDto.Response response =  bas.findUserAccount(request);
+            return UserAccount.builder()
+                    .puuid(response.getPuuid())
+                    .gameName(response.getGameName())
+                    .tagLine(response.getTagLine())
+                    .build();
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }

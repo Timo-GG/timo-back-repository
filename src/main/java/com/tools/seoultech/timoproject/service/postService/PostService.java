@@ -3,6 +3,7 @@ package com.tools.seoultech.timoproject.service.postService;
 import com.tools.seoultech.timoproject.domain.Post;
 import com.tools.seoultech.timoproject.dto.PageDTO;
 import com.tools.seoultech.timoproject.dto.PostDTO;
+import com.tools.seoultech.timoproject.repository.UserAccountRepository;
 
 public interface PostService {
     PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request);
@@ -14,18 +15,18 @@ public interface PostService {
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .content(entity.getContent())
-                .writer(entity.getWriter())
+                .puuid(entity.getUserAccount().getPuuid())
                 .regDate(entity.getRegDate())
                 .modDate(entity.getModDate())
                 .build();
         return dto;
     }
-    default Post dtoToEntity(PostDTO dto){
+    default Post dtoToEntity(PostDTO dto, UserAccountRepository userAccountRepository){
         Post entity = Post.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .writer(dto.getWriter())
+                .userAccount(userAccountRepository.findById(dto.getPuuid()).get()) // exception 필요.
                 .build();
         return entity;
     }

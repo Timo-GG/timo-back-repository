@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.dto;
 
+import com.tools.seoultech.timoproject.domain.UserAccount;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class PostDTO {
     private Long id;
     private String title;
     private String content;
-    private String writer;
+    private String puuid;
     private LocalDateTime regDate, modDate;
 }
 

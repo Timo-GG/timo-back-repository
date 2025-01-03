@@ -6,6 +6,7 @@ import com.tools.seoultech.timoproject.dto.APIErrorResponse;
 import com.tools.seoultech.timoproject.dto.PageDTO;
 import com.tools.seoultech.timoproject.dto.PostDTO;
 import com.tools.seoultech.timoproject.repository.PostRepository;
+import com.tools.seoultech.timoproject.repository.UserAccountRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,6 +25,7 @@ import java.util.function.Function;
 @Log4j2
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
+    private final UserAccountRepository userAccountRepository;
 
     public PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request){
         Pageable pageable = request.getPageable(Sort.by("id").descending());
@@ -37,7 +39,7 @@ public class PostServiceImpl implements PostService {
     }
     @Transactional
     public ResponseEntity<APIErrorResponse> create(PostDTO postDto){
-        Post post = this.dtoToEntity(postDto);
+        Post post = this.dtoToEntity(postDto, userAccountRepository);
         postRepository.save(post);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -49,7 +51,7 @@ public class PostServiceImpl implements PostService {
         ResponseEntity<APIErrorResponse> response;
         // 엄격한 post. > ID 조회 시 없는 경우, 해당 id로 create 하지 않고 4XX 에러.
         if(optionalPost.isPresent()){
-            postRepository.save(dtoToEntity(postDto));
+            postRepository.save(dtoToEntity(postDto, userAccountRepository));
             response = ResponseEntity
                     .status(HttpStatus.OK)
                     .body(APIErrorResponse.of(
