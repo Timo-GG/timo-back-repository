@@ -1,8 +1,6 @@
 package com.tools.seoultech.timoproject.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-import com.sun.jna.platform.win32.Netapi32Util;
 import com.tools.seoultech.timoproject.constant.ErrorCode;
 import com.tools.seoultech.timoproject.dto.AccountDto;
 import com.tools.seoultech.timoproject.dto.Detail_MatchInfoDTO;
