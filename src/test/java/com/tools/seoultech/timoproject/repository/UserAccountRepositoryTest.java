@@ -6,6 +6,7 @@ import com.tools.seoultech.timoproject.service.BasicAPIService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
@@ -19,6 +20,8 @@ class UserAccountRepositoryTest {
     @Autowired private BasicAPIService bas;
     @Autowired private UserAccountRepository userAccountRepository;
 
+    @Value("${my_puuid}") private String puuid;
+
     @DisplayName("[Create] 유저 생성")
     @Test
     public void create() {
@@ -26,6 +29,13 @@ class UserAccountRepositoryTest {
         userList.stream()
                 .map(this::getUserAccount)
                 .forEach(userAccountRepository::save);
+    }
+    @DisplayName("[Read] 유저 조회")
+    @Test
+    public void read() {
+//        userAccountRepository.findAll().forEach(System.out::println);
+        UserAccount userAccount = userAccountRepository.findById(puuid).get();
+        System.err.println(userAccount);
     }
 
     public UserAccount getUserAccount(String stringName) {

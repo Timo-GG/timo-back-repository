@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.domain.Post;
 import com.tools.seoultech.timoproject.dto.APIErrorResponse;
 import com.tools.seoultech.timoproject.dto.PageDTO;
 import com.tools.seoultech.timoproject.dto.PostDTO;
+import com.tools.seoultech.timoproject.exception.GeneralException;
 import com.tools.seoultech.timoproject.repository.PostRepository;
 import com.tools.seoultech.timoproject.repository.UserAccountRepository;
 import jakarta.transaction.Transactional;
@@ -38,51 +39,35 @@ public class PostServiceImpl implements PostService {
         return post.isPresent() ? entityToDto(post.get()) : null;
     }
     @Transactional
-    public ResponseEntity<APIErrorResponse> create(PostDTO postDto){
+    public APIErrorResponse create(PostDTO postDto){
         Post post = this.dtoToEntity(postDto, userAccountRepository);
         postRepository.save(post);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(APIErrorResponse.of(true, ErrorCode.OK.getCode(), ErrorCode.OK.getMessage()+": create 성공."));
+        return APIErrorResponse.of(true, ErrorCode.OK.getCode(), ErrorCode.OK.getMessage()+": create 성공.");
     }
     @Transactional
-    public ResponseEntity<APIErrorResponse> update(PostDTO postDto){
+    public APIErrorResponse update(PostDTO postDto){
         Optional<Post> optionalPost = postRepository.findById(postDto.getId());
-        ResponseEntity<APIErrorResponse> response;
+        APIErrorResponse response;
         // 엄격한 post. > ID 조회 시 없는 경우, 해당 id로 create 하지 않고 4XX 에러.
         if(optionalPost.isPresent()){
             postRepository.save(dtoToEntity(postDto, userAccountRepository));
-            response = ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(APIErrorResponse.of(
-                            true,
-                            ErrorCode.OK
-                    ));
+            response = APIErrorResponse.of(true, ErrorCode.OK);
         }
         else{
-            response = ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(APIErrorResponse.of(
-                            false,
-                            ErrorCode.BAD_REQUEST
-                    ));
+            throw new GeneralException(ErrorCode.BAD_REQUEST);
         }
         return response;
     }
     @Transactional
-    public ResponseEntity<APIErrorResponse> delete(Long id){
+    public APIErrorResponse delete(Long id){
         Optional<Post> optionalPost = postRepository.findById(id);
-        ResponseEntity<APIErrorResponse> response;
+        APIErrorResponse response;
         if(optionalPost.isPresent()){
             postRepository.deleteById(id);
-            response = ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(APIErrorResponse.of(true, ErrorCode.OK));
+            response =APIErrorResponse.of(true, ErrorCode.OK);
         }
         else {
-            response = ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(APIErrorResponse.of(false, ErrorCode.BAD_REQUEST));
+            throw new GeneralException(ErrorCode.BAD_REQUEST);
         }
         return response;
     }

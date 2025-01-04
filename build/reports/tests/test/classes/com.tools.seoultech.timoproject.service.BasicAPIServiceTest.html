@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">1.107s</div>
+<div class="counter">0.374s</div>
 <p>duration</p>
 </div>
 </td>
@@ -81,19 +81,19 @@
 <tr>
 <td class="success">puuid 검색 - 정상 유저 요청</td>
 <td class="success">givenAccountDtoRequest_whenSearchingUser_thenReturnAccountDtoResponse()</td>
-<td class="success">0.989s</td>
+<td class="success">0.170s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">puuid 검색 - 공백 유저 데이터 요청</td>
 <td class="success">givenNothing_whenSearchingUser_thenReturnConstraintViloationException()</td>
-<td class="success">0.014s</td>
+<td class="success">0.013s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">puuid 검색 - 존재하지 않는 유저 데이터 요청</td>
 <td class="success">givenWrongUserAccountDtoRequest_whenSearchingUser_thenReturnRiotAPIException()</td>
-<td class="success">0.104s</td>
+<td class="success">0.191s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -101,13 +101,13 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>2024-12-03T22:03:04.292+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [BasicAPIServiceTest]: using SpringBootContextLoader
-2024-12-03T22:03:04.292+09:00  INFO 15197 --- [TimoProject] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.tools.seoultech.timoproject.service.BasicAPIServiceTest]: BasicAPIServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2024-12-03T22:03:04.293+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using ContextCustomizerFactory implementations for test class [BasicAPIServiceTest]: [OnFailureConditionReportContextCustomizerFactory, OverrideAutoConfigurationContextCustomizerFactory, ObservabilityContextCustomizerFactory, TypeExcludeFiltersContextCustomizerFactory, PropertyMappingContextCustomizerFactory, WebDriverContextCustomizerFactory, ImportsContextCustomizerFactory, ExcludeFilterContextCustomizerFactory, HttpGraphQlTesterContextCustomizerFactory, DuplicateJsonObjectContextCustomizerFactory, MockitoContextCustomizerFactory, TestRestTemplateContextCustomizerFactory, WebTestClientContextCustomizerFactory, DisableReactorResourceFactoryGlobalResourcesContextCustomizerFactory, MockServerContainerContextCustomizerFactory, DynamicPropertiesContextCustomizerFactory]
-2024-12-03T22:03:04.293+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using ContextCustomizers for test class [BasicAPIServiceTest]: [OnFailureConditionReportContextCustomizer, DisableObservabilityContextCustomizer, PropertyMappingContextCustomizer, WebDriverContextCustomizer, ExcludeFilterContextCustomizer, DuplicateJsonObjectContextCustomizer, MockitoContextCustomizer, TestRestTemplateContextCustomizer, DisableReactorResourceFactoryGlobalResourcesContextCustomizerCustomizer]
-2024-12-03T22:03:04.297+09:00  INFO 15197 --- [TimoProject] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.tools.seoultech.timoproject.TimoProjectApplication for test class com.tools.seoultech.timoproject.service.BasicAPIServiceTest
-2024-12-03T22:03:04.298+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners for test class [BasicAPIServiceTest]: [ServletTestExecutionListener, DirtiesContextBeforeModesTestExecutionListener, ApplicationEventsTestExecutionListener, MockitoTestExecutionListener, DependencyInjectionTestExecutionListener, DirtiesContextTestExecutionListener, TransactionalTestExecutionListener, SqlScriptsTestExecutionListener, EventPublishingTestExecutionListener, RestDocsTestExecutionListener, MockRestServiceServerResetTestExecutionListener, MockMvcPrintOnlyOnFailureTestExecutionListener, WebDriverTestExecutionListener, MockWebServiceServerTestExecutionListener, ResetMocksTestExecutionListener]
-2024-12-03T22:03:05.407+09:00  INFO 15197 --- [TimoProject] [    Test worker] c.t.s.t.service.BasicAPIService          : riot API 예외 처리 - 사용자를 찾을 수 없습니다.
+<pre>2025-01-05T17:23:04.285+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [BasicAPIServiceTest]: using SpringBootContextLoader
+2025-01-05T17:23:04.286+09:00  INFO 92444 --- [TimoProject] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.tools.seoultech.timoproject.service.BasicAPIServiceTest]: BasicAPIServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-01-05T17:23:04.286+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using ContextCustomizerFactory implementations for test class [BasicAPIServiceTest]: [OnFailureConditionReportContextCustomizerFactory, OverrideAutoConfigurationContextCustomizerFactory, ObservabilityContextCustomizerFactory, TypeExcludeFiltersContextCustomizerFactory, PropertyMappingContextCustomizerFactory, WebDriverContextCustomizerFactory, ImportsContextCustomizerFactory, ExcludeFilterContextCustomizerFactory, HttpGraphQlTesterContextCustomizerFactory, DuplicateJsonObjectContextCustomizerFactory, MockitoContextCustomizerFactory, TestRestTemplateContextCustomizerFactory, WebTestClientContextCustomizerFactory, DisableReactorResourceFactoryGlobalResourcesContextCustomizerFactory, MockServerContainerContextCustomizerFactory, DynamicPropertiesContextCustomizerFactory]
+2025-01-05T17:23:04.287+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using ContextCustomizers for test class [BasicAPIServiceTest]: [OnFailureConditionReportContextCustomizer, DisableObservabilityContextCustomizer, PropertyMappingContextCustomizer, WebDriverContextCustomizer, ExcludeFilterContextCustomizer, DuplicateJsonObjectContextCustomizer, MockitoContextCustomizer, TestRestTemplateContextCustomizer, DisableReactorResourceFactoryGlobalResourcesContextCustomizerCustomizer]
+2025-01-05T17:23:04.293+09:00  INFO 92444 --- [TimoProject] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.tools.seoultech.timoproject.TimoProjectApplication for test class com.tools.seoultech.timoproject.service.BasicAPIServiceTest
+2025-01-05T17:23:04.294+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners for test class [BasicAPIServiceTest]: [ServletTestExecutionListener, DirtiesContextBeforeModesTestExecutionListener, ApplicationEventsTestExecutionListener, MockitoTestExecutionListener, DependencyInjectionTestExecutionListener, DirtiesContextTestExecutionListener, TransactionalTestExecutionListener, SqlScriptsTestExecutionListener, EventPublishingTestExecutionListener, RestDocsTestExecutionListener, MockRestServiceServerResetTestExecutionListener, MockMvcPrintOnlyOnFailureTestExecutionListener, WebDriverTestExecutionListener, MockWebServiceServerTestExecutionListener, ResetMocksTestExecutionListener]
+2025-01-05T17:23:04.671+09:00  INFO 92444 --- [TimoProject] [    Test worker] c.t.s.t.service.BasicAPIService          : riot API 예외 처리 - 사용자를 찾을 수 없습니다.
 </pre>
 </span>
 </div>
@@ -119,7 +119,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.10.1</a> at 2024. 12. 3. 오후 10:03:05</p>
+<a href="http://www.gradle.org">Gradle 8.10</a> at 2025. 1. 5. 오후 5:23:05</p>
 </div>
 </div>
 </body>

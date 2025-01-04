@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.435s</div>
+<div class="counter">0.533s</div>
 <p>duration</p>
 </div>
 </td>
@@ -82,7 +82,7 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">0.435s</td>
+<td class="success">0.533s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -90,8 +90,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>22:02:57.779 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.tools.seoultech.timoproject.TimoProjectApplicationTests]: TimoProjectApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-22:02:57.874 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.tools.seoultech.timoproject.TimoProjectApplication for test class com.tools.seoultech.timoproject.TimoProjectApplicationTests
+<pre>17:22:56.095 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.tools.seoultech.timoproject.TimoProjectApplicationTests]: TimoProjectApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+17:22:56.202 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.tools.seoultech.timoproject.TimoProjectApplication for test class com.tools.seoultech.timoproject.TimoProjectApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -102,31 +102,30 @@
 
  :: Spring Boot ::                (v3.3.5)
 
-2024-12-03T22:02:58.133+09:00  INFO 15197 --- [TimoProject] [    Test worker] c.t.s.t.TimoProjectApplicationTests      : Starting TimoProjectApplicationTests using Java 23 with PID 15197 (started by imsang-u in /Users/imsang-u/Desktop/Timo.GG/TimoProject)
-2024-12-03T22:02:58.134+09:00  INFO 15197 --- [TimoProject] [    Test worker] c.t.s.t.TimoProjectApplicationTests      : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2024-12-03T22:02:58.135+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] o.s.boot.SpringApplication               : Loading source class com.tools.seoultech.timoproject.TimoProjectApplication
-2024-12-03T22:02:58.157+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@4bee18dc
-2024-12-03T22:02:58.698+09:00  INFO 15197 --- [TimoProject] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-12-03T22:02:58.710+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] o.s.b.a.AutoConfigurationPackages        : @EnableAutoConfiguration was declared on a class in the package 'com.tools.seoultech.timoproject'. Automatic @Repository and @Entity scanning is enabled.
-2024-12-03T22:02:58.745+09:00  INFO 15197 --- [TimoProject] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42 ms. Found 1 JPA repository interface.
-2024-12-03T22:02:59.210+09:00  INFO 15197 --- [TimoProject] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-12-03T22:02:59.256+09:00  INFO 15197 --- [TimoProject] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
-2024-12-03T22:02:59.290+09:00  INFO 15197 --- [TimoProject] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2024-12-03T22:02:59.604+09:00  INFO 15197 --- [TimoProject] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-12-03T22:02:59.626+09:00  INFO 15197 --- [TimoProject] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2024-12-03T22:02:59.856+09:00  INFO 15197 --- [TimoProject] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@2f6e92ca
-2024-12-03T22:02:59.857+09:00  INFO 15197 --- [TimoProject] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2024-12-03T22:03:01.198+09:00  INFO 15197 --- [TimoProject] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2024-12-03T22:03:01.272+09:00  INFO 15197 --- [TimoProject] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-12-03T22:03:01.440+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] ySourcesPropertyResolver$DefaultResolver : Found key 'api_key' in PropertySource 'Config resource 'class path resource [application.properties]' via location 'optional:classpath:/'' with value of type String
-2024-12-03T22:03:01.440+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] ySourcesPropertyResolver$DefaultResolver : Found key 'my_puuid' in PropertySource 'Config resource 'class path resource [application.properties]' via location 'optional:classpath:/'' with value of type String
-2024-12-03T22:03:01.688+09:00  WARN 15197 --- [TimoProject] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-12-03T22:03:01.862+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : 13 mappings in 'requestMappingHandlerMapping'
-2024-12-03T22:03:01.928+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/static/**] in 'resourceHandlerMapping'
-2024-12-03T22:03:02.010+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
-2024-12-03T22:03:02.043+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 3 @ExceptionHandler, 1 ResponseBodyAdvice
-2024-12-03T22:03:02.176+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 3 @ExceptionHandler, 0 ResponseBodyAdvice
-2024-12-03T22:03:02.496+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] .s.b.a.l.ConditionEvaluationReportLogger : 
+2025-01-05T17:22:56.523+09:00  INFO 92444 --- [TimoProject] [    Test worker] c.t.s.t.TimoProjectApplicationTests      : Starting TimoProjectApplicationTests using Java 23 with PID 92444 (started by imsang-u in /Users/imsang-u/Desktop/demo-repository)
+2025-01-05T17:22:56.524+09:00  INFO 92444 --- [TimoProject] [    Test worker] c.t.s.t.TimoProjectApplicationTests      : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2025-01-05T17:22:56.525+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] o.s.boot.SpringApplication               : Loading source class com.tools.seoultech.timoproject.TimoProjectApplication
+2025-01-05T17:22:56.555+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@4cd1c1dc
+2025-01-05T17:22:57.435+09:00  INFO 92444 --- [TimoProject] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-05T17:22:57.448+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] o.s.b.a.AutoConfigurationPackages        : @EnableAutoConfiguration was declared on a class in the package 'com.tools.seoultech.timoproject'. Automatic @Repository and @Entity scanning is enabled.
+2025-01-05T17:22:57.491+09:00  INFO 92444 --- [TimoProject] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 51 ms. Found 2 JPA repository interfaces.
+2025-01-05T17:22:58.026+09:00  INFO 92444 --- [TimoProject] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-05T17:22:58.068+09:00  INFO 92444 --- [TimoProject] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-01-05T17:22:58.092+09:00  INFO 92444 --- [TimoProject] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-01-05T17:22:58.302+09:00  INFO 92444 --- [TimoProject] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-05T17:22:58.322+09:00  INFO 92444 --- [TimoProject] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-01-05T17:22:58.385+09:00  INFO 92444 --- [TimoProject] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@47b4ac83
+2025-01-05T17:22:58.386+09:00  INFO 92444 --- [TimoProject] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-01-05T17:22:59.029+09:00  INFO 92444 --- [TimoProject] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-05T17:22:59.106+09:00  INFO 92444 --- [TimoProject] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-05T17:22:59.317+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] ySourcesPropertyResolver$DefaultResolver : Found key 'api_key' in PropertySource 'Config resource 'class path resource [application.properties]' via location 'optional:classpath:/'' with value of type String
+2025-01-05T17:22:59.625+09:00  WARN 92444 --- [TimoProject] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-05T17:22:59.772+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] s.w.s.m.m.a.RequestMappingHandlerMapping : 13 mappings in 'requestMappingHandlerMapping'
+2025-01-05T17:22:59.830+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/static/**] in 'resourceHandlerMapping'
+2025-01-05T17:22:59.903+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-01-05T17:22:59.950+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 3 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-01-05T17:23:00.425+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 3 @ExceptionHandler, 0 ResponseBodyAdvice
+2025-01-05T17:23:01.014+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] .s.b.a.l.ConditionEvaluationReportLogger : 
 
 
 ============================
@@ -661,7 +660,7 @@ Negative matches:
 
    ErrorMvcAutoConfiguration.WhitelabelErrorViewConfiguration:
       Did not match:
-         - ErrorTemplate Missing found template from org.springframework.boot.autoconfigure.thymeleaf.ThymeleafTemplateAvailabilityProvider@4c2fb9dd (ErrorMvcAutoConfiguration.ErrorTemplateMissingCondition)
+         - ErrorTemplate Missing found template from org.springframework.boot.autoconfigure.thymeleaf.ThymeleafTemplateAvailabilityProvider@42c28305 (ErrorMvcAutoConfiguration.ErrorTemplateMissingCondition)
       Matched:
          - @ConditionalOnProperty (server.error.whitelabel.enabled) matched (OnPropertyCondition)
 
@@ -1227,9 +1226,9 @@ Unconditional classes:
 
 
 
-2024-12-03T22:03:02.532+09:00  INFO 15197 --- [TimoProject] [    Test worker] c.t.s.t.TimoProjectApplicationTests      : Started TimoProjectApplicationTests in 4.555 seconds (process running for 5.614)
-2024-12-03T22:03:02.533+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
-2024-12-03T22:03:02.535+09:00 DEBUG 15197 --- [TimoProject] [    Test worker] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+2025-01-05T17:23:01.061+09:00  INFO 92444 --- [TimoProject] [    Test worker] c.t.s.t.TimoProjectApplicationTests      : Started TimoProjectApplicationTests in 4.716 seconds (process running for 6.005)
+2025-01-05T17:23:01.063+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+2025-01-05T17:23:01.065+09:00 DEBUG 92444 --- [TimoProject] [    Test worker] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
 </pre>
 </span>
 </div>
@@ -1251,7 +1250,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.10.1</a> at 2024. 12. 3. 오후 10:03:05</p>
+<a href="http://www.gradle.org">Gradle 8.10</a> at 2025. 1. 5. 오후 5:23:05</p>
 </div>
 </div>
 </body>

@@ -1,19 +1,28 @@
 package com.tools.seoultech.timoproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.tools.seoultech.timoproject.config.QueryDSLConfig;
 import com.tools.seoultech.timoproject.constant.ErrorCode;
 import com.tools.seoultech.timoproject.dto.APIErrorResponse;
 import com.tools.seoultech.timoproject.dto.AccountDto;
 import com.tools.seoultech.timoproject.exception.RiotAPIException;
 import com.tools.seoultech.timoproject.service.BasicAPIService;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -23,19 +32,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 @DisplayName("[API Controller]")
 @WebMvcTest(BasicAPIController.class)
+@ContextConfiguration(classes = BasicAPIController.class)
 class BasicAPIControllerTest {
-    private final MockMvc mvc;
-    private final ObjectMapper objectMapper;
+    @Autowired MockMvc mvc;
+//    @Autowired private final ObjectMapper objectMapper;
+
     @MockBean private BasicAPIService bas;
 
-    public BasicAPIControllerTest(
-            @Autowired MockMvc mockMvc,
-            @Autowired ObjectMapper objectMapper) {
-        this.mvc = mockMvc;
-        this.objectMapper = objectMapper;
-    }
+//    @Autowired
+//    public BasicAPIControllerTest(
+//             MockMvc mockMvc,
+//             ObjectMapper objectMapper) {
+//        this.mvc = mockMvc;
+//        this.objectMapper = objectMapper;
+//    }
 
     @DisplayName("[GET] puuid 검색 - 정상 검색 시 표준 APIDataResponse 출력.")
     @Test
@@ -51,9 +64,11 @@ class BasicAPIControllerTest {
 
         // when & then
         mvc.perform(
-                get("/api/requestAccount")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request_dto))
+                        get("/api/request/Account")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(request_dto))
+                                .queryParam("gameName", gameName)
+                                .queryParam("tagLine", tagLine)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -78,8 +93,8 @@ class BasicAPIControllerTest {
         // when & then
         mvc.perform(
                 get("/api/requestAccount")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request_dto))
+                        .queryParam("gameName", gameName)
+                        .queryParam("tagLine", tagLine)
                 )
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

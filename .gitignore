@@ -205,7 +205,7 @@ $RECYCLE.BIN/
 *.lnk
 
 ### Gradle ###
-..gradle
+.gradle
 **/build/
 !src/**/build/
 ..gradle/
@@ -235,4 +235,6 @@ gradle-app.setting
 src/main/resources/application.properties
 *.properties
 .env
-/build/
+/build
+application.properties
+build/
