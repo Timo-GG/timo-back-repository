@@ -238,3 +238,7 @@ src/main/resources/application.properties
 /build
 application.properties
 build/
+
+
+docker-compose.yml
+Dockerfile

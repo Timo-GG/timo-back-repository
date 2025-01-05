@@ -1,8 +1,6 @@
 package com.tools.seoultech.timoproject.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-import com.sun.jna.platform.win32.Netapi32Util;
 import com.tools.seoultech.timoproject.constant.ErrorCode;
 import com.tools.seoultech.timoproject.dto.AccountDto;
 import com.tools.seoultech.timoproject.dto.Detail_MatchInfoDTO;
@@ -15,8 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
