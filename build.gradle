@@ -34,9 +34,11 @@ repositories {
 
 dependencies {
 
-    // JPA & Database
+    // JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'com.h2database:h2'
+
+    // MySQL Database
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
     // Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.3'
@@ -54,11 +56,6 @@ dependencies {
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    // Mariadb
-//    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.4.1'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'org.springframework:spring-webmvc:6.1.13'
-
     // Querydsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
@@ -68,11 +65,6 @@ dependencies {
     // MiniDev
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.5.1'
-    implementation 'com.h2database:h2'
-
-    // MySQL JDBC Driver
-    runtimeOnly 'com.mysql:mysql-connector-j'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
