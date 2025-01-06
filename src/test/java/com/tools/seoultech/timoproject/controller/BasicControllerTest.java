@@ -1,8 +1,9 @@
 package com.tools.seoultech.timoproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tools.seoultech.timoproject.dto.AccountDto;
-import com.tools.seoultech.timoproject.service.BasicAPIService;
+import com.tools.seoultech.timoproject.member.dto.AccountDto;
+import com.tools.seoultech.timoproject.riot.controller.BasicController;
+import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
