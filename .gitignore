@@ -236,6 +236,7 @@ gradle-app.setting
 src/main/resources/application.properties
 *.properties
 .env
+<<<<<<< HEAD
 /build
 application.properties
 build/
@@ -243,3 +244,8 @@ build/
 
 docker-compose.yml
 Dockerfile
+=======
+/build/
+docker-compose.yml
+/build
+>>>>>>> b8f7cad (Merge pull request #20 from Timo-GG/feat/#19-domain-hierarchy)

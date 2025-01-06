@@ -1,7 +1,14 @@
 package com.tools.seoultech.timoproject.controller;
 
+<<<<<<< HEAD
 import com.tools.seoultech.timoproject.dto.AccountDto;
 import com.tools.seoultech.timoproject.service.BasicAPIService;
+=======
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tools.seoultech.timoproject.member.dto.AccountDto;
+import com.tools.seoultech.timoproject.riot.controller.BasicController;
+import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+>>>>>>> b8f7cad (Merge pull request #20 from Timo-GG/feat/#19-domain-hierarchy)
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

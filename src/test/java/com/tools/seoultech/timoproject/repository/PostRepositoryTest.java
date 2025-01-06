@@ -1,10 +1,15 @@
 package com.tools.seoultech.timoproject.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+<<<<<<< HEAD
 import com.tools.seoultech.timoproject.domain.Post;
 import com.tools.seoultech.timoproject.domain.UserAccount;
 import com.tools.seoultech.timoproject.dto.AccountDto;
 import com.tools.seoultech.timoproject.service.BasicAPIService;
+=======
+import com.tools.seoultech.timoproject.post.domain.Post;
+import com.tools.seoultech.timoproject.post.repository.PostRepository;
+>>>>>>> b8f7cad (Merge pull request #20 from Timo-GG/feat/#19-domain-hierarchy)
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,8 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.stream.IntStream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PostRepositoryTest {
