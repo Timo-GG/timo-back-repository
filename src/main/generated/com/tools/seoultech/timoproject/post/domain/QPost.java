@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.domain;
+package com.tools.seoultech.timoproject.post.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,13 +16,13 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QPost extends EntityPathBase<Post> {
 
-    private static final long serialVersionUID = -1426977862L;
+    private static final long serialVersionUID = 1701672268L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QPost post = new QPost("post");
 
-    public final QBaseEntity _super = new QBaseEntity(this);
+    public final com.tools.seoultech.timoproject.global.QBaseEntity _super = new com.tools.seoultech.timoproject.global.QBaseEntity(this);
 
     public final StringPath content = createString("content");
 
@@ -36,7 +36,7 @@ public class QPost extends EntityPathBase<Post> {
 
     public final StringPath title = createString("title");
 
-    public final QUserAccount userAccount;
+    public final com.tools.seoultech.timoproject.domain.QUserAccount userAccount;
 
     public QPost(String variable) {
         this(Post.class, forVariable(variable), INITS);
@@ -56,7 +56,7 @@ public class QPost extends EntityPathBase<Post> {
 
     public QPost(Class<? extends Post> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.userAccount = inits.isInitialized("userAccount") ? new QUserAccount(forProperty("userAccount")) : null;
+        this.userAccount = inits.isInitialized("userAccount") ? new com.tools.seoultech.timoproject.domain.QUserAccount(forProperty("userAccount")) : null;
     }
 
 }

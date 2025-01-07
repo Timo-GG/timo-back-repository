@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.domain;
+package com.tools.seoultech.timoproject.global;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultSupertypeSerializer")
 public class QBaseEntity extends EntityPathBase<BaseEntity> {
 
-    private static final long serialVersionUID = 1812458926L;
+    private static final long serialVersionUID = -882307729L;
 
     public static final QBaseEntity baseEntity = new QBaseEntity("baseEntity");
 

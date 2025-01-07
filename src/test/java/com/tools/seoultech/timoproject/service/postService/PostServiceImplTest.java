@@ -1,11 +1,9 @@
 package com.tools.seoultech.timoproject.service.postService;
 
-import com.tools.seoultech.timoproject.constant.ErrorCode;
-import com.tools.seoultech.timoproject.domain.Post;
-import com.tools.seoultech.timoproject.dto.APIErrorResponse;
-import com.tools.seoultech.timoproject.dto.AccountDto;
-import com.tools.seoultech.timoproject.dto.PostDTO;
-import com.tools.seoultech.timoproject.repository.PostRepository;
+import com.tools.seoultech.timoproject.post.domain.Post;
+import com.tools.seoultech.timoproject.post.dto.PostDTO;
+import com.tools.seoultech.timoproject.post.repository.PostRepository;
+import com.tools.seoultech.timoproject.post.service.PostServiceImpl;
 import com.tools.seoultech.timoproject.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,8 +17,10 @@ import static org.mockito.BDDMockito.*;
 @DisplayName("Post")
 @SpringBootTest
 class PostServiceImplTest {
-    @Autowired PostServiceImpl postService;
-    @Autowired PostRepository postRepository;
+    @Autowired
+    PostServiceImpl postService;
+    @Autowired
+    PostRepository postRepository;
     @Autowired UserAccountRepository userAccountRepository;
 
     @Value("${my_puuid}") private String my_puuid;

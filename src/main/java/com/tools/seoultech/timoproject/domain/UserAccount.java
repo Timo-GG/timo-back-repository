@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.domain;
 
+import com.tools.seoultech.timoproject.global.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserAccount extends BaseEntity{
+public class UserAccount extends BaseEntity {
     @Id
     private String puuid;
 

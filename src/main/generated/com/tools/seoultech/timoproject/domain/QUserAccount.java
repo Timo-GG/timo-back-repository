@@ -19,7 +19,7 @@ public class QUserAccount extends EntityPathBase<UserAccount> {
 
     public static final QUserAccount userAccount = new QUserAccount("userAccount");
 
-    public final QBaseEntity _super = new QBaseEntity(this);
+    public final com.tools.seoultech.timoproject.global.QBaseEntity _super = new com.tools.seoultech.timoproject.global.QBaseEntity(this);
 
     public final StringPath gameName = createString("gameName");
 

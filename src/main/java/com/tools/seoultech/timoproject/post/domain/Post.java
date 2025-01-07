@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.post.domain;
 
+import com.tools.seoultech.timoproject.domain.UserAccount;
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

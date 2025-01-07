@@ -1,21 +1,7 @@
 package com.tools.seoultech.timoproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-<<<<<<< HEAD
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.tools.seoultech.timoproject.config.QueryDSLConfig;
-import com.tools.seoultech.timoproject.constant.ErrorCode;
-import com.tools.seoultech.timoproject.dto.APIErrorResponse;
-import com.tools.seoultech.timoproject.dto.AccountDto;
-import com.tools.seoultech.timoproject.exception.RiotAPIException;
-import com.tools.seoultech.timoproject.service.BasicAPIService;
-import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
-=======
+
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
@@ -23,14 +9,9 @@ import com.tools.seoultech.timoproject.riot.controller.BasicAPIController;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
->>>>>>> b8f7cad (Merge pull request #20 from Timo-GG/feat/#19-domain-hierarchy)
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;

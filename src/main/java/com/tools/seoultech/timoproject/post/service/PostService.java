@@ -1,15 +1,9 @@
 package com.tools.seoultech.timoproject.post.service;
 
-<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/service/postService/PostService.java
-import com.tools.seoultech.timoproject.domain.Post;
-import com.tools.seoultech.timoproject.dto.PageDTO;
-import com.tools.seoultech.timoproject.dto.PostDTO;
-import com.tools.seoultech.timoproject.repository.UserAccountRepository;
-=======
 import com.tools.seoultech.timoproject.post.domain.Post;
 import com.tools.seoultech.timoproject.post.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.dto.PostDTO;
->>>>>>> b8f7cad (Merge pull request #20 from Timo-GG/feat/#19-domain-hierarchy):src/main/java/com/tools/seoultech/timoproject/post/service/PostService.java
+import com.tools.seoultech.timoproject.repository.UserAccountRepository;
 
 public interface PostService {
     PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request);

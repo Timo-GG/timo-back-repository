@@ -1,8 +1,9 @@
 package com.tools.seoultech.timoproject.repository;
 
 import com.tools.seoultech.timoproject.domain.UserAccount;
-import com.tools.seoultech.timoproject.dto.AccountDto;
-import com.tools.seoultech.timoproject.service.BasicAPIService;
+import com.tools.seoultech.timoproject.member.dto.AccountDto;
+import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
