@@ -3,8 +3,9 @@ package com.tools.seoultech.timoproject.service.postService;
 import com.tools.seoultech.timoproject.post.domain.Post;
 import com.tools.seoultech.timoproject.post.dto.PostDTO;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
+import com.tools.seoultech.timoproject.post.repository.UserAccountRepository;
 import com.tools.seoultech.timoproject.post.service.PostServiceImpl;
-import com.tools.seoultech.timoproject.repository.UserAccountRepository;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,8 @@ class PostServiceImplTest {
     PostServiceImpl postService;
     @Autowired
     PostRepository postRepository;
-    @Autowired UserAccountRepository userAccountRepository;
+    @Autowired
+    UserAccountRepository userAccountRepository;
 
     @Value("${my_puuid}") private String my_puuid;
 

@@ -3,7 +3,8 @@ package com.tools.seoultech.timoproject.post.service;
 import com.tools.seoultech.timoproject.post.domain.Post;
 import com.tools.seoultech.timoproject.post.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.dto.PostDTO;
-import com.tools.seoultech.timoproject.repository.UserAccountRepository;
+import com.tools.seoultech.timoproject.post.repository.UserAccountRepository;
+
 
 public interface PostService {
     PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request);

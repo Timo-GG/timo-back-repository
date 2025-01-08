@@ -1,10 +1,9 @@
-package com.tools.seoultech.timoproject.repository;
+package com.tools.seoultech.timoproject.post.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tools.seoultech.timoproject.domain.UserAccount;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.post.domain.Post;
-import com.tools.seoultech.timoproject.post.repository.PostRepository;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PostRepositoryTest {

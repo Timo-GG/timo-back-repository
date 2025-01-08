@@ -7,7 +7,8 @@ import com.tools.seoultech.timoproject.post.domain.Post;
 import com.tools.seoultech.timoproject.post.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.dto.PostDTO;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
-import com.tools.seoultech.timoproject.repository.UserAccountRepository;
+
+import com.tools.seoultech.timoproject.post.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;

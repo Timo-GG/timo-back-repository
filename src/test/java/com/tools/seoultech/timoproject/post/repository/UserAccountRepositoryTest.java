@@ -1,9 +1,9 @@
-package com.tools.seoultech.timoproject.repository;
+package com.tools.seoultech.timoproject.post.repository;
 
 import com.tools.seoultech.timoproject.domain.UserAccount;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
-import com.tools.seoultech.timoproject.repository.UserAccountRepository;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserAccountRepositoryTest {
