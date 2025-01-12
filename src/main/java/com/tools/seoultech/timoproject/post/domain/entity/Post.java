@@ -1,16 +1,15 @@
-package com.tools.seoultech.timoproject.post.domain;
+package com.tools.seoultech.timoproject.post.domain.entity;
 
-import com.tools.seoultech.timoproject.domain.UserAccount;
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
-@ToString
 public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -22,6 +21,9 @@ public class Post extends BaseEntity {
     @Column(length=1500, nullable=false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
+    @JoinColumn(name = "user_account_puuid", nullable = false)
     private UserAccount userAccount;
+
+
 }

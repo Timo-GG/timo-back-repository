@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.post.dto;
+package com.tools.seoultech.timoproject.post.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

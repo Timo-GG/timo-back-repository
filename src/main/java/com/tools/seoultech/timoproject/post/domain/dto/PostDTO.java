@@ -1,6 +1,6 @@
-package com.tools.seoultech.timoproject.post.dto;
+package com.tools.seoultech.timoproject.post.domain.dto;
 
-import com.tools.seoultech.timoproject.domain.UserAccount;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
