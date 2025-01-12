@@ -1,11 +1,13 @@
 package com.tools.seoultech.timoproject.post.service;
 
-import com.tools.seoultech.timoproject.global.APIErrorResponse;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
-import com.tools.seoultech.timoproject.post.domain.Post;
-import com.tools.seoultech.timoproject.post.dto.PageDTO;
-import com.tools.seoultech.timoproject.post.dto.PostDTO;
+import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
+import com.tools.seoultech.timoproject.post.domain.entity.Post;
+import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
+import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
+import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
+import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
 
 import com.tools.seoultech.timoproject.post.repository.UserAccountRepository;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -26,7 +29,20 @@ import java.util.function.Function;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserAccountRepository userAccountRepository;
+    private final PostMapper postMapper;
 
+    public PostDTO entityToDto(Post post) {
+        return postMapper.postToPostDTO(post);
+    }
+    public Post dtoToEntity(PostDTO postDTO) {
+        UserAccount userAccount = userAccountRepository.findById(postDTO.getPuuid()).orElseThrow(() -> new GeneralException("없음."));
+        return postMapper.postDTOToPost(postDTO, userAccount);
+    }
+    public Post dtoRequestToEntity(PostDtoRequest postDTO) {
+        UserAccount userAccount = userAccountRepository.findById(postDTO.getPuuid()).orElseThrow(() -> new GeneralException("없음."));
+//        return Post.builder().title(postDTO.getTitle()).content(postDTO.getContent()).userAccount(userAccount).build();
+        return postMapper.postDTORequestToPost(postDTO, userAccount);
+    }
     public PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request){
         Pageable pageable = request.getPageable(Sort.by("id").descending());
         Page<Post> result = postRepository.findAll(pageable);
@@ -34,40 +50,45 @@ public class PostServiceImpl implements PostService {
         return PageDTO.Response.of(result, fn);
     }
     public PostDTO read(Long id){
-        Optional<Post> post = postRepository.findById(id);
-        return post.isPresent() ? entityToDto(post.get()) : null;
+        Post post = postRepository.findById(id)
+                .orElseThrow( () -> new GeneralException(ErrorCode.BAD_REQUEST));
+        return entityToDto(post);
+    }
+    public List<PostDTO> readAll(){
+        List<Post> posts = postRepository.findAll();
+        return posts.stream().map(this::entityToDto).toList();
     }
     @Transactional
-    public APIErrorResponse create(PostDTO postDto){
-        Post post = this.dtoToEntity(postDto, userAccountRepository);
+    public PostDTO create(PostDtoRequest postDto){
+        Post post = postRepository.save(dtoRequestToEntity(postDto));
+        return entityToDto(post);
+    }
+    @Transactional
+    public PostDTO create(PostDTO postDto){
+        Post post = this.dtoToEntity(postDto);
         postRepository.save(post);
-        return APIErrorResponse.of(true, ErrorCode.OK.getCode(), ErrorCode.OK.getMessage()+": create 성공.");
+        return entityToDto(post);
     }
     @Transactional
-    public APIErrorResponse update(PostDTO postDto){
+    public PostDTO update(PostDTO postDto){
         Optional<Post> optionalPost = postRepository.findById(postDto.getId());
-        APIErrorResponse response;
-        // 엄격한 post. > ID 조회 시 없는 경우, 해당 id로 create 하지 않고 4XX 에러.
+
         if(optionalPost.isPresent()){
-            postRepository.save(dtoToEntity(postDto, userAccountRepository));
-            response = APIErrorResponse.of(true, ErrorCode.OK);
+            Post newPost = Post.builder()
+                    .id(postDto.getId())
+                    .title(postDto.getTitle())
+                    .content(postDto.getContent())
+                    .userAccount(userAccountRepository.findById(postDto.getPuuid()).get())
+                    .build();
+            return entityToDto(postRepository.save(newPost));
         }
         else{
             throw new GeneralException(ErrorCode.BAD_REQUEST);
         }
-        return response;
+
     }
     @Transactional
-    public APIErrorResponse delete(Long id){
-        Optional<Post> optionalPost = postRepository.findById(id);
-        APIErrorResponse response;
-        if(optionalPost.isPresent()){
-            postRepository.deleteById(id);
-            response =APIErrorResponse.of(true, ErrorCode.OK);
-        }
-        else {
-            throw new GeneralException(ErrorCode.BAD_REQUEST);
-        }
-        return response;
+    public void delete(Long id){
+        postRepository.deleteById(id);
     }
 }

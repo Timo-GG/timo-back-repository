@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.domain;
+package com.tools.seoultech.timoproject.post.domain.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import jakarta.persistence.Column;
@@ -7,11 +7,11 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 @Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class UserAccount extends BaseEntity {
     @Id
     private String puuid;
@@ -21,7 +21,4 @@ public class UserAccount extends BaseEntity {
 
     @Column(nullable = false)
     private String tagLine;
-
-
-
 }
