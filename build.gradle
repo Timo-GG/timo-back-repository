@@ -81,6 +81,8 @@ dependencies {
     // Web-Socket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+    // Socket.io
+    implementation 'com.corundumstudio.socketio:netty-socketio:2.0.12'
 }
 
 tasks.named('test') {
