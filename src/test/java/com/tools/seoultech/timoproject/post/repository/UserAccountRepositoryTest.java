@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.post.repository;
 
-import com.tools.seoultech.timoproject.domain.UserAccount;
+import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
 
