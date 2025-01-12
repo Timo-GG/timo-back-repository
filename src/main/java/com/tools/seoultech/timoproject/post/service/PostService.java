@@ -1,13 +1,22 @@
 package com.tools.seoultech.timoproject.post.service;
 
+<<<<<<< HEAD
 import com.tools.seoultech.timoproject.post.domain.Post;
 import com.tools.seoultech.timoproject.post.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.dto.PostDTO;
+=======
+import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
+import com.tools.seoultech.timoproject.post.domain.entity.Post;
+import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
+import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
+
+>>>>>>> #12-crud-repository
 
 public interface PostService {
     PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request);
     PostDTO read(Long id);
 
+<<<<<<< HEAD
     default PostDTO entityToDto(Post entity){
         // ObjectMapper 사용하면 되는 부분 아닌가?
         PostDTO dto = PostDTO.builder()
@@ -29,4 +38,8 @@ public interface PostService {
                 .build();
         return entity;
     }
+=======
+    PostDTO entityToDto(Post entity);
+    Post dtoToEntity(PostDTO dto);
+>>>>>>> #12-crud-repository
 }

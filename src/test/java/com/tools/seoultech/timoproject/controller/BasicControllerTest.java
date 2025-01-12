@@ -1,6 +1,9 @@
 package com.tools.seoultech.timoproject.controller;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.databind.ObjectMapper;
+=======
+>>>>>>> #12-crud-repository
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.controller.BasicController;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -20,16 +24,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("[View Controller]")
+@ContextConfiguration(classes = BasicController.class)
 @WebMvcTest(BasicController.class)
 class BasicControllerTest {
-    private final MockMvc mvc;
-    private final ObjectMapper objectMapper;
-    @MockBean BasicAPIService bas;
+    @Autowired private MockMvc mvc;
+//    @Autowired ObjectMapper objectMapper;
+    @MockBean private BasicAPIService bas;
 
-    public BasicControllerTest(@Autowired MockMvc mockMvc, @Autowired ObjectMapper objectMapper) {
-        this.mvc = mockMvc;
-        this.objectMapper = objectMapper;
-    }
+//    @Autowired
+//    public BasicControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
+//        this.mvc = mockMvc;
+//        this.objectMapper = objectMapper;
+//    }
 
     @DisplayName("[GET] 사용자 페이지 검색 - 정상 검색시 표준 뷰 페이지 전달.")
     @Test

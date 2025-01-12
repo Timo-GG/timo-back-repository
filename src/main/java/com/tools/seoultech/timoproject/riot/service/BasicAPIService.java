@@ -80,6 +80,7 @@ public class BasicAPIService {
                 HttpResponse.BodyHandlers.ofString());
 
         System.err.println("Service: "+ response);
+        System.err.println(response.body());
         MatchInfoDTO matchInfoDTO = MatchInfoDTO.of(response.body());
         return matchInfoDTO;
     }

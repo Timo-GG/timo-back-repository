@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -18,7 +17,6 @@ context 오류가 발생. 따라서 application에 적용하지 않고 configura
 
 @Configuration
 @EnableJpaAuditing
-@EnableWebMvc
 @RequiredArgsConstructor
 public class QueryDSLConfig implements WebMvcConfigurer {
     private final EntityManager em;
@@ -27,8 +25,9 @@ public class QueryDSLConfig implements WebMvcConfigurer {
     public JPAQueryFactory queryFactory() {
         return new JPAQueryFactory(em);
     }
+
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(ResourceHandlerRegistry registry)   {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-    }
+     }
 }

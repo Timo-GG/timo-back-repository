@@ -1,6 +1,10 @@
 package com.tools.seoultech.timoproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+<<<<<<< HEAD
+=======
+
+>>>>>>> #12-crud-repository
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
@@ -12,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -21,19 +26,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 @DisplayName("[API Controller]")
 @WebMvcTest(BasicAPIController.class)
+@ContextConfiguration(classes = BasicAPIController.class)
 class BasicAPIControllerTest {
-    private final MockMvc mvc;
-    private final ObjectMapper objectMapper;
+    @Autowired MockMvc mvc;
+//    @Autowired private final ObjectMapper objectMapper;
+
     @MockBean private BasicAPIService bas;
 
-    public BasicAPIControllerTest(
-            @Autowired MockMvc mockMvc,
-            @Autowired ObjectMapper objectMapper) {
-        this.mvc = mockMvc;
-        this.objectMapper = objectMapper;
-    }
+//    @Autowired
+//    public BasicAPIControllerTest(
+//             MockMvc mockMvc,
+//             ObjectMapper objectMapper) {
+//        this.mvc = mockMvc;
+//        this.objectMapper = objectMapper;
+//    }
 
     @DisplayName("[GET] puuid 검색 - 정상 검색 시 표준 APIDataResponse 출력.")
     @Test
@@ -49,9 +58,11 @@ class BasicAPIControllerTest {
 
         // when & then
         mvc.perform(
-                get("/api/requestAccount")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request_dto))
+                        get("/api/request/Account")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(request_dto))
+                                .queryParam("gameName", gameName)
+                                .queryParam("tagLine", tagLine)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -76,8 +87,8 @@ class BasicAPIControllerTest {
         // when & then
         mvc.perform(
                 get("/api/requestAccount")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request_dto))
+                        .queryParam("gameName", gameName)
+                        .queryParam("tagLine", tagLine)
                 )
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
