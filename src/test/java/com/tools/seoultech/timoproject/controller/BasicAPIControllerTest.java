@@ -1,10 +1,5 @@
 package com.tools.seoultech.timoproject.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-<<<<<<< HEAD
-=======
-
->>>>>>> #12-crud-repository
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;

@@ -1,9 +1,6 @@
 package com.tools.seoultech.timoproject.controller;
 
-<<<<<<< HEAD
-import com.fasterxml.jackson.databind.ObjectMapper;
-=======
->>>>>>> #12-crud-repository
+
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.controller.BasicController;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;

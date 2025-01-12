@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.post.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tools.seoultech.timoproject.global.config.QueryDSLConfig;
+import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
