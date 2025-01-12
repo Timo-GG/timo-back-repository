@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/post/dto/PostDTO.java
-package com.tools.seoultech.timoproject.post.dto;
-========
 package com.tools.seoultech.timoproject.post.domain.dto;
->>>>>>>> #12-crud-repository:src/main/java/com/tools/seoultech/timoproject/post/domain/dto/PostDTO.java
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

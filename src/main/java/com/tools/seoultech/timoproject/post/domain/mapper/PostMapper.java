@@ -2,9 +2,9 @@ package com.tools.seoultech.timoproject.post.domain.mapper;
 
 
 import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
+import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

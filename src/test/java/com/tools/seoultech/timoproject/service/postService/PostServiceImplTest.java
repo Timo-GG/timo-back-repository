@@ -1,8 +1,8 @@
 package com.tools.seoultech.timoproject.service.postService;
 
 
-import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
+import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
@@ -15,8 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;

@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/post/domain/Post.java
-package com.tools.seoultech.timoproject.post.domain;
-========
 package com.tools.seoultech.timoproject.post.domain.entity;
->>>>>>>> #12-crud-repository:src/main/java/com/tools/seoultech/timoproject/post/domain/entity/Post.java
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import jakarta.persistence.*;

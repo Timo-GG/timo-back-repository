@@ -3,7 +3,6 @@ package com.tools.seoultech.timoproject.post.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tools.seoultech.timoproject.global.config.QueryDSLConfig;
 import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
-import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;

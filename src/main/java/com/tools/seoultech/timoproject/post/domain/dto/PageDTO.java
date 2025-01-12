@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/post/dto/PageDTO.java
-package com.tools.seoultech.timoproject.post.dto;
-========
 package com.tools.seoultech.timoproject.post.domain.dto;
->>>>>>>> #12-crud-repository:src/main/java/com/tools/seoultech/timoproject/post/domain/dto/PageDTO.java
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

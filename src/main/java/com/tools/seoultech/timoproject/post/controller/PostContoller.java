@@ -1,12 +1,7 @@
 package com.tools.seoultech.timoproject.post.controller;
 
-<<<<<<< HEAD
-import com.tools.seoultech.timoproject.post.dto.PageDTO;
-import com.tools.seoultech.timoproject.post.dto.PostDTO;
-=======
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
->>>>>>> #12-crud-repository
 import com.tools.seoultech.timoproject.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
