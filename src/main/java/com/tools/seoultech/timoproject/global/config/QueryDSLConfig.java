@@ -17,7 +17,6 @@ context 오류가 발생. 따라서 application에 적용하지 않고 configura
 
 @Configuration
 @EnableJpaAuditing
-//@EnableWebMvc
 @RequiredArgsConstructor
 public class QueryDSLConfig implements WebMvcConfigurer {
     private final EntityManager em;
