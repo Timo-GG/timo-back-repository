@@ -1,0 +1,21 @@
+<!-- sidebar: style can be found in sidebar.less -->
+<section class="sidebar" th:fragment="sidebar">
+    <!-- Sidebar Menu -->
+    <ul class="sidebar-menu" data-widget="tree">
+        <!-- <li class="header"></li> -->
+        <li><a href="/"><i class="fa fa-dashboard"></i> <span>메인 홈</span></a></li>
+        <li class="treeview">
+            <a href="#"><i class="fa fa-folder"></i> <span>멤버 도메인</span>
+                <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+                <li><a href="/admin/members"><i class="fa fa-circle-o"></i> 멤버 관리</a></li>
+                <li><a href="/admin/members/edit/1"><i class="fa fa-circle-o"></i> 멤버 추가</a></li>
+            </ul>
+        </li>
+    </ul>
+    <!-- /.sidebar-menu -->
+</section>
+<!-- /.sidebar -->
