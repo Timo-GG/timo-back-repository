@@ -1,0 +1,34 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+    <title>Registration Client</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>멤버 수정</h1>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <form data-toggle="validator" role="form" th:object="${member}" th:action="@{/members/save}" method="post">
+            <div class="box-body">
+                <input type="hidden" th:field="*{id}"/>
+
+
+                <div class="form-group">
+                    <label for="Lastname">이름</label>
+                    <input type="text" required="true" class="form-control" th:field="*{username}" id="lastname" />
+                </div>
+                <div class="form-group">
+                    <label for="email">이메일</label>
+                    <input type="email" required="true" class="form-control" th:field="*{email}" id="email" />
+                </div>
+            </div>
+            <div class="box-footer">
+                <button class="btn btn-primary" type="submit">저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

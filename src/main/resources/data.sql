@@ -1,0 +1,40 @@
+CREATE TABLE IF NOT EXISTS member (
+                                      id BIGINT NOT NULL AUTO_INCREMENT,
+                                      username VARCHAR(255) NOT NULL,
+                                      email VARCHAR(255) NOT NULL,
+                                      role VARCHAR(50) NOT NULL,
+                                      PRIMARY KEY (id)
+);
+
+INSERT INTO member (username, email, role)
+VALUES
+    ('user1', 'user1@domain.com', 'USER'),
+    ('user2', 'user2@domain.com', 'USER'),
+    ('user3', 'user3@domain.com', 'USER'),
+    ('user4', 'user4@domain.com', 'USER'),
+    ('user5', 'user5@domain.com', 'USER'),
+    ('user6', 'user6@domain.com', 'USER'),
+    ('user7', 'user7@domain.com', 'USER'),
+    ('user8', 'user8@domain.com', 'USER'),
+    ('user9', 'user9@domain.com', 'USER'),
+    ('user10', 'user10@domain.com', 'USER'),
+    ('user11', 'user11@domain.com', 'USER'),
+    ('user12', 'user12@domain.com', 'USER'),
+    ('user13', 'user13@domain.com', 'USER'),
+    ('user14', 'user14@domain.com', 'USER'),
+    ('user15', 'user15@domain.com', 'USER'),
+    ('user16', 'user16@domain.com', 'USER'),
+    ('user17', 'user17@domain.com', 'USER'),
+    ('user18', 'user18@domain.com', 'USER'),
+    ('user19', 'user19@domain.com', 'USER'),
+    ('user20', 'user20@domain.com', 'USER'),
+    ('user21', 'user21@domain.com', 'USER'),
+    ('user22', 'user22@domain.com', 'USER'),
+    ('user23', 'user23@domain.com', 'USER'),
+    ('user24', 'user24@domain.com', 'USER'),
+    ('user25', 'user25@domain.com', 'USER'),
+    ('user26', 'user26@domain.com', 'USER'),
+    ('user27', 'user27@domain.com', 'USER'),
+    ('user28', 'user28@domain.com', 'USER'),
+    ('user29', 'user29@domain.com', 'USER'),
+    ('user30', 'user30@domain.com', 'USER');
