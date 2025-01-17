@@ -1,8 +1,10 @@
 package com.tools.seoultech.timoproject.post.domain.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
+import com.tools.seoultech.timoproject.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
+
 
 
 @Entity
@@ -22,8 +24,8 @@ public class Post extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
-    @JoinColumn(name = "user_account_puuid", nullable = false)
-    private UserAccount userAccount;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
 
 }

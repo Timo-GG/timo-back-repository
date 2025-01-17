@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.post.domain.mapper;
 
 
+import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
@@ -15,17 +16,19 @@ import org.mapstruct.factory.Mappers;
 public interface PostMapper {
     PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
 
-    @Mapping(target="puuid", expression = "java(post.getUserAccount().getPuuid())")
+    @Mapping(target="memberId", expression = "java(post.getMember().getId())")
     PostDTO postToPostDTO(Post post);
 
-    @Mapping(target="userAccount", source="userAccount")
-    Post postDTOToPost(PostDTO postDTO, UserAccount userAccount);
+    @Mapping(target="member", source="member")
+    @Mapping(target="id", source="postDTO.id")
+    Post postDTOToPost(PostDTO postDTO, Member member);
 
-    @Mapping(target="userAccount", source="userAccount")
-    Post postDTORequestToPost(PostDtoRequest postDtoRequest, UserAccount userAccount);
+    @Mapping(target="member", source="member")
+    @Mapping(target="id", ignore=true)
+    Post postDTORequestToPost(PostDtoRequest postDtoRequest, Member member);
 
-    @Named("getAccountUserEntity")
-    UserAccount getAccountUserEntity(String puuid);
+    @Named("getMemberEntity")
+    UserAccount getMemberEntity(Long id);
         // abstract 클래스에 상속해서 빈 주입.
         // 서비스 레이어에서 파라미터 주입.
 
