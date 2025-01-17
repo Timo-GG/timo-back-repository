@@ -25,17 +25,18 @@ public class Member extends BaseEntity {
 
     private String username;
 
-    private String role;
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
     private String playerName;
 
     private String playerTag;
 
     @Builder
-    public Member(String email, String username, String role) {
+    public Member(String email, String username) {
         this.email = email;
         this.username = username;
-        this.role = role;
+        this.role = Role.MEMBER;
     }
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)

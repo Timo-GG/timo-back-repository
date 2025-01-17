@@ -69,7 +69,6 @@ public class OAuth2MemberService extends DefaultOAuth2UserService {
         Member member = Member.builder()
                 .email(email)
                 .username(nickname)
-                .role("ROLE_USER")
                 .build();
 
         member.linkSocialAccount(socialAccount);
