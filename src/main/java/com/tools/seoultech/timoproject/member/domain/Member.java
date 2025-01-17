@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.member.domain;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
+import com.tools.seoultech.timoproject.match.domain.MatchingOption;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -31,6 +32,14 @@ public class Member extends BaseEntity {
     private String playerName;
 
     private String playerTag;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private MatchingOption matchingOption;
+
+    public void linkMatchingOption(MatchingOption matchingOption) {
+        this.matchingOption = matchingOption;
+        matchingOption.linkMember(this);
+    }
 
     @Builder
     public Member(String email, String username) {
