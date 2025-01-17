@@ -1,46 +1,54 @@
 package com.tools.seoultech.timoproject.member.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.tools.seoultech.timoproject.global.BaseEntity;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Setter
-public class Member {
-
-    protected Member() {
-
-    }
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Member extends BaseEntity {
 
     @Id
+    @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * 회원 식별자 : Provider + " " + ProviderId
-     * 예시 : naver JfgjWA4OYe42vQbKCnMNxhGATz0hxg40JQfIUWLzaw4
-     */
-    private String username;
-
+    @Column(unique = true)
     private String email;
+
+    private String username;
 
     private String role;
 
-    public static Member create(String username, String email, String role) {
-        return new Member(username, email, role);
-    }
+    private String playerName;
 
-    private Member(String username, String email, String role) {
-        this.username = username;
+    private String playerTag;
+
+    @Builder
+    public Member(String email, String username, String role) {
         this.email = email;
+        this.username = username;
         this.role = role;
     }
 
-    public void update(String email) {
-        this.email = email;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<SocialAccount> socialAccounts = new ArrayList<>();
+
+    public void linkSocialAccount(SocialAccount socialAccount) {
+        this.socialAccounts.add(socialAccount);
+        socialAccount.linkMember(this);
+    }
+
+    // TODO : 회원 가입 이후 유저의 소환사 정보 기입하도록...
+    public void linkRiotInfo(String playerName, String playerTag) {
+        this.playerName = playerName;
+        this.playerTag = playerTag;
     }
 }
