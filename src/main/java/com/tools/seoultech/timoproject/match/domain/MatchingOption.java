@@ -29,4 +29,7 @@ public class MatchingOption {
     @Enumerated(value = EnumType.STRING)
     private PlayTime playTime; // 플레이 시간대
 
+    @Enumerated(value = EnumType.STRING)
+    private GameMode gameMode; // 게임모드(일반, 랭크)
+
 }
