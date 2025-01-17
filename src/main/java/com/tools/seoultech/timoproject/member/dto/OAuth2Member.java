@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.member.dto;
 
+import com.tools.seoultech.timoproject.member.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -12,7 +13,7 @@ import java.util.Map;
 public class OAuth2Member implements OAuth2User {
 
     private final OAuth2Response oAuth2Response;
-    private final String role;
+    private final Role role;
 
     @Override
     public Map<String, Object> getAttributes() { // 로그인 후에 서버로부터 넘어오는 값들
@@ -25,7 +26,7 @@ public class OAuth2Member implements OAuth2User {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return role;
+                return role.toString();
             }
         });
         return collection;
