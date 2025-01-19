@@ -18,5 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             WHERE sa.provider = :provider AND sa.providerId = :providerId
             """)
     Optional<Member> findBySocialAccount(String provider, String providerId);
+
+    Optional<Member> findByUsername(String username);
 }
 
