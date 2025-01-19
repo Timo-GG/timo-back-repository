@@ -25,17 +25,21 @@ public class Post extends BaseEntity {
     @Column(length=1500, nullable=false)
     private String content;
 
-    private Integer view;
+    @Builder.Default
+    @Column(columnDefinition = "DEFAULT '0'")
+    private Integer view = 0;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="tag_id")
-    private List<Tag> tags;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "DEFAULT 'NORMAL'", nullable=false)
+    private Category category = Category.NORMAL;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="comment_id")
+//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
+//    private List<Tag> tags;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "post")
     private List<Comment> comments;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 }

@@ -24,6 +24,7 @@ public class Comment {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="member_id")
     private Member member;
 
     @Builder
@@ -31,5 +32,15 @@ public class Comment {
         this.content = content;
         this.post = post;
         this.member = member;
+    }
+
+    public void setPost(Post post) {
+        if(post != null) {
+            this.post = post;
+            post.getComments().add(this);
+        }
+    }
+    public void deleteThis(){
+        post.getComments().remove(this);
     }
 }
