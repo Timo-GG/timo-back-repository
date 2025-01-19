@@ -1,5 +1,6 @@
-package com.tools.seoultech.timoproject.admin;
+package com.tools.seoultech.timoproject.admin.controller;
 
+import com.tools.seoultech.timoproject.admin.LoginRequired;
 import com.tools.seoultech.timoproject.admin.service.AmemberService;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/admin/members")
 @RequiredArgsConstructor
+@LoginRequired
 public class AmemberController {
 
     private final AmemberService memberService;
