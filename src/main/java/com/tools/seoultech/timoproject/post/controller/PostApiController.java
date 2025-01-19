@@ -2,7 +2,6 @@ package com.tools.seoultech.timoproject.post.controller;
 
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
-import com.tools.seoultech.timoproject.post.service.PostService;
 import com.tools.seoultech.timoproject.post.service.PostServiceImpl;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import jakarta.validation.Valid;
