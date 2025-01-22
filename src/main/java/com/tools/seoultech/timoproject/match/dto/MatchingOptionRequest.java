@@ -8,6 +8,8 @@ public class MatchingOptionRequest {
     private String introduce;
     private Age age;
     private Gender gender;
+    private PlayPosition playPosition;
+    private PlayCondition playCondition;
     private VoiceChat voiceChat;
     private PlayStyle playStyle;
     private PlayTime playTime;
