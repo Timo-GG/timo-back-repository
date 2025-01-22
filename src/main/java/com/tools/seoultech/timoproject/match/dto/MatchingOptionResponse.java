@@ -9,6 +9,8 @@ public class MatchingOptionResponse {
     private String introduce;
     private String age;
     private String gender;
+    private String playPosition;
+    private String playCondition;
     private String voiceChat;
     private String playStyle;
     private String playTime;
@@ -19,6 +21,8 @@ public class MatchingOptionResponse {
         this.introduce = matchingOption.getIntroduce();
         this.age = matchingOption.getAge().name();
         this.gender = matchingOption.getGender().name();
+        this.playPosition = matchingOption.getPlayPosition().name();
+        this.playCondition = matchingOption.getPlayCondition().name();
         this.voiceChat = matchingOption.getVoiceChat().name();
         this.playStyle = matchingOption.getPlayStyle().name();
         this.playTime = matchingOption.getPlayTime().name();
