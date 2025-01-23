@@ -40,7 +40,7 @@
         <td th:text="${comment.id}"></td>
         <td th:text="${comment.member.username}"></td>
         <td th:text="${comment.content}"></td>
-        <td th:text="${comment.regDate}"></td>
+        <td th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
         <td>
           <a th:href="@{/admin/comments/delete/{postId}/{id}(postId=${post.id}, id=${comment.id})}"
              class="btn btn-danger">삭제</a>
