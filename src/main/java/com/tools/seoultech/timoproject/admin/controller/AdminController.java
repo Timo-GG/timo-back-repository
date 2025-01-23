@@ -1,15 +1,20 @@
 package com.tools.seoultech.timoproject.admin.controller;
 
+import com.tools.seoultech.timoproject.admin.AdminLog;
+import com.tools.seoultech.timoproject.admin.AdminLogRepository;
 import com.tools.seoultech.timoproject.admin.LoginRequired;
 import com.tools.seoultech.timoproject.admin.service.AdminService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -18,15 +23,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AdminController {
 
     private final AdminService adminService;
+    private final AdminLogRepository adminLogRepository;
 
     @LoginRequired
     @GetMapping("")
-    public String index(HttpSession session) {
+    public String index(HttpSession session, Model model) {
         log.info("session: {}", session.getAttribute("isAdmin"));
         if (session.getAttribute("isAdmin") == null) {
             return "redirect:/admin/login";
         }
-        return "dashboard/index"; // main page
+        List<AdminLog> logs = adminLogRepository.findAll();
+        model.addAttribute("logs", logs);
+        return "dashboard/index";
     }
 
     @GetMapping("/logout")

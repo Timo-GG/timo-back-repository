@@ -71,6 +71,7 @@ public class ApostController {
     }
 
 
+
     // 게시글 삭제
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {

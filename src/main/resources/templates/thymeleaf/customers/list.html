@@ -23,18 +23,19 @@
                     <th>ID</th>
                     <th>이름</th>
                     <th>이메일</th>
+                    <th>플레이어 이름</th>
                     <th>가입날짜</th>
                     <th>수정날짜</th>
                     <th>옵션</th>
                 </tr>
-                <tr th:each="row : ${list}">
+                <tr th:each="row : ${list}" th:onclick="|location.href='@{/admin/members/edit/{id}(id=${row.id})}'|" style="cursor: pointer;">
                     <td th:text="${row.id}"></td>
                     <td th:text="${row.username}"></td>
                     <td th:text="${row.email}"></td>
-                    <td th:text="${row.regDate}"></td>
-                    <td th:text="${row.modDate}"></td>
+                    <td th:text="${row.playerName + ' # ' + row.playerTag}"></td>
+                    <td th:text="${#temporals.format(row.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${#temporals.format(row.modDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td>
-                        <a th:href="${'/admin/members/edit/' + row.id}" class="btn btn-primary">수정</a>
                         <a th:href="${'/admin/members/delete/' + row.id}" class="btn btn-primary">삭제</a>
                     </td>
 

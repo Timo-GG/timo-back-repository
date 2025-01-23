@@ -1,5 +1,7 @@
 package com.tools.seoultech.timoproject.admin.service;
 
+import com.tools.seoultech.timoproject.admin.AdminLog;
+import com.tools.seoultech.timoproject.admin.AdminLogRepository;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class AmemberService {
 
     private final MemberRepository memberRepository;
+    private final AdminLogRepository adminLogRepository;
 
     // 회원 목록 조회 (페이지네이션)
     public Page<Member> getList(int pageNumber) {
@@ -36,6 +39,11 @@ public class AmemberService {
     // 회원 삭제
     public void delete(Long id) {
         if (memberRepository.existsById(id)) {
+            //todo : 어드민 아이디 커스텀화 해야함
+            AdminLog log = new AdminLog(AdminLog.EntityType.MEMBER, AdminLog.MethodType.DELETE, id.toString(), "admin");
+            // 로그 기록
+            // admin이 해당 댓글을 삭제했다는 로그를 남김
+            adminLogRepository.save(log);
             memberRepository.deleteById(id);
         } else {
             throw new IllegalArgumentException("해당 회원을 찾을 수 없습니다. ID: " + id);

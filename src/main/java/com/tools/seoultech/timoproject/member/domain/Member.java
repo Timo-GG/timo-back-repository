@@ -2,6 +2,8 @@ package com.tools.seoultech.timoproject.member.domain;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.match.domain.MatchingOption;
+import com.tools.seoultech.timoproject.post.domain.entity.Comment;
+import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -55,6 +57,12 @@ public class Member extends BaseEntity {
         this.socialAccounts.add(socialAccount);
         socialAccount.linkMember(this);
     }
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     // TODO : 회원 가입 이후 유저의 소환사 정보 기입하도록...
     public void linkRiotInfo(String playerName, String playerTag) {
