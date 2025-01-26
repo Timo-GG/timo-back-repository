@@ -1,40 +1,28 @@
-CREATE TABLE IF NOT EXISTS member (
-                                      id BIGINT NOT NULL AUTO_INCREMENT,
-                                      username VARCHAR(255) NOT NULL,
-                                      email VARCHAR(255) NOT NULL,
-                                      role VARCHAR(50) NOT NULL,
-                                      PRIMARY KEY (id)
-);
-
-INSERT INTO member (username, email, role)
+-- Insert members
+INSERT INTO member (member_id, email, username, role, player_name, player_tag, reg_date, mod_date)
 VALUES
-    ('user1', 'user1@domain.com', 'USER'),
-    ('user2', 'user2@domain.com', 'USER'),
-    ('user3', 'user3@domain.com', 'USER'),
-    ('user4', 'user4@domain.com', 'USER'),
-    ('user5', 'user5@domain.com', 'USER'),
-    ('user6', 'user6@domain.com', 'USER'),
-    ('user7', 'user7@domain.com', 'USER'),
-    ('user8', 'user8@domain.com', 'USER'),
-    ('user9', 'user9@domain.com', 'USER'),
-    ('user10', 'user10@domain.com', 'USER'),
-    ('user11', 'user11@domain.com', 'USER'),
-    ('user12', 'user12@domain.com', 'USER'),
-    ('user13', 'user13@domain.com', 'USER'),
-    ('user14', 'user14@domain.com', 'USER'),
-    ('user15', 'user15@domain.com', 'USER'),
-    ('user16', 'user16@domain.com', 'USER'),
-    ('user17', 'user17@domain.com', 'USER'),
-    ('user18', 'user18@domain.com', 'USER'),
-    ('user19', 'user19@domain.com', 'USER'),
-    ('user20', 'user20@domain.com', 'USER'),
-    ('user21', 'user21@domain.com', 'USER'),
-    ('user22', 'user22@domain.com', 'USER'),
-    ('user23', 'user23@domain.com', 'USER'),
-    ('user24', 'user24@domain.com', 'USER'),
-    ('user25', 'user25@domain.com', 'USER'),
-    ('user26', 'user26@domain.com', 'USER'),
-    ('user27', 'user27@domain.com', 'USER'),
-    ('user28', 'user28@domain.com', 'USER'),
-    ('user29', 'user29@domain.com', 'USER'),
-    ('user30', 'user30@domain.com', 'USER');
+(1, 'test1@example.com', 'hyunuk', 'MEMBER', "Wooggie", "#KR1", NOW(), NOW()),
+(2, 'test2@example.com', 'chanha', 'MEMBER', "롤찍먹만할게요", "#5103", NOW(), NOW()),
+(3, 'test3@example.com', 'sangwoo', 'ADMIN', "짱아깨비", "#k r", NOW(), NOW()),
+(4, 'test4@example.com', 'pilho', 'MEMBER', "필호우스", "#KR2", NOW(), NOW()),
+(5, 'test5@example.com', 'byeongjun', 'MEMBER', "병나발불어", "#KR1", NOW(), NOW()),
+(6, 'test6@example.com', 'pilho', 'MEMBER', "필호우스", "#KR2", NOW(), NOW()),
+(7, 'test7@example.com', 'kimjiwon', 'MEMBER', "도산안창호", "#3402", NOW(), NOW()),
+(8, 'test8@example.com', 'sangho', 'MEMBER', "백범김구", "#HIGH", NOW(), NOW());
+
+-- Insert Social Accounts
+INSERT INTO social_account (social_account_id, member_id, provider, provider_id)
+VALUES
+(1, 1, 'google', 'sdsdgffgJfgjWA4OYe42vQbKCnMNxhGATz0hxg40JQfIUW90'),
+(2, 2, 'facebook', 'qwfd45dsdsgjWA4OYe42vQbKCnMNxhGATz0hxg40JQfIUW8'),
+(3, 3, 'naver', 'JfgjWA4OYe42vQbKCnMNxhGATz0hxgsdkisj2340JQfIUWLzaw4'),
+(4, 4, 'naver', 'JfgjWA4OYe4ghjkyu12GATz0h34xgsdkisj2340JQfIUWLzaw56'),
+(5, 5, 'kakao', 'dffjisxfgjWA4OYe42vQbKCnMNxhGATz0hxg4045JQfIU23WLzaw7');
+
+-- Insert Matching Options
+INSERT INTO matching_option (match_option_id, member_id, introduce, age, gender, play_position, play_condition, voice_chat, play_style, play_time, game_mode)
+VALUES
+(1, 1, '안녕하세요, 같이 랭크 게임해요!', 'ADULT', 'MALE', 'RANGED_DEALER', 'FIRST','ENABLED', 'HARDCORE', 'NIGHT', 'RANK_DUO'),
+(2, 2, '캐주얼하게 게임 즐겨요!', 'ADULT', 'FEMALE', 'JUNGLE', 'CONTINUE', 'DISABLED', 'FUN', 'AFTERNOON', 'NORMAL'),
+(3, 3, '빡겜하실 분만.. 랭크 올려봅시다!', 'ADULT', 'FEMALE', 'JUNGLE', 'CONTINUE', 'ENABLED', 'HARDCORE', 'AFTERNOON', 'RANK_DUO'),
+(4, 4, '빡겜하실 정글러 구합니다!', 'ADULT', 'MALE', 'MID', 'CONTINUE', 'ENABLED', 'HARDCORE', 'AFTERNOON', 'RANK_DUO');
