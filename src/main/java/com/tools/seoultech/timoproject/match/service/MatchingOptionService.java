@@ -25,6 +25,8 @@ public class MatchingOptionService {
                 .introduce(request.getIntroduce())
                 .age(request.getAge())
                 .gender(request.getGender())
+                .playPosition(request.getPlayPosition())
+                .playCondition(request.getPlayCondition())
                 .voiceChat(request.getVoiceChat())
                 .playStyle(request.getPlayStyle())
                 .playTime(request.getPlayTime())
