@@ -18,7 +18,7 @@ public class MatchingOptionController {
     public ResponseEntity<MatchingOptionResponse> createMatchingOption(
             @PathVariable Long memberId,
             @RequestBody MatchingOptionRequest request) {
-        MatchingOptionResponse response = matchingOptionService.createMatchingOption(memberId, request);
+        MatchingOptionResponse response = matchingOptionService.updateMatchingOption(memberId, request);
         return ResponseEntity.ok(response);
     }
 
@@ -34,11 +34,5 @@ public class MatchingOptionController {
             @RequestBody MatchingOptionRequest request) {
         MatchingOptionResponse response = matchingOptionService.updateMatchingOption(memberId, request);
         return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity<Void> deleteMatchingOption(@PathVariable Long memberId) {
-        matchingOptionService.deleteMatchingOption(memberId);
-        return ResponseEntity.noContent().build();
     }
 }
