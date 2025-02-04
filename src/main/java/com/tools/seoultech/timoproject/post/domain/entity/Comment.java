@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.post.domain.entity;
 
+import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Comment {
+public class Comment extends BaseEntity {
     @Id
     @Column(name="comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

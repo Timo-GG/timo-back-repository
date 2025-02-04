@@ -25,7 +25,7 @@ public class BasicController {
 
     @GetMapping
     public String goMain(){
-        return "index";
+        return "/framer/index";
     }
 
     @GetMapping("user")
@@ -34,7 +34,7 @@ public class BasicController {
     ) throws Exception {
         AccountDto.Response response_dto = basicAPIService.findUserAccount(AccountDto.Request.of(gameName, tagLine));
         return new ModelAndView(
-                "users/" + gameName,
+                "/framer/users/" + gameName,
                 Map.of(
                         "puuid", response_dto.getPuuid(),
                         "gameName", response_dto.getGameName(),
@@ -71,6 +71,6 @@ public class BasicController {
     @GetMapping("testList")
     public String showTestList(){
         log.info("testList: redirect=matches");
-        return "matches";
+        return "/framer/matches";
     }
 }

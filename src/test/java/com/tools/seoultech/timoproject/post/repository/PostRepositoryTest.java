@@ -2,9 +2,8 @@ package com.tools.seoultech.timoproject.post.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tools.seoultech.timoproject.global.config.QueryDSLConfig;
-import com.tools.seoultech.timoproject.member.domain.Member;
-import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
+import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,7 +35,7 @@ class PostRepositoryTest {
     @Autowired
     private JPAQueryFactory queryFactory;
     @Autowired
-    private MemberRepository memberRepository;
+    private UserAccountRepository userAccountRepository;
     @Autowired
     private EntityManager entityManager;
 
@@ -67,7 +67,7 @@ class PostRepositoryTest {
                                 assertThat(it.getId()).isNotNull().isNotZero();
                                 assertThat(it.getTitle()).isEqualTo(post.getTitle());
                                 assertThat(it.getContent()).isEqualTo(post.getContent());
-                                assertThat(it.getMember()).isInstanceOf(UserAccount.class);
+                                assertThat(it.getUserAccount()).isInstanceOf(UserAccount.class);
                                 assertThat(it.getRegDate()).isInstanceOf(LocalDateTime.class).isNotNull();
                                 assertThat(it.getModDate()).isInstanceOf(LocalDateTime.class).isNotNull();
                             });

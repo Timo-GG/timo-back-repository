@@ -20,7 +20,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf((csrf) -> csrf
+                        .ignoringRequestMatchers("/admin/posts/delete/**")); // 특정 요청 제외 가능
         http
                 .formLogin(AbstractHttpConfigurer::disable);
         http
