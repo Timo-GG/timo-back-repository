@@ -1,9 +1,8 @@
 package com.tools.seoultech.timoproject.member.domain;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
-import com.tools.seoultech.timoproject.match.domain.MatchingOption;
-import com.tools.seoultech.timoproject.post.domain.entity.Comment;
-import com.tools.seoultech.timoproject.post.domain.entity.Post;
+import com.tools.seoultech.timoproject.match.domain.DuoInfo;
+import com.tools.seoultech.timoproject.match.domain.UserInfo;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,12 +34,17 @@ public class Member extends BaseEntity {
 
     private String playerTag;
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private MatchingOption matchingOption;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_info_id")
+    private UserInfo userInfo;
 
-    public void linkMatchingOption(MatchingOption matchingOption) {
-        this.matchingOption = matchingOption;
-        matchingOption.linkMember(this);
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "duo_info_id")
+    private DuoInfo duoInfo;
+
+    public void updateMatchOption(UserInfo userInfo, DuoInfo duoInfo) {
+        this.userInfo = userInfo;
+        this.duoInfo = duoInfo;
     }
 
     @Builder
@@ -57,12 +61,6 @@ public class Member extends BaseEntity {
         this.socialAccounts.add(socialAccount);
         socialAccount.linkMember(this);
     }
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
 
     // TODO : 회원 가입 이후 유저의 소환사 정보 기입하도록...
     public void linkRiotInfo(String playerName, String playerTag) {
