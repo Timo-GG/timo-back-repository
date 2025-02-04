@@ -2,7 +2,7 @@ package com.tools.seoultech.timoproject.match.controller;
 
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionRequest;
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionResponse;
-import com.tools.seoultech.timoproject.match.service.MatchingOptionService;
+import com.tools.seoultech.timoproject.match.service.MatchingOptionServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MatchingOptionController {
 
-    private final MatchingOptionService matchingOptionService;
+    private final MatchingOptionServiceImpl matchingOptionService;
 
     @PostMapping("/{memberId}")
     public ResponseEntity<MatchingOptionResponse> createMatchingOption(

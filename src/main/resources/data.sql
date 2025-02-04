@@ -33,29 +33,29 @@ VALUES
 -------------------------------------------------
 -- 3. USER_INFO 테이블
 -------------------------------------------------
-INSERT INTO user_info (user_info_id, introduce, age, gender, play_position, play_condition, voice_chat, play_style, play_time, game_mode) VALUES
-  (1,  'I love competitive play',           'ADULT',  'MALE',    'TOP',           'FIRST',    'ENABLED',    'HARDCORE',     'MORNING',         'NORMAL'),
-  (2,  'Casual and fun gamer',               'TEEN',   'FEMALE',  'JUNGLE',        'CONTINUE', 'DISABLED',   'FUN',          'AFTERNOON',       'RANK_DUO'),
-  (3,  'Always striving for improvement',    'ADULT',  'MALE',    'MID',           'LAST',     'LISTEN_ONLY','SUB_ACCOUNT',  'NIGHT',           'RANK_FREE'),
-  (4,  'Secretive but skilled',              'SECRET', 'SECRET',  'SUPPORT',       'FIRST',    'ENABLED',    'NO_MATTER',    'EARLY_MORNING',   'NO_MATTER'),
-  (5,  'Loves team strategy',                'ADULT',  'FEMALE',  'RANGED_DEALER', 'CONTINUE', 'DISABLED',   'HARDCORE',     'MORNING',         'RANK_DUO'),
-  (6,  'Passionate about every game',        'TEEN',   'MALE',    'TOP',           'LAST',     'LISTEN_ONLY','FUN',          'NIGHT',           'NORMAL'),
-  (7,  'Determined and precise',             'ADULT',  'FEMALE',  'JUNGLE',        'FIRST',    'ENABLED',    'SUB_ACCOUNT',  'AFTERNOON',       'RANK_FREE'),
-  (8,  'Enjoys every match',                 'SECRET', 'MALE',    'MID',           'CONTINUE', 'DISABLED',   'NO_MATTER',    'EARLY_MORNING',   'NORMAL'),
-  (9,  'Always looking for improvement',     'ADULT',  'FEMALE',  'SUPPORT',       'LAST',     'LISTEN_ONLY','HARDCORE',     'MORNING',         'NO_MATTER'),
-  (10, 'Fun-loving and creative',            'TEEN',   'SECRET',  'RANGED_DEALER', 'FIRST',    'ENABLED',    'FUN',          'NIGHT',           'RANK_DUO');
+INSERT INTO user_info (user_info_id, introduce, play_position, play_condition, voice_chat, play_style, game_mode) VALUES
+  (1,  'I love competitive play',            'TOP',           'FIRST',    'ENABLED',    'HARDCORE',     'NORMAL'),
+  (2,  'Casual and fun gamer',               'JUNGLE',        'CONTINUE', 'DISABLED',   'FUN',          'RANK_DUO'),
+  (3,  'Always striving for improvement',    'MID',           'LAST',     'LISTEN_ONLY','SUB_ACCOUNT',  'RANK_FREE'),
+  (4,  'Secretive but skilled',              'SUPPORT',       'FIRST',    'ENABLED',    'NO_MATTER',    'NO_MATTER'),
+  (5,  'Loves team strategy',                'RANGED_DEALER', 'CONTINUE', 'DISABLED',   'HARDCORE',     'RANK_DUO'),
+  (6,  'Passionate about every game',        'TOP',           'LAST',     'LISTEN_ONLY','FUN',          'NORMAL'),
+  (7,  'Determined and precise',             'JUNGLE',        'FIRST',    'ENABLED',    'SUB_ACCOUNT',  'RANK_FREE'),
+  (8,  'Enjoys every match',                 'MID',           'CONTINUE', 'DISABLED',   'NO_MATTER',    'NORMAL'),
+  (9,  'Always looking for improvement',     'SUPPORT',       'LAST',     'LISTEN_ONLY','HARDCORE',     'NO_MATTER'),
+  (10, 'Fun-loving and creative',            'RANGED_DEALER', 'FIRST',    'ENABLED',    'FUN',          'RANK_DUO');
 
 -------------------------------------------------
 -- 4. DUO_INFO 테이블
 -------------------------------------------------
-INSERT INTO duo_info (duo_info_id, duo_play_position, duo_play_time, duo_voice_chat, duo_age) VALUES
-  (1,  'MID',           'NIGHT',        'LISTEN_ONLY', 'TEEN'),
-  (2,  'SUPPORT',       'MORNING',      'ENABLED',     'ADULT'),
-  (3,  'TOP',           'AFTERNOON',    'DISABLED',    'TEEN'),
-  (4,  'JUNGLE',        'EARLY_MORNING','LISTEN_ONLY', 'SECRET'),
-  (5,  'MID',           'MORNING',      'ENABLED',     'ADULT'),
-  (6,  'SUPPORT',       'NIGHT',        'DISABLED',    'TEEN'),
-  (7,  'RANGED_DEALER', 'AFTERNOON',    'LISTEN_ONLY', 'ADULT'),
-  (8,  'TOP',           'EARLY_MORNING','ENABLED',     'SECRET'),
-  (9,  'JUNGLE',        'MORNING',      'DISABLED',    'TEEN'),
-  (10, 'MID',           'NIGHT',        'LISTEN_ONLY', 'ADULT');
+INSERT INTO duo_info (duo_info_id, duo_play_position, duo_play_style) VALUES
+  (1,  'MID',           'FUN'),
+  (2,  'SUPPORT',       'HARDCORE'),
+  (3,  'TOP',           'HARDCORE'),
+  (4,  'JUNGLE',        'FUN'),
+  (5,  'MID',           'HARDCORE'),
+  (6,  'SUPPORT',       'FUN'),
+  (7,  'RANGED_DEALER', 'NO_MATTER'),
+  (8,  'TOP',           'SUB_ACCOUNT'),
+  (9,  'JUNGLE',        'NO_MATTER'),
+  (10, 'MID',           'HARDCORE');

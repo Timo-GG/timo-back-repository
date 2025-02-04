@@ -24,10 +24,7 @@ public class UserInfo {
     private String introduce;
 
     @Enumerated(EnumType.STRING)
-    private Age age;
-
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private GameMode gameMode;
 
     @Enumerated(EnumType.STRING)
     private PlayPosition playPosition;
@@ -41,28 +38,18 @@ public class UserInfo {
     @Enumerated(EnumType.STRING)
     private PlayStyle playStyle;
 
-    @Enumerated(EnumType.STRING)
-    private PlayTime playTime;
-
-    @Enumerated(EnumType.STRING)
-    private GameMode gameMode;
-
     // TODO : 양방향 관계 필요한지 논의
     @OneToOne(mappedBy = "userInfo")
     private Member member;
 
     @Builder
-    public UserInfo(String introduce, Age age, Gender gender, PlayPosition playPosition,
-                    PlayCondition playCondition, VoiceChat voiceChat, PlayStyle playStyle,
-                    PlayTime playTime, GameMode gameMode) {
+    public UserInfo(String introduce, GameMode gameMode, PlayPosition playPosition,
+                    PlayCondition playCondition, VoiceChat voiceChat, PlayStyle playStyle) {
         this.introduce = introduce;
-        this.age = age;
-        this.gender = gender;
+        this.gameMode = gameMode;
         this.playPosition = playPosition;
         this.playCondition = playCondition;
         this.voiceChat = voiceChat;
         this.playStyle = playStyle;
-        this.playTime = playTime;
-        this.gameMode = gameMode;
     }
 }

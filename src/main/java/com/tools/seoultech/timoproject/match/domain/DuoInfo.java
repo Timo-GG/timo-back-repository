@@ -25,23 +25,15 @@ public class DuoInfo {
     private PlayPosition duoPlayPosition;
 
     @Enumerated(EnumType.STRING)
-    private PlayTime duoPlayTime;
-
-    @Enumerated(EnumType.STRING)
-    private VoiceChat duoVoiceChat;
-
-    @Enumerated(EnumType.STRING)
-    private Age duoAge;
+    private PlayStyle duoPlayStyle;
 
     // TODO : 양방향 관계 필요한지 논의
     @OneToOne(mappedBy = "duoInfo")
     private Member member;
 
     @Builder
-    public DuoInfo(PlayPosition duoPlayPosition, PlayTime duoPlayTime, VoiceChat duoVoiceChat, Age duoAge) {
+    public DuoInfo(PlayPosition duoPlayPosition, PlayStyle duoPlayStyle) {
         this.duoPlayPosition = duoPlayPosition;
-        this.duoPlayTime = duoPlayTime;
-        this.duoVoiceChat = duoVoiceChat;
-        this.duoAge = duoAge;
+        this.duoPlayStyle = duoPlayStyle;
     }
 }

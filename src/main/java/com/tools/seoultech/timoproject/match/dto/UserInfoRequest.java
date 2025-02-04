@@ -6,12 +6,9 @@ import lombok.Getter;
 @Getter
 public class UserInfoRequest {
     private String introduce;
-    private Age age;
-    private Gender gender;
+    private GameMode gameMode;
     private PlayPosition playPosition;
     private PlayCondition playCondition;
     private VoiceChat voiceChat;
     private PlayStyle playStyle;
-    private PlayTime playTime;
-    private GameMode gameMode;
 }
