@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class PostDtoRequest {
     private String title;
     private String content;
-    private String puuid;
+    private Long memberId;
 }

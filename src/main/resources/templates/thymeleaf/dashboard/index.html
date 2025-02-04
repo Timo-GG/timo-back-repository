@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>관리자 로그</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>관리자 로그</h1>
+    <div class="box">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>엔티티 대상</th>
+                <th>메서드 타입</th>
+                <th>대상 ID</th>
+                <th>수행자</th>
+                <th>생성 시간</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="log : ${logs}">
+                <td th:text="${log.id}">ID</td>
+                <td th:text="${log.entityType}">엔티티 대상</td>
+                <td th:text="${log.methodType}">메서드 타입</td>
+                <td th:text="${log.targetId}">대상 ID</td>
+                <td th:text="${log.performedBy}">수행자</td>
+                <td th:text="${#temporals.format(log.regDate, 'yyyy-MM-dd HH:mm:ss')}">생성 시간</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

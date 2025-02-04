@@ -1,6 +1,8 @@
 package com.tools.seoultech.timoproject.service.postService;
 
 
+import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
@@ -31,7 +33,7 @@ class PostServiceImplTest {
     @Mock
     PostRepository postRepository;
     @Mock
-    UserAccountRepository userAccountRepository;
+    MemberRepository memberRepository;
     @Mock
     PostMapper postMapper;
     @InjectMocks
@@ -44,16 +46,15 @@ class PostServiceImplTest {
     @Transactional
     public void givenPostDto_whenCreate_thenCreate(){
         //given
-        UserAccount userAccount = UserAccount.builder()
-                .puuid(my_puuid)
-                .gameName("Test User: [롤찍먹만할게요]")
-                .tagLine("Test User: [5103]")
+        Member member = Member.builder()
+                .email("louis38625103@gmail.com")
+                .username("롤찍먹만할게요")
                 .build();
 
         PostDTO postDto = PostDTO.builder()
                 .title("PostService test")
                 .content("test content...")
-                .puuid(my_puuid)
+                .memberId(1L)
                 .regDate(LocalDateTime.now())
                 .modDate(LocalDateTime.now())
                 .build();
@@ -61,11 +62,11 @@ class PostServiceImplTest {
         Post post = Post.builder()
                 .title(postDto.getTitle())
                 .content(postDto.getContent())
-                .userAccount(userAccount)
+                .member(member)
                 .build();
 
-        given(userAccountRepository.findById(my_puuid)).willReturn(Optional.of(userAccount));
-        given(postMapper.postDTOToPost(postDto, userAccount)).willReturn(post);
+        given(memberRepository.findById(1L)).willReturn(Optional.of(member));
+        given(postMapper.postDTOToPost(postDto, member)).willReturn(post);
         given(postRepository.save(post)).willReturn(post);
         given(postMapper.postToPostDTO(post)).willReturn(postDto);
 
@@ -79,8 +80,8 @@ class PostServiceImplTest {
                 .hasFieldOrPropertyWithValue("title", "PostService test")
                 .hasFieldOrPropertyWithValue("content", "test content...");
 
-        then(userAccountRepository).should().findById(my_puuid);
-        then(postMapper).should().postDTOToPost(postDto, userAccount);
+        then(memberRepository).should().findById(1L);
+        then(postMapper).should().postDTOToPost(postDto, member);
         then(postRepository).should().save(post);
         then(postMapper).should().postToPostDTO(post);
     }
@@ -91,7 +92,7 @@ class PostServiceImplTest {
         PostDTO postDto = PostDTO.builder()
                 .title("[test]PostServiceImplTest... >>> UpdatePostServiceImplTest...")
                 .content("Post Updated in PostServiceImpl Layer")
-                .puuid(my_puuid)
+                .memberId(1L)
                 .build();
 //        postService.update(postDto);
     }
@@ -101,7 +102,7 @@ class PostServiceImplTest {
         PostDTO postDto = PostDTO.builder()
                 .title("[test]WrongAccount....")
                 .content("Wrong user request...")
-                .puuid(null)
+                .memberId(null)
                 .build();
 //        postService.update(postDto);
     }

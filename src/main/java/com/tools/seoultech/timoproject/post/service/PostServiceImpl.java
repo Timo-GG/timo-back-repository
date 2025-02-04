@@ -2,15 +2,15 @@ package com.tools.seoultech.timoproject.post.service;
 
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
+import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
-import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
 
-import com.tools.seoultech.timoproject.post.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -30,20 +30,19 @@ import java.util.function.Function;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
 
-    private final UserAccountRepository userAccountRepository;
+    private final MemberRepository memberRepository;
     private final PostMapper postMapper;
 
     public PostDTO entityToDto(Post post) {
         return postMapper.postToPostDTO(post);
     }
     public Post dtoToEntity(PostDTO postDTO) {
-        UserAccount userAccount = userAccountRepository.findById(postDTO.getPuuid()).orElseThrow(() -> new GeneralException("없음."));
-        return postMapper.postDTOToPost(postDTO, userAccount);
+        Member member = memberRepository.findById(postDTO.getMemberId()).orElseThrow(() -> new GeneralException("없음."));
+        return postMapper.postDTOToPost(postDTO, member);
     }
     public Post dtoRequestToEntity(PostDtoRequest postDTO) {
-        UserAccount userAccount = userAccountRepository.findById(postDTO.getPuuid()).orElseThrow(() -> new GeneralException("없음."));
-//        return Post.builder().title(postDTO.getTitle()).content(postDTO.getContent()).userAccount(userAccount).build();
-        return postMapper.postDTORequestToPost(postDTO, userAccount);
+        Member member = memberRepository.findById(postDTO.getMemberId()).orElseThrow(() -> new GeneralException("없음."));
+        return postMapper.postDTORequestToPost(postDTO, member);
     }
     public PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request){
         Pageable pageable = request.getPageable(Sort.by("id").descending());
@@ -75,12 +74,13 @@ public class PostServiceImpl implements PostService {
     public PostDTO update(PostDTO postDto){
         Optional<Post> optionalPost = postRepository.findById(postDto.getId());
 
+        //TODO: post에 updatePost 메서드 추가 필요. 지금에서는 BaseEntity가 새로 생성되서 안됨.
         if(optionalPost.isPresent()){
             Post newPost = Post.builder()
                     .id(postDto.getId())
                     .title(postDto.getTitle())
                     .content(postDto.getContent())
-                    .userAccount(userAccountRepository.findById(postDto.getPuuid()).get())
+                    .member(memberRepository.findById(postDto.getMemberId()).get())
                     .build();
             return entityToDto(postRepository.save(newPost));
         }

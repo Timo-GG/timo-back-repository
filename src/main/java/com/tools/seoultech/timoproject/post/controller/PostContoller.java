@@ -20,8 +20,8 @@ public class PostContoller {
 
     @GetMapping("")
     public String showList(){
-        log.info("Redirect:/posts/fragment");
-        return "redirect:/posts/fragment";
+        log.info("Redirect:/framer/posts/fragment");
+        return "redirect:/framer/posts/fragment";
     }
     @GetMapping("fragment")
     public void showList(PageDTO.Request dto, Model model){

@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
 
+@Deprecated
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
