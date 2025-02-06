@@ -1,6 +1,5 @@
 package com.tools.seoultech.timoproject.match.domain;
 
-import com.tools.seoultech.timoproject.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,10 +36,6 @@ public class UserInfo {
 
     @Enumerated(EnumType.STRING)
     private PlayStyle playStyle;
-
-    // TODO : 양방향 관계 필요한지 논의
-    @OneToOne(mappedBy = "userInfo")
-    private Member member;
 
     @Builder
     public UserInfo(String introduce, GameMode gameMode, PlayPosition playPosition,
