@@ -1,3 +1,8 @@
+DELETE FROM social_account;
+DELETE FROM matching_option;
+DELETE FROM comment;
+DELETE FROM post;
+DELETE FROM member;
 -- Insert members
 INSERT INTO member (member_id, email, username, role, player_name, player_tag, reg_date, mod_date)
 VALUES
@@ -23,3 +28,19 @@ INSERT INTO matching_option (match_option_id, member_id, introduce, age, gender,
 VALUES
 (1, 1, '안녕하세요, 같이 랭크 게임해요!', 'ADULT', 'MALE', 'ENABLED', 'HARDCORE', 'NIGHT', 'RANK'),
 (2, 2, '캐주얼하게 게임 즐겨요!', 'ADULT', 'FEMALE', 'DISABLED', 'FUN', 'AFTERNOON', 'NORMAL');
+
+-- Insert post
+INSERT INTO post (post_id, title, content, member_id, view_count, category, mod_date, reg_date)
+VALUES
+(1, '테스트 제목: 1', '테스트 내용...1', 1, 50, 'NORMAL', now(), now()),
+(2, '테스트 제목: 2', '테스트 내용...2', 2, 100, 'NORMAL', now(), now()),
+(3, '테스트 제목: 3', '테스트 내용...3', 3, 150, 'NORMAL', now(), now());
+-- Insert comment
+INSERT INTO comment (comment_id, member_id, post_id, content)
+VALUES
+(1, 5, 1, '테스트 댓글 내용...1'),
+(2, 4, 2, '테스트 댓글 내용...2'),
+(3, 3, 2, '테스트 댓글 내용...3'),
+(4, 2, 3, '테스트 댓글 내용...4'),
+(5, 1, 3, '테스트 댓글 내용...5');
+-- Insert Tag
