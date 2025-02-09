@@ -1,0 +1,105 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<meta charset="UTF-8">
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<head>
+    <title>멤버 수정</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>멤버 수정</h1>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <form data-toggle="validator" role="form" th:object="${member}" th:action="@{/members/save}" method="post">
+            <div class="box-body">
+                <input type="hidden" th:field="*{id}"/>
+
+                <div class="form-group">
+                    <label for="Lastname">이름</label>
+                    <input type="text" required="true" class="form-control" th:field="*{username}" id="lastname" />
+                </div>
+                <div class="form-group">
+                    <label for="email">이메일</label>
+                    <input type="email" required="true" class="form-control" th:field="*{email}" id="email" />
+                </div>
+                <div class="form-group">
+                    <label for="player">플레이어 이름 # 태그</label>
+                    <input type="text" required="true" class="form-control"
+                           th:value="${member.playerName} + ' # ' + ${member.playerTag}"
+                           id="player" name="player" />
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select class="form-control" th:field="*{role}" id="role">
+                        <option value="USER" th:selected="${role == 'USER'}">USER</option>
+                        <option value="ADMIN" th:selected="${role == 'ADMIN'}">ADMIN</option>
+                    </select>
+                </div>
+            </div>
+            <div class="box-footer">
+                <button class="btn btn-primary" type="submit">저장</button>
+            </div>
+        </form>
+    </div>
+
+
+    <h3>작성한 글 목록</h3>
+    <div class="box">
+    <!-- User's Posts -->
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>제목</th>
+                <th>내용</th>
+                <th>작성 시간</th>
+                <th>옵션</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="post : ${member.posts}" th:id="'post-' + ${post.id}">
+                <td th:text="${post.id}"></td>
+                <td th:text="${post.title}"></td>
+                <td th:text="${post.content}"></td>
+                <td th:text="${#temporals.format(post.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td>
+                    <a th:href="@{/admin/posts/delete/{id}(id=${post.id})}"
+                       class="btn btn-danger">삭제</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3>댓글 목록</h3>
+    <div class="box">
+        <!-- User's Comments -->
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>게시글 제목</th>
+                <th>댓글 내용</th>
+                <th>작성 시간</th>
+                <th>옵션</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="comment : ${member.comments}">
+                <td th:text="${comment.id}"></td>
+                <td th:text="${comment.post.title}"></td>
+                <td th:text="${comment.content}"></td>
+                <td th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td>
+                    <a th:href="@{/admin/comments/delete/{postId}/{id}(postId=${comment.post.id}, id=${comment.id})}"
+                       class="btn btn-danger">삭제</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

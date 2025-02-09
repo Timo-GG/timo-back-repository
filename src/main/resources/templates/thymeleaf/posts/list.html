@@ -1,0 +1,52 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>게시글 관리</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>게시글 관리</h1>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-body no-padding">
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>게시글</th>
+                    <th>내용</th>
+                    <th>댓글 수</th>
+                    <th>작성자</th>
+                    <th>가입날짜</th>
+                    <th>수정날짜</th>
+                    <th>옵션</th>
+                </tr>
+                <tr th:each="row : ${list}" th:onclick="|location.href='@{/admin/posts/edit/{id}(id=${row.id})}'|" style="cursor: pointer;">
+                    <td th:text="${row.id}"></td>
+                    <td th:text="${row.title}"></td>
+                    <td th:text="${row.content}"></td>
+                    <td th:text="${row.comments.size()}"></td> <!-- 댓글 수 표시 -->
+                    <td th:text="${row.member.username}"></td>
+                    <td th:text="${row.regDate}"></td>
+                    <td th:text="${row.modDate}"></td>
+                    <td>
+                        <a th:href="${'/admin/posts/delete/' + row.id}" class="btn btn-primary">삭제</a>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+        <div class="box-footer clearfix">
+            <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="/admin/posts/1">처음</a></li>
+                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
+                    <a th:href="${'/admin/posts/' + p}" th:text="${p}"></a>
+                </li>
+                <li><a th:href="${'/admin/posts/' + endIndex}">마지막</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

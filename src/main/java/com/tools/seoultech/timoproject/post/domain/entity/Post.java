@@ -54,5 +54,6 @@ public class Post extends BaseEntity {
         if (content != null && !content.isBlank()) {
             this.content = content;
         }
+
     }
 }
