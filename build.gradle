@@ -8,12 +8,7 @@ group = 'com.tools.seoultech'
 version = '0.0.1-SNAPSHOT'
 
 tasks.withType(Test) {
-    // 테스트 실행하지 않음
-    enabled = false
-    reports {
-        html.required.set(false)
-        junitXml.required.set(false)
-    }
+    enabled = true
 }
 
 java {
@@ -50,6 +45,8 @@ dependencies {
 
     // Tools
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0'
+
     implementation 'org.projectlombok:lombok'
     implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.5.Final'
     implementation group: 'org.projectlombok', name: 'lombok-mapstruct-binding', version: '0.2.0'
@@ -83,13 +80,17 @@ dependencies {
 
     // Socket.io
     implementation 'com.corundumstudio.socketio:netty-socketio:2.0.12'
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    testImplementation "io.socket:socket.io-client:2.0.1"
+    testImplementation "org.json:json:20230227"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.withType(Test) {
-    // 테스트 실행하지 않음
-    enabled = false
-}
