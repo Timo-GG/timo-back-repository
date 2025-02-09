@@ -1,0 +1,57 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>Clients</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>멤버 관리</h1>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+<!--        <div class="box-header with-border">-->
+<!--            <h3 class="box-title">멤버 리스트</h3>-->
+<!--            <div class="box-tools pull-right">-->
+<!--                <a href="/customers/add" type="button" class="btn btn-box-tool"><i class="fa fa-plus"></i></a>-->
+<!--                <br clear="all" />-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="box-body no-padding">
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>플레이어 이름</th>
+                    <th>가입날짜</th>
+                    <th>수정날짜</th>
+                    <th>옵션</th>
+                </tr>
+                <tr th:each="row : ${list}" th:onclick="|location.href='@{/admin/members/edit/{id}(id=${row.id})}'|" style="cursor: pointer;">
+                    <td th:text="${row.id}"></td>
+                    <td th:text="${row.username}"></td>
+                    <td th:text="${row.email}"></td>
+                    <td th:text="${row.playerName + ' # ' + row.playerTag}"></td>
+                    <td th:text="${#temporals.format(row.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${#temporals.format(row.modDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td>
+                        <a th:href="${'/admin/members/delete/' + row.id}" class="btn btn-primary">삭제</a>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+        <div class="box-footer clearfix">
+            <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="/admin/members/1">처음</a></li>
+                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
+                    <a th:href="${'/admin/members/' + p}" th:text="${p}"></a>
+                </li>
+                <li><a th:href="${'/admin/members/' + endIndex}">마지막</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

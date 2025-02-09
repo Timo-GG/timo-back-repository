@@ -47,12 +47,9 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    public void updatePost(String title, String content) {
-        if (title != null && !title.isBlank()) {
-            this.title = title;
-        }
-        if (content != null && !content.isBlank()) {
-            this.content = content;
-        }
+    public void update(String title, String content, Category category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
     }
 }
