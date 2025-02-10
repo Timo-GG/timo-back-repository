@@ -11,13 +11,13 @@ public class RatingServiceImpl implements RatingService{
         }
 
         @Override
-        public void saveRating(RatingReq ratingReq) {
+        public void saveRating(RatingRequest RatingRequest) {
 
             Rating rating = Rating.builder()
-                    .score(ratingReq.score())
-                    .attitude(ratingReq.attitude())
-                    .speech(ratingReq.speech())
-                    .skill(ratingReq.skill())
+                    .score(RatingRequest.score())
+                    .attitude(RatingRequest.attitude())
+                    .speech(RatingRequest.speech())
+                    .skill(RatingRequest.skill())
                     .build();
 
             ratingRepository.save(rating);
@@ -29,9 +29,9 @@ public class RatingServiceImpl implements RatingService{
         }
 
     @Override
-    public RatingRes getRating(Long id) {
+    public RatingResponse getRating(Long id) {
         Rating rating = ratingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Rating not found with id: " + id));
-        return new RatingRes(rating.getId(), rating.getScore(), rating.getAttitude(), rating.getSpeech(), rating.getSkill());
+        return new RatingResponse(rating.getId(), rating.getMember().getId(), rating.getDuo().getId(), rating.getScore(), rating.getAttitude(), rating.getSpeech(), rating.getSkill());
     }
 }

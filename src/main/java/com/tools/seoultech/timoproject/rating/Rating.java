@@ -1,5 +1,7 @@
 package com.tools.seoultech.timoproject.rating;
 
+import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.member.domain.SocialAccount;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,13 +32,28 @@ public class Rating {
     @Enumerated(value = EnumType.STRING)
     private Skill skill;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "duo_id", nullable = false)
+    private Member duo;
+
     @Builder
-    public Rating(BigDecimal score, Attitude attitude, Speech speech, Skill skill) {
+    public Rating(BigDecimal score, Attitude attitude, Speech speech, Skill skill, Member member, Member duo) {
         this.score = score;
         this.attitude = attitude;
         this.speech = speech;
         this.skill = skill;
+        this.member = member;
+        this.duo = duo;
     }
+
+    public void linkMember(Member member) {
+        this.member = member;
+    }
+
     public enum Attitude {
         GOOD,
         TRY_HARD,
