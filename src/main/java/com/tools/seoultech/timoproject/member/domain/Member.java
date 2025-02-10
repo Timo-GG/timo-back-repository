@@ -3,12 +3,15 @@ package com.tools.seoultech.timoproject.member.domain;
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.match.domain.DuoInfo;
 import com.tools.seoultech.timoproject.match.domain.UserInfo;
+import com.tools.seoultech.timoproject.rating.Rating;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +60,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<SocialAccount> socialAccounts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Rating> ratings = new ArrayList<>();
+
     public void linkSocialAccount(SocialAccount socialAccount) {
         this.socialAccounts.add(socialAccount);
         socialAccount.linkMember(this);
@@ -66,5 +72,18 @@ public class Member extends BaseEntity {
     public void linkRiotInfo(String playerName, String playerTag) {
         this.playerName = playerName;
         this.playerTag = playerTag;
+    }
+
+    public BigDecimal calculateAverageRating(){
+        if(ratings.isEmpty()){
+            return BigDecimal.ZERO;
+        }
+        BigDecimal sum = ratings.stream().map(Rating::getScore).reduce(BigDecimal::add).get();
+        return sum.divide(BigDecimal.valueOf(ratings.size()), RoundingMode.HALF_UP);
+    }
+
+    public void linkRating(Rating rating) {
+        this.ratings.add(rating);
+        rating.linkMember(this);
     }
 }
