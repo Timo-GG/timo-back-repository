@@ -1,7 +1,8 @@
 DELETE FROM social_account;
 DELETE FROM comment;
 DELETE FROM post;
-DELETE FROM member;
+DELETE FROM rating;   -- rating 테이블을 먼저 삭제
+DELETE FROM member;   -- 그 후 member 삭제
 -- Insert Data
 INSERT INTO member (member_id, email, username, role, player_name, player_tag, reg_date, mod_date)
 VALUES
