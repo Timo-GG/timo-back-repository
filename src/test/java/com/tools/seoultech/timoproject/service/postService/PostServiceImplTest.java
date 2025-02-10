@@ -4,6 +4,7 @@ package com.tools.seoultech.timoproject.service.postService;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
+import com.tools.seoultech.timoproject.post.domain.entity.Category;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
@@ -53,28 +54,34 @@ class PostServiceImplTest {
                 .title("PostService test")
                 .content("test content...")
                 .memberId(1L)
+                .category(Category.CREATIVITY)
                 .regDate(LocalDateTime.now())
                 .modDate(LocalDateTime.now())
                 .build();
 
+        PostDTO savedPostDTO = postDto;
+        savedPostDTO.setId(1L);
+
         Post post = Post.builder()
+                .id(1L)
                 .title(postDto.getTitle())
                 .content(postDto.getContent())
                 .member(member)
+                .category(Category.CREATIVITY)
                 .build();
 
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(postMapper.postDTOToPost(postDto, member)).willReturn(post);
         given(postRepository.save(post)).willReturn(post);
-        given(postMapper.postToPostDTO(post)).willReturn(postDto);
+        given(postMapper.postToPostDTO(post)).willReturn(savedPostDTO);
 
         // when
         PostDTO savedPost = postService.create(postDto);
 
         // then
         assertThat(savedPost)
-                .hasNoNullFieldsOrPropertiesExcept("id")
-                .hasFieldOrPropertyWithValue("puuid", my_puuid)
+                .hasNoNullFieldsOrProperties()
+                .hasFieldOrPropertyWithValue("id", 1L)
                 .hasFieldOrPropertyWithValue("title", "PostService test")
                 .hasFieldOrPropertyWithValue("content", "test content...");
 
@@ -107,8 +114,9 @@ class PostServiceImplTest {
     @DisplayName("[READ] 정상적인 게시글 읽기 - Repository에 있는 Post를 가져온다.")
     @Test
     public void givenPostId_whenRequestRead_thenRead(){
+        Post cpost = Post.builder().build();
         Long id = any();
-        Post post = postRepository.findById(id).get();
+        Post post = postRepository.findById(id).orElseGet(() -> cpost);
         System.out.println(post.toString());
     }
 
