@@ -37,11 +37,11 @@ public class PostServiceImpl implements PostService {
         return postMapper.postToPostDTO(post);
     }
     public Post dtoToEntity(PostDTO postDTO) {
-        Member member = memberRepository.findById(postDTO.getMemberId()).orElseThrow(() -> new GeneralException("없음."));
+        Member member = memberRepository.findById(postDTO.memberId()).orElseThrow(() -> new GeneralException("없음."));
         return postMapper.postDTOToPost(postDTO, member);
     }
     public Post dtoRequestToEntity(PostDtoRequest postDTO) {
-        Member member = memberRepository.findById(postDTO.getMemberId()).orElseThrow(() -> new GeneralException("없음."));
+        Member member = memberRepository.findById(postDTO.memberId()).orElseThrow(() -> new GeneralException("없음."));
         return postMapper.postDTORequestToPost(postDTO, member);
     }
     public PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request){
@@ -72,15 +72,15 @@ public class PostServiceImpl implements PostService {
     }
     @Transactional
     public PostDTO update(PostDTO postDto){
-        Optional<Post> optionalPost = postRepository.findById(postDto.getId());
+        Optional<Post> optionalPost = postRepository.findById(postDto.id());
 
         //TODO: post에 updatePost 메서드 추가 필요. 지금에서는 BaseEntity가 새로 생성되서 안됨.
         if(optionalPost.isPresent()){
             Post newPost = Post.builder()
-                    .id(postDto.getId())
-                    .title(postDto.getTitle())
-                    .content(postDto.getContent())
-                    .member(memberRepository.findById(postDto.getMemberId()).get())
+                    .id(postDto.id())
+                    .title(postDto.title())
+                    .content(postDto.content())
+                    .member(memberRepository.findById(postDto.memberId()).get())
                     .build();
             return entityToDto(postRepository.save(newPost));
         }

@@ -1,8 +1,6 @@
 package com.tools.seoultech.timoproject.post.domain.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,15 +13,12 @@ import java.util.stream.IntStream;
 
 public class PageDTO {
     @Builder
-    @Getter
-    @AllArgsConstructor
-    public static class Request {
-        private int page;
-        private int size;
-
+    public static record Request(
+            int page,
+            int size
+    ) {
         public Request() {
-            this.page = 1;
-            this.size = 10;
+            this(1, 10);
         }
         public Pageable getPageable(Sort sort){
             return PageRequest.of(page-1, size, sort);
@@ -33,38 +28,71 @@ public class PageDTO {
         }
     }
     @Builder
-    @Getter
-    @AllArgsConstructor
-    public static class Response<DTO, EN> {
-        private int totalPage, totalSize, cur_page;
-        private int start, end;
-        private boolean prev, next;
-        private List<DTO> dtoList;
-        private List<Integer> pageList;
-
-        public Response(Page<EN> result, Function<EN, DTO> fn) {
-            dtoList = result.stream()
-                    .map(fn)
-                    .collect(Collectors.toList());
-            totalPage = result.getTotalPages();
-            makePageList(result.getPageable());
+    public static record Response<DTO, EN>(
+            int totalPage,
+            int totalSize,
+            int cur_page,
+            int start,
+            int end,
+            boolean prev,
+            boolean next,
+            List<DTO> dtoList,
+            List<Integer> pageList
+    ) {
+        private Response(Page<EN> result, Function<EN, DTO> fn) {
+            this(
+                    result.getTotalPages(), // totalPage
+                    result.getSize(),       // totalSize
+                    result.getPageable().getPageNumber() + 1, // cur_page
+                    calculateStart(result), // start
+                    calculateEnd(result),   // end
+                    calculatePrev(result),  // prev
+                    calculateNext(result),  // next
+                    mapToDTO(result, fn),   // dtoList
+                    calculatePageList(result) // pageList
+            );
         }
-        private void makePageList(Pageable pageable) {
-            this.cur_page = pageable.getPageNumber() + 1;
-            this.totalSize = pageable.getPageSize();
 
-            int tmpEnd = (int)(Math.ceil(this.cur_page/10.0))*10;
-            start = tmpEnd - 9;
-            end = (totalPage > tmpEnd) ? tmpEnd : totalPage;
-            prev = (start > 1);
-            next = (totalPage > tmpEnd);
-
-            pageList = IntStream.rangeClosed(start, end)
-                    .boxed()
-                    .collect(Collectors.toList());
-        }
         public static <EN, DTO> Response of(Page<EN> result, Function<EN, DTO> fn){
             return new Response(result, fn);
+        }
+
+        private static <EN> int calculateStart(Page<EN> result) {
+            int curPage = result.getPageable().getPageNumber() + 1;
+            int tmpEnd = (int) (Math.ceil(curPage / 10.0)) * 10;
+            return tmpEnd - 9;
+        }
+
+        private static <EN> int calculateEnd(Page<EN> result) {
+            int curPage = result.getPageable().getPageNumber() + 1;
+            int tmpEnd = (int) (Math.ceil(curPage / 10.0)) * 10;
+            int totalPage = result.getTotalPages();
+            return (totalPage > tmpEnd) ? tmpEnd : totalPage;
+        }
+
+        private static <EN> boolean calculatePrev(Page<EN> result) {
+            int start = calculateStart(result);
+            return start > 1;
+        }
+
+        private static <EN> boolean calculateNext(Page<EN> result) {
+            int totalPage = result.getTotalPages();
+            int tmpEnd = (int) (Math.ceil((result.getPageable().getPageNumber() + 1) / 10.0)) * 10;
+            return totalPage > tmpEnd;
+        }
+
+        private static <EN, DTO> List<DTO> mapToDTO(Page<EN> result, Function<EN, DTO> fn) {
+            return result.stream()
+                    .map(fn)
+                    .collect(Collectors.toList());
+        }
+
+        private static <EN> List<Integer> calculatePageList(Page<EN> result) {
+            int start = calculateStart(result);
+            int end = calculateEnd(result);
+            return IntStream.rangeClosed(start, end)
+                    .boxed()
+                    .collect(Collectors.toList());
         }
     }
 }
