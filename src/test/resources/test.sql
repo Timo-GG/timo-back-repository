@@ -1,5 +1,4 @@
 DELETE FROM social_account;
-DELETE FROM matching_option;
 DELETE FROM comment;
 DELETE FROM post;
 DELETE FROM member;
