@@ -3,6 +3,8 @@ package com.tools.seoultech.timoproject.member.domain;
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.match.domain.DuoInfo;
 import com.tools.seoultech.timoproject.match.domain.UserInfo;
+import com.tools.seoultech.timoproject.post.domain.entity.Comment;
+import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.rating.Rating;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,6 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -44,6 +47,12 @@ public class Member extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "duo_info_id")
     private DuoInfo duoInfo;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
 
     public void updateMatchOption(UserInfo userInfo, DuoInfo duoInfo) {
         this.userInfo = userInfo;
@@ -85,5 +94,12 @@ public class Member extends BaseEntity {
     public void linkRating(Rating rating) {
         this.ratings.add(rating);
         rating.linkMember(this);
+    }
+
+    public void updateToDummy() {
+        this.username = "이름없음";
+        this.playerName = "정보없음";
+        this.playerTag = "정보없음";
+        this.email = "anonymous_" + UUID.randomUUID().toString() + "@anonymous.com";
     }
 }
