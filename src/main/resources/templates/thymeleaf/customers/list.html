@@ -28,7 +28,7 @@
                     <th>수정날짜</th>
                     <th>옵션</th>
                 </tr>
-                <tr th:each="row : ${list}" th:onclick="|location.href='@{/admin/members/edit/{id}(id=${row.id})}'|" style="cursor: pointer;">
+                <tr th:each="row : ${list}" th:onclick="|location.href='@{/admin/v1/members/edit/{id}(id=${row.id})}'|" style="cursor: pointer;">
                     <td th:text="${row.id}"></td>
                     <td th:text="${row.username}"></td>
                     <td th:text="${row.email}"></td>
@@ -36,7 +36,7 @@
                     <td th:text="${#temporals.format(row.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td th:text="${#temporals.format(row.modDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td>
-                        <a th:href="${'/admin/members/delete/' + row.id}" class="btn btn-primary">삭제</a>
+                        <a th:href="${'/admin/v1/members/delete/' + row.id}" class="btn btn-primary">삭제</a>
                     </td>
 
                 </tr>
@@ -44,11 +44,11 @@
         </div>
         <div class="box-footer clearfix">
             <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="/admin/members/1">처음</a></li>
+                <li><a href="/admin/v1/members/1">처음</a></li>
                 <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
-                    <a th:href="${'/admin/members/' + p}" th:text="${p}"></a>
+                    <a th:href="${'/admin/v1/members/' + p}" th:text="${p}"></a>
                 </li>
-                <li><a th:href="${'/admin/members/' + endIndex}">마지막</a></li>
+                <li><a th:href="${'/admin/v1/members/' + endIndex}">마지막</a></li>
             </ul>
         </div>
     </div>
