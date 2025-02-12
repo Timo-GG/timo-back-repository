@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/v1")
 @RequiredArgsConstructor
 @Slf4j
 public class AdminController {
@@ -30,7 +30,7 @@ public class AdminController {
     public String index(HttpSession session, Model model) {
         log.info("session: {}", session.getAttribute("isAdmin"));
         if (session.getAttribute("isAdmin") == null) {
-            return "redirect:/admin/login";
+            return "redirect:/admin/v1/login";
         }
         List<AdminLog> logs = adminLogRepository.findAll();
         model.addAttribute("logs", logs);
@@ -40,7 +40,7 @@ public class AdminController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/admin/login";
+        return "redirect:/admin/v1/login";
     }
 
     @GetMapping("/login")
@@ -57,9 +57,9 @@ public class AdminController {
         if (adminService.authenticate(username, password)) {
             // 세션에 ADMIN 정보 저장
             session.setAttribute("isAdmin", true);
-            return "redirect:/admin"; // 로그인 성공 시 대시보드로 이동
+            return "redirect:/admin/v1"; // 로그인 성공 시 대시보드로 이동
         } else {
-            return "redirect:/admin/login?error=true"; // 로그인 실패 시 로그인 페이지로 리다이렉트
+            return "redirect:/admin/v1/login?error=true"; // 로그인 실패 시 로그인 페이지로 리다이렉트
         }
     }
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/admin/members")
+@RequestMapping("/admin/v1/members")
 @RequiredArgsConstructor
 @LoginRequired
 public class AmemberController {
@@ -21,7 +21,7 @@ public class AmemberController {
     // 회원 목록 첫 페이지로 리다이렉트
     @GetMapping
     public String index() {
-        return "redirect:/admin/members/1";
+        return "redirect:/admin/v1/members/1";
     }
 
     // 특정 페이지의 회원 목록 보기
@@ -60,13 +60,13 @@ public class AmemberController {
     public String save(Member member, final RedirectAttributes ra) {
         memberService.save(member);
         ra.addFlashAttribute("successFlash", "회원 정보가 성공적으로 저장되었습니다.");
-        return "redirect:/admin/members";
+        return "redirect:/admin/v1/members";
     }
 
     // 회원 삭제
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         memberService.delete(id);
-        return "redirect:/admin/members";
+        return "redirect:/admin/v1/members";
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/admin/posts")
+@RequestMapping("/admin/v1/posts")
 @RequiredArgsConstructor
 @LoginRequired
 public class ApostController {
@@ -21,7 +21,7 @@ public class ApostController {
     // 게시글 목록 첫 페이지로 리다이렉트
     @GetMapping
     public String index() {
-        return "redirect:/admin/posts/1";
+        return "redirect:/admin/v1/posts/1";
     }
 
     // 특정 페이지의 게시글 목록 보기
@@ -67,7 +67,7 @@ public class ApostController {
             ra.addFlashAttribute("errorFlash", "게시글 저장 중 오류가 발생했습니다: " + e.getMessage());
             e.printStackTrace(); // 오류 로그 출력
         }
-        return "redirect:/admin/posts";
+        return "redirect:/admin/v1/posts";
     }
 
 
@@ -76,6 +76,6 @@ public class ApostController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         postService.delete(id);
-        return "redirect:/admin/posts";
+        return "redirect:/admin/v1/posts";
     }
 }
