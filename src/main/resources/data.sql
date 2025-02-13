@@ -1,6 +1,16 @@
+DELETE FROM social_account;
+DELETE FROM matching_option;
+DELETE FROM user_info;
+DELETE FROM duo_info;
+
+DELETE FROM comment;
+DELETE FROM post;
+DELETE FROM member;
+
 -------------------------------------------------
 -- 1. MEMBER 테이블
 -------------------------------------------------
+
 INSERT INTO member (member_id, email, username, role, player_name, player_tag, reg_date, mod_date)
 VALUES
 (1, 'test1@example.com', 'hyunuk', 'MEMBER', "Wooggie", "#KR1", NOW(), NOW()),
@@ -59,3 +69,31 @@ INSERT INTO duo_info (duo_info_id, duo_play_position, duo_play_style) VALUES
   (8,  'TOP',           'SUB_ACCOUNT'),
   (9,  'JUNGLE',        'NO_MATTER'),
   (10, 'MID',           'HARDCORE');
+
+-------------------------------------------------
+-- 5. Post 테이블
+-------------------------------------------------
+INSERT INTO post (post_id, title, content, member_id, view_count, category, mod_date, reg_date)
+VALUES
+(1, '테스트 제목: 1', '테스트 내용...1', 1, 50, 'NORMAL', now(), now()),
+(2, '테스트 제목: 2', '테스트 내용...2', 2, 100, 'NORMAL', now(), now()),
+(3, '테스트 제목: 3', '테스트 내용...3', 3, 150, 'NORMAL', now(), now());
+
+-------------------------------------------------
+-- 6. Comment 테이블
+-------------------------------------------------
+INSERT INTO comment (comment_id, member_id, post_id, content)
+VALUES
+(1, 5, 1, '테스트 댓글 내용...1'),
+(2, 4, 2, '테스트 댓글 내용...2'),
+(3, 3, 2, '테스트 댓글 내용...3'),
+(4, 2, 3, '테스트 댓글 내용...4'),
+(5, 1, 3, '테스트 댓글 내용...5');
+
+-------------------------------------------------
+-- 7. Rating 테이블
+-------------------------------------------------
+INSERT INTO rating (score, attitude, speech, skill, member_id, duo_id)
+VALUES
+    (4.5, 'GOOD', 'MANNERS', 'LEARNING', 1, 2),
+    (2.5, 'BAD', 'AGGRESSIVE', 'NORMAL', 1, 2);

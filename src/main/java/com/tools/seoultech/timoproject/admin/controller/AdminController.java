@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/v1")
 @RequiredArgsConstructor
 @Slf4j
 public class AdminController {
@@ -28,39 +28,41 @@ public class AdminController {
     @LoginRequired
     @GetMapping("")
     public String index(HttpSession session, Model model) {
-        log.info("session: {}", session.getAttribute("isAdmin"));
         if (session.getAttribute("isAdmin") == null) {
-            return "redirect:/admin/login";
+            return "redirect:/admin/v1/login";
         }
         List<AdminLog> logs = adminLogRepository.findAll();
         model.addAttribute("logs", logs);
-        return "dashboard/index";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/admin/login";
+        return "thymeleaf/dashboard/index"; // Thymeleaf 템플릿: dashboard/index.html
     }
 
     @GetMapping("/login")
-    public String adminLogin(@RequestParam(required = false) String error, org.springframework.ui.Model model) {
+    public String adminLogin(@RequestParam(required = false) String error, Model model) {
         if (error != null) {
             model.addAttribute("error", "Invalid username or password");
         }
-        return "login"; // login.html 렌더링
+
+        return "thymeleaf/login"; // 관리자 전용 로그인 페이지 템플릿: login.html
     }
 
     @PostMapping("/login")
     public String processLogin(@RequestParam String username, @RequestParam String password, HttpSession session) {
-        // AdminService를 사용하여 인증 처리
+        log.info("🔵 [LOGIN REQUEST] Received login attempt - username: {}, password: {}", username, password);
+
         if (adminService.authenticate(username, password)) {
-            // 세션에 ADMIN 정보 저장
+            log.info("🟢 [LOGIN SUCCESS] Admin logged in successfully: {}", username);
             session.setAttribute("isAdmin", true);
-            return "redirect:/admin"; // 로그인 성공 시 대시보드로 이동
+            return "redirect:/admin/v1";
         } else {
-            return "redirect:/admin/login?error=true"; // 로그인 실패 시 로그인 페이지로 리다이렉트
+            log.warn("🔴 [LOGIN FAILED] Invalid credentials for username: {}", username);
+            return "redirect:/admin/v1/login?error=true";
         }
     }
 
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/admin/v1/login";
+    }
 }
