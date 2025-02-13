@@ -67,8 +67,7 @@ dependencies {
 
     // MiniDev
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
-    implementation group: 'net.minidev', name: 'json-smart', version: '2.5.1'
-
+    implementation group: 'net.minidev', name: 'json-smart', version: '2.4.10'
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
@@ -81,17 +80,13 @@ dependencies {
     // Socket.io
     implementation 'com.corundumstudio.socketio:netty-socketio:2.0.12'
 
-    // Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     testImplementation "io.socket:socket.io-client:2.0.1"
     testImplementation "org.json:json:20230227"
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
-
-
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
-

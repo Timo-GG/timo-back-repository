@@ -6,10 +6,8 @@ import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Category;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
-import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
-import com.tools.seoultech.timoproject.post.repository.UserAccountRepository;
 import com.tools.seoultech.timoproject.post.service.PostServiceImpl;
 
 import org.junit.jupiter.api.DisplayName;

@@ -5,7 +5,6 @@ import com.tools.seoultech.timoproject.global.config.QueryDSLConfig;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
-import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,9 +38,9 @@ class PostRepositoryTest {
     @Autowired
     private JPAQueryFactory queryFactory;
     @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @BeforeEach
     public void beforeEach(){ // DataLoad
