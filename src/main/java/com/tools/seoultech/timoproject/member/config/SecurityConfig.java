@@ -38,24 +38,17 @@ public class SecurityConfig {
     public SecurityFilterChain userSecurityFilterChain(HttpSecurity http,
                                                        com.tools.seoultech.timoproject.member.service.OAuth2MemberService oAuth2MemberService) throws Exception {
         http
-                // API 관련 CSRF 예외
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/v1/**"))
-                // 폼 로그인 및 HTTP 기본 인증 비활성화 (OAuth2 전용)
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/**"))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                // OAuth2 로그인 설정 (일반 사용자용)
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oAuth2MemberService)
-                        )
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2MemberService))
+                        .defaultSuccessUrl("/", true)  // ✅ 로그인 성공 후 '/' 로 강제 이동
                 )
-                // URL별 접근 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/oauth2/**", "/login/**").permitAll()  // 로그인 관련 및 공개 URL 허용
-                        .requestMatchers("/api/v1/**").authenticated()                 // API 요청은 인증 필요
-                        // 정적 리소스 접근 허용
+                        .requestMatchers("/", "/oauth2/**", "/login/**").permitAll()
+                        .requestMatchers("/api/v1/**").authenticated()
                         .requestMatchers(
                                 "/bower_components/**",
                                 "/dist/**",
@@ -69,4 +62,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
