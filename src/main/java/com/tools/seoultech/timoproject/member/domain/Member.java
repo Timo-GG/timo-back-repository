@@ -3,20 +3,14 @@ package com.tools.seoultech.timoproject.member.domain;
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.match.domain.DuoInfo;
 import com.tools.seoultech.timoproject.match.domain.UserInfo;
-import com.tools.seoultech.timoproject.post.domain.entity.Comment;
-import com.tools.seoultech.timoproject.post.domain.entity.Post;
-import com.tools.seoultech.timoproject.rating.Rating;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -48,12 +42,6 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "duo_info_id")
     private DuoInfo duoInfo;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Comment> comments = new ArrayList<>();
-
     public void updateMatchOption(UserInfo userInfo, DuoInfo duoInfo) {
         this.userInfo = userInfo;
         this.duoInfo = duoInfo;
@@ -69,9 +57,6 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<SocialAccount> socialAccounts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Rating> ratings = new ArrayList<>();
-
     public void linkSocialAccount(SocialAccount socialAccount) {
         this.socialAccounts.add(socialAccount);
         socialAccount.linkMember(this);
@@ -81,25 +66,5 @@ public class Member extends BaseEntity {
     public void linkRiotInfo(String playerName, String playerTag) {
         this.playerName = playerName;
         this.playerTag = playerTag;
-    }
-
-    public BigDecimal calculateAverageRating(){
-        if(ratings.isEmpty()){
-            return BigDecimal.ZERO;
-        }
-        BigDecimal sum = ratings.stream().map(Rating::getScore).reduce(BigDecimal::add).get();
-        return sum.divide(BigDecimal.valueOf(ratings.size()), RoundingMode.HALF_UP);
-    }
-
-    public void linkRating(Rating rating) {
-        this.ratings.add(rating);
-        rating.linkMember(this);
-    }
-
-    public void updateToDummy() {
-        this.username = "이름없음";
-        this.playerName = "정보없음";
-        this.playerTag = "정보없음";
-        this.email = "anonymous_" + UUID.randomUUID().toString() + "@anonymous.com";
     }
 }

@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tools.seoultech.timoproject.global.config.TestSecurityConfig;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
 import com.tools.seoultech.timoproject.post.service.PostServiceImpl;
@@ -11,7 +10,6 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(PostApiController.class)
 @ContextConfiguration(classes = PostApiController.class)
-@Import(TestSecurityConfig.class)
 class PostApiControllerTest {
     @MockBean
     private PostServiceImpl postService;
@@ -47,10 +44,10 @@ class PostApiControllerTest {
                 .id(postId)
                 .title("Title")
                 .content("Content")
-                .memberId(1L)
+                .puuid("userUuid")
                 .build();
 
-
+        // BDDMockito 스타일
         given(postService.read(postId)).willReturn(postDTO);
 
         mockMvc.perform(get("/api/postApi/read/{postId}", postId))
@@ -68,14 +65,14 @@ class PostApiControllerTest {
                 .id(1L)
                 .title("Title1")
                 .content("Content1")
-                .memberId(1L)
+                .puuid("userUuid1")
                 .build();
 
         PostDTO postDTO2 = PostDTO.builder()
                 .id(2L)
                 .title("Title2")
                 .content("Content2")
-                .memberId(2L)
+                .puuid("userUuid2")
                 .build();
 
         List<PostDTO> postDTOList = List.of(postDTO1, postDTO2);
@@ -96,13 +93,14 @@ class PostApiControllerTest {
         PostDtoRequest postDtoRequest = PostDtoRequest.builder()
                 .title("New Post")
                 .content("This is the content")
-                .memberId(1L)
+                .puuid("userUuid")
                 .build();
 
         PostDTO postDTO = PostDTO.builder()
+                .id(1L)
                 .title("New Post")
                 .content("This is the content")
-                .memberId(2L)
+                .puuid("userUuid")
                 .build();
 
         given(postService.create(postDtoRequest)).willReturn(postDTO);
@@ -123,7 +121,7 @@ class PostApiControllerTest {
                 .id(1L)
                 .title("Updated Title")
                 .content("Updated Content")
-                .memberId(1L)
+                .puuid("userUuid")
                 .build();
 
         given(postService.update(postDTO)).willReturn(postDTO);

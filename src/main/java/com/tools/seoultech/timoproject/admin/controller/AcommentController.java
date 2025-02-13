@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admin/v1/comments")
+@RequestMapping("/admin/comments")
 @RequiredArgsConstructor
 @LoginRequired
 public class AcommentController {
@@ -20,6 +20,6 @@ public class AcommentController {
     @GetMapping("/delete/{postId}/{id}")
     public String delete(@PathVariable Long postId, @PathVariable Long id) {
         commentService.delete(id);
-        return "redirect:/admin/v1/posts/edit/" + postId;
+        return "redirect:/admin/posts/edit/" + postId;
     }
 }

@@ -25,7 +25,7 @@ public class BasicController {
 
     @GetMapping
     public String goMain(){
-        return "framer/index";
+        return "/framer/index";
     }
 
     @GetMapping("user")

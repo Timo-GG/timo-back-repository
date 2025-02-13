@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "comment")
 @Getter
 @NoArgsConstructor
 public class Comment extends BaseEntity {
@@ -22,11 +21,11 @@ public class Comment extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="post_id", nullable = false)
+    @JoinColumn(name="post_id")
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="member_id", nullable = false)
+    @JoinColumn(name="member_id")
     private Member member;
 
     @Builder
