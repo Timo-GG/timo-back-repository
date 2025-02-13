@@ -1,6 +1,5 @@
 package com.tools.seoultech.timoproject.post.domain.dto;
 
-import com.tools.seoultech.timoproject.post.domain.entity.Category;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +17,6 @@ public class PostDTO {
     private String title;
     private String content;
     private Long memberId;
-    private Category category;
     private LocalDateTime regDate, modDate;
 }
 

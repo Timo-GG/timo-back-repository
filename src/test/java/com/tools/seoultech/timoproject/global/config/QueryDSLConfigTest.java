@@ -7,9 +7,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @TestConfiguration
 @EnableAutoConfiguration
-class QueryDSLConfigTest {
+class QueryDSLTestConfig {
     @PersistenceContext
     private EntityManager entityManager;
 
