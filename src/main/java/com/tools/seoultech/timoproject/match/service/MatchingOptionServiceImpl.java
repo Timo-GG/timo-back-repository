@@ -25,26 +25,26 @@ public class MatchingOptionServiceImpl implements MatchingOptionService {
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberId));
 
         // UserInfo 엔티티 생성
-        UserInfoRequest userInfoReq = request.getUserInfo();
+        UserInfoRequest userInfoReq = request.userInfo();
         UserInfo userInfo = UserInfo.builder()
-                .introduce(userInfoReq.getIntroduce())
-                .gameMode(userInfoReq.getGameMode())
-                .playPosition(userInfoReq.getPlayPosition())
-                .playCondition(userInfoReq.getPlayCondition())
-                .voiceChat(userInfoReq.getVoiceChat())
-                .playStyle(userInfoReq.getPlayStyle())
+                .introduce(userInfoReq.introduce())
+                .gameMode(userInfoReq.gameMode())
+                .playPosition(userInfoReq.playPosition())
+                .playCondition(userInfoReq.playCondition())
+                .voiceChat(userInfoReq.voiceChat())
+                .playStyle(userInfoReq.playStyle())
                 .build();
 
         // DuoInfo 엔티티 생성
-        DuoInfoRequest duoInfoReq = request.getDuoInfo();
+        DuoInfoRequest duoInfoReq = request.duoInfo();
         DuoInfo duoInfo = DuoInfo.builder()
-                .duoPlayPosition(duoInfoReq.getDuoPlayPosition())
-                .duoPlayStyle(duoInfoReq.getDuoPlayStyle())
+                .duoPlayPosition(duoInfoReq.duoPlayPosition())
+                .duoPlayStyle(duoInfoReq.duoPlayStyle())
                 .build();
 
         // Member의 메칭 설정 업데이트
         member.updateMatchOption(userInfo, duoInfo);
-        return new MatchingOptionResponse(member);
+        return MatchingOptionResponse.from(member);
     }
 
     @Override
@@ -52,6 +52,6 @@ public class MatchingOptionServiceImpl implements MatchingOptionService {
     public MatchingOptionResponse getMatchingOption(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberId));
-        return new MatchingOptionResponse(member);
+        return MatchingOptionResponse.from(member);
     }
 }

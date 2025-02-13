@@ -1,15 +1,17 @@
 package com.tools.seoultech.timoproject.match.dto;
 
 import com.tools.seoultech.timoproject.match.domain.DuoInfo;
-import lombok.Getter;
 
-@Getter
-public class DuoInfoResponse {
-    private String duoPlayPosition;
-    private String duoPlayStyle;
+public record DuoInfoResponse(
+        String duoPlayPosition,
+        String duoPlayStyle
+) {
 
-    public DuoInfoResponse(DuoInfo duoInfo) {
-        this.duoPlayPosition = duoInfo.getDuoPlayPosition().name();
-        this.duoPlayStyle = duoInfo.getDuoPlayStyle().name();
+    public static DuoInfoResponse of(String duoPlayPosition, String duoPlayStyle) {
+        return new DuoInfoResponse(duoPlayPosition, duoPlayStyle);
+    }
+
+    public static DuoInfoResponse from(DuoInfo duoInfo) {
+        return new DuoInfoResponse(duoInfo.getDuoPlayPosition().name(), duoInfo.getDuoPlayStyle().name());
     }
 }

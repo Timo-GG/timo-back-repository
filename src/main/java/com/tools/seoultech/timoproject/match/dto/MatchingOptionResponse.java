@@ -2,17 +2,22 @@ package com.tools.seoultech.timoproject.match.dto;
 
 
 import com.tools.seoultech.timoproject.member.domain.Member;
-import lombok.Getter;
 
-@Getter
-public class MatchingOptionResponse {
-    private Long memberId;
-    private UserInfoResponse userInfo;
-    private DuoInfoResponse duoInfo;
+public record MatchingOptionResponse(
+        Long memberId,
+        UserInfoResponse userInfo,
+        DuoInfoResponse duoInfo
+) {
 
-    public MatchingOptionResponse(Member member) {
-        this.memberId = member.getId();
-        this.userInfo = new UserInfoResponse(member.getUserInfo());
-        this.duoInfo = new DuoInfoResponse(member.getDuoInfo());
+    public static MatchingOptionResponse of(Long memberId, UserInfoResponse userInfo, DuoInfoResponse duoInfo) {
+        return new MatchingOptionResponse(memberId, userInfo, duoInfo);
+    }
+
+    public static MatchingOptionResponse from(Member member) {
+        return new MatchingOptionResponse(
+                member.getId(),
+                UserInfoResponse.from(member.getUserInfo()),
+                DuoInfoResponse.from(member.getDuoInfo())
+        );
     }
 }

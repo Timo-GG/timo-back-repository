@@ -98,21 +98,21 @@ public class MatchingServiceImpl implements MatchingService{
     }
 
     private UserInfo createUserInfo(MatchingOptionRequest request) {
-        return UserInfo.builder()
-                .introduce(request.getUserInfo().getIntroduce())
-                .gameMode(request.getUserInfo().getGameMode())
-                .playPosition(request.getUserInfo().getPlayPosition())
-                .playCondition(request.getUserInfo().getPlayCondition())
-                .voiceChat(request.getUserInfo().getVoiceChat())
-                .playStyle(request.getUserInfo().getPlayStyle())
-                .build();
+        return new UserInfo(
+                request.userInfo().introduce(),
+                request.userInfo().gameMode(),
+                request.userInfo().playPosition(),
+                request.userInfo().playCondition(),
+                request.userInfo().voiceChat(),
+                request.userInfo().playStyle()
+        );
     }
 
     private DuoInfo createDuoInfo(MatchingOptionRequest request) {
-        return DuoInfo.builder()
-                .duoPlayPosition(request.getDuoInfo().getDuoPlayPosition())
-                .duoPlayStyle(request.getDuoInfo().getDuoPlayStyle())
-                .build();
+        return new DuoInfo(
+                request.duoInfo().duoPlayPosition(),
+                request.duoInfo().duoPlayStyle()
+        );
     }
 
     private double calculateMatchingScore(UserInfo userInfo, DuoInfo duoInfo,
