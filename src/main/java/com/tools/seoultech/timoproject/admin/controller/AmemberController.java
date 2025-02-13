@@ -38,7 +38,7 @@ public class AmemberController {
         model.addAttribute("endIndex", end);
         model.addAttribute("currentIndex", current);
 
-        return "customers/list"; // customers/list.html 렌더링
+        return "thymeleaf/customers/list"; // customers/list.html 렌더링
     }
 
 //    // 회원 추가 폼
@@ -52,7 +52,7 @@ public class AmemberController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable Long id, Model model) {
         model.addAttribute("member", memberService.get(id));
-        return "customers/form"; // customers/form.html 렌더링
+        return "thymeleaf/customers/form"; // customers/form.html 렌더링
     }
 
     // 회원 저장

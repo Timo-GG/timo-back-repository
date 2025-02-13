@@ -89,3 +89,11 @@ VALUES
 (3, 3, 2, '테스트 댓글 내용...3'),
 (4, 2, 3, '테스트 댓글 내용...4'),
 (5, 1, 3, '테스트 댓글 내용...5');
+
+-------------------------------------------------
+-- 7. Rating 테이블
+-------------------------------------------------
+INSERT INTO rating (score, attitude, speech, skill, member_id, duo_id)
+VALUES
+    (4.5, 'GOOD', 'MANNERS', 'LEARNING', 1, 2),
+    (2.5, 'BAD', 'AGGRESSIVE', 'NORMAL', 1, 2);

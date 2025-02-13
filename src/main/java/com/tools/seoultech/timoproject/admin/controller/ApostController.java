@@ -38,14 +38,14 @@ public class ApostController {
         model.addAttribute("endIndex", end);
         model.addAttribute("currentIndex", current);
 
-        return "posts/list"; // posts/list.html 렌더링
+        return "thymeleaf/posts/list"; // posts/list.html 렌더링
     }
 
     // 게시글 작성 폼
     @GetMapping("/add")
     public String add(Model model) {
         model.addAttribute("post", new Post());
-        return "posts/form"; // posts/form.html 렌더링
+        return "thymeleaf/posts/form"; // posts/form.html 렌더링
     }
 
     // 게시글 수정 폼
@@ -54,7 +54,7 @@ public class ApostController {
         Post post = postService.get(id);
         System.out.println("Post loaded for edit: " + post);
         model.addAttribute("post", post);
-        return "posts/form";
+        return "thymeleaf/posts/form";
     }
 
     // 게시글 저장
