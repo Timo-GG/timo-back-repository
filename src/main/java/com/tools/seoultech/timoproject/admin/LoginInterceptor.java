@@ -21,7 +21,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                 // 세션에서 로그인 여부 확인
                 Object isAdmin = request.getSession().getAttribute("isAdmin");
                 if (isAdmin == null || !(Boolean) isAdmin) {
-                    response.sendRedirect("/admin/v1/login"); // 로그인 페이지로 리다이렉트
+                    response.sendRedirect("/admin/login"); // 로그인 페이지로 리다이렉트
                     return false; // 요청 중단
                 }
             }

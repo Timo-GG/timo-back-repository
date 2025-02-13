@@ -4,6 +4,7 @@ package com.tools.seoultech.timoproject.post.domain.mapper;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
+import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,7 +28,7 @@ public interface PostMapper {
     Post postDTORequestToPost(PostDtoRequest postDtoRequest, Member member);
 
     @Named("getMemberEntity")
-    Member getMemberEntity(Long id);
+    UserAccount getMemberEntity(Long id);
         // abstract 클래스에 상속해서 빈 주입.
         // 서비스 레이어에서 파라미터 주입.
 

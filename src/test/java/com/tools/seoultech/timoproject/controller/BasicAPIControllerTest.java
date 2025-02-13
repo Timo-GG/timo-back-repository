@@ -1,8 +1,6 @@
 package com.tools.seoultech.timoproject.controller;
 
-import com.tools.seoultech.timoproject.global.config.TestSecurityConfig;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
-import com.tools.seoultech.timoproject.global.error.APIExceptionHandler;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
 import com.tools.seoultech.timoproject.riot.controller.BasicAPIController;
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,8 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("[API Controller]")
 @WebMvcTest(BasicAPIController.class)
-@ContextConfiguration(classes = {BasicAPIController.class, APIExceptionHandler.class})
-@Import(TestSecurityConfig.class)
+@ContextConfiguration(classes = BasicAPIController.class)
 class BasicAPIControllerTest {
     @Autowired MockMvc mvc;
 //    @Autowired private final ObjectMapper objectMapper;
@@ -85,7 +81,7 @@ class BasicAPIControllerTest {
 
         // when & then
         mvc.perform(
-                get("/api/request/Account")
+                get("/api/requestAccount")
                         .queryParam("gameName", gameName)
                         .queryParam("tagLine", tagLine)
                 )
