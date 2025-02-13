@@ -32,6 +32,11 @@ class BasicControllerTest {
 //    @Autowired ObjectMapper objectMapper;
     @MockBean private BasicAPIService bas;
 
+//    @Autowired
+//    public BasicControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
+//        this.mvc = mockMvc;
+//        this.objectMapper = objectMapper;
+//    }
 
     @DisplayName("[GET] 잘못된 헤더 정보 포함 - 잘못된 쿼리 파라미터 전달 시 APIErrorResponse 전달")
     @Test
