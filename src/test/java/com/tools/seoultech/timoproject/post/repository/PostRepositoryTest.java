@@ -2,8 +2,9 @@ package com.tools.seoultech.timoproject.post.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tools.seoultech.timoproject.global.config.QueryDSLConfig;
+import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
-import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -28,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Import(QueryDSLConfig.class)
 @AutoConfigureDataJpa
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql("/test.sql")
 @Rollback(false)
 class PostRepositoryTest {
     @Autowired
@@ -35,24 +38,13 @@ class PostRepositoryTest {
     @Autowired
     private JPAQueryFactory queryFactory;
     @Autowired
-    private UserAccountRepository userAccountRepository;
-    @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private MemberRepository memberRepository;
 
-    private List<String> userPuuid;
-    private List<String> userList;
     @BeforeEach
     public void beforeEach(){ // DataLoad
-        userPuuid = Arrays.asList(
-                "-O2mxHCCLutqV-VC6FZzTTDDDF-QlfsGlR9qP7Cwb4E7ujIzdRhrtM5ibhPlXshnx3ehrbxD01crbQ",
-                "EOupVwrHmwpJr0pcUiY_41Y7eoCydoMYhO0E9qL6pusKuI6VcNqGvBrmsU8BSX9qqFg-O9-aaLkZKw",
-                "hJGs7TEKsqGB9BFiKPBGYba6iOsbnxfEMc_7IX2WzpXVhSou5Qp_Ff_EuqT4A8pFt6ZwqeZ3Wtv7SQ"
-        );
-        userList = Arrays.asList("롤찍먹만할게요#5103", "YORUSHlKA#KR1", "트리오브세이비어아시는구나#TOS");
-        IntStream.rangeClosed(0,2).forEach( i -> {
-            var user = this.getUserAccount(userList.get(i), userPuuid.get(i));
-            userAccountRepository.save(user);
-        });
+
     }
     @Test
     public void createTest(){
@@ -62,12 +54,12 @@ class PostRepositoryTest {
                     Post savedPost = postRepository.save(post);
                     assertTrue(Objects.nonNull(savedPost.getId()));
                     assertThat(savedPost)
-                            .hasNoNullFieldsOrProperties()
+                            .hasNoNullFieldsOrPropertiesExcept("comments")
                             .satisfies(it -> {
                                 assertThat(it.getId()).isNotNull().isNotZero();
                                 assertThat(it.getTitle()).isEqualTo(post.getTitle());
                                 assertThat(it.getContent()).isEqualTo(post.getContent());
-                                assertThat(it.getUserAccount()).isInstanceOf(UserAccount.class);
+                                assertThat(it.getMember()).isInstanceOf(Member.class);
                                 assertThat(it.getRegDate()).isInstanceOf(LocalDateTime.class).isNotNull();
                                 assertThat(it.getModDate()).isInstanceOf(LocalDateTime.class).isNotNull();
                             });
@@ -81,8 +73,8 @@ class PostRepositoryTest {
             entityManager.flush();
             LocalDateTime beforeModDate = post.getRegDate();
 
-            savedPost.setTitle("Updated: " + savedPost.getTitle());
-            savedPost.setContent("Updated: " + savedPost.getContent());
+
+            savedPost.updatePost("Updated: " + savedPost.getTitle(),"Updated: " + savedPost.getContent() );
 
             Post updatedPost = postRepository.save(savedPost);
             entityManager.flush();
@@ -90,7 +82,7 @@ class PostRepositoryTest {
 
             assertTrue(Objects.nonNull(post));
             assertThat(updatedPost)
-                    .hasNoNullFieldsOrProperties()
+                    .hasNoNullFieldsOrPropertiesExcept("comments")
                     .satisfies(it -> {
                         assertThat(it.getId())
                                 .isNotNull()
@@ -136,24 +128,24 @@ class PostRepositoryTest {
                             "다른 챔피언들한테 밀림: 요즘 카사딘, 피즈 같은 챔피언들이 너무 강력해서 아칼리가 ᄅᄋ 한없이 약해 보임.\n" +
                             "그런 챔피언들은 안정감도 좋고 딜도 훨씬 강력해서 아칼리랑 비교되면 ᄅᄋ 너무 약해 보임.\n" +
                             "진짜 이 상태로는 아칼리로 게임하기 힘듬. 밸런스 좀 조정해서 아칼리 다시 제대로 플레이할 수 있게 해줬으면 좋겠음. 반박시 니말이 다 맞음." + i)
-                    .userAccount(userAccountRepository.findById(userPuuid.get(i%3)).get())
+                    .member(memberRepository.findById(1L).get())
                     .build();
             posts.add(post);
         });
         return posts;
     }
-    private UserAccount getUserAccount(String stringName, String puuid) {
-        StringTokenizer st = new StringTokenizer(stringName, "#");
-        try {
-            return UserAccount.builder()
-                    .puuid(puuid)
-                    .gameName(st.nextToken())
-                    .tagLine(st.nextToken())
-                    .build();
-
-        }catch(Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    private UserAccount getUserAccount(String stringName, String puuid) {
+//        StringTokenizer st = new StringTokenizer(stringName, "#");
+//        try {
+//            return UserAccount.builder()
+//                    .puuid(puuid)
+//                    .gameName(st.nextToken())
+//                    .tagLine(st.nextToken())
+//                    .build();
+//
+//        }catch(Exception e){
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 }
