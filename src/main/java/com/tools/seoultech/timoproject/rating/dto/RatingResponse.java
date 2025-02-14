@@ -1,4 +1,6 @@
-package com.tools.seoultech.timoproject.rating;
+package com.tools.seoultech.timoproject.rating.dto;
+
+import com.tools.seoultech.timoproject.rating.Rating;
 
 import java.math.BigDecimal;
 

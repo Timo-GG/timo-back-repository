@@ -83,14 +83,6 @@ public class Member extends BaseEntity {
         this.playerTag = playerTag;
     }
 
-    public BigDecimal calculateAverageRating(){
-        if(ratings.isEmpty()){
-            return BigDecimal.ZERO;
-        }
-        BigDecimal sum = ratings.stream().map(Rating::getScore).reduce(BigDecimal::add).get();
-        return sum.divide(BigDecimal.valueOf(ratings.size()), RoundingMode.HALF_UP);
-    }
-
     public void linkRating(Rating rating) {
         this.ratings.add(rating);
         rating.linkMember(this);

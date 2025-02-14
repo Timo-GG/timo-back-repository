@@ -62,9 +62,4 @@ public class MemberRatingTest {
         Assertions.assertThat(rating2.getScore()).isEqualTo(member.getRatings().get(1).getScore());
     }
 
-    @Test
-    void calculateRatingScore(){
-        BigDecimal score = member.calculateAverageRating();
-        Assertions.assertThat(score).isEqualTo(BigDecimal.valueOf(3.5));
-    }
 }

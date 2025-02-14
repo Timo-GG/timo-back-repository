@@ -1,11 +1,17 @@
 package com.tools.seoultech.timoproject.rating;
 
+import com.tools.seoultech.timoproject.rating.dto.RatingRequest;
+import com.tools.seoultech.timoproject.rating.dto.RatingResponse;
+import com.tools.seoultech.timoproject.rating.dto.RatingTotalResponse;
+
+import java.util.List;
+
 public interface RatingService {
 
-        void saveRating(RatingRequest rating);
+        RatingResponse saveRating(RatingRequest rating);
 
         void deleteRating(Long id);
 
-        RatingResponse getRating(Long id);
+        RatingTotalResponse getRatings(Long id);
 
 }

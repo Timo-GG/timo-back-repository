@@ -1,10 +1,8 @@
-package com.tools.seoultech.timoproject.member.service;
+package com.tools.seoultech.timoproject.rating;
 
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
-import com.tools.seoultech.timoproject.rating.Rating;
-import com.tools.seoultech.timoproject.rating.RatingRepository;
-import com.tools.seoultech.timoproject.rating.RatingResponse;
+import com.tools.seoultech.timoproject.rating.dto.RatingTotalResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql(scripts = "/test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Transactional
-class MemberRatingServiceTest {
+class RatingServiceTest {
 
     Member member;  // 평점을 받는 회원 (예: id=1)
     Member duo;     // 평점을 준 회원 (예: id=2)
@@ -28,7 +23,7 @@ class MemberRatingServiceTest {
     Rating rating2;
 
     @Autowired
-    MemberRatingService memberRatingService;
+    RatingService ratingService;
     @Autowired
     MemberRepository memberRepository;
     @Autowired
@@ -50,7 +45,7 @@ class MemberRatingServiceTest {
 
     @Test
     void getMemberRatings() {
-        List<RatingResponse> memberRatings = memberRatingService.getMemberRatings(member.getId());
-        assertEquals(2, memberRatings.size());
+        RatingTotalResponse ratings = ratingService.getRatings(member.getId());
+        assertEquals(2, ratings.ratings().size());
     }
 }
