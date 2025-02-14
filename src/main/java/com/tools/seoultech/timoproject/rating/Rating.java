@@ -50,6 +50,15 @@ public class Rating {
         this.duo = duo;
     }
 
+    // score 평균 계산
+    public static BigDecimal calculateAverageRatings(List<Rating> ratings) {
+        BigDecimal sum = BigDecimal.ZERO;
+        for (Rating rating : ratings) {
+            sum = sum.add(rating.getScore());
+        }
+        return sum.divide(BigDecimal.valueOf(ratings.size()), 2, BigDecimal.ROUND_HALF_UP);
+    }
+
     public void linkMember(Member member) {
         this.member = member;
     }
