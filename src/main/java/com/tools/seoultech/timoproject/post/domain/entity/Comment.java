@@ -2,16 +2,16 @@ package com.tools.seoultech.timoproject.post.domain.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.post.domain.dto.CommentDTO;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "comment")
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Comment extends BaseEntity {
     @Id
     @Column(name="comment_id")
@@ -29,12 +29,12 @@ public class Comment extends BaseEntity {
     @JoinColumn(name="member_id", nullable = false)
     private Member member;
 
-    @Builder
-    public Comment(String content, Post post, Member member) {
-        this.content = content;
-        this.post = post;
-        this.member = member;
-    }
+//    @Builder(builderMethodName = "defaultBuilder")
+//    public Comment(String content, Post post, Member member) {
+//        this.content = content;
+//        this.post = post;
+//        this.member = member;
+//    }
 
     public void setPost(Post post) {
         if(post != null) {
@@ -44,5 +44,10 @@ public class Comment extends BaseEntity {
     }
     public void deleteThis(){
         post.getComments().remove(this);
+    }
+
+    // TODO: entitymanager. FK 관련 테이블 연관관계 수정.
+    public void updateComment(CommentDTO.Request requestDto){
+        this.content = requestDto.content();
     }
 }
