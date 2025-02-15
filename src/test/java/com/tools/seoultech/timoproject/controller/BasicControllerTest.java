@@ -32,30 +32,11 @@ class BasicControllerTest {
 
     @MockBean private BasicAPIService bas;
 
-    @Deprecated
-    @DisplayName("[GET] 사용자 페이지 검색 - 정상 검색시 표준 뷰 페이지 전달.")
-    public void givenURLAndQueryParams_whenClientGETRequest_thenSendViewPage() throws Exception {
-        String puuid = "-O2mxHCCLutqV-VC6FZzTTDDDF-QlfsGlR9qP7Cwb4E7ujIzdRhrtM5ibhPlXshnx3ehrbxD01crbQ";
-
-        //given
-        String gameName = "롤찍먹만할게요";
-        String tagLine = "5103";
-
-        given(bas.findUserAccount(any())).willReturn(AccountDto.Response.of(puuid, gameName, tagLine));
-
-        //when & then
-        mvc.perform(
-                get("/user")
-                        .queryParam("gameName", gameName)
-                        .queryParam("tagLine", tagLine)
-                )
-                .andExpect(status().isOk())
-                .andExpect(view().name("/framer/users/롤찍먹만할게요"))
-                .andExpect(model().attributeExists("puuid", "gameName","tagLine"))
-                .andDo(print());
-
-        then(bas).should().findUserAccount(any());
-    }
+//    @Autowired
+//    public BasicControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
+//        this.mvc = mockMvc;
+//        this.objectMapper = objectMapper;
+//    }
 
     @DisplayName("[GET] 잘못된 헤더 정보 포함 - 잘못된 쿼리 파라미터 전달 시 APIErrorResponse 전달")
     @Test
