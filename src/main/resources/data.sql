@@ -74,11 +74,11 @@ INSERT INTO duo_info (duo_info_id, duo_play_position, duo_play_style) VALUES
 -------------------------------------------------
 -- 5. Post 테이블
 -------------------------------------------------
-INSERT INTO post (post_id, title, content, member_id, view_count, category, mod_date, reg_date)
+INSERT INTO post (post_id, title, content, member_id, view_count, like_count, category, mod_date, reg_date)
 VALUES
-(1, '테스트 제목: 1', '테스트 내용...1', 1, 50, 'NORMAL', now(), now()),
-(2, '테스트 제목: 2', '테스트 내용...2', 2, 100, 'NORMAL', now(), now()),
-(3, '테스트 제목: 3', '테스트 내용...3', 3, 150, 'NORMAL', now(), now());
+(1, '테스트 제목: 1', '테스트 내용...1', 1, 50, 0, 'NORMAL', now(), now()),
+(2, '테스트 제목: 2', '테스트 내용...2', 2, 100, 0, 'NORMAL', now(), now()),
+(3, '테스트 제목: 3', '테스트 내용...3', 3, 150, 0, 'NORMAL', now(), now());
 
 -------------------------------------------------
 -- 6. Comment 테이블
