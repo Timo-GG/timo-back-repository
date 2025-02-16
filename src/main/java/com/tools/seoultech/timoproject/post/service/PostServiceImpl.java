@@ -11,6 +11,7 @@ import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -29,19 +30,19 @@ import java.util.function.Function;
 @Log4j2
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
-
     private final MemberRepository memberRepository;
+    private final EntityManager entityManager;
     private final PostMapper postMapper;
 
     public PostDTO entityToDto(Post post) {
         return postMapper.postToPostDTO(post);
     }
     public Post dtoToEntity(PostDTO postDTO) {
-        Member member = memberRepository.findById(postDTO.getMemberId()).orElseThrow(() -> new GeneralException("없음."));
+        Member member = memberRepository.findById(postDTO.memberId()).orElseThrow(() -> new GeneralException("없음."));
         return postMapper.postDTOToPost(postDTO, member);
     }
     public Post dtoRequestToEntity(PostDtoRequest postDTO) {
-        Member member = memberRepository.findById(postDTO.getMemberId()).orElseThrow(() -> new GeneralException("없음."));
+        Member member = memberRepository.findById(postDTO.memberId()).orElseThrow(() -> new GeneralException("없음."));
         return postMapper.postDTORequestToPost(postDTO, member);
     }
     public PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request){
@@ -53,6 +54,8 @@ public class PostServiceImpl implements PostService {
     public PostDTO read(Long id){
         Post post = postRepository.findById(id)
                 .orElseThrow( () -> new GeneralException(ErrorCode.BAD_REQUEST));
+        post.increaseViewCount();
+        entityManager.merge(post);
         return entityToDto(post);
     }
     public List<PostDTO> readAll(){
@@ -65,32 +68,31 @@ public class PostServiceImpl implements PostService {
         return entityToDto(post);
     }
     @Transactional
-    public PostDTO create(PostDTO postDto){
-        Post post = this.dtoToEntity(postDto);
-        postRepository.save(post);
+    public PostDTO update(Long id, PostDtoRequest request){
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new GeneralException(ErrorCode.BAD_REQUEST));
+        post.updatePost(id, request);
+        entityManager.merge(post);
         return entityToDto(post);
-    }
-    @Transactional
-    public PostDTO update(PostDTO postDto){
-        Optional<Post> optionalPost = postRepository.findById(postDto.getId());
-
-        //TODO: post에 updatePost 메서드 추가 필요. 지금에서는 BaseEntity가 새로 생성되서 안됨.
-        if(optionalPost.isPresent()){
-            Post newPost = Post.builder()
-                    .id(postDto.getId())
-                    .title(postDto.getTitle())
-                    .content(postDto.getContent())
-                    .member(memberRepository.findById(postDto.getMemberId()).get())
-                    .build();
-            return entityToDto(postRepository.save(newPost));
-        }
-        else{
-            throw new GeneralException(ErrorCode.BAD_REQUEST);
-        }
-
     }
     @Transactional
     public void delete(Long id){
         postRepository.deleteById(id);
+    }
+
+    public PostDTO increaseLikeCount(Long id){
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new GeneralException(ErrorCode.BAD_REQUEST));
+        post.increaseLikeCount();
+        entityManager.merge(post);
+        return entityToDto(post);
+    }
+
+    public PostDTO decreaseLikeCount(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new GeneralException(ErrorCode.BAD_REQUEST));
+        post.decreaseLikeCount();
+        entityManager.merge(post);
+        return entityToDto(post);
     }
 }

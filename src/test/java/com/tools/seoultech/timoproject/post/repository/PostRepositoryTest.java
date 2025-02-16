@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tools.seoultech.timoproject.global.config.QueryDSLConfig;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
+import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.IntStream;
 
-import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,8 +73,13 @@ class PostRepositoryTest {
             entityManager.flush();
             LocalDateTime beforeModDate = post.getRegDate();
 
-
-            savedPost.updatePost("Updated: " + savedPost.getTitle(),"Updated: " + savedPost.getContent() );
+            savedPost.updatePost(post.getId(),
+                    PostDtoRequest.builder()
+                            .title("updated Post Title...")
+                            .content("updated Post Content...")
+                            .memberId(post.getMember().getId())
+                            .build()
+            );
 
             Post updatedPost = postRepository.save(savedPost);
             entityManager.flush();

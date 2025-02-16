@@ -10,15 +10,22 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-public class PostDTO {
-    private Long id;
-    private String title;
-    private String content;
-    private Long memberId;
-    private Category category;
-    private LocalDateTime regDate, modDate;
+public record PostDTO (
+        Long id,
+        String title,
+        String content,
+        Long memberId,
+        Category category,
+        LocalDateTime regDate,
+        LocalDateTime modDate
+){
+    public PostDTO of(String title, String content, Long memberId, Category category){
+        return PostDTO.builder()
+                .title(title)
+                .content(content)
+                .memberId(memberId)
+                .category(category)
+                .build();
+    }
 }
 

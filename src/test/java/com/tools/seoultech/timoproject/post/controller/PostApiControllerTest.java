@@ -50,14 +50,12 @@ class PostApiControllerTest {
                 .memberId(1L)
                 .build();
 
-
         given(postService.read(postId)).willReturn(postDTO);
 
         mockMvc.perform(get("/api/postApi/read/{postId}", postId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.title").value("Title"))
                 .andExpect(jsonPath("$.data.content").value("Content"));
-
 
         then(postService).should().read(postId);
     }
@@ -79,7 +77,6 @@ class PostApiControllerTest {
                 .build();
 
         List<PostDTO> postDTOList = List.of(postDTO1, postDTO2);
-
 
         given(postService.readAll()).willReturn(postDTOList);
 
@@ -126,16 +123,23 @@ class PostApiControllerTest {
                 .memberId(1L)
                 .build();
 
-        given(postService.update(postDTO)).willReturn(postDTO);
+        PostDtoRequest postDtoRequest = PostDtoRequest.builder()
+                .title("Updated Title")
+                .content("Updated Content")
+                .memberId(1L)
+                .build();
+
+        given(postService.update(1L, postDtoRequest)).willReturn(postDTO);
 
         mockMvc.perform(put("/api/postApi/update")
+                        .queryParam("id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postDTO)))
+                        .content(objectMapper.writeValueAsString(postDtoRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.title").value("Updated Title"))
                 .andExpect(jsonPath("$.data.content").value("Updated Content"));
 
-        then(postService).should().update(postDTO);
+        then(postService).should().update(1L, postDtoRequest);
     }
 
     @Test

@@ -6,12 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 @Builder
-public class PostDtoRequest {
-    private String title;
-    private String content;
-    private Long memberId;
+public record PostDtoRequest (
+    String title,
+    String content,
+    Long memberId
+){
+
 }

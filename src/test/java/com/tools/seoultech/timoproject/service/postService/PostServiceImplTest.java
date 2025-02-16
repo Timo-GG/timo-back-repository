@@ -59,13 +59,22 @@ class PostServiceImplTest {
                 .modDate(LocalDateTime.now())
                 .build();
 
-        PostDTO savedPostDTO = postDto;
-        savedPostDTO.setId(1L);
+
+        PostDTO savedPostDTO = PostDTO.builder()
+                .id(1L)
+                .title("PostService test")
+                .content("test content...")
+                .memberId(1L)
+                .category(Category.CREATIVITY)
+                .regDate(LocalDateTime.now())
+                .modDate(LocalDateTime.now())
+                .build();
+
 
         Post post = Post.builder()
                 .id(1L)
-                .title(postDto.getTitle())
-                .content(postDto.getContent())
+                .title(postDto.title())
+                .content(postDto.content())
                 .member(member)
                 .category(Category.CREATIVITY)
                 .build();

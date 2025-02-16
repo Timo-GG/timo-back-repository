@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.post.domain.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -32,6 +33,10 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private Integer viewCount = 0;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private Integer likeCount = 0;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable=false)
     @Builder.Default
@@ -47,13 +52,13 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    public void updatePost(String title, String content) {
-        if (title != null && !title.isBlank()) {
-            this.title = title;
+    public void updatePost(Long id, PostDtoRequest request) {
+        if(id != null && this.id.equals(id)){
+            this.title = request.title();
+            this.content = request.content();
         }
-        if (content != null && !content.isBlank()) {
-            this.content = content;
-        }
-
     }
+    public void increaseViewCount() { this.viewCount++; }
+    public void increaseLikeCount() { this.likeCount++; }
+    public void decreaseLikeCount() { this.likeCount--; }
 }
