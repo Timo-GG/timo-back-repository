@@ -2,8 +2,6 @@
 ### LOL 듀오 매칭 서비스 
 <br>
 
-<img src="attachment:d111e4a0-265e-4404-872e-fb92c9f137c3:df8233f4-5b6d-4d1f-96af-e7f388adef14.png" style="border-radius: 15px;">
-
 ## 주요 기능
 - 듀오 매칭 
 - 게시판 기능 
@@ -25,7 +23,7 @@
 
 **Test** - <img src="https://img.shields.io/badge/JUnit5-25A162?style=for-the-sociak&logo=junit5&logoColor=white"> <img src="https://img.shields.io/badge/Mockito-83a44d?style=for-the-sociak&logo=Mockito&logoColor=white">
 
-**Database** - <img src="https://img.shields.io/badge/M-003545?style=for-the-social&logo=MariaDB&logoColor=white"> 
+**Database** - <img src="https://img.shields.io/badge/MySQL-003545?style=for-the-social&logo=MariaDB&logoColor=white"> 
 
 **Cloud** - <img src ="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-social&logo=amazonec2&logoColor=white">  <img src ="https://img.shields.io/badge/AWS S3-569A31?style=for-the-social&logo=amazons3&logoColor=white">  <img src="https://img.shields.io/badge/AWS RDS-527FFF?style=for-the-social&logo=amazonrds&logoColor=white">
 <img src="https://img.shields.io/badge/Code Deploy-569A31?style=for-the-social&logo=amazonaws&logoColor=white">  <img src="https://img.shields.io/badge/ECR-FF9900?style=for-the-social&logo=amazonaws&logoColor=white">  <img src="https://img.shields.io/badge/Route 53-8C4FFF?style=for-the-social&logo=Amazon Route 53&logoColor=white">  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-social&logo=Docker&logoColor=white">  <img src="https://img.shields.io/badge/Docker compose-2496ED?style=for-the-social&logo=docker-compose&logoColor=white">
