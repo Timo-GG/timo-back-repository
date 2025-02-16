@@ -1,6 +1,8 @@
-# Timo.gg <img src="https://github.com/user-attachments/assets/26bcd771-4f1a-40b1-a45a-583bd1c41b91" align="left" width="100"></a>
+# Timo.gg <img src="https://github.com/user-attachments/assets/90416e02-b116-426a-8d7e-aedb8e6d29e0" align="left" width="100"></a>
 ### LOL 듀오 매칭 서비스 
 <br>
+
+<img src="attachment:d111e4a0-265e-4404-872e-fb92c9f137c3:df8233f4-5b6d-4d1f-96af-e7f388adef14.png" style="border-radius: 15px;">
 
 ## 주요 기능
 - 듀오 매칭 
