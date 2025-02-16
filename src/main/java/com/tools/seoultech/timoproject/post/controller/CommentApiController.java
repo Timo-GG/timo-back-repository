@@ -41,9 +41,9 @@ public class CommentApiController {
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(responseDto));
     }
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     public ResponseEntity<APIDataResponse<CommentDTO.Response>> updateComment(
-            Long id,
+            @PathVariable("id") Long id,
             @RequestBody CommentDTO.Request commentDTO
     ){
         CommentDTO.Response responseDto = commentService.update(id, commentDTO);

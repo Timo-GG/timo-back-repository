@@ -34,30 +34,24 @@ public class CommentServiceImpl implements CommentService{
         Comment comment;
         if(dto instanceof CommentDTO.Request requestDto) {
             Member member = memberRepository.findById(requestDto.memberId()).
-                    orElseThrow( () ->
-                            new GeneralException("Member Repository에 해당 Id 값을 가진 엔티티가 없습니다.")
-                    );
+                    orElseThrow( () -> new GeneralException("Member Repository에 해당 Id 값을 가진 엔티티가 없습니다."));
+
             Post post = postRepository.findById(requestDto.postId())
-                    .orElseThrow( () ->
-                            new GeneralException("Member Repository에 해당 Id 값을 가진 엔티티가 없습니다.")
-                    );
+                    .orElseThrow( () -> new GeneralException("Member Repository에 해당 Id 값을 가진 엔티티가 없습니다."));
+
             comment = mapper.commentDtoToComment(requestDto, member, post);
         }
         else if(dto instanceof CommentDTO.Response responseDto){
             Member member = memberRepository.findById(responseDto.memberId()).
-                    orElseThrow( () ->
-                            new GeneralException("Member Repository에 해당 Id 값을 가진 엔티티가 없습니다.")
+                    orElseThrow( () -> new GeneralException("Member Repository에 해당 Id 값을 가진 엔티티가 없습니다.")
             );
             Post post = postRepository.findById(responseDto.postId())
-                    .orElseThrow(() ->
-                            new GeneralException("Member Repository에 해당 Id 값을 가진 엔티티가 없습니다.")
-                    );
+                    .orElseThrow(() -> new GeneralException("Member Repository에 해당 Id 값을 가진 엔티티가 없습니다."));
             comment = mapper.commentDtoToComment(responseDto, member, post);
         }
         else {
             throw new IllegalArgumentException("Dto 타입 불일치.");
         }
-
         return comment;
     }
 
@@ -72,8 +66,8 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public CommentDTO.Response create(CommentDTO.Request dto) {
-        Comment comment = dtoToEntity(dto);
-        comment = commentRepository.save(comment);
+//        Comment comment = dtoToEntity(dto);
+        Comment comment = commentRepository.save(dtoToEntity(dto));
         return entityToDto(comment);
     }
 
@@ -96,9 +90,7 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public CommentDTO.Response update(Long id, CommentDTO.Request requestDto) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow( () ->
-                        new GeneralException("1")
-                );
+                .orElseThrow( () -> new GeneralException("1"));
         comment.updateComment(requestDto);
         return entityToDto(comment);
     }
