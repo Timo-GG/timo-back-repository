@@ -14,7 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final OAuth2MemberService oAuth2MemberService;
+    // private final OAuth2MemberService oAuth2MemberService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -26,15 +26,15 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable);
         http
                 .httpBasic(AbstractHttpConfigurer::disable);
-        http
-                .oauth2Login((oauth2) -> oauth2
-                        .loginPage("/login")
-                        .userInfoEndpoint((userInfoEndpointConfig) ->
-                                userInfoEndpointConfig.userService(oAuth2MemberService)));
-        http
-                .oauth2Login((oauth2) -> oauth2
-                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                                .userService(oAuth2MemberService)));
+//        http
+//                .oauth2Login((oauth2) -> oauth2
+//                        .loginPage("/login")
+//                        .userInfoEndpoint((userInfoEndpointConfig) ->
+//                                userInfoEndpointConfig.userService(oAuth2MemberService)));
+//        http
+//                .oauth2Login((oauth2) -> oauth2
+//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+//                                .userService(oAuth2MemberService)));
         http
                 .authorizeHttpRequests((auth) -> auth
                         //.requestMatchers("/", "/oauth2/**", "/login/**").permitAll()

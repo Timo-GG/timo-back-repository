@@ -31,6 +31,9 @@ public class OAuth2MemberService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
+        String accessToken = userRequest.getAccessToken().getTokenValue();
+
+
         // TODO : 현재는 네이버만 구현해서 추후에 타 플랫폼도  추가 에정
         OAuth2Response oAuth2Response = new NaverResponse(attributes);
         Member member = getMember(oAuth2Response.getProvider(), oAuth2Response.getProviderId(),
@@ -63,12 +66,12 @@ public class OAuth2MemberService extends DefaultOAuth2UserService {
                 .orElseGet(() -> register(socialAccount, email, nickname));
     }
 
-    private Member register(SocialAccount socialAccount, String email, String nickname) {
+    private Member register(SocialAccount socialAccount, String email, String username) {
 
         // 새로운 유저 회원가입
         Member member = Member.builder()
                 .email(email)
-                .username(nickname)
+                .username(username)
                 .build();
 
         member.linkSocialAccount(socialAccount);

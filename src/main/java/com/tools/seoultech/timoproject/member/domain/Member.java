@@ -27,6 +27,11 @@ public class Member extends BaseEntity {
 
     private String username;
 
+    private String nickname;
+
+    @Enumerated(value = EnumType.STRING)
+    private OAuthProvider oAuthProvider;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
@@ -48,9 +53,11 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(String email, String username) {
+    public Member(String email, String username, String nickname, OAuthProvider oAuthProvider) {
         this.email = email;
         this.username = username;
+        this.nickname = nickname;
+        this.oAuthProvider = oAuthProvider;
         this.role = Role.MEMBER;
     }
 
