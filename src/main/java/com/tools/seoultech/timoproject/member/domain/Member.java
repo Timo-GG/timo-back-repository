@@ -33,6 +33,11 @@ public class Member extends BaseEntity {
 
     private String username;
 
+    private String nickname;
+
+    @Enumerated(value = EnumType.STRING)
+    private OAuthProvider oAuthProvider;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
@@ -60,9 +65,11 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(String email, String username) {
+    public Member(String email, String username, String nickname, OAuthProvider oAuthProvider) {
         this.email = email;
         this.username = username;
+        this.nickname = nickname;
+        this.oAuthProvider = oAuthProvider;
         this.role = Role.MEMBER;
     }
 
@@ -93,5 +100,10 @@ public class Member extends BaseEntity {
         this.playerName = "정보없음";
         this.playerTag = "정보없음";
         this.email = "anonymous_" + UUID.randomUUID().toString() + "@anonymous.com";
+    }
+
+    //nickname 자동생성
+    public void randomCreateUsername() {
+        this.username = "티모대위" + "-" + UUID.randomUUID().toString().substring(0, 5);
     }
 }
