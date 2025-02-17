@@ -75,7 +75,7 @@ class PostServiceImplTest {
                 .id(1L)
                 .title(postDto.title())
                 .content(postDto.content())
-                .member(member)
+                .memberId(1L)
                 .category(Category.CREATIVITY)
                 .build();
 

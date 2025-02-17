@@ -14,14 +14,14 @@ import org.mapstruct.factory.Mappers;
 public interface PostMapper {
     PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
 
-    @Mapping(target="memberId", expression = "java(post.getMember().getId())")
+    @Mapping(target="memberId", expression = "java(post.getMemberId())")
     PostDTO.Response postToPostDTO(Post post);
 
-    @Mapping(target="member", source="member")
+    @Mapping(target="memberId", expression="java(member.getId())")
     @Mapping(target="id", expression="java(response.id())")
     Post postDtoToPost(PostDTO.Response response, Member member);
 
-    @Mapping(target="member", source="member")
+    @Mapping(target="memberId", expression="java(member.getId())")
     @Mapping(target="id", ignore=true)
     Post postDtoToPost(PostDTO.Request request, Member member);
 
