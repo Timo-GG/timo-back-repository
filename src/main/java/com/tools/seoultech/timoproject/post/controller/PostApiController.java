@@ -34,14 +34,26 @@ public class PostApiController {
         PostDTO dto = postService.create(postDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(APIDataResponse.of(dto));
     }
-    @PutMapping("/update")
-    public ResponseEntity<APIDataResponse<PostDTO>> updatePost(@RequestBody PostDTO postDto) {
-        PostDTO dto = postService.update(postDto);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<APIDataResponse<PostDTO>> updatePost(
+            @PathVariable Long id, @RequestBody PostDtoRequest postDto
+    ) {
+        PostDTO dto = postService.update(id, postDto);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(dto));
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<APIDataResponse> deletePost(@PathVariable("id") Long id) {
         postService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.empty());
+    }
+    @GetMapping("/likeCount/increase/{id}")
+    public ResponseEntity<APIDataResponse> increaseLikeCount(@PathVariable("id") Long id) {
+        PostDTO responseDto = postService.increaseLikeCount(id);
+        return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(responseDto));
+    }
+    @GetMapping("/likeCount/decrease/{id}")
+    public ResponseEntity<APIDataResponse> decreaseLikeCount(@PathVariable("id") Long id) {
+        PostDTO responseDto = postService.decreaseLikeCount(id);
+        return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(responseDto));
     }
 }

@@ -1,6 +1,7 @@
 DELETE FROM social_account;
 DELETE FROM matching_option;
 DELETE FROM user_info;
+DELETE FROM rating;
 DELETE FROM duo_info;
 
 DELETE FROM comment;
@@ -82,13 +83,13 @@ VALUES
 -------------------------------------------------
 -- 6. Comment 테이블
 -------------------------------------------------
-INSERT INTO comment (comment_id, member_id, post_id, content)
+INSERT INTO comment (comment_id, member_id, post_id, content, mod_date, reg_date)
 VALUES
-(1, 5, 1, '테스트 댓글 내용...1'),
-(2, 4, 2, '테스트 댓글 내용...2'),
-(3, 3, 2, '테스트 댓글 내용...3'),
-(4, 2, 3, '테스트 댓글 내용...4'),
-(5, 1, 3, '테스트 댓글 내용...5');
+(1, 5, 1, '테스트 댓글 내용...1', now(), now()),
+(2, 4, 2, '테스트 댓글 내용...2', now(), now()),
+(3, 3, 2, '테스트 댓글 내용...3', now(), now()),
+(4, 2, 3, '테스트 댓글 내용...4', now(), now()),
+(5, 1, 3, '테스트 댓글 내용...5', now(), now());
 
 -------------------------------------------------
 -- 7. Rating 테이블

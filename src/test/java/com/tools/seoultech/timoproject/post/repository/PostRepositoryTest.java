@@ -142,18 +142,3 @@
 //        });
 //        return posts;
 //    }
-//    private UserAccount getUserAccount(String stringName, String puuid) {
-//        StringTokenizer st = new StringTokenizer(stringName, "#");
-//        try {
-//            return UserAccount.builder()
-//                    .puuid(puuid)
-//                    .gameName(st.nextToken())
-//                    .tagLine(st.nextToken())
-//                    .build();
-//
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//}

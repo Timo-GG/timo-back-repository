@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(TestSecurityConfig.class)
 class BasicControllerTest {
     @Autowired private MockMvc mvc;
-//    @Autowired ObjectMapper objectMapper;
+
     @MockBean private BasicAPIService bas;
 
 //    @Autowired
