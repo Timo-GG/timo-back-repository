@@ -2,7 +2,6 @@ package com.tools.seoultech.timoproject.post.domain.mapper;
 
 
 import com.tools.seoultech.timoproject.member.domain.Member;
-import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import org.mapstruct.Mapper;
@@ -16,15 +15,15 @@ public interface PostMapper {
     PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
 
     @Mapping(target="memberId", expression = "java(post.getMember().getId())")
-    PostDTO postToPostDTO(Post post);
+    PostDTO.Response postToPostDTO(Post post);
 
     @Mapping(target="member", source="member")
-    @Mapping(target="id", source="postDTO.id")
-    Post postDTOToPost(PostDTO postDTO, Member member);
+    @Mapping(target="id", expression="java(response.id())")
+    Post postDtoToPost(PostDTO.Response response, Member member);
 
     @Mapping(target="member", source="member")
     @Mapping(target="id", ignore=true)
-    Post postDTORequestToPost(PostDtoRequest postDtoRequest, Member member);
+    Post postDtoToPost(PostDTO.Request request, Member member);
 
     @Named("getMemberEntity")
     Member getMemberEntity(Long id);

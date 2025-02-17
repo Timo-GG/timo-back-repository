@@ -50,22 +50,22 @@ class PostServiceImplTest {
                 .username("롤찍먹만할게요")
                 .build();
 
-        PostDTO postDto = PostDTO.builder()
+        PostDTO.Request postDto = PostDTO.Request.builder()
                 .title("PostService test")
                 .content("test content...")
                 .memberId(1L)
                 .category(Category.CREATIVITY)
-                .regDate(LocalDateTime.now())
-                .modDate(LocalDateTime.now())
                 .build();
 
 
-        PostDTO savedPostDTO = PostDTO.builder()
+        PostDTO.Response savedPostDTO = PostDTO.Response.builder()
                 .id(1L)
                 .title("PostService test")
                 .content("test content...")
                 .memberId(1L)
                 .category(Category.CREATIVITY)
+                .viewCount(0)
+                .likeCount(0)
                 .regDate(LocalDateTime.now())
                 .modDate(LocalDateTime.now())
                 .build();
@@ -80,12 +80,12 @@ class PostServiceImplTest {
                 .build();
 
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
-        given(postMapper.postDTOToPost(postDto, member)).willReturn(post);
+        given(postMapper.postDtoToPost(postDto, member)).willReturn(post);
         given(postRepository.save(post)).willReturn(post);
         given(postMapper.postToPostDTO(post)).willReturn(savedPostDTO);
 
         // when
-        PostDTO savedPost = postService.create(postDto);
+        PostDTO.Response savedPost = postService.create(postDto);
 
         // then
         assertThat(savedPost)
@@ -95,7 +95,7 @@ class PostServiceImplTest {
                 .hasFieldOrPropertyWithValue("content", "test content...");
 
         then(memberRepository).should().findById(1L);
-        then(postMapper).should().postDTOToPost(postDto, member);
+        then(postMapper).should().postDtoToPost(postDto, member);
         then(postRepository).should().save(post);
         then(postMapper).should().postToPostDTO(post);
     }
@@ -103,7 +103,7 @@ class PostServiceImplTest {
     @DisplayName("[UPDATE] 정상적인 게시글 업데이트 - Repository에 존재하는 게시글을 수정한다.")
     @Test
     public void givenPostDto_whenRequestUpdate_thenUpdate(){
-        PostDTO postDto = PostDTO.builder()
+        PostDTO.Response postDto = PostDTO.Response.builder()
                 .title("[test]PostServiceImplTest... >>> UpdatePostServiceImplTest...")
                 .content("Post Updated in PostServiceImpl Layer")
                 .memberId(1L)
@@ -113,7 +113,7 @@ class PostServiceImplTest {
     @DisplayName("[UPDATE] 비정상적인 게시글 업데이트 - Repository에 등록되지 않은 사용자의 게시글 수정 요청.")
     @Test
     public void givenPostDto_whenRequestUpdate_thenResponseErrorAPIResponse(){
-        PostDTO postDto = PostDTO.builder()
+        PostDTO.Response postDto = PostDTO.Response.builder()
                 .title("[test]WrongAccount....")
                 .content("Wrong user request...")
                 .memberId(null)

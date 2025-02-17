@@ -9,23 +9,28 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Builder
-public record PostDTO (
-        Long id,
-        String title,
-        String content,
-        Long memberId,
-        Category category,
-        LocalDateTime regDate,
-        LocalDateTime modDate
-){
-    public PostDTO of(String title, String content, Long memberId, Category category){
-        return PostDTO.builder()
-                .title(title)
-                .content(content)
-                .memberId(memberId)
-                .category(category)
-                .build();
+public class PostDTO {
+    @Builder
+    public record Request (
+            String title,
+            String content,
+            Category category,
+            Long memberId
+    ){
+
+    }
+    @Builder
+    public record Response(
+            Long id,
+            String title,
+            String content,
+            Long memberId,
+            Category category,
+            Integer viewCount,
+            Integer likeCount,
+            LocalDateTime regDate,
+            LocalDateTime modDate
+    ) {
+
     }
 }
-

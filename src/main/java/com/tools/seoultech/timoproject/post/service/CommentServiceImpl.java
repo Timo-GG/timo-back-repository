@@ -12,6 +12,7 @@ import com.tools.seoultech.timoproject.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -88,6 +89,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
+    @Transactional
     public CommentDTO.Response update(Long id, CommentDTO.Request requestDto) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow( () -> new GeneralException("1"));
