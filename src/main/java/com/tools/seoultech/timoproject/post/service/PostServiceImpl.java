@@ -104,4 +104,18 @@ public class PostServiceImpl implements PostService {
         entityManager.merge(post);
         return entityToDto(post);
     }
+
+    public List<PostDTO.Response> readByMember(Long memberId) {
+        if(!memberRepository.existsById(memberId))
+            throw new GeneralException("해당 사용자가 없습니다.");
+
+        List<Post> postList =  postRepository.findByMemberId(memberId);
+        if(postList.isEmpty())
+            throw new GeneralException("해당 사용자의 게시글이 없습니다.");
+
+        List<PostDTO.Response> postDtoList = postList.stream()
+                .map(this::entityToDto)
+                .toList();
+        return postDtoList;
+    }
 }
