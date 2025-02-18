@@ -1,7 +1,8 @@
-package com.tools.seoultech.timoproject.chat.service;
+package com.tools.seoultech.timoproject.chat.service.impl;
 
 import com.tools.seoultech.timoproject.chat.model.Message;
 import com.tools.seoultech.timoproject.chat.repository.MessageRepository;
+import com.tools.seoultech.timoproject.chat.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
