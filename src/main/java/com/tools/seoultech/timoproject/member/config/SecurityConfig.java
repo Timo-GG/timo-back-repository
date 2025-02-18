@@ -1,5 +1,8 @@
 package com.tools.seoultech.timoproject.member.config;
 
+import com.tools.seoultech.timoproject.auth.jwt.JwtAuthenticationFilter;
+import com.tools.seoultech.timoproject.auth.jwt.JwtTokenProvider;
+import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +10,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -32,23 +36,23 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ── 2. 일반 사용자용 Security Filter Chain ─────────────────────────────
+    // ── 2. 일반 사용자용 Security Filter Chain (JWT 인증 추가) ─────────────────────────────
     @Bean
     @Order(2)
     public SecurityFilterChain userSecurityFilterChain(HttpSecurity http,
-                                                       com.tools.seoultech.timoproject.member.service.OAuth2MemberService oAuth2MemberService) throws Exception {
+                                                       com.tools.seoultech.timoproject.member.service.OAuth2MemberService oAuth2MemberService,
+                                                       JwtTokenProvider jwtTokenProvider, MemberRepository memberRepository) throws Exception {
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/**"))
+                // JWT 필터를 UsernamePasswordAuthenticationFilter 전에 추가하여 모든 요청에서 JWT를 검증합니다.
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, memberRepository), UsernamePasswordAuthenticationFilter.class)
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/**", "/api/auth/**"))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2MemberService))
-                        .defaultSuccessUrl("/", true)  // ✅ 로그인 성공 후 '/' 로 강제 이동
-                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/oauth2/**", "/login/**").permitAll()
                         .requestMatchers("/api/v1/**").permitAll()
+                        .requestMatchers("/", "/oauth2/**", "/login/**", "/api/auth/**").permitAll()
+                        .requestMatchers("/api/v1/**", "api/members/**").authenticated()
                         .requestMatchers(
                                 "/bower_components/**",
                                 "/dist/**",
@@ -62,5 +66,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 }

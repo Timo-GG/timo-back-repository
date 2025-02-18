@@ -152,3 +152,4 @@ class PostApiControllerTest {
         then(postService).should().delete(postId);
     }
 }
+
