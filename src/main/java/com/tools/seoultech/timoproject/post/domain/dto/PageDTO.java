@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 
 public class PageDTO {
     @Builder
-    public static record Request(
+    public record Request(
             int page,
             int size
     ) {
@@ -28,7 +28,7 @@ public class PageDTO {
         }
     }
     @Builder
-    public static record Response<DTO, EN>(
+    public record Response<DTO, EN>(
             int totalPage,
             int totalSize,
             int cur_page,

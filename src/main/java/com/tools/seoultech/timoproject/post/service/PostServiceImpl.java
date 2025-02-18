@@ -4,7 +4,6 @@ import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
-import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -34,41 +32,51 @@ public class PostServiceImpl implements PostService {
     private final EntityManager entityManager;
     private final PostMapper postMapper;
 
-    public PostDTO entityToDto(Post post) {
+    public PostDTO.Response entityToDto(Post post) {
         return postMapper.postToPostDTO(post);
     }
-    public Post dtoToEntity(PostDTO postDTO) {
-        Member member = memberRepository.findById(postDTO.memberId()).orElseThrow(() -> new GeneralException("없음."));
-        return postMapper.postDTOToPost(postDTO, member);
+    public Post dtoToEntity(Object postDTO) {
+        Post post;
+        if (postDTO instanceof PostDTO.Response response) {
+            Member member = memberRepository.findById(response.memberId()).orElseThrow(() -> new GeneralException("없음."));
+            post = postMapper.postDtoToPost(response, member);
+        }
+        else if(postDTO instanceof PostDTO.Request request){
+            Member member = memberRepository.findById(request.memberId()).orElseThrow(() -> new GeneralException("없음."));
+            post = postMapper.postDtoToPost(request, member);
+        }
+        else {
+            throw new GeneralException("");
+        }
+        return post;
     }
-    public Post dtoRequestToEntity(PostDtoRequest postDTO) {
-        Member member = memberRepository.findById(postDTO.memberId()).orElseThrow(() -> new GeneralException("없음."));
-        return postMapper.postDTORequestToPost(postDTO, member);
-    }
-    public PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request){
+
+    public PageDTO.Response<PostDTO.Response, Post> getList(PageDTO.Request request){
         Pageable pageable = request.getPageable(Sort.by("id").descending());
         Page<Post> result = postRepository.findAll(pageable);
-        Function<Post, PostDTO> fn = this::entityToDto;
+        Function<Post, PostDTO.Response> fn = this::entityToDto;
         return PageDTO.Response.of(result, fn);
     }
-    public PostDTO read(Long id){
+    @Transactional
+    public PostDTO.Response read(Long id){
         Post post = postRepository.findById(id)
                 .orElseThrow( () -> new GeneralException(ErrorCode.BAD_REQUEST));
         post.increaseViewCount();
         entityManager.merge(post);
         return entityToDto(post);
     }
-    public List<PostDTO> readAll(){
+    @Transactional
+    public List<PostDTO.Response> readAll(){
         List<Post> posts = postRepository.findAll();
         return posts.stream().map(this::entityToDto).toList();
     }
     @Transactional
-    public PostDTO create(PostDtoRequest postDto){
-        Post post = postRepository.save(dtoRequestToEntity(postDto));
+    public PostDTO.Response create(PostDTO.Request postDto){
+        Post post = postRepository.save(dtoToEntity(postDto));
         return entityToDto(post);
     }
     @Transactional
-    public PostDTO update(Long id, PostDtoRequest request){
+    public PostDTO.Response update(Long id, PostDTO.Request request){
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorCode.BAD_REQUEST));
         post.updatePost(id, request);
@@ -80,15 +88,16 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(id);
     }
 
-    public PostDTO increaseLikeCount(Long id){
+    @Transactional
+    public PostDTO.Response increaseLikeCount(Long id){
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorCode.BAD_REQUEST));
         post.increaseLikeCount();
         entityManager.merge(post);
         return entityToDto(post);
     }
-
-    public PostDTO decreaseLikeCount(Long id) {
+    @Transactional
+    public PostDTO.Response decreaseLikeCount(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorCode.BAD_REQUEST));
         post.decreaseLikeCount();

@@ -2,10 +2,9 @@ package com.tools.seoultech.timoproject.post.domain.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.member.domain.Member;
-import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
+import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +28,8 @@ public class Post extends BaseEntity {
     @Column(length=1500, nullable=false)
     private String content;
 
+    private Long memberId;
+
     @Builder.Default
     @Column(nullable = false)
     private Integer viewCount = 0;
@@ -42,17 +43,10 @@ public class Post extends BaseEntity {
     @Builder.Default
     private Category category = Category.NORMAL;
 
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
-//    private List<Tag> tags;
-
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
-
-    public void updatePost(Long id, PostDtoRequest request) {
+    public void updatePost(Long id, PostDTO.Request request) {
         if(id != null && this.id.equals(id)){
             this.title = request.title();
             this.content = request.content();
