@@ -53,14 +53,18 @@ public class PostApiController {
         postService.delete(postId);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.empty());
     }
-    @GetMapping("/posts/likeCount/increase/{id}")
-    public ResponseEntity<APIDataResponse> increaseLikeCount(@PathVariable("id") Long id) {
-        PostDTO.Response responseDto = postService.increaseLikeCount(id);
+    @GetMapping("/posts/likeCount/increase/{postId}")
+    public ResponseEntity<APIDataResponse> increaseLikeCount(
+            @PathVariable("postId") Long postId, @RequestParam Long memberId
+    ) {
+        PostDTO.Response responseDto = postService.increaseLikeCount(postId, memberId);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(responseDto));
     }
-    @GetMapping("/posts/likeCount/decrease/{id}")
-    public ResponseEntity<APIDataResponse> decreaseLikeCount(@PathVariable("id") Long id) {
-        PostDTO.Response responseDto = postService.decreaseLikeCount(id);
+    @GetMapping("/posts/likeCount/decrease/{postId}")
+    public ResponseEntity<APIDataResponse> decreaseLikeCount(
+            @PathVariable("postId") Long postId, @RequestParam Long memberId
+    ) {
+        PostDTO.Response responseDto = postService.decreaseLikeCount(postId, memberId);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(responseDto));
     }
 }
