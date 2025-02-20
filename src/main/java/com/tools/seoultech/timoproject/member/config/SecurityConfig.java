@@ -73,7 +73,7 @@ public class SecurityConfig {
 
                 // ⑥ URL 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/oauth2/**", "/login/**", "/api/v1/auth/**").permitAll()
+                        .requestMatchers("/", "/oauth2/**", "/login/**", "/api/v1/auth/**", "/naver/callback").permitAll()
                         .requestMatchers("/api/v1/**", "api/v1/members/**").authenticated()
                         .requestMatchers(
                                 "/bower_components/**",

@@ -52,7 +52,8 @@ public enum ErrorCode {
     UNSUPPORTED_MESSAGE_TYPE_EXCEPTION(805, HttpStatus.BAD_REQUEST, "지원하지 않는 채팅 메세지 타입입니다."),
     NOT_FOUND_HANDLER_EXCEPTION(806, HttpStatus.NOT_FOUND, "지원하지 않는 Api 요청 입니다."),
     NOT_FOUND_USER_EXCEPTION(807, HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
-    INVALID_ACCESS_EXCEPTION(808, HttpStatus.FORBIDDEN, "잘못된 접근입니다.");
+    INVALID_ACCESS_EXCEPTION(808, HttpStatus.FORBIDDEN, "잘못된 접근입니다."),
+    NOT_FOUND_DUO_EXCEPTION(809, HttpStatus.NOT_FOUND, "존재하지 않는 듀오입니다.");
 
 
     private final int code;
