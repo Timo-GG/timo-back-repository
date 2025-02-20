@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.member.controller;
 
 import com.tools.seoultech.timoproject.auth.domain.CustomUserDetails;
+import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping("/api/v1/members")
 public class MemberController {
 
     private final MemberRepository memberRepository;
@@ -23,9 +24,9 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomUserDetails> findByAccessToken(@AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<String> findByAccessToken(@CurrentMemberId Long memberId) {
 
-        return ResponseEntity.ok(member);
+        return ResponseEntity.ok("memberId : " + memberId);
     }
 
 }
