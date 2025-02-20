@@ -55,7 +55,7 @@ class PostRepositoryTest {
                     Post savedPost = postRepository.save(post);
                     assertTrue(Objects.nonNull(savedPost.getId()));
                     assertThat(savedPost)
-                            .hasNoNullFieldsOrPropertiesExcept("comments")
+                            .hasNoNullFieldsOrPropertiesExcept("comments", "likes")
                             .satisfies(it -> {
                                 assertThat(it.getId()).isNotNull().isNotZero();
                                 assertThat(it.getTitle()).isEqualTo(post.getTitle());
@@ -89,7 +89,7 @@ class PostRepositoryTest {
 
             assertTrue(Objects.nonNull(post));
             assertThat(updatedPost)
-                    .hasNoNullFieldsOrPropertiesExcept("comments")
+                    .hasNoNullFieldsOrPropertiesExcept("comments", "likes")
                     .satisfies(it -> {
                         assertThat(it.getId())
                                 .isNotNull()

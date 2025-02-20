@@ -79,7 +79,7 @@ class PostApiControllerTest {
 
         given(postService.readAll()).willReturn(postDTOList);
 
-        mockMvc.perform(get("/api/v1/posts"))
+        mockMvc.perform(get("/api/v1/posts/all"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].title").value("Title1"));
