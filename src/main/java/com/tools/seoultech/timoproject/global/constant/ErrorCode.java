@@ -34,7 +34,6 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN_EXCEPTION(604, HttpStatus.UNAUTHORIZED,  "유효하지 않은 리프레시 토큰입니다."),
     UNSUPPORTED_JWT_TOKEN_EXCEPTION(605, HttpStatus.UNAUTHORIZED,  "지원하지 않는 JWT 토큰입니다."),
     UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION(606, HttpStatus.UNAUTHORIZED,  "지원하지 않는 소셜 플랫폼입니다."),
-    PREFIX_NOT_MATCHING_EXCEPTION(607, HttpStatus.UNAUTHORIZED, "토큰의 prefix가 일치하지 않습니다."),
     /**
      * resource. code prefix: 700번대
      */

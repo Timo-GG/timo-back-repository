@@ -19,5 +19,9 @@ public class GeneralException extends RuntimeException {
         super(message);
         this.errorCode = ErrorCode.INTERNAL_ERROR;
     }
+    public GeneralException(String message, ErrorCode errorCode) {
+        super(message);
+        this.errorCode = errorCode;
+    }
 
 }

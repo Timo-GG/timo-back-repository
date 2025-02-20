@@ -40,7 +40,7 @@ public class HeaderTokenExtractor {
             log.error("{} Header does not begin with \"Bearer\" String : [{}]",
                 headerName,
                 bearerToken);
-            throw new BusinessException(ErrorCode.PREFIX_NOT_MATCHING_EXCEPTION);
+            throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
         }
     }
 

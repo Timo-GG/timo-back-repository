@@ -34,6 +34,7 @@ public class SecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
+        // /admin/v1/** URL에 대해서는 Spring Security의 인증 처리 없이 모두 허용
         http
                 .securityMatcher("/admin/v1/**")
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/admin/v1/posts/delete/**"))
