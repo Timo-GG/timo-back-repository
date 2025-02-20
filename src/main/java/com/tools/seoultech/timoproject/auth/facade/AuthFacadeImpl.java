@@ -20,4 +20,9 @@ public class AuthFacadeImpl implements AuthFacade {
         Long memberId = jwtResolver.getMemberIdFromRefreshToken(refreshToken);
         return jwtProvider.createTokenCollection(TokenInfo.from(memberId));
     }
+
+    @Override
+    public TokenCollection testLogin() {
+        return jwtProvider.createTokenCollection(TokenInfo.from(1L));
+    }
 }

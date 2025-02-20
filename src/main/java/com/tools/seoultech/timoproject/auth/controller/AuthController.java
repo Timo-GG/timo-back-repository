@@ -44,4 +44,11 @@ public class AuthController {
         return ResponseEntity.ok(APIDataResponse.of(tokenCollection));
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<TokenCollection> testLogin() {
+        TokenCollection tokens = authFacade.testLogin();
+
+        return ResponseEntity.ok(tokens);
+    }
+
 }
