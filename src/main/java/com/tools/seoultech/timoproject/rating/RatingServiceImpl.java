@@ -1,5 +1,7 @@
 package com.tools.seoultech.timoproject.rating;
 
+import com.tools.seoultech.timoproject.global.constant.ErrorCode;
+import com.tools.seoultech.timoproject.global.exception.BusinessException;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.rating.dto.RatingRequest;
@@ -9,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -22,9 +25,9 @@ public class RatingServiceImpl implements RatingService{
         public RatingResponse saveRating(RatingRequest RatingRequest) {
 
             Member member = memberRepository.findById(2L).orElseThrow(()
-                    -> new EntityNotFoundException("Member not found with id: " + 2L));
+                    -> new BusinessException(ErrorCode.NOT_FOUND_USER_EXCEPTION));
             Member duo = memberRepository.findById(3L).orElseThrow(()
-                    -> new EntityNotFoundException("Member not found with id: " + 3L));
+                    -> new BusinessException(ErrorCode.NOT_FOUND_DUO_EXCEPTION));
 
             Rating rating = Rating.builder()
                     .score(RatingRequest.score())
@@ -49,14 +52,11 @@ public class RatingServiceImpl implements RatingService{
     // todo 로그인한 내 정보 (ex. email)로 멤버 가져와서 해야됨
     @Override
     public RatingTotalResponse getRatings(Long memberId) {
-        // 해당 멤버가 존재하는지 확인
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + memberId));
+        var member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_USER_EXCEPTION));
 
-        // 해당 멤버의 Rating 리스트 가져오기
-        List<Rating> ratings = ratingRepository.findByMemberId(memberId);
+        List<Rating> ratings = ratingRepository.findByMemberId(member.getId());
 
-        // Rating -> RatingResponse 변환
         List<RatingResponse> ratingResponses = ratings.stream()
                 .map(rating -> new RatingResponse(
                         rating.getId(),
@@ -71,5 +71,11 @@ public class RatingServiceImpl implements RatingService{
         RatingTotalResponse ratingTotalResponse = new RatingTotalResponse(Rating.calculateAverageRatings(ratings), ratingResponses);
 
         return ratingTotalResponse;
+    }
+
+    @Override
+    public BigDecimal getRatingAverage(Long memberId) {
+            List<Rating> ratings = ratingRepository.findByMemberId(memberId);
+            return Rating.calculateAverageRatings(ratings);
     }
 }

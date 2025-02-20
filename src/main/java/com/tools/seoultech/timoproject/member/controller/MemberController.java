@@ -1,21 +1,24 @@
 package com.tools.seoultech.timoproject.member.controller;
 
-import com.tools.seoultech.timoproject.auth.domain.CustomUserDetails;
+import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.member.dto.MemberInfoResponse;
+import com.tools.seoultech.timoproject.member.facade.MemberFacade;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
+import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping("/api/v1/members")
 public class MemberController {
 
     private final MemberRepository memberRepository;
+    private final MemberFacade memberFacade;
 
     @GetMapping
     public ResponseEntity<List<Member>> findAll() {
@@ -23,9 +26,11 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomUserDetails> findByAccessToken(@AuthenticationPrincipal CustomUserDetails member) {
+    public ResponseEntity<APIDataResponse<MemberInfoResponse>> getMember(@CurrentMemberId Long memberId) {
 
-        return ResponseEntity.ok(member);
+        MemberInfoResponse memberInfo = memberFacade.getMemberInfo(memberId);
+
+        return ResponseEntity.ok(APIDataResponse.of(memberInfo));
     }
 
 }

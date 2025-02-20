@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>, QuerydslPredicateExecutor<Post> {
+    long countByMemberId(Long memberId);
     @Query("SELECT p FROM Post p WHERE p.memberId = ?1")
     List<Post> findByMemberId(Long memberId);
 }

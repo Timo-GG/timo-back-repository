@@ -4,6 +4,7 @@ import com.tools.seoultech.timoproject.rating.dto.RatingRequest;
 import com.tools.seoultech.timoproject.rating.dto.RatingResponse;
 import com.tools.seoultech.timoproject.rating.dto.RatingTotalResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface RatingService {
@@ -12,6 +13,8 @@ public interface RatingService {
 
         void deleteRating(Long id);
 
-        RatingTotalResponse getRatings(Long id);
+        RatingTotalResponse getRatings(Long memberId);
+
+        BigDecimal getRatingAverage(Long memberId);
 
 }

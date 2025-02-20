@@ -1,4 +1,15 @@
--- DELETE social_account, comment, post, rating, member
+-- H2용 외래키 제약 조건 비활성화
+SET REFERENTIAL_INTEGRITY FALSE;
+
+-- 기존 데이터 삭제 (각 테이블 초기화)
+TRUNCATE TABLE rating;
+TRUNCATE TABLE comment;
+TRUNCATE TABLE post;
+TRUNCATE TABLE duo_info;
+TRUNCATE TABLE user_info;
+TRUNCATE TABLE social_account;
+TRUNCATE TABLE member;
+
 -------------------------------------------------
 -- 1. MEMBER 테이블
 -------------------------------------------------
@@ -46,7 +57,6 @@ VALUES (1, 'I love competitive play', 'TOP', 'FIRST', 'ENABLED', 'HARDCORE', 'NO
        (9, 'Always looking for improvement', 'SUPPORT', 'LAST', 'LISTEN_ONLY', 'HARDCORE', 'NO_MATTER'),
        (10, 'Fun-loving and creative', 'RANGED_DEALER', 'FIRST', 'ENABLED', 'FUN', 'RANK_DUO');
 
-
 -------------------------------------------------
 -- 4. DUO_INFO 테이블
 -------------------------------------------------
@@ -62,8 +72,24 @@ VALUES (1, 'MID', 'FUN'),
        (9, 'JUNGLE', 'NO_MATTER'),
        (10, 'MID', 'HARDCORE');
 
--- Insert Data
+-------------------------------------------------
+-- 6. Comment 테이블
+-------------------------------------------------
+INSERT INTO comment (comment_id, member_id, post_id, content, mod_date, reg_date)
+VALUES
+    (1, 5, 1, '테스트 댓글 내용...1', NOW(), NOW()),
+    (2, 4, 2, '테스트 댓글 내용...2', NOW(), NOW()),
+    (3, 3, 2, '테스트 댓글 내용...3', NOW(), NOW()),
+    (4, 2, 3, '테스트 댓글 내용...4', NOW(), NOW()),
+    (5, 1, 3, '테스트 댓글 내용...5', NOW(), NOW());
+
+-------------------------------------------------
+-- 7. Rating 테이블
+-------------------------------------------------
 INSERT INTO rating (score, attitude, speech, skill, member_id, duo_id)
 VALUES
     (4.5, 'GOOD', 'MANNERS', 'LEARNING', 1, 2),
     (2.5, 'BAD', 'AGGRESSIVE', 'NORMAL', 1, 2);
+
+-- 삽입이 끝난 후 제약 조건을 다시 활성화
+SET REFERENTIAL_INTEGRITY TRUE;

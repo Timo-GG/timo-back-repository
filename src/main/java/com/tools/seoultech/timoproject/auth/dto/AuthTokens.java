@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class AuthTokens {
 
     private final String accessToken;
-    @JsonIgnore
     private String refreshToken;
     private final String grantType;
     private final Long expiresIn;

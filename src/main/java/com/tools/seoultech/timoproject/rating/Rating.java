@@ -52,6 +52,10 @@ public class Rating {
 
     // score 평균 계산
     public static BigDecimal calculateAverageRatings(List<Rating> ratings) {
+        if (ratings == null || ratings.isEmpty()) {
+            return BigDecimal.ZERO; // 또는 적절한 기본값 처리
+        }
+
         BigDecimal sum = BigDecimal.ZERO;
         for (Rating rating : ratings) {
             sum = sum.add(rating.getScore());
