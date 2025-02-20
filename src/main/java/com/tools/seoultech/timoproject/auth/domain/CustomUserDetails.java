@@ -3,21 +3,24 @@ package com.tools.seoultech.timoproject.auth.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.domain.Role;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomUserDetails implements UserDetails {
 
     private final Member member;
 
-    public CustomUserDetails(Member member) {
-        this.member = member;
+    public static CustomUserDetails from (Member member) {
+        return new CustomUserDetails(member);
     }
 
-    public Long getId() {
+    public Long getMemberId() {
         return member.getId();
     }
 
