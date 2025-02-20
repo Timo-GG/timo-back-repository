@@ -29,13 +29,6 @@ public class Comment extends BaseEntity {
     @JoinColumn(name="member_id", nullable = false)
     private Member member;
 
-//    @Builder(builderMethodName = "defaultBuilder")
-//    public Comment(String content, Post post, Member member) {
-//        this.content = content;
-//        this.post = post;
-//        this.member = member;
-//    }
-
     public void setPost(Post post) {
         if(post != null) {
             this.post = post;

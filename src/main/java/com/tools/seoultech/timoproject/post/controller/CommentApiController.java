@@ -12,27 +12,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comment")
+@RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor
 @Slf4j
 public class CommentApiController {
     private final CommentService commentService;
 
-    @GetMapping("/read/{commentId}")
-    public ResponseEntity<APIDataResponse<CommentDTO.Response>> readComment(@PathVariable Long commentId) {
+    @GetMapping("/{commentId}")
+    public ResponseEntity<APIDataResponse<CommentDTO.Response>> readComment (
+            @PathVariable Long commentId
+    ) {
         CommentDTO.Response readDto = commentService.read(commentId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(readDto));
     }
-    @GetMapping("/read/readAll")
+    @GetMapping
     public ResponseEntity<APIDataResponse<List<CommentDTO.Response>>> readAllComments() {
         List<CommentDTO.Response> readDtoList = commentService.readAll();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(readDtoList));
     }
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<APIDataResponse<CommentDTO.Response>> createComment(
             @RequestBody CommentDTO.Request commentDTO
     ) {
@@ -41,19 +43,21 @@ public class CommentApiController {
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(responseDto));
     }
-    @PutMapping("/update/{id}")
+    @PutMapping("/{commentId}")
     public ResponseEntity<APIDataResponse<CommentDTO.Response>> updateComment(
-            @PathVariable("id") Long id,
+            @PathVariable("commentId") Long commentId,
             @RequestBody CommentDTO.Request commentDTO
     ){
-        CommentDTO.Response responseDto = commentService.update(id, commentDTO);
+        CommentDTO.Response responseDto = commentService.update(commentId, commentDTO);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(responseDto));
     }
-    @DeleteMapping
-    public ResponseEntity<APIDataResponse<CommentDTO.Response>> deleteComment(Long id){
-        commentService.delete(id);
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<APIDataResponse<CommentDTO.Response>> deleteComment(
+            @PathVariable("commentId") Long commentId
+    ){
+        commentService.delete(commentId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.empty());

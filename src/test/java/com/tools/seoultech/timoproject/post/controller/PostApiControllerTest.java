@@ -51,7 +51,7 @@ class PostApiControllerTest {
 
         given(postService.read(postId)).willReturn(postDTO);
 
-        mockMvc.perform(get("/api/v1/postApi/read/{postId}", postId))
+        mockMvc.perform(get("/api/v1/posts/{postId}", postId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.title").value("Title"))
                 .andExpect(jsonPath("$.data.content").value("Content"));
@@ -79,7 +79,7 @@ class PostApiControllerTest {
 
         given(postService.readAll()).willReturn(postDTOList);
 
-        mockMvc.perform(get("/api/v1/postApi/read/getAll"))
+        mockMvc.perform(get("/api/v1/posts/all"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].title").value("Title1"));
@@ -103,7 +103,7 @@ class PostApiControllerTest {
 
         given(postService.create(postDtoRequest)).willReturn(postDTO);
 
-        mockMvc.perform(post("/api/v1/postApi/create")
+        mockMvc.perform(post("/api/v1/posts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postDtoRequest)))
                 .andExpect(status().isCreated())
@@ -130,7 +130,7 @@ class PostApiControllerTest {
 
         given(postService.update(1L, postDtoRequest)).willReturn(postDTO);
 
-        mockMvc.perform(put("/api/v1/postApi/update/%d".formatted(1L))
+        mockMvc.perform(put("/api/v1/posts/{postId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postDtoRequest)))
                 .andExpect(status().isOk())
@@ -146,7 +146,7 @@ class PostApiControllerTest {
 
         BDDMockito.willDoNothing().given(postService).delete(postId);
 
-        mockMvc.perform(delete("/api/v1/postApi/delete/{id}", postId))
+        mockMvc.perform(delete("/api/v1/posts/{postId}", postId))
                 .andExpect(status().isOk());
 
         then(postService).should().delete(postId);

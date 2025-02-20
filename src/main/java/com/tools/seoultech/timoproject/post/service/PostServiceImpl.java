@@ -6,8 +6,10 @@ import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
+import com.tools.seoultech.timoproject.post.domain.entity.PostLike;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
+import com.tools.seoultech.timoproject.post.repository.PostLikeRepository;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
 
 import jakarta.persistence.EntityManager;
@@ -29,6 +31,8 @@ import java.util.function.Function;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final PostLikeRepository likeRepository;
+
     private final EntityManager entityManager;
     private final PostMapper postMapper;
 
@@ -89,19 +93,55 @@ public class PostServiceImpl implements PostService {
     }
 
     @Transactional
-    public PostDTO.Response increaseLikeCount(Long id){
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new GeneralException(ErrorCode.BAD_REQUEST));
-        post.increaseLikeCount();
-        entityManager.merge(post);
-        return entityToDto(post);
+    public PostDTO.Response increaseLikeCount(Long postId, Long memberId){
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new GeneralException("해당 postId에 해당하는 게시글이 존재하지 않습니다.", ErrorCode.BAD_REQUEST));
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralException("해당 memberId에 해당하는 사용자가 존재하지 않습니다.", ErrorCode.BAD_REQUEST));
+
+        if(likeRepository.existsByMemberId(postId, memberId))
+                throw new GeneralException("해당 사용자는 이미 좋아요를 눌렀습니다.", ErrorCode.BAD_REQUEST);
+        else{
+            PostLike like = PostLike.builder().post(post).member(member).build();
+            likeRepository.save(like);
+
+            post.increaseLikeCount();
+            entityManager.merge(post);
+            return entityToDto(post);
+        }
     }
     @Transactional
-    public PostDTO.Response decreaseLikeCount(Long id) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new GeneralException(ErrorCode.BAD_REQUEST));
-        post.decreaseLikeCount();
-        entityManager.merge(post);
-        return entityToDto(post);
+    public PostDTO.Response decreaseLikeCount(Long postId, Long memberId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new GeneralException("해당 postId에 해당하는 게시글이 존재하지 않습니다.", ErrorCode.BAD_REQUEST));
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralException("해당 memberId에 해당하는 사용자가 존재하지 않습니다.", ErrorCode.BAD_REQUEST));
+
+        if(!likeRepository.existsByMemberId(postId, memberId))
+            throw new GeneralException("해당 사용자는 좋아요를 누르지 않았습니다.", ErrorCode.BAD_REQUEST);
+        else{
+            likeRepository.deleteByMemberId(memberId);
+
+            post.decreaseLikeCount();
+            entityManager.merge(post);
+
+            return entityToDto(post);
+        }
+    }
+
+    public List<PostDTO.Response> readByMember(Long memberId) {
+        if(!memberRepository.existsById(memberId))
+            throw new GeneralException("해당 사용자가 없습니다.");
+
+        List<Post> postList =  postRepository.findByMemberId(memberId);
+        if(postList.isEmpty())
+            throw new GeneralException("해당 사용자의 게시글이 없습니다.");
+
+        List<PostDTO.Response> postDtoList = postList.stream()
+                .map(this::entityToDto)
+                .toList();
+        return postDtoList;
     }
 }
