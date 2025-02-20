@@ -46,42 +46,31 @@ VALUES
 -- 3. USER_INFO 테이블
 -------------------------------------------------
 INSERT INTO user_info (user_info_id, introduce, play_position, play_condition, voice_chat, play_style, game_mode)
-VALUES
-    (1, 'I love competitive play',            'TOP',           'FIRST',    'ENABLED',    'HARDCORE',     'NORMAL'),
-    (2, 'Casual and fun gamer',               'JUNGLE',        'CONTINUE', 'DISABLED',   'FUN',          'RANK_DUO'),
-    (3, 'Always striving for improvement',    'MID',           'LAST',     'LISTEN_ONLY','SUB_ACCOUNT',  'RANK_FREE'),
-    (4, 'Secretive but skilled',              'SUPPORT',       'FIRST',    'ENABLED',    'NO_MATTER',    'NO_MATTER'),
-    (5, 'Loves team strategy',                'RANGED_DEALER', 'CONTINUE', 'DISABLED',   'HARDCORE',     'RANK_DUO'),
-    (6, 'Passionate about every game',        'TOP',           'LAST',     'LISTEN_ONLY','FUN',          'NORMAL'),
-    (7, 'Determined and precise',             'JUNGLE',        'FIRST',    'ENABLED',    'SUB_ACCOUNT',  'RANK_FREE'),
-    (8, 'Enjoys every match',                 'MID',           'CONTINUE', 'DISABLED',   'NO_MATTER',    'NORMAL'),
-    (9, 'Always looking for improvement',     'SUPPORT',       'LAST',     'LISTEN_ONLY','HARDCORE',     'NO_MATTER'),
-    (10, 'Fun-loving and creative',            'RANGED_DEALER', 'FIRST',    'ENABLED',    'FUN',          'RANK_DUO');
+VALUES (1, 'I love competitive play', 'TOP', 'FIRST', 'ENABLED', 'HARDCORE', 'NORMAL'),
+       (2, 'Casual and fun gamer', 'JUNGLE', 'CONTINUE', 'DISABLED', 'FUN', 'RANK_DUO'),
+       (3, 'Always striving for improvement', 'MID', 'LAST', 'LISTEN_ONLY', 'SUB_ACCOUNT', 'RANK_FREE'),
+       (4, 'Secretive but skilled', 'SUPPORT', 'FIRST', 'ENABLED', 'NO_MATTER', 'NO_MATTER'),
+       (5, 'Loves team strategy', 'RANGED_DEALER', 'CONTINUE', 'DISABLED', 'HARDCORE', 'RANK_DUO'),
+       (6, 'Passionate about every game', 'TOP', 'LAST', 'LISTEN_ONLY', 'FUN', 'NORMAL'),
+       (7, 'Determined and precise', 'JUNGLE', 'FIRST', 'ENABLED', 'SUB_ACCOUNT', 'RANK_FREE'),
+       (8, 'Enjoys every match', 'MID', 'CONTINUE', 'DISABLED', 'NO_MATTER', 'NORMAL'),
+       (9, 'Always looking for improvement', 'SUPPORT', 'LAST', 'LISTEN_ONLY', 'HARDCORE', 'NO_MATTER'),
+       (10, 'Fun-loving and creative', 'RANGED_DEALER', 'FIRST', 'ENABLED', 'FUN', 'RANK_DUO');
 
 -------------------------------------------------
 -- 4. DUO_INFO 테이블
 -------------------------------------------------
 INSERT INTO duo_info (duo_info_id, duo_play_position, duo_play_style)
-VALUES
-    (1, 'MID',           'FUN'),
-    (2, 'SUPPORT',       'HARDCORE'),
-    (3, 'TOP',           'HARDCORE'),
-    (4, 'JUNGLE',        'FUN'),
-    (5, 'MID',           'HARDCORE'),
-    (6, 'SUPPORT',       'FUN'),
-    (7, 'RANGED_DEALER', 'NO_MATTER'),
-    (8, 'TOP',           'SUB_ACCOUNT'),
-    (9, 'JUNGLE',        'NO_MATTER'),
-    (10, 'MID',           'HARDCORE');
-
--------------------------------------------------
--- 5. Post 테이블
--------------------------------------------------
-INSERT INTO post (post_id, title, content, member_id, view_count, like_count, category, mod_date, reg_date)
-VALUES
-    (1, '테스트 제목: 1', '테스트 내용...1', 1, 50, 0, 'NORMAL', NOW(), NOW()),
-    (2, '테스트 제목: 2', '테스트 내용...2', 2, 100, 0, 'NORMAL', NOW(), NOW()),
-    (3, '테스트 제목: 3', '테스트 내용...3', 3, 150, 0, 'NORMAL', NOW(), NOW());
+VALUES (1, 'MID', 'FUN'),
+       (2, 'SUPPORT', 'HARDCORE'),
+       (3, 'TOP', 'HARDCORE'),
+       (4, 'JUNGLE', 'FUN'),
+       (5, 'MID', 'HARDCORE'),
+       (6, 'SUPPORT', 'FUN'),
+       (7, 'RANGED_DEALER', 'NO_MATTER'),
+       (8, 'TOP', 'SUB_ACCOUNT'),
+       (9, 'JUNGLE', 'NO_MATTER'),
+       (10, 'MID', 'HARDCORE');
 
 -------------------------------------------------
 -- 6. Comment 테이블

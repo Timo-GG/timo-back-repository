@@ -9,10 +9,6 @@ TRUNCATE TABLE duo_info;
 TRUNCATE TABLE user_info;
 TRUNCATE TABLE social_account;
 TRUNCATE TABLE member;
-
--- 외래키 체크 활성화
-SET FOREIGN_KEY_CHECKS = 1;
-
 -------------------------------------------------
 -- 1. MEMBER 테이블
 -------------------------------------------------
@@ -103,3 +99,7 @@ INSERT INTO rating (score, attitude, speech, skill, member_id, duo_id)
 VALUES
     (4.5, 'GOOD', 'MANNERS', 'LEARNING', 1, 2),
     (2.5, 'BAD', 'AGGRESSIVE', 'NORMAL', 1, 2);
+    
+-- 외래키 체크 활성화
+SET FOREIGN_KEY_CHECKS = 1;
+
