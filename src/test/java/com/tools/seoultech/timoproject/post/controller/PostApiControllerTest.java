@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PostApiController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @ContextConfiguration(classes = PostApiController.class)
 @Import(TestSecurityConfig.class)
 class PostApiControllerTest {
@@ -79,7 +81,7 @@ class PostApiControllerTest {
 
         given(postService.readAll()).willReturn(postDTOList);
 
-        mockMvc.perform(get("/api/v1/posts/all"))
+        mockMvc.perform(get("/api/v1/posts"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].title").value("Title1"));
