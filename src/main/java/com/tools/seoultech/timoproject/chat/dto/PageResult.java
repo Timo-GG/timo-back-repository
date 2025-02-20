@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.chat.model.dto;
+package com.tools.seoultech.timoproject.chat.dto;
 
 import java.util.List;
 

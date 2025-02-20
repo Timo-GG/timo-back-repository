@@ -11,5 +11,5 @@ public interface MessageService {
 
     Message saveMessage(Message message);
 
-
+    Message getById(Long messageId);
 }

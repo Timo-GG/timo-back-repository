@@ -3,6 +3,7 @@ package com.tools.seoultech.timoproject.chat.service.impl;
 import com.tools.seoultech.timoproject.chat.model.Message;
 import com.tools.seoultech.timoproject.chat.repository.MessageRepository;
 import com.tools.seoultech.timoproject.chat.service.MessageService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,11 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Message saveMessage(Message message) {
         return messageRepository.save(message);
+    }
+
+    @Override
+    public Message getById(Long messageId) {
+        return messageRepository.findById(messageId)
+                .orElseThrow(() -> new EntityNotFoundException("Message not found with id: " + messageId));
     }
 }
