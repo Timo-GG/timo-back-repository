@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.post.domain.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
-import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,7 +46,7 @@ public class Post extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "post")
-    private List<Like> likes = new ArrayList<>();
+    private List<PostLike> likes = new ArrayList<>();
 
     public void updatePost(Long id, PostDTO.Request request) {
         if(id != null && this.id.equals(id)){

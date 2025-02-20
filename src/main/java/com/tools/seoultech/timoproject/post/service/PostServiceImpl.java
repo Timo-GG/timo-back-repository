@@ -6,10 +6,10 @@ import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.domain.entity.Like;
+import com.tools.seoultech.timoproject.post.domain.entity.PostLike;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
-import com.tools.seoultech.timoproject.post.repository.LikeRepository;
+import com.tools.seoultech.timoproject.post.repository.PostLikeRepository;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
 
 import jakarta.persistence.EntityManager;
@@ -31,7 +31,7 @@ import java.util.function.Function;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
-    private final LikeRepository likeRepository;
+    private final PostLikeRepository likeRepository;
 
     private final EntityManager entityManager;
     private final PostMapper postMapper;
@@ -103,7 +103,7 @@ public class PostServiceImpl implements PostService {
         if(likeRepository.existsByMemberId(postId, memberId))
                 throw new GeneralException("해당 사용자는 이미 좋아요를 눌렀습니다.", ErrorCode.BAD_REQUEST);
         else{
-            Like like = Like.builder().post(post).member(member).build();
+            PostLike like = PostLike.builder().post(post).member(member).build();
             likeRepository.save(like);
 
             post.increaseLikeCount();

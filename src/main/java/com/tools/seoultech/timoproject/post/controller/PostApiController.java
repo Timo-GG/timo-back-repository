@@ -30,7 +30,7 @@ public class PostApiController {
         List<PostDTO.Response> postList =  postService.readByMember(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(postList));
     }
-    @GetMapping("/posts/all")
+    @GetMapping("/posts")
     public ResponseEntity<APIDataResponse<List<PostDTO.Response>>> readAllPosts() {
         List<PostDTO.Response> postDtoList = postService.readAll();
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(postDtoList));
@@ -53,14 +53,14 @@ public class PostApiController {
         postService.delete(postId);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.empty());
     }
-    @GetMapping("/posts/likeCount/increase/{postId}")
+    @GetMapping("/posts/{postId}/likeCount/increase")
     public ResponseEntity<APIDataResponse> increaseLikeCount(
             @PathVariable("postId") Long postId, @RequestParam Long memberId
     ) {
         PostDTO.Response responseDto = postService.increaseLikeCount(postId, memberId);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(responseDto));
     }
-    @GetMapping("/posts/likeCount/decrease/{postId}")
+    @GetMapping("/posts/{postId}/likeCount/decrease")
     public ResponseEntity<APIDataResponse> decreaseLikeCount(
             @PathVariable("postId") Long postId, @RequestParam Long memberId
     ) {

@@ -9,12 +9,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="like")
+@Table(name="postLike")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Like {
+public class PostLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_id", nullable = false)
