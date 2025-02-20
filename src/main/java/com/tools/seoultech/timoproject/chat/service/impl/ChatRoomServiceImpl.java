@@ -7,11 +7,14 @@ import com.tools.seoultech.timoproject.chat.model.Message;
 import com.tools.seoultech.timoproject.chat.model.MessageType;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomMemberRepository;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomRepository;
+import com.tools.seoultech.timoproject.chat.repository.MessageRepository;
 import com.tools.seoultech.timoproject.chat.service.ChatRoomService;
 import com.tools.seoultech.timoproject.chat.service.MessageService;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +24,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomMemberRepository chatRoomMemberRepository;
     private final MessageService messageService;
+    private final MessageRepository messageRepository;
 
 
     @Override
@@ -34,7 +38,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public void validateUserInRoom(Member member, ChatRoom room) {
+    public void validateMemberInRoom(Member member, ChatRoom room) {
         if(!chatRoomMemberRepository.existsByMemberIdAndChatRoomId(member.getId(), room.getId())) {
             throw new EntityNotFoundException("Member not found in ChatRoom with id: " + room.getId());
         }
@@ -47,6 +51,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .map(ChatRoomMember::getLastCheckedMessage)
                 .map(Message::getId)
                 .orElse(null);
+    }
+
+    @Override
+    public Slice<Message> getBeforeMessagesByPaging(long roomId, Long messageId, int size){
+        return messageId == null ?
+                messageRepository.findByChatRoomIdOrderByIdDesc(roomId, PageRequest.of(0, size)) :
+                messageRepository.findByRoomIdLessThanIdOrderByIdDesc(roomId, messageId, PageRequest.of(0, size));
     }
 
     @Override

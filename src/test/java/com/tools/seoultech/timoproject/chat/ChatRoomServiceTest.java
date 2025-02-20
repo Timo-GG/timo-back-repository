@@ -83,7 +83,7 @@ class ChatRoomServiceTest {
         when(chatRoomMemberRepository.existsByMemberIdAndChatRoomId(1L, 1L)).thenReturn(true);
 
         // When
-        chatRoomService.validateUserInRoom(member, chatRoom);
+        chatRoomService.validateMemberInRoom(member, chatRoom);
 
         // Then
         verify(chatRoomMemberRepository).existsByMemberIdAndChatRoomId(1L, 1L);
@@ -120,7 +120,7 @@ class ChatRoomServiceTest {
         // When
         // Then
         try {
-            chatRoomService.validateUserInRoom(member, chatRoom);
+            chatRoomService.validateMemberInRoom(member, chatRoom);
         } catch (EntityNotFoundException e) {
             assertEquals("Member not found in ChatRoom with id: 1", e.getMessage());
         }
