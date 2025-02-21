@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.member.config;
+package com.tools.seoultech.timoproject.auth.config;
 
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.tools.seoultech.timoproject.auth.jwt.HeaderTokenExtractor;
