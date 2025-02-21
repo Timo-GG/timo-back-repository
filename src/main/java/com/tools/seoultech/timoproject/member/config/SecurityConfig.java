@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.member.config;
 
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.tools.seoultech.timoproject.auth.jwt.HeaderTokenExtractor;
 import com.tools.seoultech.timoproject.auth.jwt.JwtResolver;
 import com.tools.seoultech.timoproject.auth.jwt.filter.JwtAccessDeniedHandler;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
@@ -74,7 +76,10 @@ public class SecurityConfig {
 
                 // ⑥ URL 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/oauth2/**", "/login/**", "/api/v1/auth/**", "/naver/callback").permitAll()
+                        .requestMatchers("/", "/oauth2/**", "/login/**", "/api/v1/auth/**","/naver/callback").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/posts/public/**", "/api/v1/comments/public/**").permitAll()
+                        // post나 comment 작성, 수정, 삭제는 인증 필요. 메서드 별로 구별해야 돼
+                        .requestMatchers("/api/v1/posts/**", "/api/v1/comments/**").authenticated()
                         .requestMatchers("/api/v1/**", "api/v1/members/**").authenticated()
                         .requestMatchers(
                                 "/bower_components/**",

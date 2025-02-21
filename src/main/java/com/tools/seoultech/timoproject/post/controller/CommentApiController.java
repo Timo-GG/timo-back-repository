@@ -18,7 +18,7 @@ import java.util.List;
 public class CommentApiController {
     private final CommentService commentService;
 
-    @GetMapping("/{commentId}")
+    @GetMapping("/public/{commentId}")
     public ResponseEntity<APIDataResponse<CommentDTO.Response>> readComment (
             @PathVariable Long commentId
     ) {
@@ -27,7 +27,7 @@ public class CommentApiController {
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(readDto));
     }
-    @GetMapping
+    @GetMapping("/public")
     public ResponseEntity<APIDataResponse<List<CommentDTO.Response>>> readAllComments() {
         List<CommentDTO.Response> readDtoList = commentService.readAll();
         return ResponseEntity
