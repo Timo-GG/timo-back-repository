@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SocketIOAddMappingSupporter {
+public class SocketIOAddMappingSupporter { // 어노테이션 묶는 곳
 
     private final ConfigurableListableBeanFactory beanFactory;
     private final SocketProperty socketProperty;
