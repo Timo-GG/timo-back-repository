@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -18,5 +20,14 @@ public class MemberServiceImpl implements MemberService {
     public Member getById(Long memberId) {
         return memberRepository.findById(memberId).
                 orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + memberId));
+    }
+
+    public boolean checkNickname(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    public String randomCreateNickname() {
+        return "티모대위" + "-" + UUID.randomUUID().toString().substring(0, 5);
     }
 }

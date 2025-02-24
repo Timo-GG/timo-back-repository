@@ -97,8 +97,4 @@ public class Member extends BaseEntity {
         this.email = "anonymous_" + UUID.randomUUID().toString() + "@anonymous.com";
     }
 
-    //nickname 자동생성
-    public void randomCreateNickname() {
-        this.nickname = "티모대위" + "-" + UUID.randomUUID().toString().substring(0, 5);
-    }
 }

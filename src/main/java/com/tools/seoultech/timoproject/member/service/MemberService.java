@@ -7,4 +7,7 @@ public interface MemberService {
 
     Member getById(Long memberId);
 
+    boolean checkNickname(String nickname);
+
+    String randomCreateNickname();
 }
