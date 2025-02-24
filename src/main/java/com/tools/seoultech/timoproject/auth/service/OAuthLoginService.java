@@ -34,12 +34,11 @@ public class OAuthLoginService {
     private Long newMember(OAuthInfoResponse oAuthInfoResponse) {
         Member member = Member.builder()
                 .email(oAuthInfoResponse.getEmail())
-                .nickname(oAuthInfoResponse.getNickname())
                 .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
                 .build();
 
-        if(member.getUsername() == null){
-            member.randomCreateUsername();
+        if(member.getNickname() == null){
+            member.randomCreateNickname();
         }
 
         return memberRepository.save(member).getId();
