@@ -46,14 +46,4 @@ public class AuthController {
         return ResponseEntity.ok(tokens);
     }
 
-    @GetMapping("/verify")
-    public ResponseEntity<APIDataResponse<?>> verifyPlayer(
-            AccountDto.Request request
-    ) {
-        AccountDto.Response response = authFacade.verifyPlayer(request);
-
-        return ResponseEntity.ok(APIDataResponse.of(response));
-    }
-
-
 }
