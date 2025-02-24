@@ -19,9 +19,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static java.lang.Thread.sleep;
 
 @Service
 @Validated
@@ -33,15 +33,29 @@ public class BasicAPIService {
     private HttpResponse<String> response;
 
     @Value("${api_key}") private String api_key;
-//    @Value("${my_puuid}") private String my_puuid;
+
+    // URL 인코딩 메서드
+    private String encodeUrlParameter(String param) {
+        try {
+            return java.net.URLEncoder.encode(param, StandardCharsets.UTF_8.toString())
+                    .replace("+", "%20"); // 공백을 %20으로 변환
+        } catch (Exception e) {
+            throw new RuntimeException("URL 인코딩 실패: " + param, e);
+        }
+    }
 
     @Transactional
     public AccountDto.Response findUserAccount(@Valid AccountDto.Request dto) throws Exception {
+        String encodedGameName = encodeUrlParameter(dto.getGameName());
+        String encodedTagLine = encodeUrlParameter(dto.getTagLine());
+
         StringBuilder sb = new StringBuilder();
         sb.append("https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/")
-                .append(dto.getGameName()).append("/")
-                .append(dto.getTagLine()).append("/")
+                .append(encodedGameName).append("/")
+                .append(encodedTagLine).append("/")
                 .append("?api_key=").append(api_key);
+
+        System.out.println("API URL: " + sb);
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create(sb.toString()))
@@ -54,61 +68,65 @@ public class BasicAPIService {
         return mapper.readValue(response.body(), AccountDto.Response.class);
     }
 
-    private void riotAPI_validation(HttpResponse<String> response){
-        if(response.statusCode() == HttpStatus.NOT_FOUND.value()) {
+    private void riotAPI_validation(HttpResponse<String> response) {
+        System.out.println("Response Status Code: " + response.statusCode());
+        System.out.println("Response Body: " + response.body());
+
+        if (response.statusCode() == HttpStatus.NOT_FOUND.value()) {
             log.info("riot API 예외 처리 - 사용자를 찾을 수 없습니다.");
             throw new RiotAPIException("계정 정보 API 호출 실패 - 사용자 정보가 없습니다.", ErrorCode.API_ACCESS_ERROR);
         }
-        if(response.statusCode() == HttpStatus.UNAUTHORIZED.value()) {
+        if (response.statusCode() == HttpStatus.UNAUTHORIZED.value()) {
             log.info("riot API 예외 처리 - API_KEY가 유효하지 않습니다.");
             throw new RiotAPIException("유효하지 않은 API_KEY", ErrorCode.API_ACCESS_ERROR);
         }
     }
+
     public MatchInfoDTO requestMatchInfoRaw(String matchid) throws Exception {
+        String encodedMatchId = encodeUrlParameter(matchid);
+
         StringBuilder sb = new StringBuilder();
         sb.append("https://asia.api.riotgames.com/lol/match/v5/matches/")
-                .append(matchid);
+                .append(encodedMatchId);
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create(sb.toString()))
                 .header("X-Riot-Token", api_key)
                 .GET()
                 .build();
-//        sleep(1500);
         response = httpClient.send(
                 request,
                 HttpResponse.BodyHandlers.ofString());
 
-        System.err.println("Service: "+ response);
+        System.err.println("Service: " + response);
         System.err.println(response.body());
-        MatchInfoDTO matchInfoDTO = MatchInfoDTO.of(response.body());
-        return matchInfoDTO;
+        return MatchInfoDTO.of(response.body());
     }
+
     public Detail_MatchInfoDTO requestMatchInfo(String matchid, String my_puuid, String requestRuneDataString) throws Exception {
+        String encodedMatchId = encodeUrlParameter(matchid);
+
         StringBuilder sb = new StringBuilder();
         sb.append("https://asia.api.riotgames.com/lol/match/v5/matches/")
-                .append(matchid);
+                .append(encodedMatchId);
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create(sb.toString()))
                 .header("X-Riot-Token", api_key)
                 .GET()
                 .build();
-//        sleep(1500);
         response = httpClient.send(
                 request,
                 HttpResponse.BodyHandlers.ofString());
-
-        System.err.println("Service: "+ response);
-        MatchInfoDTO matchInfoDTO = MatchInfoDTO.of(response.body());
 
         log.info("BasicAPIService: Completed MatchInfoDTO request");
-        Detail_MatchInfoDTO detail_matchInfoDTO = Detail_MatchInfoDTO.of(matchInfoDTO, my_puuid, requestRuneDataString);
+        MatchInfoDTO matchInfoDTO = MatchInfoDTO.of(response.body());
+
         log.info("BasicAPIService: Completed Detail_MatchInfoDTO request");
-        return detail_matchInfoDTO;
+        return Detail_MatchInfoDTO.of(matchInfoDTO, my_puuid, requestRuneDataString);
     }
 
-    public String requestRuneData() throws Exception{
+    public String requestRuneData() throws Exception {
         request = HttpRequest.newBuilder()
                 .uri(URI.create("https://ddragon.leagueoflegends.com/cdn/14.23.1/data/en_US/runesReforged.json"))
                 .GET()
@@ -119,16 +137,18 @@ public class BasicAPIService {
         log.info("BasicAPIService: Completed RuneData request");
         return response.body();
     }
+
     public List<String> requestMatchList(String puuid) throws Exception {
+        String encodedPuuid = encodeUrlParameter(puuid);
+
         StringBuilder sb = new StringBuilder();
         sb.append("https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/")
-                .append(puuid)
+                .append(encodedPuuid)
                 .append("/ids");
 
         request = HttpRequest.newBuilder()
-                .uri(URI.create(sb.toString()))
                 .uri(UriComponentsBuilder.fromUriString(sb.toString())
-                        .queryParam("start",0)
+                        .queryParam("start", 0)
                         .queryParam("count", 20)
                         .queryParam("api_key", api_key)
                         .build().toUri())
