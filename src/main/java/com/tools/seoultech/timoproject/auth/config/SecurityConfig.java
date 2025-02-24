@@ -8,7 +8,6 @@ import com.tools.seoultech.timoproject.auth.jwt.filter.JwtAuthenticationFilter;
 import com.tools.seoultech.timoproject.auth.jwt.filter.JwtExceptionFilter;
 import com.tools.seoultech.timoproject.auth.service.CustomUserDetailsService;
 import com.tools.seoultech.timoproject.global.config.WhitelistProperties;
-import com.tools.seoultech.timoproject.global.constant.ApiPaths;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
