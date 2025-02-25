@@ -68,15 +68,7 @@ public class Member extends BaseEntity {
     }
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<SocialAccount> socialAccounts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Rating> ratings = new ArrayList<>();
-
-    public void linkSocialAccount(SocialAccount socialAccount) {
-        this.socialAccounts.add(socialAccount);
-        socialAccount.linkMember(this);
-    }
 
     // TODO : 회원 가입 이후 유저의 소환사 정보 기입하도록...
     public void linkRiotInfo(String playerName, String playerTag) {
@@ -96,7 +88,7 @@ public class Member extends BaseEntity {
         this.email = "anonymous_" + UUID.randomUUID().toString() + "@anonymous.com";
     }
 
-    //nickname 자동생성
+    // nickname 자동생성
     public void randomCreateUsername() {
         this.username = "티모대위" + "-" + UUID.randomUUID().toString().substring(0, 5);
     }
