@@ -1,15 +1,17 @@
 package com.tools.seoultech.timoproject.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tools.seoultech.timoproject.global.config.TestSecurityConfig;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.domain.dto.PostDtoRequest;
 import com.tools.seoultech.timoproject.post.service.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,7 +24,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PostApiController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @ContextConfiguration(classes = PostApiController.class)
+@Import(TestSecurityConfig.class)
 class PostApiControllerTest {
     @MockBean
     private PostServiceImpl postService;
@@ -40,47 +44,44 @@ class PostApiControllerTest {
     @Test
     void testReadPost() throws Exception {
         Long postId = 1L;
-        PostDTO postDTO = PostDTO.builder()
+        PostDTO.Response postDTO = PostDTO.Response.builder()
                 .id(postId)
                 .title("Title")
                 .content("Content")
-                .puuid("userUuid")
+                .memberId(1L)
                 .build();
 
-        // BDDMockito 스타일
         given(postService.read(postId)).willReturn(postDTO);
 
-        mockMvc.perform(get("/api/postApi/read/{postId}", postId))
+        mockMvc.perform(get("/api/v1/posts/{postId}", postId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.title").value("Title"))
                 .andExpect(jsonPath("$.data.content").value("Content"));
-
 
         then(postService).should().read(postId);
     }
 
     @Test
     void testGetAllPosts() throws Exception {
-        PostDTO postDTO1 = PostDTO.builder()
+        PostDTO.Response postDTO1 = PostDTO.Response.builder()
                 .id(1L)
                 .title("Title1")
                 .content("Content1")
-                .puuid("userUuid1")
+                .memberId(1L)
                 .build();
 
-        PostDTO postDTO2 = PostDTO.builder()
+        PostDTO.Response postDTO2 = PostDTO.Response.builder()
                 .id(2L)
                 .title("Title2")
                 .content("Content2")
-                .puuid("userUuid2")
+                .memberId(2L)
                 .build();
 
-        List<PostDTO> postDTOList = List.of(postDTO1, postDTO2);
-
+        List<PostDTO.Response> postDTOList = List.of(postDTO1, postDTO2);
 
         given(postService.readAll()).willReturn(postDTOList);
 
-        mockMvc.perform(get("/api/postApi/read/getAll"))
+        mockMvc.perform(get("/api/v1/posts"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].title").value("Title1"));
@@ -90,22 +91,21 @@ class PostApiControllerTest {
 
     @Test
     void testCreatePost() throws Exception {
-        PostDtoRequest postDtoRequest = PostDtoRequest.builder()
+        PostDTO.Request postDtoRequest = PostDTO.Request.builder()
                 .title("New Post")
                 .content("This is the content")
-                .puuid("userUuid")
+                .memberId(1L)
                 .build();
 
-        PostDTO postDTO = PostDTO.builder()
-                .id(1L)
+        PostDTO.Response postDTO = PostDTO.Response.builder()
                 .title("New Post")
                 .content("This is the content")
-                .puuid("userUuid")
+                .memberId(2L)
                 .build();
 
         given(postService.create(postDtoRequest)).willReturn(postDTO);
 
-        mockMvc.perform(post("/api/postApi/create")
+        mockMvc.perform(post("/api/v1/posts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postDtoRequest)))
                 .andExpect(status().isCreated())
@@ -117,23 +117,29 @@ class PostApiControllerTest {
 
     @Test
     void testUpdatePost() throws Exception {
-        PostDTO postDTO = PostDTO.builder()
+        PostDTO.Response postDTO = PostDTO.Response.builder()
                 .id(1L)
                 .title("Updated Title")
                 .content("Updated Content")
-                .puuid("userUuid")
+                .memberId(1L)
                 .build();
 
-        given(postService.update(postDTO)).willReturn(postDTO);
+        PostDTO.Request postDtoRequest = PostDTO.Request.builder()
+                .title("Updated Title")
+                .content("Updated Content")
+                .memberId(1L)
+                .build();
 
-        mockMvc.perform(put("/api/postApi/update")
+        given(postService.update(1L, postDtoRequest)).willReturn(postDTO);
+
+        mockMvc.perform(put("/api/v1/posts/{postId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postDTO)))
+                        .content(objectMapper.writeValueAsString(postDtoRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.title").value("Updated Title"))
                 .andExpect(jsonPath("$.data.content").value("Updated Content"));
 
-        then(postService).should().update(postDTO);
+        then(postService).should().update(1L, postDtoRequest);
     }
 
     @Test
@@ -142,9 +148,10 @@ class PostApiControllerTest {
 
         BDDMockito.willDoNothing().given(postService).delete(postId);
 
-        mockMvc.perform(delete("/api/postApi/delete/{id}", postId))
+        mockMvc.perform(delete("/api/v1/posts/{postId}", postId))
                 .andExpect(status().isOk());
 
         then(postService).should().delete(postId);
     }
 }
+

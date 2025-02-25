@@ -1,14 +1,16 @@
 package com.tools.seoultech.timoproject.post.domain.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
-import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
+@Table(name = "post")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,28 +27,34 @@ public class Post extends BaseEntity {
     @Column(length=1500, nullable=false)
     private String content;
 
+    private Long memberId;
+
     @Builder.Default
-    @Column(columnDefinition = "DEFAULT '0'")
-    private Integer view = 0;
+    @Column(nullable = false)
+    private Integer viewCount = 0;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private Integer likeCount = 0;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "DEFAULT 'NORMAL'", nullable=false)
+    @Column(nullable=false)
+    @Builder.Default
     private Category category = Category.NORMAL;
 
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "post")
-//    private List<Tag> tags;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true, mappedBy = "post")
-    private List<Comment> comments;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "post")
+    private List<PostLike> likes = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
-
-    // 업데이트 메서드
-    public void update(String title, String content, Category category) {
-        this.title = title;
-        this.content = content;
-        this.category = category;
+    public void updatePost(Long id, PostDTO.Request request) {
+        if(id != null && this.id.equals(id)){
+            this.title = request.title();
+            this.content = request.content();
+        }
     }
+    public void increaseViewCount() { this.viewCount++; }
+    public void increaseLikeCount() { this.likeCount++; }
+    public void decreaseLikeCount() { this.likeCount--; }
 }
