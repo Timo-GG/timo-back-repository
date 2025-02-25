@@ -1,26 +1,33 @@
-# 🕹️ Timo.gg - This Is My Opportunity
+# Timo.gg <img src="https://github.com/user-attachments/assets/90416e02-b116-426a-8d7e-aedb8e6d29e0" align="left" width="100"></a>
+### LOL 듀오 매칭 서비스 
+<br>
 
-![Timo.gg Banner](https://github.com/user-attachments/assets/159b962c-0e71-4b94-83e7-96a9d463767e)
+## 주요 기능
+- 듀오 매칭 
+- 게시판 기능 
+- 대화 기능
+- 소셜로그인
 
----
+## Backend Developer
+- <a href="https://github.com/Changha-dev">전창하</a>
+- <a href="https://github.com/woogie01">권현욱</a>
+- <a href="https://github.com/louis5103">임상우</a>
 
-🎮 **Timo.gg**는 League of Legends 플레이어를 위한 전적 검색, 듀오 매칭, 그리고 커뮤니티 기능을 제공하는 플랫폼입니다.  
-**'이곳에서 나의 기회를 찾다!'** 라는 철학을 바탕으로, 유저들이 자신만의 특별한 듀오를 만나고 함께 성장할 수 있는 최고의 경험을 제공합니다.
 
----
+## Tech Stack
+**Framework** - <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-social&logo=Spring Boot&logoColor=white">  <img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-social&logo=Gradle&logoColor=white">
 
-## 🚀 주요 기능
+**ORM** - <img src="https://img.shields.io/badge/Spring Data JPA-6DB33F?style=for-the-social&logo=Databricks&logoColor=white">
 
-### 📊 전적 검색 서비스
-- 소환사의 **전적**과 **챔피언 통계**를 빠르게 확인.
-- 팀 구성과 전략에 유용한 데이터 제공.
+**Authorization** - <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-social&logo=springsecurity&logoColor=white">  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-social&logo=JSON Web Tokens&logoColor=white">
 
-### 🤝 매칭 서비스
-- 원하는 조건(티어, 마이크 유무 등)을 설정하여 **듀오 매칭** 가능.
-- 매칭 성공 시 실시간 **채팅방**으로 연결.
+**Test** - <img src="https://img.shields.io/badge/JUnit5-25A162?style=for-the-sociak&logo=junit5&logoColor=white"> <img src="https://img.shields.io/badge/Mockito-83a44d?style=for-the-sociak&logo=Mockito&logoColor=white">
 
-### 💬 커뮤니티
-- **게시판**과 **댓글**을 통해 유저 간 소통.
-- 롤 관련 **팁 공유**와 **친목 도모**.
+**Database** - <img src="https://img.shields.io/badge/MySQL-003545?style=for-the-social&logo=MariaDB&logoColor=white"> 
 
----
+**Cloud** - <img src ="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-social&logo=amazonec2&logoColor=white">  <img src ="https://img.shields.io/badge/AWS S3-569A31?style=for-the-social&logo=amazons3&logoColor=white">  <img src="https://img.shields.io/badge/AWS RDS-527FFF?style=for-the-social&logo=amazonrds&logoColor=white">
+<img src="https://img.shields.io/badge/Code Deploy-569A31?style=for-the-social&logo=amazonaws&logoColor=white">  <img src="https://img.shields.io/badge/ECR-FF9900?style=for-the-social&logo=amazonaws&logoColor=white">  <img src="https://img.shields.io/badge/Route 53-8C4FFF?style=for-the-social&logo=Amazon Route 53&logoColor=white">  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-social&logo=Docker&logoColor=white">  <img src="https://img.shields.io/badge/Docker compose-2496ED?style=for-the-social&logo=docker-compose&logoColor=white">
+
+**Api Docs** - <img src="https://img.shields.io/badge/Postman-85EA2D?style=for-the-social&logo=postman&logoColor=white">
+
+**Other** - <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-social&logo=Socket.io&logoColor=white"> 

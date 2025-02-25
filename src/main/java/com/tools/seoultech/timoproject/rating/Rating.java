@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.rating;
 
 import com.tools.seoultech.timoproject.member.domain.Member;
-import com.tools.seoultech.timoproject.member.domain.SocialAccount;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

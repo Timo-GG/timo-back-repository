@@ -24,37 +24,17 @@ class MemberTest {
     private EntityManager entityManager;
 
     private Member member;
-    private SocialAccount socialAccount;
 
     @BeforeEach
     void init() {
         member = Member.builder()
                 .email("test@example.com")
                 .username("testUser")
-                .build();
-
-        socialAccount = SocialAccount.builder()
-                .provider("NAVER")
-                .providerId("12345")
+                .oAuthProvider(OAuthProvider.NAVER)
                 .build();
 
         memberRepository.save(member);
         entityManager.flush();
         entityManager.clear();
-    }
-
-    @Test
-    @DisplayName("회원이 소셜 계정을 정상적으로 연동할 수 있다.")
-    void linkSocialAccount_Success() {
-        // given
-        Member foundMember = memberRepository.findByEmail("test@example.com").orElseThrow();
-
-        // when
-        foundMember.linkSocialAccount(socialAccount);
-
-        // then
-        assertThat(foundMember.getSocialAccounts()).contains(socialAccount);
-        assertThat(foundMember.getSocialAccounts().get(0).getProvider()).isEqualTo("NAVER");
-        assertThat(socialAccount.getMember()).isEqualTo(foundMember);
     }
 }
