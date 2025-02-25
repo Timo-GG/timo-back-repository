@@ -1,22 +1,17 @@
 package com.tools.seoultech.timoproject.post.domain.dto;
 
-import jakarta.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class PostDTO {
-    private Long id;
+@Builder
+public class PostDtoRequest {
     private String title;
     private String content;
     private Long memberId;
-    private LocalDateTime regDate, modDate;
 }
-

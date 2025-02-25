@@ -5,9 +5,9 @@ import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 
 public interface PostService {
-    PageDTO.Response<PostDTO.Response, Post> getList(PageDTO.Request request);
-    PostDTO.Response read(Long id);
+    PageDTO.Response<PostDTO, Post> getList(PageDTO.Request request);
+    PostDTO read(Long id);
 
-    PostDTO.Response entityToDto(Post entity);
-    Post dtoToEntity(Object dto);
+    PostDTO entityToDto(Post entity);
+    Post dtoToEntity(PostDTO dto);
 }

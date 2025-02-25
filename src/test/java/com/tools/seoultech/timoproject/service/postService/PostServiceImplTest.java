@@ -4,10 +4,11 @@ package com.tools.seoultech.timoproject.service.postService;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.domain.entity.Category;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
+import com.tools.seoultech.timoproject.post.domain.entity.UserAccount;
 import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
+import com.tools.seoultech.timoproject.post.repository.UserAccountRepository;
 import com.tools.seoultech.timoproject.post.service.PostServiceImpl;
 
 import org.junit.jupiter.api.DisplayName;
@@ -50,52 +51,37 @@ class PostServiceImplTest {
                 .username("롤찍먹만할게요")
                 .build();
 
-        PostDTO.Request postDto = PostDTO.Request.builder()
+        PostDTO postDto = PostDTO.builder()
                 .title("PostService test")
                 .content("test content...")
                 .memberId(1L)
-                .category(Category.CREATIVITY)
-                .build();
-
-
-        PostDTO.Response savedPostDTO = PostDTO.Response.builder()
-                .id(1L)
-                .title("PostService test")
-                .content("test content...")
-                .memberId(1L)
-                .category(Category.CREATIVITY)
-                .viewCount(0)
-                .likeCount(0)
                 .regDate(LocalDateTime.now())
                 .modDate(LocalDateTime.now())
                 .build();
 
-
         Post post = Post.builder()
-                .id(1L)
-                .title(postDto.title())
-                .content(postDto.content())
-                .memberId(1L)
-                .category(Category.CREATIVITY)
+                .title(postDto.getTitle())
+                .content(postDto.getContent())
+                .member(member)
                 .build();
 
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
-        given(postMapper.postDtoToPost(postDto, member)).willReturn(post);
+        given(postMapper.postDTOToPost(postDto, member)).willReturn(post);
         given(postRepository.save(post)).willReturn(post);
-        given(postMapper.postToPostDTO(post)).willReturn(savedPostDTO);
+        given(postMapper.postToPostDTO(post)).willReturn(postDto);
 
         // when
-        PostDTO.Response savedPost = postService.create(postDto);
+        PostDTO savedPost = postService.create(postDto);
 
         // then
         assertThat(savedPost)
-                .hasNoNullFieldsOrProperties()
-                .hasFieldOrPropertyWithValue("id", 1L)
+                .hasNoNullFieldsOrPropertiesExcept("id")
+                .hasFieldOrPropertyWithValue("puuid", my_puuid)
                 .hasFieldOrPropertyWithValue("title", "PostService test")
                 .hasFieldOrPropertyWithValue("content", "test content...");
 
         then(memberRepository).should().findById(1L);
-        then(postMapper).should().postDtoToPost(postDto, member);
+        then(postMapper).should().postDTOToPost(postDto, member);
         then(postRepository).should().save(post);
         then(postMapper).should().postToPostDTO(post);
     }
@@ -103,7 +89,7 @@ class PostServiceImplTest {
     @DisplayName("[UPDATE] 정상적인 게시글 업데이트 - Repository에 존재하는 게시글을 수정한다.")
     @Test
     public void givenPostDto_whenRequestUpdate_thenUpdate(){
-        PostDTO.Response postDto = PostDTO.Response.builder()
+        PostDTO postDto = PostDTO.builder()
                 .title("[test]PostServiceImplTest... >>> UpdatePostServiceImplTest...")
                 .content("Post Updated in PostServiceImpl Layer")
                 .memberId(1L)
@@ -113,7 +99,7 @@ class PostServiceImplTest {
     @DisplayName("[UPDATE] 비정상적인 게시글 업데이트 - Repository에 등록되지 않은 사용자의 게시글 수정 요청.")
     @Test
     public void givenPostDto_whenRequestUpdate_thenResponseErrorAPIResponse(){
-        PostDTO.Response postDto = PostDTO.Response.builder()
+        PostDTO postDto = PostDTO.builder()
                 .title("[test]WrongAccount....")
                 .content("Wrong user request...")
                 .memberId(null)
@@ -123,9 +109,8 @@ class PostServiceImplTest {
     @DisplayName("[READ] 정상적인 게시글 읽기 - Repository에 있는 Post를 가져온다.")
     @Test
     public void givenPostId_whenRequestRead_thenRead(){
-        Post cpost = Post.builder().build();
         Long id = any();
-        Post post = postRepository.findById(id).orElseGet(() -> cpost);
+        Post post = postRepository.findById(id).get();
         System.out.println(post.toString());
     }
 

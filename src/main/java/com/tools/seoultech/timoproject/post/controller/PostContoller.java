@@ -31,7 +31,7 @@ public class PostContoller {
     @GetMapping("/read")
     public void read(long id, @ModelAttribute("requestDTO") PageDTO.Request requestDTO, Model model){
         log.info("id: "+id);
-        PostDTO.Response dto = postService.read(id);
+        PostDTO dto = postService.read(id);
         model.addAttribute("dto", dto);
     }
 }

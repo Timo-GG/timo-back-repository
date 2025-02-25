@@ -2,7 +2,6 @@ package com.tools.seoultech.timoproject.global.error;
 
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.APIErrorResponse;
-import com.tools.seoultech.timoproject.global.exception.BusinessException;
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
 
@@ -36,12 +35,6 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleGlobalException(Exception e, WebRequest request) {
         return getInternalResponseEntity(e, ErrorCode.INTERNAL_ERROR, request);
     }
-    @ExceptionHandler
-    public ResponseEntity<Object> handleBusinessException(BusinessException e, WebRequest request) {
-        return getInternalResponseEntity(e, e.getErrorCode(), request);
-    }
-
-
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request){
