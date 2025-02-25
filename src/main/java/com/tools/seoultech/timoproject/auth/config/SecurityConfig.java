@@ -7,6 +7,7 @@ import com.tools.seoultech.timoproject.auth.jwt.filter.JwtAccessDeniedHandler;
 import com.tools.seoultech.timoproject.auth.jwt.filter.JwtAuthenticationFilter;
 import com.tools.seoultech.timoproject.auth.jwt.filter.JwtExceptionFilter;
 import com.tools.seoultech.timoproject.auth.service.CustomUserDetailsService;
+import com.tools.seoultech.timoproject.global.config.WhitelistProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,7 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtResolver jwtResolver;
     private final HeaderTokenExtractor headerTokenExtractor;
+    private final WhitelistProperties whitelistProperties;
 
     // 만약 corsConfigurationSource 등 다른 빈도 필요하면 주입
 
@@ -76,11 +78,12 @@ public class SecurityConfig {
 
                 // ⑥ URL 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/oauth2/**", "/login/**", "/api/v1/auth/**","/naver/callback").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/posts/public/**", "/api/v1/comments/public/**").permitAll()
-                        // post나 comment 작성, 수정, 삭제는 인증 필요. 메서드 별로 구별해야 돼
+                        // whitelist URL 적용
+                        .requestMatchers(whitelistProperties.getUrls().toArray(new String[0])).permitAll()
+                        .requestMatchers(HttpMethod.GET, whitelistProperties.getPublicUrls().toArray(new String[0])).permitAll()
+                        // API 인증 필요 URL 설정
                         .requestMatchers("/api/v1/posts/**", "/api/v1/comments/**").authenticated()
-                        .requestMatchers("/api/v1/**", "api/v1/members/**").authenticated()
+                        .requestMatchers("/api/v1/**", "/api/v1/members/**").authenticated()
                         .requestMatchers(
                                 "/bower_components/**",
                                 "/dist/**",

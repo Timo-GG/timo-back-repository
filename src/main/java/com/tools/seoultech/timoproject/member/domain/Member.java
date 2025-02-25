@@ -83,13 +83,9 @@ public class Member extends BaseEntity {
 
     public void updateToDummy() {
         this.username = "이름없음";
+        this.nickname = "닉네임없음";
         this.playerName = "정보없음";
         this.playerTag = "정보없음";
         this.email = "anonymous_" + UUID.randomUUID().toString() + "@anonymous.com";
-    }
-
-    // nickname 자동생성
-    public void randomCreateUsername() {
-        this.username = "티모대위" + "-" + UUID.randomUUID().toString().substring(0, 5);
     }
 }

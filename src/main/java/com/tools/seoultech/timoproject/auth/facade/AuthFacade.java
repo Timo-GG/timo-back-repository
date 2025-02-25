@@ -7,4 +7,5 @@ public interface AuthFacade {
     TokenCollection newTokenInfo(String refreshToken);
 
     TokenCollection testLogin();
+
 }
