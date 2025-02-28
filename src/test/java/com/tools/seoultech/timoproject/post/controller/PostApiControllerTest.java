@@ -3,7 +3,7 @@ package com.tools.seoultech.timoproject.post.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tools.seoultech.timoproject.global.config.TestSecurityConfig;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.service.PostServiceImpl;
+import com.tools.seoultech.timoproject.post.facade.PostFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(TestSecurityConfig.class)
 class PostApiControllerTest {
     @MockBean
-    private PostServiceImpl postService;
+    private PostFacade postFacade;
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,14 +52,14 @@ class PostApiControllerTest {
                 .memberId(1L)
                 .build();
 
-        given(postService.read(postId)).willReturn(postDTO);
+        given(postFacade.read(postId)).willReturn(postDTO);
 
-        mockMvc.perform(get("/api/v1/posts/{postId}", postId))
+        mockMvc.perform(get("/api/v1/posts/public/{postId}", postId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.title").value("Title"))
                 .andExpect(jsonPath("$.data.content").value("Content"));
 
-        then(postService).should().read(postId);
+        then(postFacade).should().read(postId);
     }
 
     @Test
@@ -79,14 +80,14 @@ class PostApiControllerTest {
 
         List<PostDTO.Response> postDTOList = List.of(postDTO1, postDTO2);
 
-        given(postService.readAll()).willReturn(postDTOList);
+        given(postFacade.searchByFilter(null, null, PageRequest.of(0, 10), "id", true)).willReturn(postDTOList);
 
-        mockMvc.perform(get("/api/v1/posts"))
+        mockMvc.perform(get("/api/v1/posts/public"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].title").value("Title1"));
 
-        then(postService).should().readAll();
+        then(postFacade).should().searchByFilter(null, null, PageRequest.of(0, 10), "id", true);
     }
 
     @Test
@@ -103,7 +104,7 @@ class PostApiControllerTest {
                 .memberId(2L)
                 .build();
 
-        given(postService.create(postDtoRequest)).willReturn(postDTO);
+        given(postFacade.create(postDtoRequest)).willReturn(postDTO);
 
         mockMvc.perform(post("/api/v1/posts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -112,7 +113,7 @@ class PostApiControllerTest {
                 .andExpect(jsonPath("$.data.title").value("New Post"))
                 .andExpect(jsonPath("$.data.content").value("This is the content"));
 
-        then(postService).should().create(postDtoRequest);
+        then(postFacade).should().create(postDtoRequest);
     }
 
     @Test
@@ -130,7 +131,7 @@ class PostApiControllerTest {
                 .memberId(1L)
                 .build();
 
-        given(postService.update(1L, postDtoRequest)).willReturn(postDTO);
+        given(postFacade.update(1L, postDtoRequest)).willReturn(postDTO);
 
         mockMvc.perform(put("/api/v1/posts/{postId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -139,19 +140,19 @@ class PostApiControllerTest {
                 .andExpect(jsonPath("$.data.title").value("Updated Title"))
                 .andExpect(jsonPath("$.data.content").value("Updated Content"));
 
-        then(postService).should().update(1L, postDtoRequest);
+        then(postFacade).should().update(1L, postDtoRequest);
     }
 
     @Test
     void testDeletePost() throws Exception {
         Long postId = 1L;
 
-        BDDMockito.willDoNothing().given(postService).delete(postId);
+        BDDMockito.willDoNothing().given(postFacade).delete(postId);
 
         mockMvc.perform(delete("/api/v1/posts/{postId}", postId))
                 .andExpect(status().isOk());
 
-        then(postService).should().delete(postId);
+        then(postFacade).should().delete(postId);
     }
 }
 

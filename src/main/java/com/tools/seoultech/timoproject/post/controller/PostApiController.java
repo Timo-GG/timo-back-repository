@@ -6,7 +6,10 @@ import com.tools.seoultech.timoproject.post.domain.dto.SearchingFilterDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Category;
 import com.tools.seoultech.timoproject.post.facade.PostFacade;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,18 +29,17 @@ public class PostApiController {
         PostDTO.Response postDto = postFacade.read(postId);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(postDto));
     }
-
-    @GetMapping("/member")
-    public ResponseEntity<APIDataResponse<List<PostDTO.Response>>> readPostsByMember(
-            @CurrentMemberId Long memberId
-    ) {
-        List<PostDTO.Response> postList =  postService.readByMember(memberId);
-        return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(postList));
-    }
     @GetMapping("/public")
-    public ResponseEntity<APIDataResponse<List<PostDTO.Response>>> readAllPosts() {
-        List<PostDTO.Response> postDtoList = postService.readAll();
-        return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(postDtoList));
+    public ResponseEntity<APIDataResponse<List<PostDTO.Response>>> readPosts(
+            @Valid @ModelAttribute SearchingFilterDTO filterDto,
+            @PageableDefault(page = 0, size = 10) Pageable pageable
+    ) {
+        List<PostDTO.Response> postList = postFacade
+                .searchByFilter(
+                        filterDto,
+                        pageable
+                );
+        return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(postList));
     }
     @PostMapping("")
     public ResponseEntity<APIDataResponse<PostDTO.Response>> createPost(@RequestBody PostDTO.Request postDto) {
