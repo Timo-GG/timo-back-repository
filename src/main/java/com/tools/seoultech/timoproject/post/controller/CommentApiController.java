@@ -1,7 +1,7 @@
 package com.tools.seoultech.timoproject.post.controller;
 
 import com.tools.seoultech.timoproject.post.domain.dto.CommentDTO;
-import com.tools.seoultech.timoproject.post.service.CommentService;
+import com.tools.seoultech.timoproject.post.facade.CommentFacade;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,20 +16,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class CommentApiController {
-    private final CommentService commentService;
+    private final CommentFacade commentFacade;
 
     @GetMapping("/public/{commentId}")
     public ResponseEntity<APIDataResponse<CommentDTO.Response>> readComment (
             @PathVariable Long commentId
     ) {
-        CommentDTO.Response readDto = commentService.read(commentId);
+        CommentDTO.Response readDto = commentFacade.read(commentId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(readDto));
     }
     @GetMapping("/public")
     public ResponseEntity<APIDataResponse<List<CommentDTO.Response>>> readAllComments() {
-        List<CommentDTO.Response> readDtoList = commentService.readAll();
+        List<CommentDTO.Response> readDtoList = commentFacade.readAll();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(readDtoList));
@@ -38,7 +38,7 @@ public class CommentApiController {
     public ResponseEntity<APIDataResponse<CommentDTO.Response>> createComment(
             @RequestBody CommentDTO.Request commentDTO
     ) {
-        CommentDTO.Response responseDto = commentService.create(commentDTO);
+        CommentDTO.Response responseDto = commentFacade.create(commentDTO);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(responseDto));
@@ -48,7 +48,7 @@ public class CommentApiController {
             @PathVariable("commentId") Long commentId,
             @RequestBody CommentDTO.Request commentDTO
     ){
-        CommentDTO.Response responseDto = commentService.update(commentId, commentDTO);
+        CommentDTO.Response responseDto = commentFacade.update(commentId, commentDTO);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(responseDto));
@@ -57,7 +57,7 @@ public class CommentApiController {
     public ResponseEntity<APIDataResponse<CommentDTO.Response>> deleteComment(
             @PathVariable("commentId") Long commentId
     ){
-        commentService.delete(commentId);
+        commentFacade.delete(commentId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.empty());
