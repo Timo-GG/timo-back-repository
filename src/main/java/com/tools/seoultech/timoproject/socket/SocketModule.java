@@ -5,6 +5,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.tools.seoultech.timoproject.auth.jwt.JwtResolver;
+import com.tools.seoultech.timoproject.chat.service.ChatService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ public class SocketModule {
     private final SocketIOServer socketIOServer;
     private final JwtResolver jwtResolver;
     private final WebSocketAddMappingSupporter webSocketAddMappingSupporter;
+    private final ChatService chatService;
 
     @PostConstruct
     public void initSocketServer() {
@@ -59,6 +61,7 @@ public class SocketModule {
         Long memberId = parseMemberId(token);
         setMemberId(client, memberId);
         String room = extractRoom(client);
+
         joinRoom(client, room);
         broadcastSystemMessage(room, memberId + " 님이 입장했습니다.");
 
