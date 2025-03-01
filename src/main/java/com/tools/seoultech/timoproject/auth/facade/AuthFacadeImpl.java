@@ -25,4 +25,8 @@ public class AuthFacadeImpl implements AuthFacade {
     public TokenCollection testLogin() {
         return jwtProvider.createTokenCollection(TokenInfo.from(1L));
     }
+    @Override
+    public TokenCollection testLogin2() {
+        return jwtProvider.createTokenCollection(TokenInfo.from(2L));
+    }
 }

@@ -46,4 +46,12 @@ public class AuthController {
         return ResponseEntity.ok(tokens);
     }
 
+    @GetMapping("/test2")
+    public ResponseEntity<TokenCollection> testLogin2() {
+        TokenCollection tokens = authFacade.testLogin2();
+
+        return ResponseEntity.ok(tokens);
+    }
+
+
 }
