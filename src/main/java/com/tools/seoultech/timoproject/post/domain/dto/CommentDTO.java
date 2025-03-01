@@ -1,8 +1,6 @@
 package com.tools.seoultech.timoproject.post.domain.dto;
 
 import lombok.Builder;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 public class CommentDTO {

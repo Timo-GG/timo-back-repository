@@ -1,21 +1,27 @@
-package com.tools.seoultech.timoproject.post.service;
+package com.tools.seoultech.timoproject.post.service.impl;
 
+import com.querydsl.core.BooleanBuilder;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
+import com.tools.seoultech.timoproject.post.domain.dto.SearchingFilterDTO;
+import com.tools.seoultech.timoproject.post.domain.entity.Category;
 import com.tools.seoultech.timoproject.post.domain.entity.PostLike;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
+import com.tools.seoultech.timoproject.post.domain.entity.QPost;
 import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
 import com.tools.seoultech.timoproject.post.repository.PostLikeRepository;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
 
+import com.tools.seoultech.timoproject.post.service.PostService;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -62,30 +68,45 @@ public class PostServiceImpl implements PostService {
         return PageDTO.Response.of(result, fn);
     }
     @Transactional
-    public PostDTO.Response read(Long id){
+    public Post read(Long id){
         Post post = postRepository.findById(id)
                 .orElseThrow( () -> new GeneralException(ErrorCode.BAD_REQUEST));
         post.increaseViewCount();
         entityManager.merge(post);
-        return entityToDto(post);
+        return post;
     }
+
     @Transactional
-    public List<PostDTO.Response> readAll(){
-        List<Post> posts = postRepository.findAll();
-        return posts.stream().map(this::entityToDto).toList();
+    public List<Post> searchByFilter(
+            SearchingFilterDTO filterDto,
+            Pageable pageable
+    ){
+        BooleanBuilder builder = searchFilterValidation(filterDto.memberId(), filterDto.category());
+        Sort sort = (filterDto.sortOrder()) ? Sort.by(Sort.Order.asc(filterDto.sortBy())) : Sort.by(Sort.Order.desc(filterDto.sortBy()));
+        List<Post> postList = postRepository.findAll(
+                builder,
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        sort
+                )
+        ).getContent();
+
+        return postList;
     }
+    
     @Transactional
-    public PostDTO.Response create(PostDTO.Request postDto){
+    public Post create(PostDTO.Request postDto){
         Post post = postRepository.save(dtoToEntity(postDto));
-        return entityToDto(post);
+        return post;
     }
     @Transactional
-    public PostDTO.Response update(Long id, PostDTO.Request request){
+    public Post update(Long id, PostDTO.Request request){
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorCode.BAD_REQUEST));
         post.updatePost(id, request);
         entityManager.merge(post);
-        return entityToDto(post);
+        return post;
     }
     @Transactional
     public void delete(Long id){
@@ -93,7 +114,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Transactional
-    public PostDTO.Response increaseLikeCount(Long postId, Long memberId){
+    public Post increaseLikeCount(Long postId, Long memberId){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new GeneralException("해당 postId에 해당하는 게시글이 존재하지 않습니다.", ErrorCode.BAD_REQUEST));
 
@@ -108,11 +129,11 @@ public class PostServiceImpl implements PostService {
 
             post.increaseLikeCount();
             entityManager.merge(post);
-            return entityToDto(post);
+            return post;
         }
     }
     @Transactional
-    public PostDTO.Response decreaseLikeCount(Long postId, Long memberId) {
+    public Post decreaseLikeCount(Long postId, Long memberId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new GeneralException("해당 postId에 해당하는 게시글이 존재하지 않습니다.", ErrorCode.BAD_REQUEST));
 
@@ -126,22 +147,26 @@ public class PostServiceImpl implements PostService {
 
             post.decreaseLikeCount();
             entityManager.merge(post);
-
-            return entityToDto(post);
+            return post;
         }
     }
 
-    public List<PostDTO.Response> readByMember(Long memberId) {
-        if(!memberRepository.existsById(memberId))
-            throw new GeneralException("해당 사용자가 없습니다.");
+    private BooleanBuilder searchFilterValidation(
+            Long memberId, Category category
+    ) {
+        QPost post = QPost.post;
+        BooleanBuilder builder = new BooleanBuilder();
 
-        List<Post> postList =  postRepository.findByMemberId(memberId);
-        if(postList.isEmpty())
-            throw new GeneralException("해당 사용자의 게시글이 없습니다.");
+        if(memberId != null){
+            boolean isExist = memberRepository.existsById(memberId);
 
-        List<PostDTO.Response> postDtoList = postList.stream()
-                .map(this::entityToDto)
-                .toList();
-        return postDtoList;
+            if(!isExist)
+                throw new GeneralException("필터링 조건에 포함된 멤버 ID에 해당하는 값이 존재하지 않습니다.");
+            builder.and(post.memberId.eq(memberId));
+        }
+        if(category != null){
+            builder.and(post.category.eq(category));
+        }
+        return builder;
     }
 }

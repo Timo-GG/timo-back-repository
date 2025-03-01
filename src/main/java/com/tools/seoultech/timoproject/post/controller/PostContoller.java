@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.post.controller;
 
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
+import com.tools.seoultech.timoproject.post.facade.PostFacade;
 import com.tools.seoultech.timoproject.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @Log4j2
 public class PostContoller {
-    private final PostService postService;
+    private final PostFacade postFacade;
 
     @GetMapping("")
     public String showList(){
@@ -26,12 +27,12 @@ public class PostContoller {
     @GetMapping("fragment")
     public void showList(PageDTO.Request dto, Model model){
         log.info("list................"+dto);
-        model.addAttribute("result", postService.getList(dto));
+        model.addAttribute("result", postFacade.getList(dto));
     }
     @GetMapping("/read")
     public void read(long id, @ModelAttribute("requestDTO") PageDTO.Request requestDTO, Model model){
         log.info("id: "+id);
-        PostDTO.Response dto = postService.read(id);
+        PostDTO.Response dto = postFacade.read(id);
         model.addAttribute("dto", dto);
     }
 }

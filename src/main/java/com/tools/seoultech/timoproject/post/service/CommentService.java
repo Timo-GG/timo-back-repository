@@ -9,9 +9,9 @@ public interface CommentService {
     Comment dtoToEntity(Object dto);
     CommentDTO.Response entityToDto(Comment comment);
 
-    CommentDTO.Response create(CommentDTO.Request dto);
-    CommentDTO.Response read(Long id);
-    List<CommentDTO.Response> readAll();
-    CommentDTO.Response update(Long id, CommentDTO.Request requestDto);
+    Comment create(CommentDTO.Request dto);
+    Comment read(Long id);
+    List<Comment> readAll();
+    Comment update(Long id, CommentDTO.Request requestDto);
     void delete(Long id);
 }

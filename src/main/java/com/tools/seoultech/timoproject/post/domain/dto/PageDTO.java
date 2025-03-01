@@ -26,6 +26,7 @@ public class PageDTO {
         public static Request of(int page, int size){
             return new Request(page, size);
         }
+
     }
     @Builder
     public record Response<DTO, EN>(

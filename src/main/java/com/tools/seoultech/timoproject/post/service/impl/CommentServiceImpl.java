@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.post.service;
+package com.tools.seoultech.timoproject.post.service.impl;
 
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.member.domain.Member;
@@ -9,6 +9,7 @@ import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.mapper.CommentMapper;
 import com.tools.seoultech.timoproject.post.repository.CommentRepository;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
+import com.tools.seoultech.timoproject.post.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
@@ -66,35 +67,32 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentDTO.Response create(CommentDTO.Request dto) {
+    public Comment create(CommentDTO.Request dto) {
 //        Comment comment = dtoToEntity(dto);
         Comment comment = commentRepository.save(dtoToEntity(dto));
-        return entityToDto(comment);
+        return comment;
     }
 
     @Override
-    public CommentDTO.Response read(Long id) {
+    public Comment read(Long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow( () -> new GeneralException("1"));
-        return entityToDto(comment);
+        return comment;
     }
 
     @Override
-    public List<CommentDTO.Response> readAll() {
+    public List<Comment> readAll() {
         List<Comment> comments = commentRepository.findAll();
-        List<CommentDTO.Response> dtoList = comments.stream()
-                .map(this::entityToDto)
-                .collect(Collectors.toList());
-        return dtoList;
+        return comments;
     }
 
     @Override
     @Transactional
-    public CommentDTO.Response update(Long id, CommentDTO.Request requestDto) {
+    public Comment update(Long id, CommentDTO.Request requestDto) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow( () -> new GeneralException("1"));
         comment.updateComment(requestDto);
-        return entityToDto(comment);
+        return comment;
     }
 
     @Override
