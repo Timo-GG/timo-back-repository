@@ -47,7 +47,7 @@ class PostServiceImplTest {
         //given
         Member member = Member.builder()
                 .email("louis38625103@gmail.com")
-                .username("롤찍먹만할게요")
+                .nickname("롤찍먹만할게요")
                 .build();
 
         PostDTO.Request postDto = PostDTO.Request.builder()

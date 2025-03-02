@@ -31,8 +31,6 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String email;
 
-    private String username;
-
     private String nickname;
 
     @Enumerated(value = EnumType.STRING)
@@ -59,9 +57,8 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(String email, String username, String nickname, OAuthProvider oAuthProvider) {
+    public Member(String email, String nickname, OAuthProvider oAuthProvider) {
         this.email = email;
-        this.username = username;
         this.nickname = nickname;
         this.oAuthProvider = oAuthProvider;
         this.role = Role.MEMBER;
@@ -90,7 +87,6 @@ public class Member extends BaseEntity {
     }
 
     public void updateToDummy() {
-        this.username = "이름없음";
         this.nickname = "닉네임없음";
         this.playerName = "정보없음";
         this.playerTag = "정보없음";

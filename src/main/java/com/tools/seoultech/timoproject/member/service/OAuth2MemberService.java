@@ -63,12 +63,12 @@ public class OAuth2MemberService extends DefaultOAuth2UserService {
                 .orElseGet(() -> register(socialAccount, email, nickname));
     }
 
-    private Member register(SocialAccount socialAccount, String email, String username) {
+    private Member register(SocialAccount socialAccount, String email, String nickname) {
 
         // 새로운 유저 회원가입
         Member member = Member.builder()
                 .email(email)
-                .username(username)
+                .nickname(nickname)
                 .build();
 
         member.linkSocialAccount(socialAccount);

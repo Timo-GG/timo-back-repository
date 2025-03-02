@@ -19,9 +19,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             """)
     Optional<Member> findBySocialAccount(String provider, String providerId);
 
-    Optional<Member> findByUsername(String username);
-
     boolean existsByNickname(String nickname);
+
+    Optional<Member> findByNickname(String nickName);
 
 //    @Query("select m from Member m "
 //            + "left join fetch m.memberInfo ui "
