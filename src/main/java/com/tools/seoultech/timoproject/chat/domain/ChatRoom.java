@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class ChatRoom extends BaseEntity {
 
     @Id
+    @Column(name = "chat_room_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
