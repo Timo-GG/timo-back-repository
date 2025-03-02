@@ -1,81 +1,53 @@
 package com.tools.seoultech.timoproject.chat.controller;
 
 
-import com.corundumstudio.socketio.SocketIOClient;
-import com.tools.seoultech.timoproject.chat.dto.*;
-import com.tools.seoultech.timoproject.chat.facade.ChatRoomFacade;
-import com.tools.seoultech.timoproject.chat.socket.SocketService;
+import com.tools.seoultech.timoproject.chat.domain.ChatRoom;
+import com.tools.seoultech.timoproject.chat.dto.ChatMessageDTO;
+import com.tools.seoultech.timoproject.chat.dto.ChatRoomResponse;
+import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
-import com.tools.seoultech.timoproject.global.annotation.SocketController;
-import com.tools.seoultech.timoproject.global.annotation.SocketMapping;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/chat")
-@SocketController("/event/v1/chat")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/chat")
 public class ChatController {
 
-    private final ChatRoomFacade chatRoomFacade;
-    private final SocketService socketService;
+    private final ChatService chatService;
 
-    @SocketMapping(endpoint = "/text", requestCls = SendMessageRequest.class)
-    public MessageResponse sendTextMessage(
-            SocketIOClient client,
-            @Valid SendMessageRequest request) {
-        Long memberId = socketService.getMemberId(client);
-        Long roomId = socketService.getRoomId(client);
+    @PostMapping("/rooms")
+    public APIDataResponse<?> createRoom(@RequestParam String roomName) {
+        ChatRoom chatRoom = chatService.createChatRoom(roomName);
 
-        return chatRoomFacade.sendTextMessage(
-                client,
-                memberId,
-                roomId,
-                request.content());
+        return APIDataResponse.of(chatRoom);
     }
 
-    @SocketMapping(endpoint = "/receive", requestCls = ReceiveMessageRequest.class)
-    public void receiveMessage(
-        SocketIOClient client,
-        ReceiveMessageRequest request){
-        Long memberId = socketService.getMemberId(client);
-        Long roomId = socketService.getRoomId(client);
-
-        chatRoomFacade.receiveMessage(
-            client,
-            memberId,
-            roomId,
-            request.messageId());
+    @GetMapping("/rooms")
+    public APIDataResponse<ChatRoomResponse> getRoom(@RequestParam String roomName) {
+        return APIDataResponse.of(chatService.getChatRoom(roomName));
     }
 
-    @GetMapping("/room/{roomId}/message")
-    public ResponseEntity<APIDataResponse<GetMessageListResponse>> getMessages(
-        @CurrentMemberId long memberId,
-        @PathVariable long roomId,
-        @RequestParam(required = false) Long lastMessageId
-    ){
-        var response = GetMessageListResponse.from(
-            chatRoomFacade.getMessages(memberId, roomId, lastMessageId)
-        );
-
-        return ResponseEntity.ok(APIDataResponse.of(response));
+    @GetMapping("/rooms/{roomName}/messages")
+    public List<ChatMessageDTO> getMessages(
+            @PathVariable String roomName,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        // 예: 페이지네이션(한 페이지당 20개) 사용
+        return chatService.getMessages(roomName, page, 20);
     }
 
-    @GetMapping("/room/{roomId}/message/recent")
-    public ResponseEntity<APIDataResponse<GetLastSeenMessageResponse>> getRecentMessages(
-        @CurrentMemberId long memberId,
-        @PathVariable long roomId
-    ){
-        var response = GetLastSeenMessageResponse.from(
-            chatRoomFacade.getRecentMessageId(memberId, roomId)
-        );
-
-        return ResponseEntity.ok(APIDataResponse.of(response));
+    @GetMapping("/rooms/{roomName}/unread")
+    public APIDataResponse<?> getUnreadCount(@CurrentMemberId Long memberId, @PathVariable String roomName) {
+        return APIDataResponse.of(chatService.getUnreadCount(memberId, roomName));
     }
 
+    @PostMapping("/rooms/{roomId}/join")
+    public APIDataResponse<?> joinRoom(@RequestParam Long memberId, @PathVariable Long roomId) {
+        chatService.joinRoom(memberId, roomId);
+        return APIDataResponse.of("방 참여 완료");
+    }
 }

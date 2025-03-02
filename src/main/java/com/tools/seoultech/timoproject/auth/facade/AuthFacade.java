@@ -8,4 +8,7 @@ public interface AuthFacade {
 
     TokenCollection testLogin();
 
+    TokenCollection testLogin2();
+
+
 }
