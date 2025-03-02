@@ -8,7 +8,7 @@ import com.tools.seoultech.timoproject.post.domain.entity.Category;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.domain.mapper.PostMapper;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
-import com.tools.seoultech.timoproject.post.service.PostServiceImpl;
+import com.tools.seoultech.timoproject.post.service.impl.PostServiceImpl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -85,7 +85,7 @@ class PostServiceImplTest {
         given(postMapper.postToPostDTO(post)).willReturn(savedPostDTO);
 
         // when
-        PostDTO.Response savedPost = postService.create(postDto);
+        PostDTO.Response savedPost = postService.entityToDto(postService.create(postDto));
 
         // then
         assertThat(savedPost)

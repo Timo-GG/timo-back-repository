@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.post.exceptionhandler;
+package com.tools.seoultech.timoproject.post.controller.exceptionhandler;
 
 import com.tools.seoultech.timoproject.global.APIErrorResponse;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
