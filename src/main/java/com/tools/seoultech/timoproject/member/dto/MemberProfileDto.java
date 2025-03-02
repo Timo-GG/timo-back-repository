@@ -9,7 +9,8 @@ public record MemberProfileDto(
         String nickname,
         String email,
         String playerName,
-        String playerTag
+        String playerTag,
+        Integer profileImageId
 ) {
 
     public static MemberProfileDto from(Member member){
@@ -22,6 +23,7 @@ public record MemberProfileDto(
                 .email(member.getEmail())
                 .playerName(member.getPlayerName())
                 .playerTag(member.getPlayerTag())
+                .profileImageId(member.getProfileImageId())
                 .build();
     }
 }

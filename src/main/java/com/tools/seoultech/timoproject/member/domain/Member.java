@@ -43,6 +43,8 @@ public class Member extends BaseEntity {
 
     private String playerTag;
 
+    private Integer profileImageId = 1;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;
@@ -93,4 +95,11 @@ public class Member extends BaseEntity {
         this.email = "anonymous_" + UUID.randomUUID().toString() + "@anonymous.com";
     }
 
+    public void updateProfileImageId(int profileImageId) {
+        this.profileImageId = profileImageId;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
