@@ -45,6 +45,12 @@ public class Member extends BaseEntity {
 
     private Integer profileImageId = 1;
 
+    @OneToMany(mappedBy = "member")
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments = new ArrayList<>();
+
     @Enumerated(value = EnumType.STRING)
     private MemberStatus status = MemberStatus.ACTIVE;
 
