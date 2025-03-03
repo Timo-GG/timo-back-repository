@@ -60,17 +60,19 @@ jobs:
             linux/amd64
             linux/arm64
 
-      # (1) docker-compose.yml 업로드 단계
+      - name: Create docker-compose file
+        run: |
+          echo "${{ secrets.DOCKER_COMPOSE_FILE }}" > ./docker-compose.yml
+      
       - name: Upload docker-compose file
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
-          source: ${{ secrets.DOCKER_COMPOSE_SPRINGBOOT }}
+          source: "./docker-compose.yml"
           target: "/home/ubuntu/compose/docker-compose.yml"
 
-      # (2) EC2에 SSH 접속해 docker-compose 실행 단계
       - name: Connect to EC2 and run docker
         uses: appleboy/ssh-action@master
         env:
