@@ -62,7 +62,7 @@ jobs:
 
       - name: Create docker-compose file
         run: |
-          echo "${{ secrets.DOCKER_COMPOSE_FILE }}" > ./docker-compose.yml
+          echo "${{ secrets.DOCKER_COMPOSE_SPRINGBOOT }}" > ./docker-compose.yml
       
       - name: Upload docker-compose file
         uses: appleboy/scp-action@master
