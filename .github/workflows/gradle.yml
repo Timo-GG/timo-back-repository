@@ -1,10 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: Java CI with Gradle
 
 on:
@@ -20,63 +13,76 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      
       # application.properties 파일 생성
-    - name: Make application.properties
-      run: touch ./src/main/resources/application.properties
+      - name: Make application.properties
+        run: touch ./src/main/resources/application.properties
 
-    - name: Deliver application.properties
-      run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
-        
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+      - name: Deliver application.properties
+        run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build -x test
-    
-    - name: docker login
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2            
-      
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-    
-    - name: Build and push
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: menten4859/timo-repo:latest
-        platforms: |
-          linux/amd64
-          linux/arm64
-      
-    - name: Connect to EC2 and run docker
-      uses: appleboy/ssh-action@master
-      env:
-        COMPOSE: "/home/ubuntu/compose/docker-compose.yml"
-      with:
-        host: 3.34.183.7
-        username: ubuntu
-        key: ${{ secrets.EC2_PEM }}
-        port: 22
-        envs: COMPOSE
-        script: |
-          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          sudo docker-compose -f $COMPOSE down --rmi all 
-          sudo docker pull menten4859/timo-repo:latest
-          sudo docker-compose -f $COMPOSE up -d
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle Wrapper
+        run: ./gradlew build -x test
+
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2            
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: menten4859/timo-repo:latest
+          platforms: |
+            linux/amd64
+            linux/arm64
+
+      # (1) docker-compose.yml 업로드 단계
+      - name: Upload docker-compose file
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_PEM }}
+          source: "./docker-compose.yml"
+          target: "/home/ubuntu/compose/docker-compose.yml"
+
+      # (2) EC2에 SSH 접속해 docker-compose 실행 단계
+      - name: Connect to EC2 and run docker
+        uses: appleboy/ssh-action@master
+        env:
+          COMPOSE: "/home/ubuntu/compose/docker-compose.yml"
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_PEM }}
+          port: 22
+          envs: COMPOSE
+          script: |
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker-compose -f $COMPOSE down --rmi all
+            sudo docker pull menten4859/timo-repo:latest
+            sudo docker-compose -f $COMPOSE up -d
