@@ -45,6 +45,9 @@ public class Member extends BaseEntity {
 
     private Integer profileImageId = 1;
 
+    @Enumerated(value = EnumType.STRING)
+    private MemberStatus status = MemberStatus.ACTIVE;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;
