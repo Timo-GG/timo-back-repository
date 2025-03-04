@@ -72,6 +72,9 @@ jobs:
           key: ${{ secrets.EC2_PEM }}
           source: "./docker-compose.yml"
           target: "/home/ubuntu/compose/docker-compose.yml"
+          overwrite: true       # 기존 파일 덮어쓰기
+          recursive: false      # 단일 파일이므로 재귀 업로드 불필요
+          tar: false            # tar 사용 안 함
 
       - name: Connect to EC2 and run docker
         uses: appleboy/ssh-action@master
