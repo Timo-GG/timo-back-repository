@@ -31,8 +31,6 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String email;
 
-    private String username;
-
     private String nickname;
 
     @Enumerated(value = EnumType.STRING)
@@ -44,6 +42,17 @@ public class Member extends BaseEntity {
     private String playerName;
 
     private String playerTag;
+
+    private Integer profileImageId = 1;
+
+    @OneToMany(mappedBy = "member")
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments = new ArrayList<>();
+
+    @Enumerated(value = EnumType.STRING)
+    private MemberStatus status = MemberStatus.ACTIVE;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_info_id")
@@ -63,9 +72,8 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(String email, String username, String nickname, OAuthProvider oAuthProvider) {
+    public Member(String email, String nickname, OAuthProvider oAuthProvider) {
         this.email = email;
-        this.username = username;
         this.nickname = nickname;
         this.oAuthProvider = oAuthProvider;
         this.role = Role.MEMBER;
@@ -86,10 +94,17 @@ public class Member extends BaseEntity {
     }
 
     public void updateToDummy() {
-        this.username = "이름없음";
         this.nickname = "닉네임없음";
         this.playerName = "정보없음";
         this.playerTag = "정보없음";
         this.email = "anonymous_" + UUID.randomUUID().toString() + "@anonymous.com";
+    }
+
+    public void updateProfileImageId(int profileImageId) {
+        this.profileImageId = profileImageId;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

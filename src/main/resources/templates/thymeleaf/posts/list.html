@@ -27,7 +27,7 @@
                     <td th:text="${row.title}"></td>
                     <td th:text="${row.content}"></td>
                     <td th:text="${row.comments.size()}"></td> <!-- 댓글 수 표시 -->
-                    <td th:text="${row.member.username}"></td>
+                    <td th:text="${row.getMember().getNickname()}"></td>
                     <td th:text="${row.regDate}"></td>
                     <td th:text="${row.modDate}"></td>
                     <td>

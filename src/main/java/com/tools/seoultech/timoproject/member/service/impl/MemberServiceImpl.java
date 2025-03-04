@@ -6,6 +6,7 @@ import com.tools.seoultech.timoproject.member.service.MemberService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -29,5 +30,29 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public String randomCreateNickname() {
         return "티모대위" + "-" + UUID.randomUUID().toString().substring(0, 5);
+    }
+
+    @Transactional
+    public Member updateAdditionalInfo(Long memberId, String nickname, String playerName, String playerTag) {
+        Member member = getById(memberId);
+
+        // 1) 닉네임 중복 체크
+        if (checkNickname(nickname)) {
+            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
+        }
+
+        // 2) 엔티티 업데이트
+        member.updateNickname(nickname);
+        member.linkRiotInfo(playerName, playerTag);
+
+        // 3) 저장 (영속성 컨텍스트에서 변경 감지로 자동 반영)
+        return member;
+    }
+
+    @Override
+    public Integer updateProfileImageId(Long memberId, Integer imageId) {
+        Member member = getById(memberId);
+        member.updateProfileImageId(imageId);
+        return imageId;
     }
 }

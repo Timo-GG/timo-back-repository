@@ -29,6 +29,8 @@ public class ChatRoomMember {
 
     private Long lastReadMessageId;
 
+    private boolean isLeft;
+
     public void increaseUnreadCount() {
         this.unreadCount++;
     }
@@ -49,6 +51,10 @@ public class ChatRoomMember {
         chatRoomMember.lastReadMessageId = 0L;
 
         return chatRoomMember;
+    }
+
+    public void leave() {
+        this.isLeft = true;
     }
 
 }
