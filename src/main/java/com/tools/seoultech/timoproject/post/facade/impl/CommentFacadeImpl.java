@@ -1,10 +1,12 @@
 package com.tools.seoultech.timoproject.post.facade.impl;
 
 import com.tools.seoultech.timoproject.post.domain.dto.CommentDTO;
+import com.tools.seoultech.timoproject.post.domain.dto.Comment_SearchingFilterDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Comment;
 import com.tools.seoultech.timoproject.post.facade.CommentFacade;
 import com.tools.seoultech.timoproject.post.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,17 +30,11 @@ public class CommentFacadeImpl implements CommentFacade {
     }
 
     @Override
-    public List<CommentDTO.Response> readAll() {
-        List<Comment> commentList = commentService.readAll();
+    public List<CommentDTO.Response> searchPostByFilter(Comment_SearchingFilterDTO filterDto, Pageable pageable) {
+        List<Comment> commentList = commentService.searchCommentByFilter(filterDto, pageable);
         return commentList.stream()
                 .map(commentService::entityToDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<CommentDTO.Response> readComments() {
-        // TODO: 필터링 검색 메서드
-        return null;
+                .toList();
     }
 
     @Override

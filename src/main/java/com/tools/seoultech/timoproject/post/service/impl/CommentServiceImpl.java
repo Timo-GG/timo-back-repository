@@ -1,17 +1,23 @@
 package com.tools.seoultech.timoproject.post.service.impl;
 
+import com.querydsl.core.BooleanBuilder;
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.dto.CommentDTO;
+import com.tools.seoultech.timoproject.post.domain.dto.Comment_SearchingFilterDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Comment;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
+import com.tools.seoultech.timoproject.post.domain.entity.QComment;
 import com.tools.seoultech.timoproject.post.domain.mapper.CommentMapper;
 import com.tools.seoultech.timoproject.post.repository.CommentRepository;
 import com.tools.seoultech.timoproject.post.repository.PostRepository;
 import com.tools.seoultech.timoproject.post.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,12 +87,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> readAll() {
-        List<Comment> comments = commentRepository.findAll();
-        return comments;
-    }
-
-    @Override
     @Transactional
     public Comment update(Long id, CommentDTO.Request requestDto) {
         Comment comment = commentRepository.findById(id)
@@ -98,5 +98,43 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void delete(Long id) {
         commentRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Comment> searchCommentByFilter(Comment_SearchingFilterDTO filterDto, Pageable pageable) {
+        BooleanBuilder builder = searchFilterValidation(filterDto);
+        Sort sort = (filterDto.sortOrder()) ? Sort.by(Sort.Order.asc(filterDto.sortBy())) : Sort.by(Sort.Order.desc(filterDto.sortBy()));
+        List<Comment> commentList = commentRepository.findAll(
+                builder,
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        sort)
+        ).getContent();
+        return commentList;
+    }
+    private BooleanBuilder searchFilterValidation(Comment_SearchingFilterDTO filterDto) {
+        QComment qComment = QComment.comment;
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(Objects.nonNull(filterDto.commentId())) {
+            boolean exists = commentRepository.existsById(filterDto.commentId());
+            if(!exists)
+                throw new GeneralException("해당 commentId는 존재하지 않는 Id 값입니다.");
+            builder.and(qComment.id.eq(filterDto.commentId()));
+        }
+        if(Objects.nonNull(filterDto.postId())) {
+            boolean exists = postRepository.existsById(filterDto.postId());
+            if(!exists)
+                throw new GeneralException("해당 postId는 존재하지 않는 Id 값입니다.");
+            builder.and(qComment.post.id.eq(filterDto.postId()));
+        }
+        if(Objects.nonNull(filterDto.memberId())) {
+            boolean exists = memberRepository.existsById(filterDto.memberId());
+            if(!exists)
+                throw new GeneralException("해당 memberId는 존재하지 않는 Id 값입니다.");
+            builder.and(qComment.member.id.eq(filterDto.memberId()));
+        }
+        return builder;
     }
 }
