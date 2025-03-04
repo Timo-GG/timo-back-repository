@@ -31,7 +31,8 @@ public class Post extends BaseEntity {
     @Column(length=1500, nullable=false)
     private String content;
 
-    private Long memberId;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "post")
+    private List<Image> images = new ArrayList<>();
 
     @Builder.Default
     @Column(nullable = false)
