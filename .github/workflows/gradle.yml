@@ -73,6 +73,7 @@ jobs:
           source: "./docker-compose.yml"
           target: "/home/ubuntu/compose"
           overwrite: true       # 기존 파일 덮어쓰기
+          tar : false
 
       - name: Connect to EC2 and run docker
         uses: appleboy/ssh-action@master
