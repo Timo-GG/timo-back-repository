@@ -8,23 +8,24 @@ import java.util.Objects;
 
 @SearchingFilterCheck
 @Builder
-public record SearchingFilterDTO(
+public record Post_SearchingFilterDTO(
+        Long postId,
         Long memberId,
         Category category,
         String sortBy,
         Boolean sortOrder
 ) {
 
-    public SearchingFilterDTO{
+    public Post_SearchingFilterDTO {
         if(Objects.isNull(sortBy))
             sortBy = "regDate";
         if(Objects.isNull(sortOrder))
             sortOrder = true;
     }
-    static SearchingFilterDTO of(
-            Long memberId, Category category,
+    static Post_SearchingFilterDTO of(
+            Long postId, Long memberId, Category category,
             String sortBy, Boolean sortOrder
     ) {
-        return new SearchingFilterDTO(memberId, category, sortBy, sortOrder);
+        return new Post_SearchingFilterDTO(postId, memberId, category, sortBy, sortOrder);
     }
 }

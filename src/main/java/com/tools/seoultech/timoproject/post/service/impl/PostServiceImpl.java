@@ -152,7 +152,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private BooleanBuilder searchFilterValidation(
-            Long memberId, Category category
+            Long postId, Long memberId, Category category
     ) {
         QPost post = QPost.post;
         BooleanBuilder builder = new BooleanBuilder();

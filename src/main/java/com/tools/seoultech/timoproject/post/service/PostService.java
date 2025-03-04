@@ -2,8 +2,7 @@ package com.tools.seoultech.timoproject.post.service;
 
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.domain.dto.SearchingFilterDTO;
-import com.tools.seoultech.timoproject.post.domain.entity.Category;
+import com.tools.seoultech.timoproject.post.domain.dto.Post_SearchingFilterDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import org.springframework.data.domain.Pageable;
 
@@ -27,5 +26,5 @@ public interface PostService {
     Post decreaseLikeCount(Long postId, Long memberId);
 
     // Read by Filtering
-    List<Post> searchByFilter(SearchingFilterDTO filterDto, Pageable pageable);
+    List<Post> searchPostByFilter(Post_SearchingFilterDTO filterDto, Pageable pageable);
 }

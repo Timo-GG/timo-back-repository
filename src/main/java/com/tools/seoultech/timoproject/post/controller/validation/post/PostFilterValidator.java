@@ -1,17 +1,20 @@
-package com.tools.seoultech.timoproject.post.controller.validation;
+package com.tools.seoultech.timoproject.post.controller.validation.post;
 
-import com.tools.seoultech.timoproject.post.domain.dto.SearchingFilterDTO;
+import com.tools.seoultech.timoproject.post.controller.validation.SearchingFilterCheck;
+import com.tools.seoultech.timoproject.post.domain.dto.Post_SearchingFilterDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.lang.reflect.Field;
 
-public class SearchingFilterValidator implements ConstraintValidator<SearchingFilterCheck, SearchingFilterDTO> {
-    private String[] checkList = {};
+public class PostFilterValidator implements ConstraintValidator<SearchingFilterCheck, Post_SearchingFilterDTO> {
 
     @Override
-    public boolean isValid(SearchingFilterDTO requestDto, ConstraintValidatorContext context) {
+    public boolean isValid(Post_SearchingFilterDTO requestDto, ConstraintValidatorContext context) {
+        // 게시글 ID 위배 조건
+        if(requestDto.postId() != null && requestDto.postId() <= 0)
+            return false;
 
         // 멤버 ID 위배 조건
         if(requestDto.memberId() != null && requestDto.memberId() <= 0)
