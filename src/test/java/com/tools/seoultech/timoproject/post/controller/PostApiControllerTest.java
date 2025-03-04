@@ -3,7 +3,7 @@ package com.tools.seoultech.timoproject.post.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tools.seoultech.timoproject.global.config.TestSecurityConfig;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.domain.dto.SearchingFilterDTO;
+import com.tools.seoultech.timoproject.post.domain.dto.Post_SearchingFilterDTO;
 import com.tools.seoultech.timoproject.post.facade.PostFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -84,14 +83,14 @@ class PostApiControllerTest {
 
         List<PostDTO.Response> postDTOList = List.of(postDTO1, postDTO2);
 
-        given(postFacade.searchByFilter(SearchingFilterDTO.builder().build(), PageRequest.of(0, 10))).willReturn(postDTOList);
+        given(postFacade.searchByFilter(Post_SearchingFilterDTO.builder().build(), PageRequest.of(0, 10))).willReturn(postDTOList);
 
         mockMvc.perform(get("/api/v1/posts/public"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(jsonPath("$.data[0].title").value("Title1"));
 
-        then(postFacade).should().searchByFilter(SearchingFilterDTO.builder().build(), PageRequest.of(0, 10));
+        then(postFacade).should().searchByFilter(Post_SearchingFilterDTO.builder().build(), PageRequest.of(0, 10));
     }
 
     @Test

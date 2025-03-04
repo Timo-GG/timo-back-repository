@@ -24,6 +24,10 @@ public class Post extends BaseEntity {
     @Column(length=100, nullable=false)
     private String title;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
     @Column(length=1500, nullable=false)
     private String content;
 

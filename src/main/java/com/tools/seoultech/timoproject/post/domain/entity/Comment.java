@@ -29,6 +29,11 @@ public class Comment extends BaseEntity {
     @JoinColumn(name="member_id", nullable = false)
     private Member member;
 
+    // 댓글 연관관계 맵핑: 게시글
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="post_id", nullable = false)
+    private Post post;
+
     public void setPost(Post post) {
         if(post != null) {
             this.post = post;
