@@ -13,17 +13,15 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class Comment extends BaseEntity {
+    // 댓글 고유 아이디
     @Id
     @Column(name="comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 댓글 정보: 내용, 작성자
     @Column(nullable = false)
     private String content;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="post_id", nullable = false)
-    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id", nullable = false)
@@ -44,7 +42,6 @@ public class Comment extends BaseEntity {
         post.getComments().remove(this);
     }
 
-    // TODO: entitymanager. FK 관련 테이블 연관관계 수정.
     public void updateComment(CommentDTO.Request requestDto){
         this.content = requestDto.content();
     }
