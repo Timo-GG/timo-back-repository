@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.post.domain.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
+import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,7 +28,9 @@ public class Post extends BaseEntity {
     @Column(length=1500, nullable=false)
     private String content;
 
-    private Long memberId;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Builder.Default
     @Column(nullable = false)

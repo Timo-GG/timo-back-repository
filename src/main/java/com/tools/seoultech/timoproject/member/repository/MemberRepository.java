@@ -12,9 +12,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     boolean existsByEmail(String email);
 
-    Optional<Member> findByUsername(String username);
-
     boolean existsByNickname(String nickname);
+
+    Optional<Member> findByNickname(String nickName);
 
 //    @Query("select m from Member m "
 //            + "left join fetch m.memberInfo ui "

@@ -6,11 +6,11 @@ import lombok.Builder;
 @Builder
 public record MemberProfileDto(
         Long id,
-        String username,
         String nickname,
         String email,
         String playerName,
-        String playerTag
+        String playerTag,
+        Integer profileImageId
 ) {
 
     public static MemberProfileDto from(Member member){
@@ -19,11 +19,11 @@ public record MemberProfileDto(
         }
         return MemberProfileDto.builder()
                 .id(member.getId())
-                .username(member.getUsername())
                 .nickname(member.getNickname())
                 .email(member.getEmail())
                 .playerName(member.getPlayerName())
                 .playerTag(member.getPlayerTag())
+                .profileImageId(member.getProfileImageId())
                 .build();
     }
 }
