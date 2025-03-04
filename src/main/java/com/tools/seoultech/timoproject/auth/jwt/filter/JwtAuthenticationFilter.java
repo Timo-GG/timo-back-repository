@@ -42,8 +42,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/api/v1/members/player/verify"),
             new AntPathRequestMatcher("/api/v1/members/nickname/**"),
             new AntPathRequestMatcher("/naver/callback"),
-            new AntPathRequestMatcher("/api/v1/posts/public/**"),       // GET 요청 허용
-            new AntPathRequestMatcher("/api/v1/comments/public/**")      // GET 요청 허용
+            new AntPathRequestMatcher("/api/v1/posts/public/**"),
+            new AntPathRequestMatcher("/api/v1/comments/public/**"),
+            new AntPathRequestMatcher("/bower_components/**"),
+            new AntPathRequestMatcher("/dist/**"),
+            new AntPathRequestMatcher("/plugins/**"),
+            new AntPathRequestMatcher("/css/**"),
+            new AntPathRequestMatcher("/js/**"),
+            new AntPathRequestMatcher("/img/**")
+
     );
 
     @Override

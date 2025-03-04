@@ -18,8 +18,8 @@ public class AdminServiceImpl implements AdminService {
     private final MemberRepository memberRepository;
 
     @Override
-    public boolean authenticate(String username, String password) {
-        Optional<Member> optionalMember = memberRepository.findByUsername(username);
+    public boolean authenticate(String nickName, String password) {
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickName);
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
             if ("ADMIN".equals(member.getRole().name()) && ADMIN_PASSWORD.equals(password)) {
