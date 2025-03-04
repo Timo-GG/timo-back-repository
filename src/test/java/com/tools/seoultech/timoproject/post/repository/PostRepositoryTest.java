@@ -55,12 +55,12 @@ class PostRepositoryTest {
                     Post savedPost = postRepository.save(post);
                     assertTrue(Objects.nonNull(savedPost.getId()));
                     assertThat(savedPost)
-                            .hasNoNullFieldsOrPropertiesExcept("comments", "likes")
+                            .hasNoNullFieldsOrPropertiesExcept("comments", "likes", "images")
                             .satisfies(it -> {
                                 assertThat(it.getId()).isNotNull().isNotZero();
                                 assertThat(it.getTitle()).isEqualTo(post.getTitle());
                                 assertThat(it.getContent()).isEqualTo(post.getContent());
-                                assertThat(it.getMemberId()).isInstanceOf(Long.class);
+                                assertThat(it.getMember()).isInstanceOf(Member.class);
                                 assertThat(it.getRegDate()).isInstanceOf(LocalDateTime.class).isNotNull();
                                 assertThat(it.getModDate()).isInstanceOf(LocalDateTime.class).isNotNull();
                             });
@@ -79,7 +79,7 @@ class PostRepositoryTest {
                     PostDTO.Request.builder()
                             .title("updated Post Title...")
                             .content("updated Post Content...")
-                            .memberId(post.getMemberId())
+                            .memberId(post.getMember().getId())
                             .build()
             );
 
@@ -89,7 +89,7 @@ class PostRepositoryTest {
 
             assertTrue(Objects.nonNull(post));
             assertThat(updatedPost)
-                    .hasNoNullFieldsOrPropertiesExcept("comments", "likes")
+                    .hasNoNullFieldsOrPropertiesExcept("comments", "likes", "images")
                     .satisfies(it -> {
                         assertThat(it.getId())
                                 .isNotNull()
@@ -137,8 +137,13 @@ class PostRepositoryTest {
                             "다른 챔피언들한테 밀림: 요즘 카사딘, 피즈 같은 챔피언들이 너무 강력해서 아칼리가 ᄅᄋ 한없이 약해 보임.\n" +
                             "그런 챔피언들은 안정감도 좋고 딜도 훨씬 강력해서 아칼리랑 비교되면 ᄅᄋ 너무 약해 보임.\n" +
                             "진짜 이 상태로는 아칼리로 게임하기 힘듬. 밸런스 좀 조정해서 아칼리 다시 제대로 플레이할 수 있게 해줬으면 좋겠음. 반박시 니말이 다 맞음." + i)
-                    .memberId((i%3)+1L)
-                    .build();
+                    .member(
+                            memberRepository.findById((i%3)+1L)
+                                    .orElse(
+                                            Member.builder()
+                                                .username("created new in test method")
+                                                .build())
+                    ).build();
             posts.add(post);
         });
         return posts;
