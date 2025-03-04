@@ -47,6 +47,23 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     @Override
+    public List<Long> getWaitingUsers(String gameMode) {
+        String queueKey = MATCHING_QUEUE_PREFIX + gameMode;
+
+        // 대기열에서 유저 ID 조회
+        Set<String> waitingUserIds = zSetOps.range(queueKey, 0, -1);
+
+        // 유저 ID 리스트를 Long 타입으로 변환하여 반환
+        if (waitingUserIds != null) {
+            return waitingUserIds.stream()
+                    .map(Long::valueOf)
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList(); // 대기열이 비어 있을 경우 빈 리스트 반환
+        }
+    }
+
+    @Override
     public Optional<String> startMatch(Long memberId, MatchingOptionRequest request) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberId));

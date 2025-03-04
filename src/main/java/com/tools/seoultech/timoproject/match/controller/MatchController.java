@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -64,4 +65,15 @@ public class MatchController {
         }
     }
 
+    /** 대기 중인 유저 조회 */
+    @GetMapping("/waiting/{gameMode}")
+    public APIDataResponse<?> getWaitingUsers(@PathVariable String gameMode) {
+        List<Long> waitingUsers = matchingService.getWaitingUsers(gameMode);
+
+        if (waitingUsers.isEmpty()) {
+            return APIDataResponse.of("현재 대기 중인 유저가 없습니다.");
+        } else {
+            return APIDataResponse.of("대기 중인 유저 리스트 : " + waitingUsers);
+        }
+    }
 }
