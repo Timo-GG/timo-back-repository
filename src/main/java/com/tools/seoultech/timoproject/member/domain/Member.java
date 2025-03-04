@@ -53,6 +53,10 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "duo_info_id")
     private DuoInfo duoInfo;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id")
+    private List<Comment> comments = new ArrayList<>();
+
     public void updateMatchOption(UserInfo userInfo, DuoInfo duoInfo) {
         this.userInfo = userInfo;
         this.duoInfo = duoInfo;
