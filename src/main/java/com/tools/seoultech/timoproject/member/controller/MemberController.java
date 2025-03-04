@@ -4,6 +4,7 @@ import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.member.dto.MemberInfoResponse;
+import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.facade.MemberFacade;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
@@ -34,6 +35,26 @@ public class MemberController {
         return ResponseEntity.ok(APIDataResponse.of(memberInfo));
     }
 
+    @PutMapping("/me/info")
+    public ResponseEntity<APIDataResponse<MemberInfoResponse>> updateAdditionalInfo(
+            @CurrentMemberId Long memberId,
+            @RequestBody UpdateMemberInfoRequest request
+    ) {
+        MemberInfoResponse updatedInfo = memberFacade.updateMemberInfo(memberId, request);
+
+        return ResponseEntity.ok(APIDataResponse.of(updatedInfo));
+    }
+
+    @PutMapping("/me/profile-image")
+    public ResponseEntity<APIDataResponse<Integer>> updateProfileImageId(
+            @CurrentMemberId Long memberId,
+            @RequestBody Integer imageId
+    ) {
+        Integer updatedImageId = memberFacade.updateProfileImageId(memberId, imageId);
+
+        return ResponseEntity.ok(APIDataResponse.of(updatedImageId));
+    }
+
     @GetMapping("/player/verify")
     public ResponseEntity<APIDataResponse<?>> verifyPlayer(
             AccountDto.Request request
@@ -41,14 +62,6 @@ public class MemberController {
         AccountDto.Response response = memberFacade.verifyPlayer(request);
 
         return ResponseEntity.ok(APIDataResponse.of(response));
-    }
-
-    @PostMapping("/nickname/random")
-    public ResponseEntity<APIDataResponse<?>> getRandomNickname() {
-
-        String randomNickname = memberFacade.createRandomNickname();
-
-        return ResponseEntity.ok(APIDataResponse.of(randomNickname));
     }
 
     @GetMapping("/nickname/check")
