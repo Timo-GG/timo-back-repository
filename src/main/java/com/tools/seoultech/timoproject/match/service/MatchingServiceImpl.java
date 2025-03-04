@@ -47,7 +47,7 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     @Override
-    public void addToMatchingQueue(Long memberId, MatchingOptionRequest request) {
+    public Optional<String> startMatch(Long memberId, MatchingOptionRequest request) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberId));
 
@@ -58,15 +58,22 @@ public class MatchingServiceImpl implements MatchingService {
         String queueKey = MATCHING_QUEUE_PREFIX + userInfo.getGameMode();
         String userKey = USER_INFO_PREFIX + memberId;
 
-        // 필수 조건을 Redis Hash에 저장 (필터링 시 활용)
-        saveMemberToRedis(userKey, userInfo, duoInfo);
+        // 1. 먼저 대기열을 조회하여 바로 매칭 가능한지 확인
+        Optional<String> matchId = findMatch(memberId);
+        if (matchId.isPresent()) {
+            return matchId; // 즉시 매칭이 가능하면 Redis에 등록하지 않고 바로 반환
+        }
 
-        // 대기 시간 초기값 저장 (등록 시간)
+        // 2. 매칭이 불가능한 경우에만 Redis에 등록
+        saveMemberToRedis(userKey, userInfo, duoInfo);
         long currentTime = System.currentTimeMillis();
         hashOps.put(userKey, "waitTime", String.valueOf(currentTime));
 
-        // ZSET에 등록 (점수 = 초기 대기 시간 값)
         zSetOps.add(queueKey, memberId.toString(), 0);
+        log.info("대기열에 추가됨: {}", memberId);
+
+        // 3. 대기 상태 유지
+        return Optional.empty();
     }
 
     @Override

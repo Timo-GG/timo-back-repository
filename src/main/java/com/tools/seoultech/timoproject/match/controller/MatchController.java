@@ -20,17 +20,16 @@ public class MatchController {
 
     /** 매칭 시작 */
     @PostMapping("/queue")
-    public APIDataResponse<?> addToQueueAndFindMatch(@CurrentMemberId Long memberId, @RequestBody MatchingOptionRequest request) {
+    public APIDataResponse<?> startMatch(@CurrentMemberId Long memberId, @RequestBody MatchingOptionRequest request) {
 
         log.info("매칭 요청 받음. memberId: {}, request: {}", memberId, request);
 
-        matchingService.addToMatchingQueue(memberId, request);
-        Optional<String> matchId = matchingService.findMatch(memberId);
+        Optional<String> matchId = matchingService.startMatch(memberId, request);
 
         if (matchId.isPresent()) {
-            return APIDataResponse.of(matchId.get());
+            return APIDataResponse.of("매칭 요청이 즉시 처리되었습니다 : " + matchId.get());
         } else {
-            return APIDataResponse.of("현재 가능한 매칭이 없습니다.");
+            return APIDataResponse.of("대기열에 등록되었습니다. 매칭 상대를 기다리는 중입니다.");
         }
     }
 

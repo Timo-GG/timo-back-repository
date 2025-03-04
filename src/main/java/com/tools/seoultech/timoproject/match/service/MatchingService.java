@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface MatchingService {
 
-    void addToMatchingQueue(Long memberId, MatchingOptionRequest request);
+    Optional<String> startMatch(Long memberId, MatchingOptionRequest request);
 
     Optional<String> findMatch(Long memberId);
 
