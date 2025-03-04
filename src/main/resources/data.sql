@@ -61,22 +61,34 @@ VALUES
 -------------------------------------------------
 -- 4. Post 테이블
 -------------------------------------------------
-INSERT INTO post (post_id, title, content, member_id, view_count, like_count, category, mod_date, reg_date)
+INSERT INTO post (post_id, title, content, member_id, view_count, like_count, category, reg_date, mod_date)
 VALUES
-      (1, '테스트 제목: 1', '테스트 내용...1', 1, 50, 0, 'NORMAL', now(), now()),
-      (2, '테스트 제목: 2', '테스트 내용...2', 2, 100, 0, 'NORMAL', now(), now()),
-      (3, '테스트 제목: 3', '테스트 내용...3', 3, 150, 0, 'NORMAL', now(), now());
+    (1, '테스트 제목: 1', '테스트 내용...1', 1, 50, 0, 'NORMAL', now(), now() + INTERVAL 1 SECOND),
+    (2, '테스트 제목: 2', '테스트 내용...2', 2, 100, 0, 'NORMAL', now(), now()),
+    (3, '테스트 제목: 3', '테스트 내용...3', 3, 150, 0, 'NORMAL', now(), now()),
+    (4, '테스트 제목: 11', '테스트 내용...11', 1, 150, 0, 'NORMAL', now() - INTERVAL 1 DAY, now() + INTERVAL 1 SECOND),
+    (5, '테스트 제목: 22', '테스트 내용...22', 2, 100, 0, 'CREATIVITY', now() - INTERVAL 1 DAY, now()),
+    (6, '테스트 제목: 33', '테스트 내용...33', 3, 50, 0, 'CREATIVITY', now() - INTERVAL 3 DAY, now() - INTERVAL 1 SECOND);
+
 
 -------------------------------------------------
 -- 5. Comment 테이블
 -------------------------------------------------
-INSERT INTO comment (comment_id, member_id, post_id, content, mod_date, reg_date)
+INSERT INTO comment (comment_id, member_id, post_id, content, reg_date, mod_date)
 VALUES
-     (1, 5, 1, '테스트 댓글 내용...1', now(), now()),
-     (2, 4, 2, '테스트 댓글 내용...2', now(), now()),
-     (3, 3, 2, '테스트 댓글 내용...3', now(), now()),
-     (4, 2, 3, '테스트 댓글 내용...4', now(), now()),
-     (5, 1, 3, '테스트 댓글 내용...5', now(), now());
+    (1, 5, 1, '테스트 댓글 내용...1', now() + INTERVAL 8 DAY, now() + INTERVAL 2 DAY),
+    (2, 4, 2, '테스트 댓글 내용...2', now() + INTERVAL 7 DAY, now() + INTERVAL 1 DAY),
+    (3, 3, 2, '테스트 댓글 내용...3', now() + INTERVAL 6 DAY, now()),
+
+    (4, 2, 3, '테스트 댓글 내용...4', now() + INTERVAL 5 DAY, now()),
+    (5, 1, 3, '테스트 댓글 내용...5', now() + INTERVAL 4 DAY, now() + INTERVAL 5 DAY),
+
+    (6, 2, 3, '테스트 댓글 내용...4', now() + INTERVAL 3 DAY, now()),
+    (7, 2, 3, '테스트 댓글 내용...5', now() + INTERVAL 2 DAY, now()),
+
+    (8, 1, 1, '테스트 댓글 내용...4', now() + INTERVAL 1 DAY, now()),
+    (9, 1, 1, '테스트 댓글 내용...5', now() - INTERVAL 1 DAY, now() - INTERVAL 1 DAY);
+
 
 -------------------------------------------------
 -- 6. Rating 테이블
