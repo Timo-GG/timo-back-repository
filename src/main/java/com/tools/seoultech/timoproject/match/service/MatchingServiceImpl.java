@@ -50,6 +50,8 @@ public class MatchingServiceImpl implements MatchingService {
     public List<Long> getWaitingUsers(String gameMode) {
         String queueKey = MATCHING_QUEUE_PREFIX + gameMode;
 
+        log.info("queueKey : " + queueKey);
+
         // 대기열에서 유저 ID 조회
         Set<String> waitingUserIds = zSetOps.range(queueKey, 0, -1);
 
@@ -71,6 +73,7 @@ public class MatchingServiceImpl implements MatchingService {
         UserInfo userInfo = createUserInfo(request);
         DuoInfo duoInfo = createDuoInfo(request);
         member.updateMatchOption(userInfo, duoInfo);
+        memberRepository.flush();
 
         String queueKey = MATCHING_QUEUE_PREFIX + userInfo.getGameMode();
         String userKey = USER_INFO_PREFIX + memberId;
@@ -120,6 +123,9 @@ public class MatchingServiceImpl implements MatchingService {
             Member candidate = memberRepository.findById(candidateId)
                     .orElseThrow(() -> new IllegalArgumentException("Candidate not found: " + candidateId));
 
+            log.info("Candidate : " + candidate.getNickname());
+            log.info("Candidate : " + candidate.getId());
+
             double score = calculateMatchingScore(userInfo, member.getDuoInfo(),
                     candidate.getUserInfo(), candidate.getDuoInfo(), candidateId);
 
@@ -130,8 +136,8 @@ public class MatchingServiceImpl implements MatchingService {
         }
 
         if (bestMatch != null) {
-            removeFromQueue(memberId, String.valueOf(userInfo.getGameMode()));
-            removeFromQueue(bestMatch.getId(), String.valueOf(userInfo.getGameMode()));
+            removeFromQueue(memberId);
+            removeFromQueue(bestMatch.getId());
             return createMatchRequest(memberId, bestMatch.getId());
         }
 
@@ -273,6 +279,7 @@ public class MatchingServiceImpl implements MatchingService {
         return (System.currentTimeMillis() - waitTime) / 1000; // 초 단위 변환
     }
 
+    // TODO : 수정 필요
     /** Redis 대기열에 등록 */
     private void saveMemberToRedis(String userKey, UserInfo userInfo, DuoInfo duoInfo) {
         if (userInfo == null || duoInfo == null) {
@@ -286,8 +293,11 @@ public class MatchingServiceImpl implements MatchingService {
                 "playStyle", String.valueOf(userInfo.getPlayStyle()),
                 "waitTime", String.valueOf(System.currentTimeMillis())
         );
+
+        log.info("Saving to Redis with userKey: {}, userMap: {}", userKey, userMap);
         hashOps.putAll(userKey, userMap);
     }
+
 
     @Override
     @Transactional
@@ -345,8 +355,13 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     /** 매칭 대기열에서 제거 */
-    public void removeFromQueue(Long memberId, String gameMode) {
-        String queueKey = MATCHING_QUEUE_PREFIX + gameMode;
+    public void removeFromQueue(Long memberId) {
+        String userKey = USER_INFO_PREFIX + memberId;
+        String queueKey = MATCHING_QUEUE_PREFIX + hashOps.get(userKey, "gameMode");
+
+        log.info("uerKey : " + userKey);
+        log.info("queueKey : " + queueKey);
+
         zSetOps.remove(queueKey, memberId.toString());
         redisTemplate.delete(USER_INFO_PREFIX + memberId);
     }
