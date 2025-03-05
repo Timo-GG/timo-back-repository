@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.match.controller;
 
+import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionRequest;
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionResponse;
 import com.tools.seoultech.timoproject.match.service.MatchingOptionServiceImpl;
@@ -14,23 +15,23 @@ public class MatchingOptionController {
 
     private final MatchingOptionServiceImpl matchingOptionService;
 
-    @PostMapping("/{memberId}")
+    @PostMapping()
     public ResponseEntity<MatchingOptionResponse> createMatchingOption(
-            @PathVariable Long memberId,
+            @CurrentMemberId Long memberId,
             @RequestBody MatchingOptionRequest request) {
         MatchingOptionResponse response = matchingOptionService.updateMatchingOption(memberId, request);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{memberId}")
-    public ResponseEntity<MatchingOptionResponse> getMatchingOption(@PathVariable Long memberId) {
+    @GetMapping()
+    public ResponseEntity<MatchingOptionResponse> getMatchingOption(@CurrentMemberId Long memberId) {
         MatchingOptionResponse response = matchingOptionService.getMatchingOption(memberId);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{memberId}")
+    @PutMapping()
     public ResponseEntity<MatchingOptionResponse> updateMatchingOption(
-            @PathVariable Long memberId,
+            @CurrentMemberId Long memberId,
             @RequestBody MatchingOptionRequest request) {
         MatchingOptionResponse response = matchingOptionService.updateMatchingOption(memberId, request);
         return ResponseEntity.ok(response);
