@@ -64,8 +64,8 @@ public class MatchingServiceImpl implements MatchingService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberId));
 
-        UserInfo userInfo = createUserInfo(request);
-        DuoInfo duoInfo = createDuoInfo(request);
+        UserInfo userInfo = request.toUserInfo();
+        DuoInfo duoInfo = request.toDuoInfo();
 
         member.updateMatchOption(userInfo, duoInfo);
         memberRepository.flush();
@@ -145,23 +145,6 @@ public class MatchingServiceImpl implements MatchingService {
 
         log.info("매칭 요청 생성: {} vs {}", member1, member2);
         return Optional.of(matchId);
-    }
-
-    private UserInfo createUserInfo(MatchingOptionRequest request) {
-        return UserInfo.builder()
-                .introduce(request.getUserInfo().getIntroduce())
-                .gameMode(request.getUserInfo().getGameMode())
-                .playPosition(request.getUserInfo().getPlayPosition())
-                .playCondition(request.getUserInfo().getPlayCondition())
-                .voiceChat(request.getUserInfo().getVoiceChat())
-                .playStyle(request.getUserInfo().getPlayStyle())
-                .build();
-    }
-    private DuoInfo createDuoInfo(MatchingOptionRequest request) {
-        return DuoInfo.builder()
-                .duoPlayPosition(request.getDuoInfo().getDuoPlayPosition())
-                .duoPlayStyle(request.getDuoInfo().getDuoPlayStyle())
-                .build();
     }
 
     /** 필수 조건 필터링 */
