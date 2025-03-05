@@ -35,9 +35,9 @@ public class MatchController {
     }
 
     /** 매칭 취소 */
-    @DeleteMapping("/cancel/{memberId}")
-    public APIDataResponse<?> cancelMatch(@PathVariable Long memberId) {
-        matchingService.removeFromQueue(memberId, "gameMode"); // gameMode 처리를 위한 수정 필요
+    @DeleteMapping("/cancel")
+    public APIDataResponse<?> cancelMatch(@CurrentMemberId Long memberId) {
+        matchingService.removeFromQueue(memberId);
         return APIDataResponse.of("매칭이 취소되었습니다.");
     }
 
