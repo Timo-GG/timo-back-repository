@@ -13,7 +13,7 @@ public interface MatchingService {
 
     Optional<String> findMatch(Long memberId);
 
-    void removeFromQueue(Long memberId, String gameMode);
+    void removeFromQueue(Long memberId);
 
     boolean acceptMatch(String matchId, Long memberId);
 
