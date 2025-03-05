@@ -1,9 +1,5 @@
 package com.tools.seoultech.timoproject.match.service;
 
-import com.tools.seoultech.timoproject.chat.domain.ChatRoom;
-import com.tools.seoultech.timoproject.chat.domain.ChatRoomMember;
-import com.tools.seoultech.timoproject.chat.repository.ChatRoomMemberRepository;
-import com.tools.seoultech.timoproject.chat.repository.ChatRoomRepository;
 import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.match.domain.DuoInfo;
 import com.tools.seoultech.timoproject.match.domain.UserInfo;
@@ -132,8 +128,8 @@ public class MatchingServiceImpl implements MatchingService {
         }
 
         if (bestMatch != null) {
-            removeFromQueue(memberId, String.valueOf(userInfo.getGameMode()));
-            removeFromQueue(bestMatch.getId(), String.valueOf(userInfo.getGameMode()));
+            removeFromQueue(memberId);
+            removeFromQueue(bestMatch.getId());
             return createMatchRequest(memberId, bestMatch.getId());
         }
 
@@ -335,8 +331,10 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     /** 매칭 대기열에서 제거 */
-    public void removeFromQueue(Long memberId, String gameMode) {
-        String queueKey = MATCHING_QUEUE_PREFIX + gameMode;
+    public void removeFromQueue(Long memberId) {
+        String userKey = USER_INFO_PREFIX + memberId;
+        String queueKey = MATCHING_QUEUE_PREFIX + hashOps.get(userKey, "gameMode");
+
         zSetOps.remove(queueKey, memberId.toString());
         redisTemplate.delete(USER_INFO_PREFIX + memberId);
     }
