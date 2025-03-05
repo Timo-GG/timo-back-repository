@@ -1,8 +1,7 @@
-package com.tools.seoultech.timoproject.socket;
+package com.tools.seoultech.timoproject.socket.controller;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.tools.seoultech.timoproject.chat.domain.ChatRoom;
 import com.tools.seoultech.timoproject.chat.domain.ChatRoomMember;
 import com.tools.seoultech.timoproject.chat.dto.ChatMessageDTO;
 import com.tools.seoultech.timoproject.chat.dto.LeaveRoomRequest;
@@ -14,7 +13,6 @@ import com.tools.seoultech.timoproject.global.annotation.SocketController;
 import com.tools.seoultech.timoproject.global.annotation.SocketMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @SocketController
 @Slf4j

@@ -31,9 +31,12 @@ public class ChatRoom extends BaseEntity {
 
     private boolean isTerminated;
 
-    public static ChatRoom createRoom(String chatRoomName) {
+    private String matchId;
+
+    public static ChatRoom createRoom(String chatRoomName, String matchId) {
         ChatRoom room = new ChatRoom();
         room.chatRoomName = chatRoomName;
+        room.matchId = matchId;
         return room;
     }
 
