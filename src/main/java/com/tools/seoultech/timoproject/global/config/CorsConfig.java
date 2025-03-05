@@ -12,6 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")        // 모든 경로
                 .allowedOrigins("*")      // 모든 Origin 허용
                 .allowedMethods("*")      // 모든 HTTP Method 허용
-                .allowedHeaders("*");     // 모든 헤더 허용 (필요 시)
+                .allowedHeaders("*")      // 모든 헤더 허용 (필요 시)
+                .allowCredentials(false);
     }
 }
