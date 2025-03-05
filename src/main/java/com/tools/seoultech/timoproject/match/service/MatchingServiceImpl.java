@@ -97,10 +97,11 @@ public class MatchingServiceImpl implements MatchingService {
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberId));
 
         UserInfo userInfo = member.getUserInfo();
+        DuoInfo duoInfo = member.getDuoInfo();
         String queueKey = MATCHING_QUEUE_PREFIX + userInfo.getGameMode();
 
         // 필수 조건을 만족하는 후보자만 필터링
-        Set<String> candidateIds = filterCandidates(queueKey, userInfo);
+        Set<String> candidateIds = filterCandidates(queueKey, userInfo, duoInfo);
         if (candidateIds.isEmpty()) {
             return Optional.empty();
         }
@@ -110,10 +111,6 @@ public class MatchingServiceImpl implements MatchingService {
 
         for (String candidateIdStr : candidateIds) {
             Long candidateId = Long.valueOf(candidateIdStr);
-
-            if (candidateId.equals(memberId)) {
-                continue;
-            }
 
             Member candidate = memberRepository.findById(candidateId)
                     .orElseThrow(() -> new IllegalArgumentException("Candidate not found: " + candidateId));
@@ -168,30 +165,33 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     /** 필수 조건 필터링 */
-    private Set<String> filterCandidates(String queueKey, UserInfo userInfo) {
+    private Set<String> filterCandidates(String queueKey, UserInfo userInfo, DuoInfo duoInfo) {
         Set<String> allCandidates = zSetOps.range(queueKey, 0, -1);
 
         return allCandidates != null ? allCandidates.stream()
-                .filter(candidateId -> isMatchingOptionValid(candidateId, userInfo))
+                .filter(candidateId -> isMatchingOptionValid(candidateId, userInfo, duoInfo))
                 .collect(Collectors.toSet()) : Collections.emptySet();
     }
-    private boolean isMatchingOptionValid(String candidateId, UserInfo userInfo) {
+    private boolean isMatchingOptionValid(String candidateId, UserInfo userInfo, DuoInfo duoInfo) {
 
         String userKey = USER_INFO_PREFIX + candidateId;
 
-        List<String> userFields = hashOps.multiGet(userKey, List.of("gameMode", "voiceChat"));
-        if (userFields.size() != 2 || userFields.contains(null)) {
+        List<String> userFields = hashOps.multiGet(userKey, List.of("playPosition"));
+        if (userFields.contains(null)) {
             return false;
         }
 
-        String storedGameMode = userFields.get(0);
-        String storedVoiceChat = userFields.get(1);
+        // 후보자 정보
+        String storedPlayPosition = userFields.getFirst();
 
-        String myGameMode = String.valueOf(userInfo.getGameMode());
-        String myVoiceChat = String.valueOf(userInfo.getVoiceChat());
+        // 유저 정보
+        String myDesiredPosition = String.valueOf(duoInfo.getDuoPlayPosition());
+
+        log.info(storedPlayPosition);
+        log.info(myDesiredPosition);
 
         // 필수 조건이 맞지 않으면 제외
-        return Objects.equals(storedGameMode, myGameMode) && Objects.equals(storedVoiceChat, myVoiceChat);
+        return Objects.equals(storedPlayPosition, myDesiredPosition);
     }
 
     /** 부가 조건 점수 계산 */
@@ -203,25 +203,11 @@ public class MatchingServiceImpl implements MatchingService {
         long candidateWaitTime = getWaitTime(candidateId);
         score -= candidateWaitTime * WAIT_TIME_WEIGHT; // 오래 기다릴수록 점수 낮아짐 (좋은 매칭)
 
-        // 포지션 조합 (서로 다르면 +20점, 같으면 -10점)
-        if (!duoInfo.getDuoPlayPosition().equals(candidateUserInfo.getPlayPosition())) {
-            score += 20;
-        } else {
-            score -= 10;
-        }
-
         // 플레이 스타일 가산점
         if (duoInfo.getDuoPlayStyle().equals(candidateUserInfo.getPlayStyle())) {
             score -= 15;
         } else {
             score += 15;
-        }
-
-        // 플레이 조건 (캐주얼 vs 경쟁적)
-        if (userInfo.getPlayCondition().equals(candidateUserInfo.getPlayCondition())) {
-            score -= 10;
-        } else {
-            score += 10;
         }
 
         return score;
