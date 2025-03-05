@@ -1,13 +1,11 @@
 package com.tools.seoultech.timoproject.auth.config;
 
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.tools.seoultech.timoproject.auth.jwt.HeaderTokenExtractor;
 import com.tools.seoultech.timoproject.auth.jwt.JwtResolver;
 import com.tools.seoultech.timoproject.auth.jwt.filter.JwtAccessDeniedHandler;
 import com.tools.seoultech.timoproject.auth.jwt.filter.JwtAuthenticationFilter;
 import com.tools.seoultech.timoproject.auth.jwt.filter.JwtExceptionFilter;
 import com.tools.seoultech.timoproject.auth.service.CustomUserDetailsService;
-import com.tools.seoultech.timoproject.global.config.CorsConfig;
 import com.tools.seoultech.timoproject.global.config.WhitelistProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -113,7 +111,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("*");
+        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
