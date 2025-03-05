@@ -4,6 +4,7 @@ import com.tools.seoultech.timoproject.chat.domain.ChatRoom;
 import com.tools.seoultech.timoproject.chat.domain.ChatRoomMember;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomMemberRepository;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomRepository;
+import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.match.domain.DuoInfo;
 import com.tools.seoultech.timoproject.match.domain.UserInfo;
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionRequest;
@@ -28,8 +29,7 @@ import java.util.stream.Collectors;
 public class MatchingServiceImpl implements MatchingService {
 
     private final MemberRepository memberRepository;
-    private final ChatRoomRepository chatRoomRepository;
-    private final ChatRoomMemberRepository chatRoomMemberRepository;
+    private final ChatService chatService;
     private final StringRedisTemplate redisTemplate;
     private final ZSetOperations<String, String> zSetOps;   // 대기열 관리
     private HashOperations<String, String, String> hashOps; // 회원 정보 저장
@@ -70,7 +70,9 @@ public class MatchingServiceImpl implements MatchingService {
 
         UserInfo userInfo = createUserInfo(request);
         DuoInfo duoInfo = createDuoInfo(request);
+
         member.updateMatchOption(userInfo, duoInfo);
+        memberRepository.flush();
 
         String queueKey = MATCHING_QUEUE_PREFIX + userInfo.getGameMode();
         String userKey = USER_INFO_PREFIX + memberId;
@@ -150,42 +152,6 @@ public class MatchingServiceImpl implements MatchingService {
 
         log.info("매칭 요청 생성: {} vs {}", member1, member2);
         return Optional.of(matchId);
-    }
-
-    @Transactional
-    protected boolean createChatRoom(String matchId, String matchKey) {
-        // 두 명의 사용자 ID 가져오기
-        Set<String> memberIds = hashOps.keys(matchKey);
-        if (memberIds.size() != 2) {
-            log.error("매칭 정보 오류: {}", matchId);
-            return false;
-        }
-
-        Iterator<String> iterator = memberIds.iterator();
-        Long member1 = Long.valueOf(iterator.next());
-        Long member2 = Long.valueOf(iterator.next());
-
-        Member user1 = memberRepository.findById(member1)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원: " + member1));
-        Member user2 = memberRepository.findById(member2)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원: " + member2));
-
-        // 채팅방 이름은 "{member1Id}_{member2Id}" 형식으로 설정
-        String chatRoomName = member1 + "_" + member2;
-        ChatRoom chatRoom = ChatRoom.createRoom(chatRoomName);
-        chatRoomRepository.save(chatRoom);
-
-        // 채팅방 멤버 추가
-        ChatRoomMember chatRoomMember1 = ChatRoomMember.createChatRoomMember(chatRoom, user1);
-        ChatRoomMember chatRoomMember2 = ChatRoomMember.createChatRoomMember(chatRoom, user2);
-        chatRoomMemberRepository.save(chatRoomMember1);
-        chatRoomMemberRepository.save(chatRoomMember2);
-
-        log.info("✅ 채팅방 생성됨: {}", chatRoomName);
-
-        // Redis에서 매칭 정보 삭제
-        redisTemplate.delete(matchKey);
-        return true;
     }
 
     private UserInfo createUserInfo(MatchingOptionRequest request) {
@@ -289,14 +255,14 @@ public class MatchingServiceImpl implements MatchingService {
         hashOps.putAll(userKey, userMap);
     }
 
-    @Override
     @Transactional
+    @Override
     public boolean acceptMatch(String matchId, Long memberId) {
         String matchKey = MATCH_WAITING_PREFIX + matchId;
 
         if (!redisTemplate.hasKey(matchKey)) {
             log.warn("매칭이 만료됨: matchId={}", matchId);
-            return false; // 매칭이 만료됨
+            return false;
         }
 
         hashOps.put(matchKey, memberId.toString(), "accepted");
@@ -304,11 +270,35 @@ public class MatchingServiceImpl implements MatchingService {
         // 두 명 모두 수락했는지 확인
         Set<String> statusValues = new HashSet<>(hashOps.values(matchKey));
         if (statusValues.contains("pending")) {
-            return false; // 아직 한 명이 응답하지 않음
+            return false; // 아직 다른 사용자의 응답 대기
         }
 
+        // 여기서 매칭이 최종 확정된 상태
         log.info("매칭 확정: matchId={}", matchId);
-        return createChatRoom(matchId, matchKey);
+
+        // 두 사용자 정보를 얻어와서 ChatService를 통해 채팅방 생성
+        return finalizeMatch(matchId, matchKey);
+    }
+
+    @Transactional
+    protected boolean finalizeMatch(String matchId, String matchKey) {
+        // 두 명의 사용자 ID 가져오기
+        Set<String> memberIds = hashOps.keys(matchKey);
+        if (memberIds == null || memberIds.size() != 2) {
+            log.error("매칭 정보 오류: matchId={}", matchId);
+            return false;
+        }
+
+        Iterator<String> iterator = memberIds.iterator();
+        Long member1 = Long.valueOf(iterator.next());
+        Long member2 = Long.valueOf(iterator.next());
+
+        // ChatService를 통해 채팅방 생성 & 두 멤버 가입
+        chatService.createChatRoomForMatch(matchId, member1, member2);
+
+        // Redis에서 매칭 정보 삭제
+        redisTemplate.delete(matchKey);
+        return true;
     }
 
     @Override
@@ -365,5 +355,22 @@ public class MatchingServiceImpl implements MatchingService {
         hashOps.put(userKey, "waitTime", String.valueOf(waitTime));
 
         log.info("거절 후 재등록: memberId={} (기존 대기 시간 유지)", memberId);
+    }
+
+    // MatchingServiceImpl.java (일부 발췌)
+    @Override
+    public Set<Long> getMatchMemberIds(String matchId) {
+        String matchKey = MATCH_WAITING_PREFIX + matchId;
+        // hashOps.keys(matchKey)는 Redis에 저장된 key들(회원 ID 문자열)을 반환합니다.
+        Set<String> memberIdStrSet = hashOps.keys(matchKey);
+        if (memberIdStrSet == null) {
+            return null;
+        }
+        // 문자열을 Long으로 변환하여 반환
+        Set<Long> memberIds = new HashSet<>();
+        for (String idStr : memberIdStrSet) {
+            memberIds.add(Long.valueOf(idStr));
+        }
+        return memberIds;
     }
 }

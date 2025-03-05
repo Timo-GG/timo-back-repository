@@ -29,9 +29,14 @@ public class ChatRoom extends BaseEntity {
 
     private boolean isGroupChat = false;
 
-    public static ChatRoom createRoom(String chatRoomName) {
+    private boolean isTerminated;
+
+    private String matchId;
+
+    public static ChatRoom createRoom(String chatRoomName, String matchId) {
         ChatRoom room = new ChatRoom();
         room.chatRoomName = chatRoomName;
+        room.matchId = matchId;
         return room;
     }
 
@@ -40,5 +45,10 @@ public class ChatRoom extends BaseEntity {
         this.lastMessageTime = message.getRegDate();
         this.lastMessageContent = message.getContent();
     }
+
+    public void terminate() {
+        this.isTerminated = true;
+    }
+
 
 }

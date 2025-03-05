@@ -19,13 +19,6 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @PostMapping("/rooms")
-    public APIDataResponse<?> createRoom(@RequestParam String roomName) {
-        ChatRoom chatRoom = chatService.createChatRoom(roomName);
-
-        return APIDataResponse.of(chatRoom);
-    }
-
     @GetMapping("/rooms")
     public APIDataResponse<ChatRoomResponse> getRoom(@RequestParam String roomName) {
         return APIDataResponse.of(chatService.getChatRoom(roomName));

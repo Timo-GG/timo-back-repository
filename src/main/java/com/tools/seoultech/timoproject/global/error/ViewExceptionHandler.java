@@ -21,6 +21,7 @@ public class ViewExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR;
 
         log.info("익셉션 핸들러에서 예외처리");
+        log.error(e.getMessage(), e);
         return new ModelAndView(
                 "error",
                 Map.of(
@@ -35,6 +36,7 @@ public class ViewExceptionHandler {
         ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         log.info("익셉션 핸들러에서 예외 처리.");
+        log.error(e.getMessage(), e);
         return new ModelAndView(
                 "error",
                 Map.of(

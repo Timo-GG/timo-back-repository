@@ -38,7 +38,7 @@
       </tr>
       <tr th:each="comment : ${post.comments}">
         <td th:text="${comment.id}"></td>
-        <td th:text="${comment.member.username}"></td>
+        <td th:text="${comment.getId()}"></td>
         <td th:text="${comment.content}"></td>
         <td th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
         <td>

@@ -2,8 +2,7 @@ package com.tools.seoultech.timoproject.post.controller;
 
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.domain.dto.SearchingFilterDTO;
-import com.tools.seoultech.timoproject.post.domain.entity.Category;
+import com.tools.seoultech.timoproject.post.domain.dto.Post_SearchingFilterDTO;
 import com.tools.seoultech.timoproject.post.facade.PostFacade;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import jakarta.validation.Valid;
@@ -31,7 +30,7 @@ public class PostApiController {
     }
     @GetMapping("/public")
     public ResponseEntity<APIDataResponse<List<PostDTO.Response>>> readPosts(
-            @Valid @ModelAttribute SearchingFilterDTO filterDto,
+            @Valid Post_SearchingFilterDTO filterDto,
             @PageableDefault(page = 0, size = 10) Pageable pageable
     ) {
         List<PostDTO.Response> postList = postFacade

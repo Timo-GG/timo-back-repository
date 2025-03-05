@@ -7,7 +7,7 @@ import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.domain.dto.SearchingFilterDTO;
+import com.tools.seoultech.timoproject.post.domain.dto.Post_SearchingFilterDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Category;
 import com.tools.seoultech.timoproject.post.domain.entity.PostLike;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
@@ -77,11 +77,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Transactional
-    public List<Post> searchByFilter(
-            SearchingFilterDTO filterDto,
+    public List<Post> searchPostByFilter(
+            Post_SearchingFilterDTO filterDto,
             Pageable pageable
     ){
-        BooleanBuilder builder = searchFilterValidation(filterDto.memberId(), filterDto.category());
+        BooleanBuilder builder = searchFilterValidation(filterDto.postId(),  filterDto.memberId(), filterDto.category());
         Sort sort = (filterDto.sortOrder()) ? Sort.by(Sort.Order.asc(filterDto.sortBy())) : Sort.by(Sort.Order.desc(filterDto.sortBy()));
         List<Post> postList = postRepository.findAll(
                 builder,
@@ -152,17 +152,20 @@ public class PostServiceImpl implements PostService {
     }
 
     private BooleanBuilder searchFilterValidation(
-            Long memberId, Category category
+            Long postId, Long memberId, Category category
     ) {
         QPost post = QPost.post;
         BooleanBuilder builder = new BooleanBuilder();
 
+        if(postId != null) {
+            builder.and(post.id.eq(postId));
+        }
         if(memberId != null){
             boolean isExist = memberRepository.existsById(memberId);
 
             if(!isExist)
                 throw new GeneralException("필터링 조건에 포함된 멤버 ID에 해당하는 값이 존재하지 않습니다.");
-            builder.and(post.memberId.eq(memberId));
+            builder.and(post.member.id.eq(memberId));
         }
         if(category != null){
             builder.and(post.category.eq(category));

@@ -2,8 +2,7 @@ package com.tools.seoultech.timoproject.post.facade.impl;
 
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.domain.dto.SearchingFilterDTO;
-import com.tools.seoultech.timoproject.post.domain.entity.Category;
+import com.tools.seoultech.timoproject.post.domain.dto.Post_SearchingFilterDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import com.tools.seoultech.timoproject.post.facade.PostFacade;
 import com.tools.seoultech.timoproject.post.service.impl.PostServiceImpl;
@@ -37,10 +36,10 @@ public class PostFacadeImpl implements PostFacade {
 
     @Override
     public List<PostDTO.Response> searchByFilter(
-            SearchingFilterDTO filterDto,
+            Post_SearchingFilterDTO filterDto,
             Pageable pageable
     ) {
-        List<Post> postList = postService.searchByFilter(filterDto, pageable);
+        List<Post> postList = postService.searchPostByFilter(filterDto, pageable);
         return postList
                 .stream()
                 .map(postService::entityToDto)

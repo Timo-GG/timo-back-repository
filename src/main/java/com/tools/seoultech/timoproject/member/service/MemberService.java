@@ -10,4 +10,8 @@ public interface MemberService {
     boolean checkNickname(String nickname);
 
     String randomCreateNickname();
+
+    Member updateAdditionalInfo(Long memberId, String nickname, String playerName, String playerTag);
+
+    Integer updateProfileImageId(Long memberId, Integer imageId);
 }
