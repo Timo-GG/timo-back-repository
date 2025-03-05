@@ -2,8 +2,7 @@ package com.tools.seoultech.timoproject.post.facade;
 
 import com.tools.seoultech.timoproject.post.domain.dto.PageDTO;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
-import com.tools.seoultech.timoproject.post.domain.dto.SearchingFilterDTO;
-import com.tools.seoultech.timoproject.post.domain.entity.Category;
+import com.tools.seoultech.timoproject.post.domain.dto.Post_SearchingFilterDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;
 import org.springframework.data.domain.Pageable;
 
@@ -21,7 +20,7 @@ public interface PostFacade {
     PostDTO.Response decreaseLikeCount(Long postId, Long memberId);
 
     List<PostDTO.Response> searchByFilter(
-            SearchingFilterDTO filterDto,
+            Post_SearchingFilterDTO filterDto,
             Pageable pageable
 
     );

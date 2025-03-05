@@ -247,6 +247,5 @@ build/
 
 
 docker-compose.yml
-Dockerfile
 
 src/test/java/com/tools/seoultech/timoproject/post/repository/UserAccountRepositoryTest.java

@@ -1,11 +1,13 @@
-package com.tools.seoultech.timoproject.socket;
+package com.tools.seoultech.timoproject.socket.controller;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.tools.seoultech.timoproject.chat.domain.ChatRoomMember;
 import com.tools.seoultech.timoproject.chat.dto.ChatMessageDTO;
+import com.tools.seoultech.timoproject.chat.dto.LeaveRoomRequest;
 import com.tools.seoultech.timoproject.chat.dto.ReadMessageRequest;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomMemberRepository;
+import com.tools.seoultech.timoproject.chat.repository.ChatRoomRepository;
 import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.global.annotation.SocketController;
 import com.tools.seoultech.timoproject.global.annotation.SocketMapping;
@@ -19,6 +21,7 @@ public class ChatSocketController {
 
     private final ChatService chatService;
     private final ChatRoomMemberRepository chatRoomMemberRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     @SocketMapping(endpoint = "send_message", requestCls = ChatMessageDTO.class)
     public void handleSendMessage(SocketIOClient senderClient, SocketIOServer server,
@@ -58,7 +61,29 @@ public class ChatSocketController {
         chatRoomMember.updateLastReadMessageId(request.messageId());
         chatRoomMemberRepository.save(chatRoomMember);
 
-
     }
+
+    @SocketMapping(endpoint = "leave_room", requestCls = LeaveRoomRequest.class)
+    public void handleLeaveRoom(SocketIOClient client,
+                                SocketIOServer server,
+                                LeaveRoomRequest request) {
+        Long memberId = client.get("memberId");
+        String roomName = request.roomName();
+
+        log.info("[leave_room] memberId={}, roomName={}", memberId, roomName);
+
+        // 1) 소켓에서 방 제거
+        client.leaveRoom(roomName);
+
+        // 2) DB에서 ChatRoomMember 삭제 (또는 상태 변경)
+        chatService.leaveRoom(memberId, roomName);
+
+        // 3) (옵션) 다른 사용자에게 시스템 메시지 브로드캐스트
+        String leaveMsg = "User " + memberId + " left the room: " + roomName;
+        server.getRoomOperations(roomName).sendEvent("system_message", leaveMsg);
+
+        log.info("[leave_room] {}번 회원이 {} 방에서 나갔습니다.", memberId, roomName);
+    }
+
 
 }

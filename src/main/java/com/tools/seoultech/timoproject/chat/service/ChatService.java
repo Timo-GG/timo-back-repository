@@ -33,12 +33,6 @@ public class ChatService {
     private final ChatRoomMemberRepository chatRoomMemberRepository;
     private final MemberRepository memberRepository;
 
-    // 채팅방 생성
-    @Transactional
-    public ChatRoom createChatRoom(String roomName) {
-        ChatRoom chatRoom = ChatRoom.createRoom(roomName);
-        return chatRoomRepository.save(chatRoom);
-    }
 
     // 메시지 저장
     @Transactional
@@ -129,6 +123,71 @@ public class ChatService {
         Member member = memberRepository.findById(memberId).orElseThrow();
         ChatRoomMember newMember = ChatRoomMember.createChatRoomMember(chatRoom, member);
         chatRoomMemberRepository.save(newMember);
+
+    }
+
+    @Transactional
+    public void leaveRoom(Long memberId, String roomName) {
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomName(roomName)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방"));
+
+        ChatRoomMember chatRoomMember = chatRoomMemberRepository
+                .findByChatRoomIdAndMemberId(chatRoom.getId(), memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 멤버가 이 방에 없습니다."));
+
+        // 실제로 delete하지 않고, isLeft = true 설정
+        chatRoomMember.leave();
+        chatRoomMemberRepository.save(chatRoomMember);
+
+        // (옵션) 방 인원이 전부 나갔다면, 방 자체도 isTerminated = true
+        boolean allLeft = chatRoomMemberRepository.findByChatRoom(chatRoom).stream()
+                .allMatch(ChatRoomMember::isLeft);
+        if (allLeft) {
+            chatRoom.terminate();
+            chatRoomRepository.save(chatRoom);
+        }
+    }
+
+    public List<ChatRoomMember> findActiveMembers(Long roomId) {
+        return chatRoomMemberRepository.findByChatRoomId(roomId)
+                .stream()
+                .filter(m -> !m.isLeft())
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void createChatRoomForMatch(String matchId, Long member1Id, Long member2Id) {
+        // 예: 채팅방 이름을 "member1Id_member2Id" 형태로 생성
+        String chatRoomName = member1Id + "_" + member2Id;
+
+        // 채팅방 생성
+        ChatRoom chatRoom = ChatRoom.createRoom(chatRoomName, matchId);
+        chatRoomRepository.save(chatRoom);
+
+        // 채팅방 멤버 추가
+        Member user1 = memberRepository.findById(member1Id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원: " + member1Id));
+        Member user2 = memberRepository.findById(member2Id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원: " + member2Id));
+
+        ChatRoomMember chatRoomMember1 = ChatRoomMember.createChatRoomMember(chatRoom, user1);
+        ChatRoomMember chatRoomMember2 = ChatRoomMember.createChatRoomMember(chatRoom, user2);
+
+        chatRoomMemberRepository.save(chatRoomMember1);
+        chatRoomMemberRepository.save(chatRoomMember2);
+
+        log.info("✅ 채팅방 생성 및 멤버 가입 완료. matchId={}, chatRoomName={}", matchId, chatRoomName);
+    }
+
+    /**
+     * 매칭 ID로 채팅방을 찾고 싶다면,
+     * ChatRoom 엔티티에 matchId 필드를 추가하고 (예: private String matchId),
+     * 아래처럼 Repository에 findByMatchId를 구현하면 됩니다.
+     */
+    @Transactional(readOnly = true)
+    public ChatRoom findChatRoomByMatchId(String matchId) {
+        // ChatRoom 엔티티에 matchId 필드가 있다고 가정
+         return chatRoomRepository.findByMatchId(matchId).orElse(null);
 
     }
 }

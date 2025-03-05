@@ -46,15 +46,15 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public String processLogin(@RequestParam String username, @RequestParam String password, HttpSession session) {
-        log.info("🔵 [LOGIN REQUEST] Received login attempt - username: {}, password: {}", username, password);
+    public String processLogin(@RequestParam String nickname, @RequestParam String password, HttpSession session) {
+        log.info("🔵 [LOGIN REQUEST] Received login attempt - nickname: {}, password: {}", nickname, password);
 
-        if (adminService.authenticate(username, password)) {
-            log.info("🟢 [LOGIN SUCCESS] Admin logged in successfully: {}", username);
+        if (adminService.authenticate(nickname, password)) {
+            log.info("🟢 [LOGIN SUCCESS] Admin logged in successfully: {}", nickname);
             session.setAttribute("isAdmin", true);
             return "redirect:/admin/v1";
         } else {
-            log.warn("🔴 [LOGIN FAILED] Invalid credentials for username: {}", username);
+            log.warn("🔴 [LOGIN FAILED] Invalid credentials for nickname: {}", nickname);
             return "redirect:/admin/v1/login?error=true";
         }
     }

@@ -18,6 +18,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/admin/v1/**") // /admin 경로에만 적용
-                .excludePathPatterns("/admin/v1/login", "admin/v1/**", "/resources/**", "/error"); // 예외 처리
+                .excludePathPatterns("/admin/v1/login", "/admin/v1/**", "/resources/**", "/error"); // 예외 처리
     }
 }
