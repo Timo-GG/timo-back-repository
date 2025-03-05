@@ -1,12 +1,10 @@
 package com.tools.seoultech.timoproject.match.dto;
 
 import com.tools.seoultech.timoproject.match.domain.*;
-import lombok.Getter;
 
-import java.util.Set;
+public record DuoInfoRequest(
+        PlayPosition duoPlayPosition,
+        PlayStyle duoPlayStyle
+) {
 
-@Getter
-public class DuoInfoRequest {
-    private PlayPosition duoPlayPosition;
-    private PlayStyle duoPlayStyle;
 }

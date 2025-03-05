@@ -25,22 +25,10 @@ public class MatchingOptionServiceImpl implements MatchingOptionService {
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberId));
 
         // UserInfo 엔티티 생성
-        UserInfoRequest userInfoReq = request.getUserInfo();
-        UserInfo userInfo = UserInfo.builder()
-                .introduce(userInfoReq.getIntroduce())
-                .gameMode(userInfoReq.getGameMode())
-                .playPosition(userInfoReq.getPlayPosition())
-                .playCondition(userInfoReq.getPlayCondition())
-                .voiceChat(userInfoReq.getVoiceChat())
-                .playStyle(userInfoReq.getPlayStyle())
-                .build();
+        UserInfo userInfo = request.toUserInfo();
 
         // DuoInfo 엔티티 생성
-        DuoInfoRequest duoInfoReq = request.getDuoInfo();
-        DuoInfo duoInfo = DuoInfo.builder()
-                .duoPlayPosition(duoInfoReq.getDuoPlayPosition())
-                .duoPlayStyle(duoInfoReq.getDuoPlayStyle())
-                .build();
+        DuoInfo duoInfo = request.toDuoInfo();
 
         // Member의 메칭 설정 업데이트
         member.updateMatchOption(userInfo, duoInfo);
