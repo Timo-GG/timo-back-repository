@@ -41,6 +41,13 @@ public class MatchController {
         return APIDataResponse.of("매칭이 취소되었습니다.");
     }
 
+    /** 모든 매칭 취소 */
+    @DeleteMapping("/cancelAll/{gameMode}")
+    public APIDataResponse<?> cancelAllMatch(@PathVariable String gameMode) {
+        matchingService.removeAllFromQueue(gameMode);
+        return APIDataResponse.of("모든 매칭이 취소되었습니다.");
+    }
+
     /** 매칭 수락 */
     @PostMapping("/accept/{matchId}")
     public APIDataResponse<?> acceptMatch(@CurrentMemberId Long memberId, @PathVariable String matchId) {

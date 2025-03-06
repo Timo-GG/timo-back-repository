@@ -16,6 +16,8 @@ public interface MatchingService {
 
     void removeFromQueue(Long memberId);
 
+    void removeAllFromQueue(String gameMode);
+
     boolean acceptMatch(String matchId, Long memberId);
 
     boolean denyMatch(String matchId, Long memberId);

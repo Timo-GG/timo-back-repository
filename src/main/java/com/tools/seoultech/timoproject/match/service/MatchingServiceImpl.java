@@ -308,6 +308,25 @@ public class MatchingServiceImpl implements MatchingService {
         redisTemplate.delete(USER_INFO_PREFIX + memberId);
     }
 
+    /** 대기열에서 모든 유저 삭제 */
+    @Override
+    public void removeAllFromQueue(String gameMode) {
+        String queueKey = MATCHING_QUEUE_PREFIX + gameMode;
+
+        // 대기열에 있는 모든 유저 ID 가져오기
+        Set<String> allUserIds = zSetOps.range(queueKey, 0, -1);
+
+        // 대기열에서 모든 유저 삭제
+        if (allUserIds != null && !allUserIds.isEmpty()) {
+            for (String userId : allUserIds) {
+                zSetOps.remove(queueKey, userId);  // 대기열에서 유저만 삭제
+            }
+            log.info("대기열에서 모든 유저를 삭제했습니다. (게임 모드: {})", gameMode);
+        } else {
+            log.info("대기열이 비어 있습니다. (게임 모드: {})", gameMode);
+        }
+    }
+
     /** 거절당한 상대방 다시 매칭 진행 */
     private void requeueMember(Long memberId) {
         String userKey = USER_INFO_PREFIX + memberId;
