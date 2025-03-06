@@ -18,6 +18,8 @@ public interface MatchingService {
 
     void removeAllFromQueue(String gameMode);
 
+    void saveTestDataToRedis();
+
     boolean acceptMatch(String matchId, Long memberId);
 
     boolean denyMatch(String matchId, Long memberId);
