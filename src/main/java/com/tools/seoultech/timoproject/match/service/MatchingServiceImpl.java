@@ -62,7 +62,7 @@ public class MatchingServiceImpl implements MatchingService {
     @Override
     public Optional<String> startMatch(Long memberId, MatchingOptionRequest request) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberId));
+                .orElseThrow(() -> new IllegalArgumentException("Member not found : " + memberId));
 
         UserInfo userInfo = request.toUserInfo();
         DuoInfo duoInfo = request.toDuoInfo();
@@ -89,6 +89,27 @@ public class MatchingServiceImpl implements MatchingService {
 
         // 3. 대기 상태 유지
         return Optional.empty();
+    }
+
+    @Override
+    public void saveTestDataToRedis() {
+        for (int i = 5; i <= 8; i++) {
+            Long memberId = (long) i;
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new IllegalArgumentException("Member not found : " + memberId));
+
+            UserInfo userInfo = member.getUserInfo();
+            DuoInfo duoInfo = member.getDuoInfo();
+
+            String queueKey = MATCHING_QUEUE_PREFIX + userInfo.getGameMode();
+            String userKey = USER_INFO_PREFIX + memberId;
+
+            saveMemberToRedis(userKey, userInfo, duoInfo);
+            long currentTime = System.currentTimeMillis();
+            hashOps.put(userKey, "waitTime", String.valueOf(currentTime));
+            zSetOps.add(queueKey, memberId.toString(), 0);
+            log.info("대기열에 추가됨: {}", memberId);
+        }
     }
 
     @Override
@@ -187,7 +208,21 @@ public class MatchingServiceImpl implements MatchingService {
         score -= candidateWaitTime * WAIT_TIME_WEIGHT; // 오래 기다릴수록 점수 낮아짐 (좋은 매칭)
 
         // 플레이 스타일 가산점
-        if (duoInfo.getDuoPlayStyle().equals(candidateUserInfo.getPlayStyle())) {
+        if (userInfo.getPlayStyle().equals(candidateUserInfo.getPlayStyle())) {
+            score -= 15;
+        } else {
+            score += 15;
+        }
+
+        // 플레이 포지션 2차 체크
+        if (userInfo.getPlayPosition().equals(candidateDuoInfo.getDuoPlayPosition())) {
+            score -= 15;
+        } else {
+            score += 15;
+        }
+
+        // 보이스챗 여부
+        if (userInfo.getVoiceChat().equals(candidateUserInfo.getVoiceChat())) {
             score -= 15;
         } else {
             score += 15;
