@@ -56,16 +56,16 @@ public class MatchController {
     }
 
     /** 매칭 수락 */
-    @PostMapping("/accept/{matchId}")
-    public APIDataResponse<?> acceptMatch(@CurrentMemberId Long memberId, @PathVariable String matchId) {
-        boolean isMatchConfirmed = matchingService.acceptMatch(matchId, memberId);
-
-        if (isMatchConfirmed) {
-            return APIDataResponse.of("매칭이 확정되었습니다. 채팅방이 생성되었습니다.");
-        } else {
-            return APIDataResponse.of("매칭이 진행 중이거나 상대방의 응답을 기다리고 있습니다.");
-        }
-    }
+//    @PostMapping("/accept/{matchId}")
+//    public APIDataResponse<?> acceptMatch(@CurrentMemberId Long memberId, @PathVariable String matchId) {
+//        boolean isMatchConfirmed = matchingService.acceptMatch(matchId, memberId);
+//
+//        if (isMatchConfirmed) {
+//            return APIDataResponse.of("매칭이 확정되었습니다. 채팅방이 생성되었습니다.");
+//        } else {
+//            return APIDataResponse.of("매칭이 진행 중이거나 상대방의 응답을 기다리고 있습니다.");
+//        }
+//    }
 
     /** 매칭 거절 */
     @PostMapping("/deny/{matchId}")

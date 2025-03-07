@@ -37,7 +37,7 @@ public class ChatService {
     // 메시지 저장
     @Transactional
     public ChatMessageDTO saveMessage(ChatMessageDTO chatMessageDTO) {
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomName(chatMessageDTO.room())
+        ChatRoom chatRoom = chatRoomRepository.findById(chatMessageDTO.roomId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
 
         // 1) 메시지 엔티티 생성 & DB 저장
@@ -62,7 +62,7 @@ public class ChatService {
         // 4) DB에서 생성된 message.getId()를 포함해 DTO로 변환해서 반환
         return ChatMessageDTO.builder()
                 .messageId(message.getId())                 // DB에서 생성된 PK
-                .room(chatRoom.getChatRoomName())    // roomName
+                .roomId(chatRoom.getId())    // roomName
                 .senderId(message.getSenderId())      // 보낸 사람 ID
                 .content(message.getContent())        // 메시지 내용
                 .build();
@@ -81,7 +81,7 @@ public class ChatService {
         return messagePage.stream()
                 .map(m -> new ChatMessageDTO(
                         m.getId(),
-                        m.getChatRoom().getChatRoomName(),
+                        m.getChatRoom().getId(),
                         m.getSenderId(),
                         m.getContent()
                 ))
@@ -89,8 +89,8 @@ public class ChatService {
     }
 
     // 안 읽은 메시지 개수 조회
-    public int getUnreadCount(Long memberId, String roomName) {
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomName(roomName)
+    public int getUnreadCount(Long memberId, Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
 
         ChatRoomMember chatRoomMember = chatRoomMemberRepository.findByChatRoomIdAndMemberId(chatRoom.getId(), memberId)
@@ -101,8 +101,8 @@ public class ChatService {
     }
 
 
-    public ChatRoomResponse getChatRoom(String roomName) {
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomName(roomName)
+    public ChatRoomResponse getChatRoom(Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
 
         return ChatRoomResponse.of(chatRoom);
@@ -127,8 +127,8 @@ public class ChatService {
     }
 
     @Transactional
-    public void leaveRoom(Long memberId, String roomName) {
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomName(roomName)
+    public void leaveRoom(Long memberId, Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방"));
 
         ChatRoomMember chatRoomMember = chatRoomMemberRepository
