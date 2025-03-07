@@ -27,11 +27,12 @@ public class ChatSocketController {
     public void handleSendMessage(SocketIOClient senderClient, SocketIOServer server,
                                   ChatMessageDTO data) {
         Long senderId = senderClient.get("memberId"); // 서버 세션에서 memberId 조회
-        String room = data.room();
+        Long roomId = data.roomId();
+        String roomName = "chat_"+roomId;
 
         // 1) 클라이언트가 보낸 DTO를 기반으로 새 메시지 DTO 생성 (id는 아직 없음)
         ChatMessageDTO chatMessage = ChatMessageDTO.builder()
-                .room(room)
+                .roomId(roomId)
                 .senderId(senderId)
                 .content(data.content())
                 .build();
@@ -40,7 +41,7 @@ public class ChatSocketController {
         ChatMessageDTO savedChatMessage = chatService.saveMessage(chatMessage);
 
         // 3) 같은 room에 접속한 클라이언트들에게 메시지 전송
-        for (SocketIOClient client : senderClient.getNamespace().getRoomOperations(room).getClients()) {
+        for (SocketIOClient client : senderClient.getNamespace().getRoomOperations(roomName).getClients()) {
             if (!client.getSessionId().equals(senderClient.getSessionId())) {
                 // DB에서 PK까지 세팅된 savedChatMessage를 전송
                 client.sendEvent("receive_message", savedChatMessage);
@@ -54,7 +55,7 @@ public class ChatSocketController {
                                   ReadMessageRequest request) {
         Long memberId = client.get("memberId");
 
-        ChatRoomMember chatRoomMember = chatRoomMemberRepository.findByChatRoomIdAndMemberId(request.chatRoomId(), memberId)
+        ChatRoomMember chatRoomMember = chatRoomMemberRepository.findByChatRoomIdAndMemberId(request.roomId(), memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
 
         chatRoomMember.resetUnreadCount();
@@ -68,7 +69,7 @@ public class ChatSocketController {
                                 SocketIOServer server,
                                 LeaveRoomRequest request) {
         Long memberId = client.get("memberId");
-        String roomName = request.roomName();
+        String roomName = "chat_"+request.roomId();
 
         log.info("[leave_room] memberId={}, roomName={}", memberId, roomName);
 
@@ -76,7 +77,7 @@ public class ChatSocketController {
         client.leaveRoom(roomName);
 
         // 2) DB에서 ChatRoomMember 삭제 (또는 상태 변경)
-        chatService.leaveRoom(memberId, roomName);
+        chatService.leaveRoom(memberId, request.roomId());
 
         // 3) (옵션) 다른 사용자에게 시스템 메시지 브로드캐스트
         String leaveMsg = "User " + memberId + " left the room: " + roomName;

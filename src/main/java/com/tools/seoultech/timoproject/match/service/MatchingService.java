@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.match.service;
 
+import com.tools.seoultech.timoproject.match.dto.MatchResult;
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionRequest;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface MatchingService {
 
     void saveTestDataToRedis();
 
-    boolean acceptMatch(String matchId, Long memberId);
+    MatchResult acceptMatch(String matchId, Long memberId);
 
     boolean denyMatch(String matchId, Long memberId);
 

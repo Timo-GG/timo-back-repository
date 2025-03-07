@@ -20,8 +20,8 @@ public class ChatController {
     private final ChatService chatService;
 
     @GetMapping("/rooms")
-    public APIDataResponse<ChatRoomResponse> getRoom(@RequestParam String roomName) {
-        return APIDataResponse.of(chatService.getChatRoom(roomName));
+    public APIDataResponse<ChatRoomResponse> getRoom(@RequestParam Long roomId) {
+        return APIDataResponse.of(chatService.getChatRoom(roomId));
     }
 
     @GetMapping("/rooms/{roomName}/messages")
@@ -34,8 +34,8 @@ public class ChatController {
     }
 
     @GetMapping("/rooms/{roomName}/unread")
-    public APIDataResponse<?> getUnreadCount(@CurrentMemberId Long memberId, @PathVariable String roomName) {
-        return APIDataResponse.of(chatService.getUnreadCount(memberId, roomName));
+    public APIDataResponse<?> getUnreadCount(@CurrentMemberId Long memberId, @PathVariable Long roomId) {
+        return APIDataResponse.of(chatService.getUnreadCount(memberId, roomId));
     }
 
     @PostMapping("/rooms/{roomId}/join")

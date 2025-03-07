@@ -9,17 +9,17 @@ import com.tools.seoultech.timoproject.chat.service.ChatService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class SocketModule {
+public class SocketModule implements DisposableBean {
 
     private final SocketIOServer socketIOServer;
     private final JwtResolver jwtResolver;
     private final WebSocketAddMappingSupporter webSocketAddMappingSupporter;
-    private final ChatService chatService;
 
     @PostConstruct
     public void initSocketServer() {
@@ -27,6 +27,12 @@ public class SocketModule {
         socketIOServer.start();
         socketIOServer.addConnectListener(onConnected());
         socketIOServer.addDisconnectListener(onDisconnected());
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        log.info("Shutting down SocketIOServer...");
+        socketIOServer.stop();
     }
 
     private ConnectListener onConnected() {
@@ -60,15 +66,14 @@ public class SocketModule {
         String token = extractToken(client);
         Long memberId = parseMemberId(token);
         setMemberId(client, memberId);
-        String room = extractRoom(client);
 
-        joinRoom(client, room);
-        broadcastSystemMessage(room, memberId + " 님이 입장했습니다.");
+        joinRoom(client, "member_" + memberId.toString());
+        broadcastSystemMessage(memberId.toString(), memberId + " 님이 입장했습니다.");
 
         client.sendEvent("connected_info", memberId);
 
         log.info("[connect] Socket connected. memberId = {}, sessionId = {}, room = {}",
-                memberId, client.getSessionId(), room);
+                memberId, client.getSessionId(), "member_" + memberId);
     }
 
     private String extractToken(SocketIOClient client) {
@@ -86,12 +91,6 @@ public class SocketModule {
 
     private void setMemberId(SocketIOClient client, Long memberId) {
         client.set("memberId", memberId);
-    }
-
-    private String extractRoom(SocketIOClient client) {
-        String roomParam = client.getHandshakeData().getSingleUrlParam("room");
-        // 비어있을 경우 "1"로 기본 설정
-        return (roomParam == null || roomParam.isEmpty()) ? "1" : roomParam;
     }
 
     private void joinRoom(SocketIOClient client, String room) {
