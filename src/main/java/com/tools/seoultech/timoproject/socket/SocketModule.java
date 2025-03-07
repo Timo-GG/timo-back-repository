@@ -66,15 +66,14 @@ public class SocketModule implements DisposableBean {
         String token = extractToken(client);
         Long memberId = parseMemberId(token);
         setMemberId(client, memberId);
-        String room = extractRoom(client);
 
-        joinRoom(client, room);
-        broadcastSystemMessage(room, memberId + " 님이 입장했습니다.");
+        joinRoom(client, "member_" + memberId.toString());
+        broadcastSystemMessage(memberId.toString(), memberId + " 님이 입장했습니다.");
 
         client.sendEvent("connected_info", memberId);
 
         log.info("[connect] Socket connected. memberId = {}, sessionId = {}, room = {}",
-                memberId, client.getSessionId(), room);
+                memberId, client.getSessionId(), "member_" + memberId);
     }
 
     private String extractToken(SocketIOClient client) {
