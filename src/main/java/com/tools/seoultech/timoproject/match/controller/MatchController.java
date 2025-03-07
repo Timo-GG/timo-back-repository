@@ -34,11 +34,25 @@ public class MatchController {
         }
     }
 
+    /** 테스트 데이터 Redis 삽입 */
+    @PostMapping("/queue/test")
+    public APIDataResponse<?> saveTestDataToRedis() {
+        matchingService.saveTestDataToRedis();
+        return APIDataResponse.of("테스트 데이터가 Redis에 저장되었습니다.");
+    }
+
     /** 매칭 취소 */
     @DeleteMapping("/cancel")
     public APIDataResponse<?> cancelMatch(@CurrentMemberId Long memberId) {
         matchingService.removeFromQueue(memberId);
         return APIDataResponse.of("매칭이 취소되었습니다.");
+    }
+
+    /** 모든 매칭 취소 */
+    @DeleteMapping("/cancelAll/{gameMode}")
+    public APIDataResponse<?> cancelAllMatch(@PathVariable String gameMode) {
+        matchingService.removeAllFromQueue(gameMode);
+        return APIDataResponse.of("모든 매칭이 취소되었습니다.");
     }
 
     /** 매칭 수락 */
