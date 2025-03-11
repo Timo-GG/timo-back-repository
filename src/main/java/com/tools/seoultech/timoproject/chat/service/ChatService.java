@@ -8,9 +8,10 @@ import com.tools.seoultech.timoproject.chat.dto.ChatRoomResponse;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomMemberRepository;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomRepository;
 import com.tools.seoultech.timoproject.chat.repository.MessageRepository;
+import com.tools.seoultech.timoproject.global.constant.ErrorCode;
+import com.tools.seoultech.timoproject.global.exception.BusinessException;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
-import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -71,11 +72,11 @@ public class ChatService {
 
     // 이전 메시지 조회
     @Transactional(readOnly = true)
-    public List<ChatMessageDTO> getMessages(String roomName, int page, int size) {
+    public List<ChatMessageDTO> getMessages(Long roomId, int page, int size) {
         // PageRequest로 페이징, 오래된 순 정렬
         Pageable pageable = PageRequest.of(page, size, Sort.by("regDate").ascending());
 
-        Page<Message> messagePage = messageRepository.findByChatRoom_ChatRoomName(roomName, pageable);
+        Page<Message> messagePage = messageRepository.findByChatRoom_Id(roomId, pageable);
 
         // Message -> ChatMessageDTO 변환
         return messagePage.stream()
@@ -179,15 +180,20 @@ public class ChatService {
         log.info("✅ 채팅방 생성 및 멤버 가입 완료. matchId={}, chatRoomName={}", matchId, chatRoomName);
     }
 
-    /**
-     * 매칭 ID로 채팅방을 찾고 싶다면,
-     * ChatRoom 엔티티에 matchId 필드를 추가하고 (예: private String matchId),
-     * 아래처럼 Repository에 findByMatchId를 구현하면 됩니다.
-     */
     @Transactional(readOnly = true)
     public ChatRoom findChatRoomByMatchId(String matchId) {
         // ChatRoom 엔티티에 matchId 필드가 있다고 가정
          return chatRoomRepository.findByMatchId(matchId).orElse(null);
 
+    }
+
+    @Transactional
+    public void terminateChat(String matchId) {
+        ChatRoom chatRoom = chatRoomRepository.findByMatchId(matchId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_CHATROOM_EXCEPTION));
+        if (!chatRoom.isTerminated()) {
+            chatRoom.terminate();
+        }
+        chatRoomRepository.save(chatRoom);
     }
 }
