@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"member_id", "duo_id", "matchId"})
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Rating {
@@ -38,14 +41,18 @@ public class Rating {
     @JoinColumn(name = "duo_id", nullable = false)
     private Member duo;
 
+    @Column(nullable = false)
+    private String matchId;
+
     @Builder
-    public Rating(BigDecimal score, Attitude attitude, Speech speech, Skill skill, Member member, Member duo) {
+    public Rating(BigDecimal score, Attitude attitude, Speech speech, Skill skill, Member member, Member duo, String matchId) {
         this.score = score;
         this.attitude = attitude;
         this.speech = speech;
         this.skill = skill;
         this.member = member;
         this.duo = duo;
+        this.matchId = matchId;
     }
 
     // score 평균 계산

@@ -2,11 +2,8 @@ package com.tools.seoultech.timoproject.socket.controller;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.tools.seoultech.timoproject.chat.domain.ChatRoom;
-import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.match.dto.MatchNotificationDTO;
 import com.tools.seoultech.timoproject.match.dto.MatchResponseDTO;
-import com.tools.seoultech.timoproject.match.dto.MatchResponseStatus;
 import com.tools.seoultech.timoproject.match.dto.MatchResult;
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionRequest;
 import com.tools.seoultech.timoproject.match.service.MatchingService;

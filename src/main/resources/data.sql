@@ -56,10 +56,10 @@ VALUES
 -------------------------------------------------
 -- 4. Rating 테이블
 -------------------------------------------------
-INSERT INTO rating (score, attitude, speech, skill, member_id, duo_id)
-VALUES
-    (4.5, 'GOOD', 'MANNERS', 'LEARNING', 1, 2),
-    (2.5, 'BAD', 'AGGRESSIVE', 'NORMAL', 1, 2);
+-- INSERT INTO rating (score, attitude, speech, skill, member_id, duo_id)
+-- VALUES
+--     (4.5, 'GOOD', 'MANNERS', 'LEARNING', 1, 2),
+--     (2.5, 'BAD', 'AGGRESSIVE', 'NORMAL', 1, 2);
 
 -------------------------------------------------
 -- 5. MatchingOption  테이블
