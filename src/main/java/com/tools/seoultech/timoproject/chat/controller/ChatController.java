@@ -20,27 +20,39 @@ public class ChatController {
     private final ChatService chatService;
 
     @GetMapping("/rooms")
-    public APIDataResponse<ChatRoomResponse> getRoom(@RequestParam String roomName) {
-        return APIDataResponse.of(chatService.getChatRoom(roomName));
+    public APIDataResponse<ChatRoomResponse> getRoom(@RequestParam Long roomId) {
+        return APIDataResponse.of(chatService.getChatRoom(roomId));
     }
 
-    @GetMapping("/rooms/{roomName}/messages")
+    @GetMapping("/rooms/{roomId}/messages")
     public List<ChatMessageDTO> getMessages(
-            @PathVariable String roomName,
+            @PathVariable Long roomId,
             @RequestParam(defaultValue = "0") int page
     ) {
         // 예: 페이지네이션(한 페이지당 20개) 사용
-        return chatService.getMessages(roomName, page, 20);
+        return chatService.getMessages(roomId, page, 20);
     }
 
     @GetMapping("/rooms/{roomName}/unread")
-    public APIDataResponse<?> getUnreadCount(@CurrentMemberId Long memberId, @PathVariable String roomName) {
-        return APIDataResponse.of(chatService.getUnreadCount(memberId, roomName));
+    public APIDataResponse<?> getUnreadCount(@CurrentMemberId Long memberId, @PathVariable Long roomId) {
+        return APIDataResponse.of(chatService.getUnreadCount(memberId, roomId));
     }
 
     @PostMapping("/rooms/{roomId}/join")
     public APIDataResponse<?> joinRoom(@RequestParam Long memberId, @PathVariable Long roomId) {
         chatService.joinRoom(memberId, roomId);
         return APIDataResponse.of("방 참여 완료");
+    }
+
+    @PostMapping("/terminate")
+    public APIDataResponse<?> terminateRoom(@RequestParam String matchId) {
+        chatService.terminateChat(matchId);
+        return APIDataResponse.of("방 종료 완료");
+    }
+
+    @PostMapping("/test")
+    public APIDataResponse<?> test() {
+        chatService.createChatRoomForMatch("test", 1L, 2L);
+        return APIDataResponse.of("멤버 1, 멤버 2, 채팅방 이름 : test 생성");
     }
 }

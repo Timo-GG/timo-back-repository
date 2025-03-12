@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface RatingService {
 
-        RatingResponse saveRating(RatingRequest rating);
+        RatingResponse saveRating(Long memberId, RatingRequest rating);
 
         void deleteRating(Long id);
 

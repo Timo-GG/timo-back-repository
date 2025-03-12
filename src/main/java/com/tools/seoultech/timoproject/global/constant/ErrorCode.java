@@ -52,7 +52,10 @@ public enum ErrorCode {
     NOT_FOUND_HANDLER_EXCEPTION(806, HttpStatus.NOT_FOUND, "지원하지 않는 Api 요청 입니다."),
     NOT_FOUND_USER_EXCEPTION(807, HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
     INVALID_ACCESS_EXCEPTION(808, HttpStatus.FORBIDDEN, "잘못된 접근입니다."),
-    NOT_FOUND_DUO_EXCEPTION(809, HttpStatus.NOT_FOUND, "존재하지 않는 듀오입니다.");
+    NOT_FOUND_DUO_EXCEPTION(809, HttpStatus.NOT_FOUND, "존재하지 않는 듀오입니다."),
+    NOT_FOUND_CHATROOM_EXCEPTION(810, HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다."),
+    CHATROOM_NOT_TERMINATED_EXCEPTION(811, HttpStatus.BAD_REQUEST, "채팅방이 종료되지 않았습니다."),
+    DUPLICATE_RATING_EXCEPTION(812, HttpStatus.CONFLICT, "이미 평점을 제출한 매칭입니다.");
 
 
     private final int code;

@@ -34,6 +34,13 @@ public class MatchController {
         }
     }
 
+    /** 테스트 데이터 Redis 삽입 */
+    @PostMapping("/queue/test")
+    public APIDataResponse<?> saveTestDataToRedis() {
+        matchingService.saveTestDataToRedis();
+        return APIDataResponse.of("테스트 데이터가 Redis에 저장되었습니다.");
+    }
+
     /** 매칭 취소 */
     @DeleteMapping("/cancel")
     public APIDataResponse<?> cancelMatch(@CurrentMemberId Long memberId) {
@@ -41,17 +48,24 @@ public class MatchController {
         return APIDataResponse.of("매칭이 취소되었습니다.");
     }
 
-    /** 매칭 수락 */
-    @PostMapping("/accept/{matchId}")
-    public APIDataResponse<?> acceptMatch(@CurrentMemberId Long memberId, @PathVariable String matchId) {
-        boolean isMatchConfirmed = matchingService.acceptMatch(matchId, memberId);
-
-        if (isMatchConfirmed) {
-            return APIDataResponse.of("매칭이 확정되었습니다. 채팅방이 생성되었습니다.");
-        } else {
-            return APIDataResponse.of("매칭이 진행 중이거나 상대방의 응답을 기다리고 있습니다.");
-        }
+    /** 모든 매칭 취소 */
+    @DeleteMapping("/cancelAll/{gameMode}")
+    public APIDataResponse<?> cancelAllMatch(@PathVariable String gameMode) {
+        matchingService.removeAllFromQueue(gameMode);
+        return APIDataResponse.of("모든 매칭이 취소되었습니다.");
     }
+
+    /** 매칭 수락 */
+//    @PostMapping("/accept/{matchId}")
+//    public APIDataResponse<?> acceptMatch(@CurrentMemberId Long memberId, @PathVariable String matchId) {
+//        boolean isMatchConfirmed = matchingService.acceptMatch(matchId, memberId);
+//
+//        if (isMatchConfirmed) {
+//            return APIDataResponse.of("매칭이 확정되었습니다. 채팅방이 생성되었습니다.");
+//        } else {
+//            return APIDataResponse.of("매칭이 진행 중이거나 상대방의 응답을 기다리고 있습니다.");
+//        }
+//    }
 
     /** 매칭 거절 */
     @PostMapping("/deny/{matchId}")

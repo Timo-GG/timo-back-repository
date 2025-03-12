@@ -1,4 +1,4 @@
 package com.tools.seoultech.timoproject.chat.dto;
 
-public record LeaveRoomRequest(String roomName) {
+public record LeaveRoomRequest(Long roomId) {
 }

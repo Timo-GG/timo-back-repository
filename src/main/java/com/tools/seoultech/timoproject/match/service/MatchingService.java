@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.match.service;
 
+import com.tools.seoultech.timoproject.match.dto.MatchResult;
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionRequest;
 
 import java.util.List;
@@ -16,7 +17,11 @@ public interface MatchingService {
 
     void removeFromQueue(Long memberId);
 
-    boolean acceptMatch(String matchId, Long memberId);
+    void removeAllFromQueue(String gameMode);
+
+    void saveTestDataToRedis();
+
+    MatchResult acceptMatch(String matchId, Long memberId);
 
     boolean denyMatch(String matchId, Long memberId);
 

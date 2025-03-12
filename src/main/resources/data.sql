@@ -6,7 +6,6 @@ TRUNCATE TABLE rating;
 TRUNCATE TABLE comment;
 TRUNCATE TABLE post;
 TRUNCATE TABLE member;
--- user_info, duo_info 테이블 관련 삭제
 
 -------------------------------------------------
 -- 1. MEMBER 테이블
@@ -57,10 +56,67 @@ VALUES
 -------------------------------------------------
 -- 4. Rating 테이블
 -------------------------------------------------
-INSERT INTO rating (score, attitude, speech, skill, member_id, duo_id)
+-- INSERT INTO rating (score, attitude, speech, skill, member_id, duo_id)
+-- VALUES
+--     (4.5, 'GOOD', 'MANNERS', 'LEARNING', 1, 2),
+--     (2.5, 'BAD', 'AGGRESSIVE', 'NORMAL', 1, 2);
+
+-------------------------------------------------
+-- 5. MatchingOption  테이블
+-------------------------------------------------
+INSERT INTO user_info (user_info_id, introduce, game_mode, play_position, play_condition, voice_chat, play_style)
 VALUES
-    (4.5, 'GOOD', 'MANNERS', 'LEARNING', 1, 2),
-    (2.5, 'BAD', 'AGGRESSIVE', 'NORMAL', 1, 2);
+    (1, '팀워크 중요111', 'RANK', 'RANGED_DEALER', 'FIRST', 'ENABLED', 'FUN'),
+    (2, '팀워크 중요222', 'RANK', 'SUPPORT', 'FIRST', 'ENABLED', 'FUN'),
+    (3, '팀워크 중요333', 'RANK', 'TOP', 'FIRST', 'ENABLED', 'FUN'),
+    (4, '팀워크 중요444', 'RANK', 'MID', 'FIRST', 'ENABLED', 'FUN'),
+    (5, '팀워크 중요555', 'RANK', 'SUPPORT', 'FIRST', 'ENABLED', 'HARDCORE'),
+    (6, '팀워크 중요666', 'RANK', 'SUPPORT', 'FIRST', 'DISABLED', 'HARDCORE'),
+    (7, '팀워크 중요777', 'RANK', 'SUPPORT', 'FIRST', 'ENABLED', 'HARDCORE'),
+    (8, '팀워크 중요888', 'RANK', 'SUPPORT', 'FIRST', 'ENABLED', 'HARDCORE');
+
+INSERT INTO duo_info (duo_info_id, duo_play_position, duo_play_style)
+VALUES
+    (1, 'SUPPORT', 'FUN'),
+    (2, 'RANGED_DEALER', 'FUN'),
+    (3, 'RANGED_DEALER', 'FUN'),
+    (4, 'JUNGLE', 'FUN'),
+    (5, 'RANGED_DEALER', 'FUN'),
+    (6, 'JUNGLE', 'FUN'),
+    (7, 'MID', 'FUN'),
+    (8, 'TOP', 'FUN');
+
+UPDATE member
+SET user_info_id = 1, duo_info_id = 1
+WHERE member_id = 1;
+
+UPDATE member
+SET user_info_id = 2, duo_info_id = 2
+WHERE member_id = 2;
+
+UPDATE member
+SET user_info_id = 3, duo_info_id = 3
+WHERE member_id = 3;
+
+UPDATE member
+SET user_info_id = 4, duo_info_id = 4
+WHERE member_id = 4;
+
+UPDATE member
+SET user_info_id = 5, duo_info_id = 5
+WHERE member_id = 5;
+
+UPDATE member
+SET user_info_id = 6, duo_info_id = 6
+WHERE member_id = 6;
+
+UPDATE member
+SET user_info_id = 7, duo_info_id = 7
+WHERE member_id = 7;
+
+UPDATE member
+SET user_info_id = 8, duo_info_id = 8
+WHERE member_id = 8;
 
 -- 외래키 체크 활성화
 SET FOREIGN_KEY_CHECKS = 1;

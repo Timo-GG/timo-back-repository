@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.rating;
 
+import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.rating.dto.RatingRequest;
 import com.tools.seoultech.timoproject.rating.dto.RatingResponse;
 import com.tools.seoultech.timoproject.rating.dto.RatingTotalResponse;
@@ -18,8 +19,8 @@ public class RatingController {
     private final RatingService ratingService;
 
     @PostMapping("")
-    public ResponseEntity<APIDataResponse<RatingResponse>> saveRating(@RequestBody RatingRequest rating) {
-        RatingResponse ratingResponse = ratingService.saveRating(rating);
+    public ResponseEntity<APIDataResponse<RatingResponse>> saveRating(@CurrentMemberId Long memberId, @RequestBody RatingRequest rating) {
+        RatingResponse ratingResponse = ratingService.saveRating(memberId, rating);
         return ResponseEntity.ok(APIDataResponse.of(ratingResponse));
     }
 
@@ -30,8 +31,8 @@ public class RatingController {
     }
 
     @GetMapping("")
-    public ResponseEntity<APIDataResponse<RatingTotalResponse>> getRatings() {
-        RatingTotalResponse rating = ratingService.getRatings(1L);
+    public ResponseEntity<APIDataResponse<RatingTotalResponse>> getRatings(@CurrentMemberId Long memberId) {
+        RatingTotalResponse rating = ratingService.getRatings(memberId);
         return ResponseEntity.ok(APIDataResponse.of(rating));
     }
 
