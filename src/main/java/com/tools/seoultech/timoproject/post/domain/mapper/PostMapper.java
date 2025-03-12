@@ -15,6 +15,9 @@ public interface PostMapper {
     PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
 
     @Mapping(target="memberId", expression = "java(post.getMember().getId())")
+    @Mapping(target="imageCount", expression = "java(post.getImages().size())")
+    @Mapping(target="commentCount", expression = "java(post.getComments().size())")
+    @Mapping(target="memberName", expression = "java(post.getMember().getNickname())")
     PostDTO.Response postToPostDTO(Post post);
 
     @Mapping(target="member", source="member")
