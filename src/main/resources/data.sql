@@ -55,12 +55,24 @@ VALUES
     (9, 1, 1, '테스트 댓글 내용...5', now() - INTERVAL 1 DAY, now() - INTERVAL 1 DAY);
 
 -------------------------------------------------
--- 4. Rating 테이블
+-- 4. PostLike 테이블
+-------------------------------------------------
+INSERT INTO image(image_id, post_id, base64)
+    VALUES
+        (1, 1, "image_1"),
+        (2, 1, "image_2"),
+        (3, 1, "image_3");
+
+-------------------------------------------------
+-- 5. Rating 테이블
 -------------------------------------------------
 INSERT INTO rating (score, attitude, speech, skill, member_id, duo_id)
 VALUES
     (4.5, 'GOOD', 'MANNERS', 'LEARNING', 1, 2),
     (2.5, 'BAD', 'AGGRESSIVE', 'NORMAL', 1, 2);
+
+
+
 
 -- 외래키 체크 활성화
 SET FOREIGN_KEY_CHECKS = 1;
