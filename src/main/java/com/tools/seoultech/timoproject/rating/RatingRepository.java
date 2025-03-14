@@ -10,4 +10,6 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
     long countByMemberId(Long memberId);
 
     Optional<Rating> findByMemberIdAndDuoIdAndMatchId(Long memberId, Long duoId, String matchId);
+
+    boolean existsByMemberIdAndDuoIdAndMatchId(Long memberId, Long duoId, String matchId);
 }
