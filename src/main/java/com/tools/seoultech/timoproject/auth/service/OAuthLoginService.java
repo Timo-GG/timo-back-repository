@@ -39,6 +39,7 @@ public class OAuthLoginService {
         Member member = Member.builder()
                 .email(oAuthInfoResponse.getEmail())
                 .nickname(memberService.randomCreateNickname())
+                .profileImageId(memberService.randomCreateProfileImageId())
                 .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
                 .build();
 

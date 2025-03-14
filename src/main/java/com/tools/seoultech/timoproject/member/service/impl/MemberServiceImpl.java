@@ -32,6 +32,12 @@ public class MemberServiceImpl implements MemberService {
         return "티모대위" + "-" + UUID.randomUUID().toString().substring(0, 5);
     }
 
+    @Override
+    public Integer randomCreateProfileImageId() {
+        // 1~6 범위의 랜덤 숫자 생성
+        return (int) (Math.random() * 6) + 1;
+    }
+
     @Transactional
     public Member updateAdditionalInfo(Long memberId, String nickname, String playerName, String playerTag) {
         Member member = getById(memberId);

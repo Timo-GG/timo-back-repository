@@ -58,14 +58,13 @@ public class MatchingServiceImpl implements MatchingService {
         }
     }
 
+    @Transactional
     @Override
     public Optional<String> startMatch(Long memberId, MatchingOptionRequest request) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found : " + memberId));
-
         UserInfo userInfo = request.toUserInfo();
         DuoInfo duoInfo = request.toDuoInfo();
-
         member.updateMatchOption(userInfo, duoInfo);
         memberRepository.flush();
 

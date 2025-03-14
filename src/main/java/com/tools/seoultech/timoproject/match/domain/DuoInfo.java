@@ -31,4 +31,9 @@ public class DuoInfo {
         this.duoPlayPosition = duoPlayPosition;
         this.duoPlayStyle = duoPlayStyle;
     }
+
+    public void update(PlayPosition duoPlayPosition, PlayStyle duoPlayStyle) {
+        this.duoPlayPosition = duoPlayPosition;
+        this.duoPlayStyle = duoPlayStyle;
+    }
 }

@@ -62,15 +62,32 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "duo_info_id")
     private DuoInfo duoInfo;
 
-    public void updateMatchOption(UserInfo userInfo, DuoInfo duoInfo) {
-        this.userInfo = userInfo;
-        this.duoInfo = duoInfo;
+    public void updateMatchOption(UserInfo newUserInfo, DuoInfo newDuoInfo) {
+        if (this.userInfo == null) this.userInfo = newUserInfo;
+        else {
+            this.userInfo.update(
+                    newUserInfo.getIntroduce(),
+                    newUserInfo.getGameMode(),
+                    newUserInfo.getPlayPosition(),
+                    newUserInfo.getPlayCondition(),
+                    newUserInfo.getVoiceChat(),
+                    newUserInfo.getPlayStyle()
+            );
+        }
+        if (this.duoInfo == null) this.duoInfo = newDuoInfo;
+        else {
+            this.duoInfo.update(
+                    newDuoInfo.getDuoPlayPosition(),
+                    newDuoInfo.getDuoPlayStyle()
+            );
+        }
     }
 
     @Builder
-    public Member(String email, String nickname, OAuthProvider oAuthProvider) {
+    public Member(String email, String nickname, Integer profileImageId, OAuthProvider oAuthProvider) {
         this.email = email;
         this.nickname = nickname;
+        this.profileImageId = profileImageId;
         this.oAuthProvider = oAuthProvider;
         this.role = Role.MEMBER;
     }
