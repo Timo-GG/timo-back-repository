@@ -6,6 +6,7 @@ import com.tools.seoultech.timoproject.match.dto.MatchNotificationDTO;
 import com.tools.seoultech.timoproject.match.dto.MatchResponseDTO;
 import com.tools.seoultech.timoproject.match.dto.MatchResult;
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionRequest;
+import com.tools.seoultech.timoproject.match.service.MatchingOptionService;
 import com.tools.seoultech.timoproject.match.service.MatchingService;
 import com.tools.seoultech.timoproject.global.annotation.SocketController;
 import com.tools.seoultech.timoproject.global.annotation.SocketMapping;
@@ -20,11 +21,13 @@ import java.util.Set;
 public class MatchingSocketController {
 
     private final MatchingService matchingService;
+    private final MatchingOptionService matchingOptionService;
 
     @SocketMapping(endpoint = "match_start", requestCls = MatchingOptionRequest.class)
     public void handleStartMatch(SocketIOClient client, SocketIOServer server, MatchingOptionRequest request) {
         Long memberId = client.get("memberId");
         log.info("[match_start] memberId={}, request={}", memberId, request);
+        matchingOptionService.updateMatchingOption(memberId, request);
         var matchIdOpt = matchingService.startMatch(memberId, request);
         if (matchIdOpt.isPresent()) {
             String matchId = matchIdOpt.get();
