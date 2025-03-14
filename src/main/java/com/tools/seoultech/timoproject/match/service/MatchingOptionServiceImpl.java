@@ -23,10 +23,10 @@ public class MatchingOptionServiceImpl implements MatchingOptionService {
     public MatchingOptionResponse updateMatchingOption(Long memberId, MatchingOptionRequest request) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberId));
-        UserInfo userInfo = request.toUserInfo();
-        DuoInfo duoInfo = request.toDuoInfo();
-        member.updateMatchOption(userInfo, duoInfo);
-        memberRepository.flush();
+        UserInfo newUserInfo = request.toUserInfo();
+        DuoInfo newDuoInfo = request.toDuoInfo();
+        member.updateMatchOption(newUserInfo, newDuoInfo);
+
         return new MatchingOptionResponse(member);
     }
 
