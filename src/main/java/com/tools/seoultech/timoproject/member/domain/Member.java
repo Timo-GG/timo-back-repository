@@ -84,9 +84,10 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(String email, String nickname, OAuthProvider oAuthProvider) {
+    public Member(String email, String nickname, Integer profileImageId, OAuthProvider oAuthProvider) {
         this.email = email;
         this.nickname = nickname;
+        this.profileImageId = profileImageId;
         this.oAuthProvider = oAuthProvider;
         this.role = Role.MEMBER;
     }
