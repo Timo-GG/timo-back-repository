@@ -7,30 +7,34 @@ import lombok.Getter;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NaverInfoResponse implements OAuthInfoResponse {
+public class KakaoInfoResponse implements OAuthInfoResponse {
 
-    /**
-     * 네이버 회원 프로필 조회 API
-     * -> https://openapi.naver.com/v1/nid/me 요청 결과
-     */
+    /** https://kapi.kakao.com/v2/user/me */
 
-    @JsonProperty("response")
-    private Response response;
+    @JsonProperty("kakao_account")
+    private KakaoAccount kakaoAccount;
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Response {
+    static class KakaoAccount {
+        private KakaoProfile profile;
         private String email;
+    }
+
+    @Getter
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class KakaoProfile {
+        private String nickname;
     }
 
     @Override
     public String getEmail() {
-        return response.email;
+        return kakaoAccount.email;
     }
 
     @Override
     public OAuthProvider getOAuthProvider() {
-        return OAuthProvider.NAVER;
+        return OAuthProvider.KAKAO;
     }
 
 }

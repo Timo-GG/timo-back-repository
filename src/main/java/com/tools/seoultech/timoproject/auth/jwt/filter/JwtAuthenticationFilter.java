@@ -35,6 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final List<AntPathRequestMatcher> whiteListPatternsForApi = List.of(
             new AntPathRequestMatcher("/api/v1/auth/naver"),
+            new AntPathRequestMatcher("/api/v1/auth/kakao"),
+            new AntPathRequestMatcher("/api/v1/auth/google"),
             new AntPathRequestMatcher("/api/v1/auth/refresh"),
             new AntPathRequestMatcher("/api/v1/auth/test"),
             new AntPathRequestMatcher("/api/v1/auth/test2"),
@@ -42,6 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/api/v1/members/player/verify"),
             new AntPathRequestMatcher("/api/v1/members/nickname/**"),
             new AntPathRequestMatcher("/naver/callback"),
+            new AntPathRequestMatcher("/kakao/callback"),
             new AntPathRequestMatcher("/api/v1/posts/public/**"),
             new AntPathRequestMatcher("/api/v1/comments/public/**"),
             new AntPathRequestMatcher("/bower_components/**"),
