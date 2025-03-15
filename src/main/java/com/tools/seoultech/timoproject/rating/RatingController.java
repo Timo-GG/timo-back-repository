@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.rating;
 
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
+import com.tools.seoultech.timoproject.rating.dto.DuoResponse;
 import com.tools.seoultech.timoproject.rating.dto.RatingRequest;
 import com.tools.seoultech.timoproject.rating.dto.RatingResponse;
 import com.tools.seoultech.timoproject.rating.dto.RatingTotalResponse;
@@ -34,6 +35,12 @@ public class RatingController {
     public ResponseEntity<APIDataResponse<RatingTotalResponse>> getRatings(@CurrentMemberId Long memberId) {
         RatingTotalResponse rating = ratingService.getRatings(memberId);
         return ResponseEntity.ok(APIDataResponse.of(rating));
+    }
+
+    @GetMapping("/duos")
+    public ResponseEntity<APIDataResponse<List<DuoResponse>>> getMyDuoList(@CurrentMemberId Long memberId) {
+        List<DuoResponse> ratings = ratingService.getDuoList(memberId);
+        return ResponseEntity.ok(APIDataResponse.of(ratings));
     }
 
 }

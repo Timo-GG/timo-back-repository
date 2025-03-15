@@ -11,6 +11,8 @@ public interface MemberService {
 
     String randomCreateNickname();
 
+    Integer randomCreateProfileImageId();
+
     Member updateAdditionalInfo(Long memberId, String nickname, String playerName, String playerTag);
 
     Integer updateProfileImageId(Long memberId, Integer imageId);

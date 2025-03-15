@@ -10,18 +10,18 @@ TRUNCATE TABLE member;
 -------------------------------------------------
 -- 1. MEMBER 테이블
 -------------------------------------------------
-INSERT INTO member (member_id, email, nickname, role, player_name, player_tag, reg_date, mod_date)
+INSERT INTO member (member_id, email, nickname, role, player_name, player_tag, profile_image_id, reg_date, mod_date)
 VALUES
-    (1,  'test1@example.com',  'hyunuk',    'MEMBER', 'Wooggie',       '#KR1',  NOW(), NOW()),
-    (2,  'test2@example.com',  'chanha',    'MEMBER', '롤찍먹만할게요', '#5103', NOW(), NOW()),
-    (3,  'test3@example.com',  'sangwoo',   'ADMIN',  '짱아깨비',      '#k r',  NOW(), NOW()),
-    (4,  'test4@example.com',  'pilho',     'MEMBER', '필호우스',      '#KR2',  NOW(), NOW()),
-    (5,  'test5@example.com',  'byeongjun', 'MEMBER', '병나발불어',    '#KR1',  NOW(), NOW()),
-    (6,  'test6@example.com',  'pilho',     'MEMBER', '필호우스',      '#KR2',  NOW(), NOW()),
-    (7,  'test7@example.com',  'kimjiwon',  'MEMBER', '도산안창호',     '#3402', NOW(), NOW()),
-    (8,  'test8@example.com',  'sangho',    'MEMBER', '백범김구',      '#HIGH', NOW(), NOW()),
-    (9,  'test9@example.com',  'youngjae',  'MEMBER', '행님',          '#KR1',  NOW(), NOW()),
-    (10, 'test10@example.com', 'yoonseok',  'MEMBER', '후아유',        '#9876', NOW(), NOW());
+    (1,  'test1@example.com',  'hyunuk',    'MEMBER', 'Wooggie',       '#KR1',  1, NOW(), NOW()),
+    (2,  'test2@example.com',  'chanha',    'MEMBER', '롤찍먹만할게요', '#5103', 2, NOW(), NOW()),
+    (3,  'test3@example.com',  'sangwoo',   'ADMIN',  '짱아깨비',      '#k r',  1, NOW(), NOW()),
+    (4,  'test4@example.com',  'pilho',     'MEMBER', '필호우스',      '#KR2',  2, NOW(), NOW()),
+    (5,  'test5@example.com',  'byeongjun', 'MEMBER', '병나발불어',    '#KR1',  1, NOW(), NOW()),
+    (6,  'test6@example.com',  'pilho',     'MEMBER', '필호우스',      '#KR2',  2, NOW(), NOW()),
+    (7,  'test7@example.com',  'kimjiwon',  'MEMBER', '도산안창호',     '#3402', 1, NOW(), NOW()),
+    (8,  'test8@example.com',  'sangho',    'MEMBER', '백범김구',      '#HIGH', 2, NOW(), NOW()),
+    (9,  'test9@example.com',  'youngjae',  'MEMBER', '행님',          '#KR1',  1, NOW(), NOW()),
+    (10, 'test10@example.com', 'yoonseok',  'MEMBER', '후아유',        '#9876', 2, NOW(), NOW());
 
 -------------------------------------------------
 -- 2. Post 테이블
@@ -54,7 +54,16 @@ VALUES
     (9, 1, 1, '테스트 댓글 내용...5', now() - INTERVAL 1 DAY, now() - INTERVAL 1 DAY);
 
 -------------------------------------------------
--- 4. Rating 테이블
+-- 4. PostLike 테이블
+-------------------------------------------------
+INSERT INTO image(image_id, post_id, base64)
+    VALUES
+        (1, 1, "image_1"),
+        (2, 1, "image_2"),
+        (3, 1, "image_3");
+
+-------------------------------------------------
+-- 5. Rating 테이블
 -------------------------------------------------
 -- INSERT INTO rating (score, attitude, speech, skill, member_id, duo_id)
 -- VALUES
@@ -117,6 +126,9 @@ WHERE member_id = 7;
 UPDATE member
 SET user_info_id = 8, duo_info_id = 8
 WHERE member_id = 8;
+
+
+
 
 -- 외래키 체크 활성화
 SET FOREIGN_KEY_CHECKS = 1;

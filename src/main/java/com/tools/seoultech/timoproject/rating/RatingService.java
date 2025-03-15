@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.rating;
 
+import com.tools.seoultech.timoproject.rating.dto.DuoResponse;
 import com.tools.seoultech.timoproject.rating.dto.RatingRequest;
 import com.tools.seoultech.timoproject.rating.dto.RatingResponse;
 import com.tools.seoultech.timoproject.rating.dto.RatingTotalResponse;
@@ -17,4 +18,7 @@ public interface RatingService {
 
         BigDecimal getRatingAverage(Long memberId);
 
+        boolean hasRated(Long memberId, Long duoId, String matchId);
+
+        List<DuoResponse> getDuoList(Long memberId);
 }

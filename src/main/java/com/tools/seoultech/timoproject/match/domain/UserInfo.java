@@ -47,4 +47,14 @@ public class UserInfo {
         this.voiceChat = voiceChat;
         this.playStyle = playStyle;
     }
+
+    public void update(String introduce, GameMode gameMode, PlayPosition playPosition,
+                       PlayCondition playCondition, VoiceChat voiceChat, PlayStyle playStyle) {
+        this.introduce = introduce;
+        this.gameMode = gameMode;
+        this.playPosition = playPosition;
+        this.playCondition = playCondition;
+        this.voiceChat = voiceChat;
+        this.playStyle = playStyle;
+    }
 }
