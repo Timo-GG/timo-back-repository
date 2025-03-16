@@ -16,4 +16,7 @@ public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, 
     Collection<ChatRoomMember> findByChatRoomId(Long roomId);
 
     List<ChatRoomMember> findByMemberId(Long memberId);
+
+    // 현재 활성화된(참여중이고 종료되지 않은) 채팅방 조회
+    Optional<ChatRoomMember> findFirstByMember_IdAndIsLeftFalse(Long memberId);
 }

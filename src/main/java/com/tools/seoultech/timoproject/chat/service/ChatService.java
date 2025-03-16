@@ -184,7 +184,6 @@ public class ChatService {
     public ChatRoom findChatRoomByMatchId(String matchId) {
         // ChatRoom 엔티티에 matchId 필드가 있다고 가정
          return chatRoomRepository.findByMatchId(matchId).orElse(null);
-
     }
 
     @Transactional
@@ -195,5 +194,13 @@ public class ChatService {
             chatRoom.terminate();
         }
         chatRoomRepository.save(chatRoom);
+    }
+
+    public Long findActiveChatRoomIdForMember(Long memberId) {
+        return chatRoomMemberRepository.findFirstByMember_IdAndIsLeftFalse(memberId)
+                .map(ChatRoomMember::getChatRoom)
+                .filter(chatRoom -> !chatRoom.isTerminated())
+                .map(ChatRoom::getId)
+                .orElseThrow(() -> new IllegalStateException("활성 채팅방이 존재하지 않습니다."));
     }
 }
