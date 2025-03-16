@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -84,6 +85,7 @@ public class SecurityConfig {
                         // whitelist URL 적용
                         .requestMatchers(whitelistProperties.getUrls().toArray(new String[0])).permitAll()
                         .requestMatchers(HttpMethod.GET, whitelistProperties.getPublicUrls().toArray(new String[0])).permitAll()
+                        .requestMatchers(new RegexRequestMatcher("^/api/v1/members/\\d+$", "GET")).permitAll()
                         // API 인증 필요 URL 설정
                         .requestMatchers("/api/v1/posts/**", "/api/v1/comments/**").authenticated()
                         .requestMatchers("/api/v1/**", "/api/v1/members/**").authenticated()
