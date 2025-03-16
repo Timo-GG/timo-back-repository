@@ -158,11 +158,9 @@ public class ChatService {
 
     @Transactional
     public void createChatRoomForMatch(String matchId, Long member1Id, Long member2Id) {
-        // 예: 채팅방 이름을 "member1Id_member2Id" 형태로 생성
-        String chatRoomName = member1Id + "_" + member2Id;
 
         // 채팅방 생성
-        ChatRoom chatRoom = ChatRoom.createRoom(chatRoomName, matchId);
+        ChatRoom chatRoom = ChatRoom.createRoom(matchId);
         chatRoomRepository.save(chatRoom);
 
         // 채팅방 멤버 추가
@@ -177,14 +175,13 @@ public class ChatService {
         chatRoomMemberRepository.save(chatRoomMember1);
         chatRoomMemberRepository.save(chatRoomMember2);
 
-        log.info("✅ 채팅방 생성 및 멤버 가입 완료. matchId={}, chatRoomName={}", matchId, chatRoomName);
+        log.info("✅ 채팅방 생성 및 멤버 가입 완료. matchId={}", matchId);
     }
 
     @Transactional(readOnly = true)
     public ChatRoom findChatRoomByMatchId(String matchId) {
         // ChatRoom 엔티티에 matchId 필드가 있다고 가정
          return chatRoomRepository.findByMatchId(matchId).orElse(null);
-
     }
 
     @Transactional
@@ -195,5 +192,13 @@ public class ChatService {
             chatRoom.terminate();
         }
         chatRoomRepository.save(chatRoom);
+    }
+
+    public Long findActiveChatRoomIdForMember(Long memberId) {
+        return chatRoomMemberRepository.findFirstByMember_IdAndIsLeftFalse(memberId)
+                .map(ChatRoomMember::getChatRoom)
+                .filter(chatRoom -> !chatRoom.isTerminated())
+                .map(ChatRoom::getId)
+                .orElse(null);
     }
 }

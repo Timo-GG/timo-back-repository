@@ -4,10 +4,7 @@ import com.tools.seoultech.timoproject.chat.domain.ChatRoom;
 import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.match.domain.DuoInfo;
 import com.tools.seoultech.timoproject.match.domain.UserInfo;
-import com.tools.seoultech.timoproject.match.dto.FinalizedMatchResult;
-import com.tools.seoultech.timoproject.match.dto.MatchResponseStatus;
-import com.tools.seoultech.timoproject.match.dto.MatchResult;
-import com.tools.seoultech.timoproject.match.dto.MatchingOptionRequest;
+import com.tools.seoultech.timoproject.match.dto.*;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import jakarta.annotation.PostConstruct;
@@ -325,4 +322,61 @@ public class MatchingServiceImpl implements MatchingService {
         }
         return memberIds;
     }
+
+    @Override
+    public MatchStatusResponse getMatchStatus(Long memberId) {
+        // 1. 매칭 대기 상태 확인: 회원이 대기열에 등록되어 있다면, USER_INFO_PREFIX 키가 존재합니다.
+        String userKey = USER_INFO_PREFIX + memberId;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(userKey))) {
+            return new MatchStatusResponse("WAITING", null, "매칭 대기중입니다.", Collections.emptyMap());
+        }
+
+        // 2. 매칭 요청 진행 상태 확인:
+        //    모든 매칭 요청 키("match:waiting:*")를 조회해서 해당 회원이 참여한 매칭 요청의 상태를 확인합니다.
+        Set<String> matchKeys = redisTemplate.keys(MATCH_WAITING_PREFIX + "*");
+        if (matchKeys != null) {
+            for (String matchKey : matchKeys) {
+                if (hashOps.hasKey(matchKey, memberId.toString())) {
+                    // 해당 매칭 요청의 모든 응답 상태를 가져옵니다.
+                    Map<String, String> statuses = hashOps.entries(matchKey);
+                    // matchKey는 "match:waiting:" + matchId 형태이므로 매칭 ID를 추출합니다.
+                    String matchId = matchKey.substring(MATCH_WAITING_PREFIX.length());
+                    // 각 참여자의 상태를 Long 타입의 키로 변환하여 상세 상태 맵 생성
+                    Map<Long, String> detailedStatuses = statuses.entrySet().stream()
+                            .collect(Collectors.toMap(e -> Long.valueOf(e.getKey()), Map.Entry::getValue));
+                    // 전체 상태 결정: 한쪽이라도 "pending"이면 PENDING, 모두 "accepted"이면 ACCEPTED
+                    boolean anyPending = statuses.values().stream()
+                            .anyMatch(status -> "pending".equalsIgnoreCase(status));
+                    boolean allAccepted = statuses.values().stream()
+                            .allMatch(status -> "accepted".equalsIgnoreCase(status));
+                    String overallStatus;
+                    String message;
+                    if (anyPending) {
+                        overallStatus = "PENDING";
+                        message = "상대방 응답 대기중입니다.";
+                    } else if (allAccepted) {
+                        overallStatus = "ACCEPTED";
+                        message = "매칭이 수락되었습니다.";
+                    } else {
+                        overallStatus = "UNKNOWN";
+                        message = "매칭 상태를 확인할 수 없습니다.";
+                    }
+                    return new MatchStatusResponse(overallStatus, matchId, message, detailedStatuses);
+                }
+            }
+        }
+
+        // 3. Redis에 매칭 요청 정보가 없으면, 매칭이 확정되어 채팅방이 생성되었을 가능성이 있습니다.
+        //    DB에서 현재 활성 채팅방(즉, 채팅방에 참여 중이며 isLeft가 false, 채팅방 종료되지 않음)을 확인합니다.
+        Long activeRoomId = chatService.findActiveChatRoomIdForMember(memberId);
+        if (activeRoomId != null) {
+            return new MatchStatusResponse("MATCHED", activeRoomId.toString(), "활성화된 매칭방이 존재합니다. : " + activeRoomId, Collections.emptyMap());
+        }
+
+        // 4. 위 조건에 해당하지 않으면 현재 매칭 진행중이 아님.
+        return new MatchStatusResponse("NONE", null, "현재 매칭 진행중이 아닙니다.", Collections.emptyMap());
+    }
+
+
+
 }

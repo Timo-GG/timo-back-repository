@@ -4,11 +4,10 @@ import com.tools.seoultech.timoproject.chat.domain.ChatRoom;
 import lombok.Builder;
 
 @Builder
-public record ChatRoomResponse(Long chatRoomId, String roomName, String lastMessage) {
+public record ChatRoomResponse(Long roomId, String lastMessage) {
     public static ChatRoomResponse of(ChatRoom chatRoom) {
         return ChatRoomResponse.builder()
-                .chatRoomId(chatRoom.getId())
-                .roomName(chatRoom.getChatRoomName())
+                .roomId(chatRoom.getId())
                 .lastMessage(chatRoom.getLastMessageContent())
                 .build();
     }

@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.match.service;
 
 import com.tools.seoultech.timoproject.match.dto.MatchResult;
+import com.tools.seoultech.timoproject.match.dto.MatchStatusResponse;
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionRequest;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface MatchingService {
     boolean denyMatch(String matchId, Long memberId);
 
     Set<Long> getMatchMemberIds(String matchId);
+
+    MatchStatusResponse getMatchStatus(Long memberId);
 }
