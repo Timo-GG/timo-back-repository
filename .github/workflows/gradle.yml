@@ -21,7 +21,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       
-      # application.properties 파일 생성
       - name: Make application.properties
         run: touch ./src/main/resources/application.properties
 
@@ -59,17 +58,18 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-
+      
       - name: Create docker-compose file
         run: |
           echo "${{ secrets.DOCKER_COMPOSE_SPRINGBOOT }}" > ./docker-compose.yml
-
+      
       - name: Remove old compose folder
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
+          tty: false
           script: |
             echo "Removing old /home/ubuntu/compose folder..."
             rm -rf /home/ubuntu/compose
@@ -83,7 +83,7 @@ jobs:
           key: ${{ secrets.EC2_PEM }}
           source: "./docker-compose.yml"
           target: "/home/ubuntu/compose"
-          overwrite: true       # 기존 파일 덮어쓰기
+          overwrite: true
 
       - name: Connect to EC2 and run docker
         uses: appleboy/ssh-action@master
@@ -94,9 +94,11 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
           port: 22
+          tty: false
           envs: COMPOSE
           script: |
-            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
             sudo docker-compose -f $COMPOSE down --rmi all
+            sleep 5
             sudo docker pull menten4859/timo-repo:latest
             sudo docker-compose -f $COMPOSE up -d
