@@ -141,8 +141,8 @@ class PostRepositoryTest {
                             memberRepository.findById((i%3)+1L)
                                     .orElse(
                                             Member.builder()
-                                                .username("created new in test method")
-                                                .build())
+                                            .email("testMember" + i + "@test.com")
+                                            .build())
                     ).build();
             posts.add(post);
         });

@@ -17,7 +17,6 @@ class OAuth2MemberTest {
 
         member = Member.builder()
                 .email("asdf123@gmail.com")
-                .username("test")
                 .build();
     }
     @Test
