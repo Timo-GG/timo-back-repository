@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.auth.controller;
 
+import com.tools.seoultech.timoproject.auth.dto.KakaoLoginParams;
 import com.tools.seoultech.timoproject.auth.dto.NaverLoginParams;
 import com.tools.seoultech.timoproject.auth.facade.AuthFacade;
 import com.tools.seoultech.timoproject.auth.jwt.HeaderTokenExtractor;
@@ -19,15 +20,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-
     private final OAuthLoginService oAuthLoginService;
     private final AuthFacade authFacade;
     private final HeaderTokenExtractor headerTokenExtractor;
 
     @PostMapping("/naver")
-    public ResponseEntity<TokenCollection> loginNaver(@RequestBody NaverLoginParams params, HttpServletResponse response) {
+    public ResponseEntity<TokenCollection> loginNaver(@RequestBody NaverLoginParams params) {
         TokenCollection tokens = oAuthLoginService.login(params);
+        return ResponseEntity.ok(tokens);
+    }
 
+    @PostMapping("/kakao")
+    public ResponseEntity<TokenCollection> loginKakao(@RequestBody KakaoLoginParams params) {
+        TokenCollection tokens = oAuthLoginService.login(params);
         return ResponseEntity.ok(tokens);
     }
 

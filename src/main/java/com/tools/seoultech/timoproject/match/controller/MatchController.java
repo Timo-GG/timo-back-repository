@@ -90,4 +90,10 @@ public class MatchController {
             return APIDataResponse.of("대기 중인 유저 리스트 : " + waitingUsers);
         }
     }
+
+    /** 매칭 상태 조회 */
+    @GetMapping("/status")
+    public APIDataResponse<?> getMatchStatus(@CurrentMemberId Long memberId) {
+        return APIDataResponse.of(matchingService.getMatchStatus(memberId));
+    }
 }

@@ -4,6 +4,7 @@ import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.member.dto.MemberInfoResponse;
+import com.tools.seoultech.timoproject.member.dto.MemberProfileDto;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.facade.MemberFacade;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
@@ -33,6 +34,12 @@ public class MemberController {
         MemberInfoResponse memberInfo = memberFacade.getMemberInfo(memberId);
 
         return ResponseEntity.ok(APIDataResponse.of(memberInfo));
+    }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<APIDataResponse<MemberProfileDto>> findById(@PathVariable Long memberId) {
+        MemberProfileDto memberProfile = memberFacade.getMemberProfile(memberId);
+        return ResponseEntity.ok(APIDataResponse.of(memberProfile));
     }
 
     @PutMapping("/me/info")

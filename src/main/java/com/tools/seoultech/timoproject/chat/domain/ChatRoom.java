@@ -18,9 +18,6 @@ public class ChatRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String chatRoomName;
-
     private Long lastMessageSenderId;
 
     private LocalDateTime lastMessageTime;
@@ -33,9 +30,8 @@ public class ChatRoom extends BaseEntity {
 
     private String matchId;
 
-    public static ChatRoom createRoom(String chatRoomName, String matchId) {
+    public static ChatRoom createRoom(String matchId) {
         ChatRoom room = new ChatRoom();
-        room.chatRoomName = chatRoomName;
         room.matchId = matchId;
         return room;
     }

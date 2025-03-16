@@ -6,7 +6,6 @@ import com.tools.seoultech.timoproject.match.dto.MatchNotificationDTO;
 import com.tools.seoultech.timoproject.match.dto.MatchResponseDTO;
 import com.tools.seoultech.timoproject.match.dto.MatchResult;
 import com.tools.seoultech.timoproject.match.dto.MatchingOptionRequest;
-import com.tools.seoultech.timoproject.match.service.MatchingOptionService;
 import com.tools.seoultech.timoproject.match.service.MatchingService;
 import com.tools.seoultech.timoproject.global.annotation.SocketController;
 import com.tools.seoultech.timoproject.global.annotation.SocketMapping;
