@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final HeaderTokenExtractor headerTokenExtractor;
     private final JwtResolver jwtResolver;
 
-    private static final List<AntPathRequestMatcher> whiteListPatternsForApi = List.of(
+    private static final List<RequestMatcher> whiteListPatternsForApi = List.of(
             new AntPathRequestMatcher("/api/v1/auth/naver"),
             new AntPathRequestMatcher("/api/v1/auth/kakao"),
             new AntPathRequestMatcher("/api/v1/auth/google"),
@@ -43,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/api/v1/chat/**"),
             new AntPathRequestMatcher("/api/v1/members/player/verify"),
             new AntPathRequestMatcher("/api/v1/members/nickname/**"),
-            new AntPathRequestMatcher("/api/v1/members/*"),
+            new RegexRequestMatcher("^/api/v1/members/[0-9]+$", "GET"),
             new AntPathRequestMatcher("/naver/callback"),
             new AntPathRequestMatcher("/kakao/callback"),
             new AntPathRequestMatcher("/api/v1/posts/public/**"),
@@ -72,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 
-        List<AntPathRequestMatcher> skipList = new ArrayList<>();
+        List<RequestMatcher> skipList = new ArrayList<>();
         skipList.addAll(whiteListPatternsForApi);
 
         OrRequestMatcher orRequestMatcher = new OrRequestMatcher(new ArrayList<>(skipList));
