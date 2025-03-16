@@ -3,6 +3,7 @@ package com.tools.seoultech.timoproject.member.facade;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.member.dto.MemberInfoResponse;
+import com.tools.seoultech.timoproject.member.dto.MemberProfileDto;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.post.repository.CommentRepository;
@@ -70,6 +71,12 @@ public class MemberFacadeImpl implements MemberFacade {
     @Override
     public Integer updateProfileImageId(Long memberId, Integer imageId) {
         return memberService.updateProfileImageId(memberId, imageId);
+    }
+
+    @Override
+    public MemberProfileDto getMemberProfile(Long memberId) {
+        Member member = memberService.getById(memberId);
+        return MemberProfileDto.from(member);
     }
 
     /**
