@@ -7,6 +7,7 @@
 - 게시판 기능 
 - 대화 기능
 - 소셜로그인
+- 평점 기능
 
 ## Backend Developer
 - <a href="https://github.com/Changha-dev">전창하</a>
