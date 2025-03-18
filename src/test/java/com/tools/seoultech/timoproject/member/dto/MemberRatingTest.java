@@ -21,12 +21,10 @@ public class MemberRatingTest {
     void init(){
         member = Member.builder()
                 .email("asdf@gmail.com")
-                .username("test")
                 .build();
 
         duo = Member.builder()
                 .email("asdf_duo@gmail.com")
-                .username("duoTest")
                 .build();
 
         rating = Rating.builder()
@@ -53,7 +51,7 @@ public class MemberRatingTest {
 
     @Test
     void linkMemberRating(){
-        Assertions.assertThat(rating.getMember().getUsername()).isEqualTo(member.getUsername());
+        Assertions.assertThat(rating.getMember().getEmail()).isEqualTo(member.getEmail());
     }
 
     @Test

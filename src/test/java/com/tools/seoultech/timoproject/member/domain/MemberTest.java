@@ -29,7 +29,6 @@ class MemberTest {
     void init() {
         member = Member.builder()
                 .email("test@example.com")
-                .username("testUser")
                 .oAuthProvider(OAuthProvider.NAVER)
                 .build();
 
