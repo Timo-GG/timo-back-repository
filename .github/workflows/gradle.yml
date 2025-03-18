@@ -36,7 +36,7 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build -x test
 
-      - name: Docker login
+      - name: docker login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -48,7 +48,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and push Docker image
+      - name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -58,56 +58,47 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-
-      # docker-compose 파일들은 이미 메인 브랜치에 커밋되어 있다고 가정
-      - name: List docker-compose files in repository
+      
+      - name: Create docker-compose file
         run: |
-          ls -l docker-compose.blue.yml docker-compose.green.yml
-          echo "=== docker-compose.blue.yml ==="
-          cat docker-compose.blue.yml
-          echo "=== docker-compose.green.yml ==="
-          cat docker-compose.green.yml
-
-      # docker-compose 파일 개별 업로드
-      - name: Upload docker-compose.blue.yml to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_PEM }}
-          source: "docker-compose.blue.yml"
-          target: "/home/ubuntu/"
-          overwrite: true
-
-      - name: Upload docker-compose.green.yml to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_PEM }}
-          source: "docker-compose.green.yml"
-          target: "/home/ubuntu/"
-          overwrite: true
-
-      # deploy.sh 파일도 메인 브랜치에 커밋되어 있다고 가정
-      - name: Upload deploy.sh to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_PEM }}
-          source: "./deploy.sh"
-          target: "/home/ubuntu/"
-          overwrite: true
-
-      # deploy.sh 실행
-      - name: Execute deploy.sh script remotely
+          echo "${{ secrets.DOCKER_COMPOSE_SPRINGBOOT }}" > ./docker-compose.yml
+      
+      - name: Remove old compose folder
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
-          port: 22
+          tty: false
           script: |
-            chmod +x /home/ubuntu/deploy.sh
-            /home/ubuntu/deploy.sh
+            echo "Removing old /home/ubuntu/compose folder..."
+            rm -rf /home/ubuntu/compose
+            mkdir -p /home/ubuntu/compose
+      
+      - name: Upload docker-compose file
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_PEM }}
+          source: "./docker-compose.yml"
+          target: "/home/ubuntu/compose"
+          overwrite: true
+
+      - name: Connect to EC2 and run docker
+        uses: appleboy/ssh-action@master
+        env:
+          COMPOSE: "/home/ubuntu/compose/docker-compose.yml"
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_PEM }}
+          port: 22
+          tty: false
+          envs: COMPOSE
+          script: |
+            sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+            sudo docker-compose -f $COMPOSE down --rmi all
+            sleep 5
+            sudo docker pull menten4859/timo-repo:latest
+            sudo docker-compose -f $COMPOSE up -d
