@@ -94,7 +94,7 @@ jobs:
       #     host: ${{ secrets.EC2_HOST }}
       #     username: ubuntu
       #     key: ${{ secrets.EC2_PEM }}
-      #     source: "./nginx-conf/*"               # 로컬에 nginx-conf/timo-api-blue.conf, timo-api-green.conf가 있다고 가정
+      #     source: "./nginx-conf/*"
       #     target: "/etc/nginx/conf.d"
       #     overwrite: true
       
@@ -112,8 +112,11 @@ jobs:
           script: |
             # 도커 로그인
             sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+
+            # 기존 컨테이너(이전 배포) 정리
+            sudo docker compose -f $COMPOSE down
             
-            # Green 서비스 pull & up
+            # Green 서비스 pull & up (Redis 포함)
             sudo docker compose -f $COMPOSE pull timo-redis spring-green
             sudo docker compose -f $COMPOSE up -d timo-redis spring-green
             
@@ -140,5 +143,5 @@ jobs:
             sudo cp /etc/nginx/conf.d/timo-api-green.conf /etc/nginx/conf.d/timo-api.conf
             sudo nginx -t && sudo systemctl reload nginx
             
-            # 전환 후 Blue 서비스 중지
-            sudo docker-compose -f $COMPOSE stop spring-blue
+            # 전환 후 Blue 서비스 중지 (필요하다면)
+            sudo docker compose -f $COMPOSE stop spring-blue
