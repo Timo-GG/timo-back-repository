@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  spring-green:
+    container_name: timo-repo-green
+    image: menten4859/timo-repo:latest
+    restart: always
+    ports:
+      - "8082:8080"     # API (Green)
+      - "8086:8085"     # Socket.IO (Green)
+    networks:
+      - timo-network
+
+  timo-redis:
+    container_name: timo-redis
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - timo-network
+
+networks:
+  timo-network:
+    driver: bridge
