@@ -59,6 +59,7 @@ jobs:
             linux/amd64
             linux/arm64
       
+      # -- 여기서 docker-compose.yml을 GitHub Actions에서 생성해 환경 변수로 EC2에 전달 --
       - name: Create docker-compose file
         run: |
           echo "${{ secrets.DOCKER_COMPOSE_SPRINGBOOT }}" > ./docker-compose.yml
@@ -69,7 +70,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
-          tty: false
           script: |
             echo "Removing old /home/ubuntu/compose folder..."
             rm -rf /home/ubuntu/compose
@@ -84,17 +84,7 @@ jobs:
           source: "./docker-compose.yml"
           target: "/home/ubuntu/compose"
           overwrite: true
-      
-      - name: Upload nginx-green.conf file to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_PEM }}
-          source: "./nginx-green.conf"
-          target: "/home/ubuntu/compose/nginx-green.conf"
-          overwrite: true
-      
+
       - name: Deploy Green version and switch Nginx
         uses: appleboy/ssh-action@master
         env:
@@ -104,13 +94,13 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
           port: 22
-          tty: false
+          # tty: false  # <- appleboy/ssh-action에서는 tty 입력을 지원하지 않으므로 제거
           envs: COMPOSE
           script: |
             # 도커 로그인
             sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
             
-            # Green 서비스에 최신 이미지를 pull하고 실행 (Blue/Green docker-compose 구성에서 spring-green을 사용)
+            # Green 서비스에 최신 이미지를 pull하고 실행
             sudo docker-compose -f $COMPOSE pull spring-green
             sudo docker-compose -f $COMPOSE up -d spring-green
             
@@ -132,9 +122,10 @@ jobs:
               exit 1
             fi
             
-            # 헬스체크 성공 시, Nginx 설정을 Green용으로 전환
-            sudo cp /home/ubuntu/compose/nginx-green.conf /etc/nginx/conf.d/timo-api.conf
+            # Nginx 설정 전환: 이미 서버에 /etc/nginx/conf.d/timo-api-green.conf가 존재한다고 가정
+            # => 이를 /etc/nginx/conf.d/timo-api.conf 로 복사하여 Green으로 트래픽 전환
+            sudo cp /etc/nginx/conf.d/timo-api-green.conf /etc/nginx/conf.d/timo-api.conf
             sudo nginx -t && sudo systemctl reload nginx
             
-            # 전환 완료 후, Blue 서비스를 중지 (필요시 롤백 전략 적용)
+            # 전환 완료 후, Blue 서비스를 중지
             sudo docker-compose -f $COMPOSE stop spring-blue
