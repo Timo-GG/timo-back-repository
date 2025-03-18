@@ -59,13 +59,13 @@ jobs:
             linux/amd64
             linux/arm64
 
-      # docker-compose.blue.yml & green.yml 생성
-      - name: Create docker-compose files
+      # docker-compose 파일들은 이미 메인 브랜치에 커밋되어 있다고 가정
+      - name: List docker-compose files in repository
         run: |
-          echo "${{ secrets.DOCKER_COMPOSE_BLUE }}" > docker-compose.blue.yml
-          echo "${{ secrets.DOCKER_COMPOSE_GREEN }}" > docker-compose.green.yml
-          ls -l docker-compose.*  # 생성된 파일 확인
-          cat docker-compose.blue.yml  # 내용 확인
+          ls -l docker-compose.blue.yml docker-compose.green.yml
+          echo "=== docker-compose.blue.yml ==="
+          cat docker-compose.blue.yml
+          echo "=== docker-compose.green.yml ==="
           cat docker-compose.green.yml
 
       # docker-compose 파일 개별 업로드
@@ -89,7 +89,7 @@ jobs:
           target: "/home/ubuntu/"
           overwrite: true
 
-      # deploy.sh 업로드
+      # deploy.sh 파일도 메인 브랜치에 커밋되어 있다고 가정
       - name: Upload deploy.sh to EC2
         uses: appleboy/scp-action@master
         with:
