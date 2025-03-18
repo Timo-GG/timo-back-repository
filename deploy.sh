@@ -15,11 +15,13 @@ if [ -z "${EXIST_BLUE}" ]; then
     TERMINATE_CONTAINER="green"
     START_PORT=8081
     TERMINATE_PORT=8082
+    NEW_NGINX_CONF="timo-api-blue.conf"
 else
     START_CONTAINER="green"
     TERMINATE_CONTAINER="blue"
     START_PORT=8082
     TERMINATE_PORT=8081
+    NEW_NGINX_CONF="timo-api-green.conf"
 fi
 
 echo "✅ 새로 실행할 컨테이너: spring-${START_CONTAINER}"
@@ -47,10 +49,11 @@ if [ "$HEALTH_STATUS" -ne 200 ]; then
 fi
 
 echo "🔄 Nginx 설정 변경..."
-sudo sed -i "s/${TERMINATE_PORT}/${START_PORT}/" /etc/nginx/conf.d/service-url.inc
+# service-url.inc 사용 X -> timo-api.conf 파일을 blue/green 설정으로 변경
+sudo cp /etc/nginx/conf.d/${NEW_NGINX_CONF} /etc/nginx/conf.d/timo-api.conf
 
 echo "♻️ Nginx 재시작..."
-sudo service nginx reload
+sudo systemctl reload nginx
 
 echo "🛑 기존 컨테이너 종료: spring-${TERMINATE_CONTAINER}"
 sudo docker-compose -f /home/ubuntu/docker-compose.${TERMINATE_CONTAINER}.yml down
