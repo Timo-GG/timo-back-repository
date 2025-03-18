@@ -59,11 +59,12 @@ jobs:
             linux/amd64
             linux/arm64
       
-      # -- 여기서 docker-compose.yml을 GitHub Actions에서 생성해 환경 변수로 EC2에 전달 --
+      # docker-compose.yml 생성 (GitHub Actions 환경 변수 -> 실제 파일)
       - name: Create docker-compose file
         run: |
           echo "${{ secrets.DOCKER_COMPOSE_SPRINGBOOT }}" > ./docker-compose.yml
       
+      # SSH로 EC2 접속, 기존 폴더 정리
       - name: Remove old compose folder on EC2
         uses: appleboy/ssh-action@master
         with:
@@ -75,6 +76,7 @@ jobs:
             rm -rf /home/ubuntu/compose
             mkdir -p /home/ubuntu/compose
       
+      # docker-compose.yml 업로드
       - name: Upload docker-compose file to EC2
         uses: appleboy/scp-action@master
         with:
@@ -85,6 +87,18 @@ jobs:
           target: "/home/ubuntu/compose"
           overwrite: true
 
+      # (선택) Nginx 설정 파일들(timo-api-blue.conf, timo-api-green.conf) 업로드
+      - name: Upload Nginx conf files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_PEM }}
+          source: "./nginx-conf/*"               # 로컬에 nginx-conf/timo-api-blue.conf, timo-api-green.conf가 있다고 가정
+          target: "/etc/nginx/conf.d"
+          overwrite: true
+      
+      # Green 배포 및 Nginx 전환
       - name: Deploy Green version and switch Nginx
         uses: appleboy/ssh-action@master
         env:
@@ -94,17 +108,16 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
           port: 22
-          # tty: false  # <- appleboy/ssh-action에서는 tty 입력을 지원하지 않으므로 제거
           envs: COMPOSE
           script: |
             # 도커 로그인
             sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
             
-            # Green 서비스에 최신 이미지를 pull하고 실행
+            # Green 서비스 pull & up
             sudo docker-compose -f $COMPOSE pull spring-green
             sudo docker-compose -f $COMPOSE up -d spring-green
             
-            # Green 서비스 헬스체크 (최대 10회, 5초 간격)
+            # 헬스체크 (최대 10회, 5초 간격)
             HEALTH_STATUS=0
             for i in {1..10}; do
               HEALTH_STATUS=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8081/actuator/health)
@@ -118,14 +131,14 @@ jobs:
             done
             
             if [ "$HEALTH_STATUS" -ne 200 ]; then
-              echo "Green 서비스 헬스체크 실패. 배포를 중단합니다."
+              echo "Green 서비스 헬스체크 실패. 배포 중단."
               exit 1
             fi
             
-            # Nginx 설정 전환: 이미 서버에 /etc/nginx/conf.d/timo-api-green.conf가 존재한다고 가정
-            # => 이를 /etc/nginx/conf.d/timo-api.conf 로 복사하여 Green으로 트래픽 전환
+            # 헬스체크 성공 시, Nginx 설정 전환
+            # => timo-api-green.conf를 timo-api.conf로 복사
             sudo cp /etc/nginx/conf.d/timo-api-green.conf /etc/nginx/conf.d/timo-api.conf
             sudo nginx -t && sudo systemctl reload nginx
             
-            # 전환 완료 후, Blue 서비스를 중지
+            # 전환 후 Blue 서비스 중지
             sudo docker-compose -f $COMPOSE stop spring-blue
