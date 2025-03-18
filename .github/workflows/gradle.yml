@@ -58,32 +58,39 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-      # Secrets에서 가져온 docker-compose.blue.yml 파일 생성
-      - name: Create docker-compose.blue.yml
+
+      # docker-compose.blue.yml & green.yml 생성
+      - name: Create docker-compose files
         run: |
           echo "${{ secrets.DOCKER_COMPOSE_BLUE }}" > docker-compose.blue.yml
-          cat /home/ubuntu/docker-compose.blue.yml  # 내용 확인
-
-      # Secrets에서 가져온 docker-compose.green.yml 파일 생성
-      - name: Create docker-compose.green.yml
-        run: |
           echo "${{ secrets.DOCKER_COMPOSE_GREEN }}" > docker-compose.green.yml
+          ls -l docker-compose.*  # 생성된 파일 확인
+          cat docker-compose.blue.yml  # 내용 확인
+          cat docker-compose.green.yml
 
-      # docker-compose.blue.yml & docker-compose.green.yml 업로드
-      - name: Upload docker-compose files to EC2
+      # docker-compose 파일 개별 업로드
+      - name: Upload docker-compose.blue.yml to EC2
         uses: appleboy/scp-action@master
-
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
-          source: "docker-compose.blue.yml,docker-compose.green.yml"
+          source: "docker-compose.blue.yml"
+          target: "/home/ubuntu/"
+          overwrite: true
+
+      - name: Upload docker-compose.green.yml to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_PEM }}
+          source: "docker-compose.green.yml"
           target: "/home/ubuntu/"
           overwrite: true
 
       # deploy.sh 업로드
       - name: Upload deploy.sh to EC2
-
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
