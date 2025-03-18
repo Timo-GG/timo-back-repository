@@ -114,8 +114,8 @@ jobs:
             sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
             
             # Green 서비스 pull & up
-            sudo docker-compose -f $COMPOSE pull timo-redis spring-green
-            sudo docker-compose -f $COMPOSE up -d timo-redis spring-green
+            sudo docker compose -f $COMPOSE pull timo-redis spring-green
+            sudo docker compose -f $COMPOSE up -d timo-redis spring-green
             
             # 헬스체크 (최대 10회, 5초 간격)
             HEALTH_STATUS=0
