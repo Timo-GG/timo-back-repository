@@ -56,6 +56,6 @@ echo "♻️ Nginx 재시작..."
 sudo systemctl reload nginx
 
 echo "🛑 기존 컨테이너 종료: spring-${TERMINATE_CONTAINER}"
-sudo docker-compose -f /home/ubuntu/docker-compose.${TERMINATE_CONTAINER}.yml down
+sudo docker compose -f /home/ubuntu/docker-compose.${TERMINATE_CONTAINER}.yml down
 
 echo "✅ 배포 완료!"
