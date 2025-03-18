@@ -10,15 +10,6 @@ services:
     networks:
       - timo-network
 
-  timo-redis:
-    container_name: timo-redis
-    image: redis:6.2-alpine
-    restart: always
-    ports:
-      - "6379:6379"
-    networks:
-      - timo-network
-
 networks:
   timo-network:
-    driver: bridge
+    external: true
