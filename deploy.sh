@@ -27,7 +27,7 @@ fi
 echo "✅ 새로 실행할 컨테이너: spring-${START_CONTAINER}"
 
 # 새 컨테이너 실행 (docker-compose)
-sudo docker-compose -f /home/ubuntu/docker-compose.${START_CONTAINER}.yml up -d --build
+sudo docker compose -f /home/ubuntu/docker-compose.${START_CONTAINER}.yml up -d --build
 
 # 헬스체크 (최대 10번, 5초 간격)
 for i in {1..10}; do
