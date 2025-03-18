@@ -7,6 +7,7 @@
 - 게시판 기능 
 - 대화 기능
 - 소셜로그인
+- 평점 기능
 
 ## Backend Developer
 - <a href="https://github.com/Changha-dev">전창하</a>
@@ -31,3 +32,6 @@
 **Api Docs** - <img src="https://img.shields.io/badge/Postman-85EA2D?style=for-the-social&logo=postman&logoColor=white">
 
 **Other** - <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-social&logo=Socket.io&logoColor=white"> 
+
+## ERD
+<img width="1279" alt="스크린샷 2025-03-16 오후 9 07 53" src="https://github.com/user-attachments/assets/4ff6b8eb-5a69-44cf-9211-2d2620180c4c" />
