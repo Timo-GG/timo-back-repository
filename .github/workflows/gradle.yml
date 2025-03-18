@@ -87,16 +87,16 @@ jobs:
           target: "/home/ubuntu/compose"
           overwrite: true
 
-      # (선택) Nginx 설정 파일들(timo-api-blue.conf, timo-api-green.conf) 업로드
-      - name: Upload Nginx conf files
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_PEM }}
-          source: "./nginx-conf/*"               # 로컬에 nginx-conf/timo-api-blue.conf, timo-api-green.conf가 있다고 가정
-          target: "/etc/nginx/conf.d"
-          overwrite: true
+      # # (선택) Nginx 설정 파일들(timo-api-blue.conf, timo-api-green.conf) 업로드
+      # - name: Upload Nginx conf files
+      #   uses: appleboy/scp-action@master
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ubuntu
+      #     key: ${{ secrets.EC2_PEM }}
+      #     source: "./nginx-conf/*"               # 로컬에 nginx-conf/timo-api-blue.conf, timo-api-green.conf가 있다고 가정
+      #     target: "/etc/nginx/conf.d"
+      #     overwrite: true
       
       # Green 배포 및 Nginx 전환
       - name: Deploy Green version and switch Nginx
