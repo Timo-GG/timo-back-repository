@@ -55,7 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/plugins/**"),
             new AntPathRequestMatcher("/css/**"),
             new AntPathRequestMatcher("/js/**"),
-            new AntPathRequestMatcher("/img/**")
+            new AntPathRequestMatcher("/img/**"),
+            new AntPathRequestMatcher("/actuator/health")
 
     );
 
