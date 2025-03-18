@@ -98,7 +98,7 @@ jobs:
           envs: COMPOSE
           script: |
             sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-            sudo docker-compose -f $COMPOSE down --rmi all
+            sudo docker compose -f $COMPOSE down --rmi all
             sleep 5
             sudo docker pull menten4859/timo-repo:latest
-            sudo docker-compose -f $COMPOSE up -d
+            sudo docker compose -f $COMPOSE up -d
