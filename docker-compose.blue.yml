@@ -5,7 +5,7 @@ services:
     image: menten4859/timo-repo:latest
     restart: always
     ports:
-      - "8080:8080"     # API (Blue)
+      - "8081:8080"     # API (Blue)
       - "8085:8085"     # Socket.IO (Blue)
     networks:
       - timo-network
