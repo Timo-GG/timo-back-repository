@@ -63,8 +63,8 @@ jobs:
         run: |
           echo "${{ secrets.DOCKER_COMPOSE_SPRINGBOOT }}" > ./docker-compose.yml
 
-      # EC2 배포 (기존 EC2 서버에 배포)
-      - name: Remove old compose folder (EC2)
+      # Remove old docker-compose folder on EC2 (if necessary)
+      - name: Remove old compose folder on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -76,6 +76,7 @@ jobs:
             rm -rf /home/ubuntu/compose
             mkdir -p /home/ubuntu/compose
 
+      # Upload docker-compose.yml to EC2
       - name: Upload docker-compose file to EC2
         uses: appleboy/scp-action@master
         with:
@@ -86,7 +87,8 @@ jobs:
           target: "/home/ubuntu/compose"
           overwrite: true
 
-      - name: Connect to EC2 and run docker (EC2)
+      # Run docker-compose on EC2
+      - name: Connect to EC2 and run docker-compose
         uses: appleboy/ssh-action@master
         env:
           COMPOSE: "/home/ubuntu/compose/docker-compose.yml"
@@ -104,41 +106,30 @@ jobs:
             sudo docker pull menten4859/timo-repo:latest
             sudo docker compose -f $COMPOSE up -d
 
-      # Windows Server 배포 (새로 설정한 Windows Server에 배포)
-      - name: Remove old compose folder (Windows)
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.WINDOWS_HOST }}
-          username: ${{ secrets.WINDOWS_USER }}
-          password: ${{ secrets.WINDOWS_PASSWORD }}
-          tty: false
-          script: |
-            echo "Removing old C:\\compose folder..."
-            rm -rf C:\\compose
-            mkdir -p C:\\compose
-
+      # Upload docker-compose.yml to Windows Server
       - name: Upload docker-compose file to Windows Server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.WINDOWS_HOST }}
           username: ${{ secrets.WINDOWS_USER }}
-          password: ${{ secrets.WINDOWS_PASSWORD }}
+          password: ${{ secrets.WINDOWS_PASSWORD }}  # Windows 인증서 또는 비밀번호 사용
           source: "./docker-compose.yml"
-          target: "C:\\compose"
+          target: "C://my_project/docker-compose.yml"
           overwrite: true
 
-      - name: Connect to Windows Server and run docker (Windows)
+      # Run docker-compose on Windows Server
+      - name: Connect to Windows Server and run docker-compose
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.WINDOWS_HOST }}
           username: ${{ secrets.WINDOWS_USER }}
           password: ${{ secrets.WINDOWS_PASSWORD }}
-          port: 22
-          tty: false
           script: |
-            echo "Running docker commands on Windows Server..."
-            docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-            docker compose -f C:\\compose\\docker-compose.yml down --rmi all
+            echo "Stopping existing containers..."
+            cd C://my_project
+            docker-compose down --rmi all
             sleep 5
+            echo "Pulling new image and starting containers..."
             docker pull menten4859/timo-repo:latest
-            docker compose -f C:\\compose\\docker-compose.yml up -d
+            docker-compose up -d
+
