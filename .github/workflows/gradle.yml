@@ -20,7 +20,7 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-      
+
       - name: Make application.properties
         run: touch ./src/main/resources/application.properties
 
@@ -58,12 +58,13 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-      
+
       - name: Create docker-compose file
         run: |
           echo "${{ secrets.DOCKER_COMPOSE_SPRINGBOOT }}" > ./docker-compose.yml
-      
-      - name: Remove old compose folder
+
+      # EC2 배포 (기존 EC2 서버에 배포)
+      - name: Remove old compose folder (EC2)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -74,8 +75,8 @@ jobs:
             echo "Removing old /home/ubuntu/compose folder..."
             rm -rf /home/ubuntu/compose
             mkdir -p /home/ubuntu/compose
-      
-      - name: Upload docker-compose file
+
+      - name: Upload docker-compose file to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -85,7 +86,7 @@ jobs:
           target: "/home/ubuntu/compose"
           overwrite: true
 
-      - name: Connect to EC2 and run docker
+      - name: Connect to EC2 and run docker (EC2)
         uses: appleboy/ssh-action@master
         env:
           COMPOSE: "/home/ubuntu/compose/docker-compose.yml"
@@ -102,3 +103,42 @@ jobs:
             sleep 5
             sudo docker pull menten4859/timo-repo:latest
             sudo docker compose -f $COMPOSE up -d
+
+      # Windows Server 배포 (새로 설정한 Windows Server에 배포)
+      - name: Remove old compose folder (Windows)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.WINDOWS_HOST }}
+          username: ${{ secrets.WINDOWS_USER }}
+          password: ${{ secrets.WINDOWS_PASSWORD }}
+          tty: false
+          script: |
+            echo "Removing old C:\\compose folder..."
+            rm -rf C:\\compose
+            mkdir -p C:\\compose
+
+      - name: Upload docker-compose file to Windows Server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.WINDOWS_HOST }}
+          username: ${{ secrets.WINDOWS_USER }}
+          password: ${{ secrets.WINDOWS_PASSWORD }}
+          source: "./docker-compose.yml"
+          target: "C:\\compose"
+          overwrite: true
+
+      - name: Connect to Windows Server and run docker (Windows)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.WINDOWS_HOST }}
+          username: ${{ secrets.WINDOWS_USER }}
+          password: ${{ secrets.WINDOWS_PASSWORD }}
+          port: 22
+          tty: false
+          script: |
+            echo "Running docker commands on Windows Server..."
+            docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+            docker compose -f C:\\compose\\docker-compose.yml down --rmi all
+            sleep 5
+            docker pull menten4859/timo-repo:latest
+            docker compose -f C:\\compose\\docker-compose.yml up -d
