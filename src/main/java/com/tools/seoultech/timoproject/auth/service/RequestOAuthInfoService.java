@@ -4,14 +4,16 @@ import com.tools.seoultech.timoproject.auth.client.OAuthApiClient;
 import com.tools.seoultech.timoproject.auth.dto.OAuthInfoResponse;
 import com.tools.seoultech.timoproject.auth.dto.OAuthLoginParams;
 import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Component
+@Service
+@Slf4j
 public class RequestOAuthInfoService {
 
     private final Map<OAuthProvider, OAuthApiClient> clients;
