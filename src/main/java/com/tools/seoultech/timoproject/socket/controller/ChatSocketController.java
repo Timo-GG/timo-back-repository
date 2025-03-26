@@ -4,10 +4,10 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.tools.seoultech.timoproject.chat.domain.ChatRoomMember;
 import com.tools.seoultech.timoproject.chat.dto.ChatMessageDTO;
+import com.tools.seoultech.timoproject.chat.dto.ChatSocketDTO;
 import com.tools.seoultech.timoproject.chat.dto.LeaveRoomRequest;
 import com.tools.seoultech.timoproject.chat.dto.ReadMessageRequest;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomMemberRepository;
-import com.tools.seoultech.timoproject.chat.repository.ChatRoomRepository;
 import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.global.annotation.SocketController;
 import com.tools.seoultech.timoproject.global.annotation.SocketMapping;
@@ -21,32 +21,38 @@ public class ChatSocketController {
 
     private final ChatService chatService;
     private final ChatRoomMemberRepository chatRoomMemberRepository;
-    private final ChatRoomRepository chatRoomRepository;
 
     @SocketMapping(endpoint = "send_message", requestCls = ChatMessageDTO.class)
     public void handleSendMessage(SocketIOClient senderClient, SocketIOServer server,
                                   ChatMessageDTO data) {
         Long senderId = senderClient.get("memberId"); // 서버 세션에서 memberId 조회
         Long roomId = data.roomId();
-        String roomName = "chat_"+roomId;
+        String roomName = "chat_" + roomId;
 
-        // 1) 클라이언트가 보낸 DTO를 기반으로 새 메시지 DTO 생성 (id는 아직 없음)
+        // 클라이언트가 보낸 DTO를 기반으로 새 메시지 DTO 생성
         ChatMessageDTO chatMessage = ChatMessageDTO.builder()
                 .roomId(roomId)
                 .senderId(senderId)
                 .content(data.content())
                 .build();
 
-        // 2) DB 저장 → DB에서 생성된 PK를 포함한 DTO를 반환
+        // DB 저장 후, 생성된 메시지 DTO 반환
         ChatMessageDTO savedChatMessage = chatService.saveMessage(chatMessage);
 
-        // 3) 같은 room에 접속한 클라이언트들에게 메시지 전송
-        for (SocketIOClient client : senderClient.getNamespace().getRoomOperations(roomName).getClients()) {
+        // 공통 DTO에 필요한 필드들을 세팅하여 메시지 이벤트 생성
+        ChatSocketDTO<ChatMessageDTO> eventDTO = ChatSocketDTO.<ChatMessageDTO>builder()
+                .eventType("receive_message")
+                .roomId(roomId)
+                .opponentId(senderId)
+                .payload(savedChatMessage)
+                .build();
+
+        // 같은 방에 접속한 클라이언트들에게 메시지 전송 (보낸 클라이언트 제외)
+        senderClient.getNamespace().getRoomOperations(roomName).getClients().forEach(client -> {
             if (!client.getSessionId().equals(senderClient.getSessionId())) {
-                // DB에서 PK까지 세팅된 savedChatMessage를 전송
-                client.sendEvent("receive_message", savedChatMessage);
+                client.sendEvent("receive_message", eventDTO);
             }
-        }
+        });
     }
 
     @SocketMapping(endpoint = "read_message", requestCls = ReadMessageRequest.class)
@@ -61,7 +67,6 @@ public class ChatSocketController {
         chatRoomMember.resetUnreadCount();
         chatRoomMember.updateLastReadMessageId(request.messageId());
         chatRoomMemberRepository.save(chatRoomMember);
-
     }
 
     @SocketMapping(endpoint = "leave_room", requestCls = LeaveRoomRequest.class)
@@ -69,22 +74,28 @@ public class ChatSocketController {
                                 SocketIOServer server,
                                 LeaveRoomRequest request) {
         Long memberId = client.get("memberId");
-        String roomName = "chat_"+request.roomId();
+        Long roomId = request.roomId();
+        String roomName = "chat_" + roomId;
 
         log.info("[leave_room] memberId={}, roomName={}", memberId, roomName);
 
-        // 1) 소켓에서 방 제거
+        // 1) 소켓 세션에서 방 제거
         client.leaveRoom(roomName);
 
-        // 2) DB에서 ChatRoomMember 삭제 (또는 상태 변경)
-        chatService.leaveRoom(memberId, request.roomId());
+        // 2) DB에서 ChatRoomMember 삭제 또는 상태 변경
+        chatService.leaveRoom(memberId, roomId);
 
-        // 3) (옵션) 다른 사용자에게 시스템 메시지 브로드캐스트
-        String leaveMsg = "User " + memberId + " left the room: " + roomName;
-        server.getRoomOperations(roomName).sendEvent("system_message", leaveMsg);
+        // 3) 시스템 메시지를 위한 공통 DTO 생성
+        ChatSocketDTO<String> systemEventDTO = ChatSocketDTO.<String>builder()
+                .eventType("leave")
+                .roomId(roomId)
+                .opponentId(memberId)
+                .payload("Member " + memberId + " left the room: " + roomName)
+                .build();
+
+        // 같은 방에 접속 중인 다른 클라이언트들에게 시스템 메시지 전송
+        server.getRoomOperations(roomName).sendEvent("leave", systemEventDTO);
 
         log.info("[leave_room] {}번 회원이 {} 방에서 나갔습니다.", memberId, roomName);
     }
-
-
 }
