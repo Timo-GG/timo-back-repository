@@ -1,5 +1,6 @@
-package com.tools.seoultech.timoproject.admin;
+package com.tools.seoultech.timoproject.global.interceptor;
 
+import com.tools.seoultech.timoproject.admin.LoginRequired;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
