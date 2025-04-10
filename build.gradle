@@ -25,6 +25,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven{url 'https://jitpack.io'}
 }
 
 dependencies {
@@ -99,9 +100,11 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'io.micrometer:micrometer-core'
 
+    //SpringDocs
+    implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
 
-
-
+    //UnivCert
+    implementation 'com.github.in-seo:univcert:master-SNAPSHOT'
 }
 
 tasks.named('test') {
