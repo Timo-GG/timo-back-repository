@@ -99,7 +99,8 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'io.micrometer:micrometer-core'
 
-
+    // SpringDoc
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 
 
 }
@@ -107,3 +108,4 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
