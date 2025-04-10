@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.auth.univ;
 
 import com.tools.seoultech.timoproject.global.APIErrorResponse;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
+import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,13 @@ import java.io.IOException;
 public class UnivApiController {
     private final UnivApiFacade univApiFacade;
 
+    @PostMapping("/checkUniv")
+    public ResponseEntity<APIErrorResponse> checkUniv(@Valid @RequestBody UnivRequestDTO univRequestDto) throws Exception {
+        univApiFacade.checkUniv(univRequestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(APIErrorResponse.of(true, ErrorCode.OK));
+    }
     @PostMapping("/request")
     public ResponseEntity<APIErrorResponse> certify(@Valid @RequestBody UnivRequestDTO univRequestDto) throws Exception {
         univApiFacade.certify(univRequestDto);
@@ -30,6 +38,23 @@ public class UnivApiController {
                 .status(HttpStatus.OK)
                 .body(APIErrorResponse.of(true, ErrorCode.OK));
     }
+    @PostMapping("/getVerifiedUser")
+    public ResponseEntity<APIDataResponse> getVerifiedUser() throws Exception {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        APIDataResponse.of(univApiFacade.getVerifiedUserList())
+                );
+    }
+    @PostMapping("/checkStatus")
+    public ResponseEntity<APIDataResponse> checkStatus(@RequestBody UnivRequestDTO univRequestDto) throws Exception {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        APIDataResponse.of(univApiFacade.checkStatus(univRequestDto))
+                );
+    }
+
     @ExceptionHandler
     public ResponseEntity<APIErrorResponse> handleException(IOException e) {
         return ResponseEntity
