@@ -38,6 +38,8 @@ public class UnivApiController {
                 .status(HttpStatus.OK)
                 .body(APIErrorResponse.of(true, ErrorCode.OK));
     }
+
+    @ExceptionHandler
     @PostMapping("/getVerifiedUser")
     public ResponseEntity<APIDataResponse> getVerifiedUser() throws Exception {
         return ResponseEntity

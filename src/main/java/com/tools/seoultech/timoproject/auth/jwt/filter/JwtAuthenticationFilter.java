@@ -55,7 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/actuator/**"),
             new AntPathRequestMatcher("/v3/api-docs/**"),
             new AntPathRequestMatcher("/swagger-ui/**"),
-            new AntPathRequestMatcher("/swagger-ui.html")
+            new AntPathRequestMatcher("/swagger-ui.html"),
+            new AntPathRequestMatcher("/api/v1/univ/**")
 
     );
 

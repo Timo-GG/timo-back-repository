@@ -17,6 +17,7 @@ public class UnivApiFacadeImpl implements UnivApiFacade {
 
     @Override
     public void certify(UnivRequestDTO requestDto) throws IOException {
+        univService.checkUniv(requestDto.univName());
         univService.certifyUniv(requestDto);
     }
 
@@ -34,4 +35,5 @@ public class UnivApiFacadeImpl implements UnivApiFacade {
     public Object checkStatus(UnivRequestDTO requestDto) throws Exception {
         return univService.checkStatus(requestDto);
     }
+
 }
