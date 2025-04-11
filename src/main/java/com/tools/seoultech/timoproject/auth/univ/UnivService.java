@@ -18,7 +18,7 @@ public class UnivService {
 
      public void checkUniv(String univName) throws IOException{
           Map<String, Object> response = UnivCert.check(univName);
-          if(response.get("success") == "false"){
+          if(response.get("success").toString().equals("false")){
                throw new IOException(response.get("message").toString());
           }
           System.err.println(response.toString());
@@ -26,7 +26,7 @@ public class UnivService {
 
      public void certifyUniv(UnivRequestDTO requestDto) throws IOException {
           Map<String, Object> response = UnivCert.certify(api_key, requestDto.univEmail(), requestDto.univName(), true);
-          if(response.get("success") == "false"){
+          if(response.get("success").toString().equals("false")){
                throw new IOException(response.get("message").toString());
           }
           System.err.println(response.toString());
@@ -37,14 +37,14 @@ public class UnivService {
      }
      public Object checkStatus(UnivRequestDTO requestDto) throws IOException {
           Map<String, Object> response = UnivCert.status(api_key, requestDto.univEmail());
-          if(response.get("success") == "false"){
+          if(response.get("success").toString().equals("false")){
                throw new IOException(response.get("message").toString());
           }
           return response;
      }
      public Object getVerifiedUserList() throws IOException {
           Map<String, Object> response = UnivCert.list(api_key);
-          if(response.get("success") == "false"){
+          if(response.get("success").toString().equals("false")){
                throw new IOException(response.get("message").toString());
           }
           return response;
