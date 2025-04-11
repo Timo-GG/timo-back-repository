@@ -55,7 +55,7 @@ public class UnivApiController {
                 );
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(value = {IOException.class})
     public ResponseEntity<APIErrorResponse> handleException(IOException e) {
         return ResponseEntity
                 .status(HttpStatus.OK)
