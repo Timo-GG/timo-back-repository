@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class DuoSearchBoard extends BaseSearchBoard{
     @Builder
-    public DuoSearchBoard(BaseUserEntity baseUserEntity, String memmo) {
-        super(baseUserEntity, memmo);
+    public DuoSearchBoard(BaseUserEntity baseUserEntity, String memo) {
+        super(baseUserEntity, memo);
     }
 }
