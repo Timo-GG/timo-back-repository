@@ -21,7 +21,7 @@ public class BaseUserEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="member_id")
     private MemberAccount memberAccount;
 
