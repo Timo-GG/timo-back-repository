@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.auth.service;
 
 import com.tools.seoultech.timoproject.auth.domain.CustomUserDetails;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
+import com.tools.seoultech.timoproject.version2.memberAccount.MemberAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final MemberRepository memberRepository;
+    private final MemberAccountRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

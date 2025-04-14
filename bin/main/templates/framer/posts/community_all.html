@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="setContent(content)">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bulletin Board</title>
+
+    <link type="text/css" href="../static/posts/community_all.css" rel="stylesheet" />
+    <link type="text/css" href="../static/posts/community_writed.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="#">
+  </head>
+
+  <body>
+    <div class="left-body"></div>
+    <div class="right-body"></div>
+    <nav>
+      <div class="head">
+        <div class="timo">
+          <a href="#!"><img src="../static/posts/timo.png" alt="" /></a>
+        </div>
+        </div>
+        <div class="menu">
+          <a href="#!">홈</a>
+          <a href="#!">챔피언 분석</a>
+          <a href="#!">챔피언 티어</a>
+          <a href="#!">파티찾기</a>
+          <a href="#!">커뮤니티</a>
+        </div>
+        <div class="loginmenu">
+          <a href="#"><img src="../static/posts/login.png" alt="" /></a>
+        </div>
+      </div>
+    </nav>
+    <main class="main">
+        <th:block th:replace="${content}"></th:block>
+    </main>
+
+    <aside class="side">
+      <div class="side_login">
+        <p>로그인 후 게시글 쓰기</p>
+        <button type="button" onclick="goLogin()">로그인</button>
+      </div>
+      <div>
+        <div class="side_bar">
+          <form action="">
+            <input type="text" placeholder="게시판 검색" />
+          </form>
+          <ul class="information">
+            <li class="first">
+              <a href="#!">정보 게시판</a><a href="#!" class="angle">></a>
+            </li>
+            <li><a href="#!">패치 노트</a></li>
+            <li><a href="#!">빌드 연구</a></li>
+            <li><a href="#!">팁과 공략</a></li>
+            <li><a href="#!">질문과 답변</a></li>
+          </ul>
+          <ul class="information">
+            <li class="first">
+              <a href="#!">자유 게시판</a><a href="#!" class="angle">></a>
+            </li>
+            <li><a href="#!">잡담</a></li>
+            <li><a href="#!">유머</a></li>
+            <li><a href="#!">고민</a></li>
+            <li><a href="#!">전적 인증</a></li>
+          </ul>
+          <ul class="information">
+            <li class="first">
+              <a href="">창작 게시판</a><a href="" class="angle">></a>
+            </li>
+            <li><a href="#!">팬아트</a></li>
+            <li><a href="#!">만화</a></li>
+            <li><a href="#!">하이라이트</a></li>
+            <li><a href="#!">영상</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </body>
+</th:block>
+</html>
+
+

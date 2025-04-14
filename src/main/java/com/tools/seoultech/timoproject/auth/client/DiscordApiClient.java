@@ -60,8 +60,10 @@ public class DiscordApiClient implements OAuthApiClient {
         HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
         DiscordTokens response = restTemplate.postForObject(url, request, DiscordTokens.class);
 
+        // ✅ 여기도 로그
+        log.info("📌 Discord AccessToken 응답: {}", response);
+
         assert response != null;
-        log.info("resourceToken : " + response.getAccessToken());
         return response.getAccessToken();
     }
 
@@ -76,13 +78,24 @@ public class DiscordApiClient implements OAuthApiClient {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
-        return restTemplate.exchange(
+        DiscordInfoResponse response = restTemplate.exchange(
                 url,
-                HttpMethod.GET, // POST -> GET으로 변경
+                HttpMethod.GET,
                 request,
                 DiscordInfoResponse.class
         ).getBody();
+
+        // ✅ 여기에 로그 추가!
+        log.info("📌 Discord 유저 정보: {}", response);
+        if (response != null) {
+            log.info("✅ Discord 이메일: {}", response.getEmail());
+        } else {
+            log.warn("❗ Discord 사용자 정보가 null입니다.");
+        }
+
+        return response;
     }
+
 
     /** 디스코드 전체 토큰 요청 API */
     public DiscordTokens requestToken(OAuthLoginParams params) {

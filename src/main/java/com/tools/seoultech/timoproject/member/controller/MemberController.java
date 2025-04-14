@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.member.controller;
 
+import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
@@ -9,7 +10,11 @@ import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.facade.MemberFacade;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
+import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.version2.memberAccount.dto.MemberAccountDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +22,9 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/v1/members")
+@Tag(name = "Member", description = "Member API")
 public class MemberController {
 
     private final MemberRepository memberRepository;
@@ -29,55 +36,67 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<APIDataResponse<MemberInfoResponse>> getMember(@CurrentMemberId Long memberId) {
+    public ResponseEntity<APIDataResponse<MemberAccountDto>> getMember(@CurrentMemberId Long memberId) {
 
-        MemberInfoResponse memberInfo = memberFacade.getMemberInfo(memberId);
+        MemberAccountDto memberInfo = memberFacade.getMemberInfo(memberId);
 
         return ResponseEntity.ok(APIDataResponse.of(memberInfo));
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<APIDataResponse<MemberProfileDto>> findById(@PathVariable Long memberId) {
-        MemberProfileDto memberProfile = memberFacade.getMemberProfile(memberId);
+    public ResponseEntity<APIDataResponse<MemberAccountDto>> findById(@PathVariable Long memberId) {
+        MemberAccountDto memberProfile = memberFacade.getMemberProfile(memberId);
         return ResponseEntity.ok(APIDataResponse.of(memberProfile));
     }
 
     @PutMapping("/me/info")
-    public ResponseEntity<APIDataResponse<MemberInfoResponse>> updateAdditionalInfo(
+    public ResponseEntity<APIDataResponse<MemberAccountDto>> updateAdditionalInfo(
             @CurrentMemberId Long memberId,
             @RequestBody UpdateMemberInfoRequest request
     ) {
-        MemberInfoResponse updatedInfo = memberFacade.updateMemberInfo(memberId, request);
+        MemberAccountDto updatedInfo = memberFacade.updateAccountInfo(memberId, request);
 
         return ResponseEntity.ok(APIDataResponse.of(updatedInfo));
     }
 
-    @PutMapping("/me/profile-image")
-    public ResponseEntity<APIDataResponse<Integer>> updateProfileImageId(
-            @CurrentMemberId Long memberId,
-            @RequestBody Integer imageId
-    ) {
-        Integer updatedImageId = memberFacade.updateProfileImageId(memberId, imageId);
-
-        return ResponseEntity.ok(APIDataResponse.of(updatedImageId));
-    }
-
-    @GetMapping("/player/verify")
+    @PostMapping("/player/verify")
     public ResponseEntity<APIDataResponse<?>> verifyPlayer(
-            AccountDto.Request request
+            @CurrentMemberId Long memberId,
+            @RequestBody AccountDto.Request request
+
     ) {
-        AccountDto.Response response = memberFacade.verifyPlayer(request);
-
-        return ResponseEntity.ok(APIDataResponse.of(response));
+        MemberAccountDto dto = memberFacade.verifyPlayer(memberId, request);
+        return ResponseEntity.ok(APIDataResponse.of(dto));
     }
 
-    @GetMapping("/nickname/check")
-    public ResponseEntity<APIDataResponse<?>> checkNickname(@RequestParam String nickname) {
-        if(memberFacade.checkNickname(nickname)) {
-            return ResponseEntity.badRequest().body(APIDataResponse.of("사용 중인 닉네임입니다."));
-        } else {
-            return ResponseEntity.ok(APIDataResponse.of("사용 가능한 닉네임입니다."));
-        }
+    @PutMapping("/username")
+    public ResponseEntity<APIDataResponse<?>> updateUsername(
+            @CurrentMemberId Long memberId,
+            @RequestBody String username
+    ) {
+        MemberAccountDto dto = memberFacade.updateUsername(memberId, username);
+
+        return ResponseEntity.ok(APIDataResponse.of(dto));
     }
+
+    @PostMapping("/riot/reset")
+    public ResponseEntity<APIDataResponse<?>> resetRiotAccount(
+            @CurrentMemberId Long memberId
+    ) {
+        MemberAccountDto dto = memberFacade.resetRiotAccount(memberId);
+
+        return ResponseEntity.ok(APIDataResponse.of(dto));
+    }
+
+    @PutMapping("/univ")
+    public ResponseEntity<APIDataResponse<?>> updateUniv(
+            @CurrentMemberId Long memberId,
+            @RequestBody UnivRequestDTO univ
+            ) {
+        MemberAccountDto dto = memberFacade.updateUniv(memberId, univ);
+
+        return ResponseEntity.ok(APIDataResponse.of(dto));
+    }
+
 
 }

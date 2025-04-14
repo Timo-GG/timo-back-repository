@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.member.dto;
 
 
-public record UpdateMemberInfoRequest(String nickname, String playerName, String playerTag) {
+public record UpdateMemberInfoRequest(String username, String puuid, String playerName, String playerTag,
+                                      String univName, String univEmail) {
 }

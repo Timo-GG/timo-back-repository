@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class Post extends BaseEntity {
     private String content;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "post")
+    @Builder.Default
     private List<Image> images = new ArrayList<>();
 
     // 게시글 추가 정보: 카테고리, 조회 수, 좋아요 수

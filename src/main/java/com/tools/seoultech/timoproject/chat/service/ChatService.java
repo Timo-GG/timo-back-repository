@@ -228,7 +228,7 @@ public class ChatService implements DisposableBean {
     @Transactional(readOnly = true)
     public List<ChatMessageDTO> getMessages(Long roomId, int page, int size) {
         // PageRequest로 페이징, 오래된 순 정렬
-        Pageable pageable = PageRequest.of(page, size, Sort.by("regDate").ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "regDate")); // 최신순
         Page<Message> messagePage = messageRepository.findByChatRoom_Id(roomId, pageable);
 
         // Message -> ChatMessageDTO 변환
@@ -287,11 +287,13 @@ public class ChatService implements DisposableBean {
     }
 
 
-    public ChatRoomResponse getChatRoom(Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
+    @Transactional(readOnly = true)
+    public List<ChatRoomResponse> getChatRoomsByMemberId(Long memberId) {
+        List<ChatRoomMember> memberships = chatRoomMemberRepository.findByMemberIdAndIsLeftFalse(memberId);
 
-        return ChatRoomResponse.of(chatRoom);
+        return memberships.stream()
+                .map(member -> ChatRoomResponse.of(member.getChatRoom()))
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -303,7 +305,8 @@ public class ChatService implements DisposableBean {
         ChatRoomMember existing = chatRoomMemberRepository.findByChatRoomIdAndMemberId(roomId, memberId)
                 .orElse(null);
         if (existing != null) {
-            throw new IllegalArgumentException("이미 참여한 방입니다.");
+            log.info("🔁 이미 참여한 채팅방입니다. roomId={}, memberId={}", roomId, memberId);
+            return;
         }
 
         Member member = memberRepository.findById(memberId).orElseThrow();
@@ -385,5 +388,24 @@ public class ChatService implements DisposableBean {
                 .filter(chatRoom -> !chatRoom.isTerminated())
                 .map(ChatRoom::getId)
                 .orElse(null);
+    }
+
+    @Transactional
+    public ChatRoomResponse createOrGetChatRoom(Long myId, Long opponentId) {
+        Optional<ChatRoom> existing = chatRoomRepository.findRoomByMembers(myId, opponentId);
+        if (existing.isPresent()) {
+            return ChatRoomResponse.of(existing.get());
+        }
+
+        ChatRoom room = ChatRoom.createChatRoom(myId, opponentId);
+        chatRoomRepository.save(room);
+
+        Member me = memberRepository.findById(myId).orElseThrow();
+        Member opponent = memberRepository.findById(opponentId).orElseThrow();
+
+        chatRoomMemberRepository.save(ChatRoomMember.createChatRoomMember(room, me));
+        chatRoomMemberRepository.save(ChatRoomMember.createChatRoomMember(room, opponent));
+
+        return ChatRoomResponse.of(room);
     }
 }
