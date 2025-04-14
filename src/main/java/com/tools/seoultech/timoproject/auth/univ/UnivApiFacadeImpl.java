@@ -25,7 +25,6 @@ public class UnivApiFacadeImpl implements UnivApiFacade {
     public void verify(UnivRequestDTO requestDto, Integer code) throws IOException {
         univService.verifyRequest(requestDto, code);
     }
-
     @Override
     public Object getVerifiedUserList() throws Exception {
         return univService.getVerifiedUserList();
@@ -35,5 +34,4 @@ public class UnivApiFacadeImpl implements UnivApiFacade {
     public Object checkStatus(UnivRequestDTO requestDto) throws Exception {
         return univService.checkStatus(requestDto);
     }
-
 }

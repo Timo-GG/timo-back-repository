@@ -19,6 +19,13 @@ public class UnivService {
      public void checkUniv(String univName) throws IOException{
           Map<String, Object> response = UnivCert.check(univName);
           if(response.get("success").toString().equals("false")){
+public class UnivService {
+     @Value("${univ_api_key}")
+     private String api_key;
+
+     public void checkUniv(String univName) throws IOException{
+          Map<String, Object> response = UnivCert.check(univName);
+          if(response.get("success") == "false"){
                throw new IOException(response.get("message").toString());
           }
           System.err.println(response.toString());
@@ -26,7 +33,7 @@ public class UnivService {
 
      public void certifyUniv(UnivRequestDTO requestDto) throws IOException {
           Map<String, Object> response = UnivCert.certify(api_key, requestDto.univEmail(), requestDto.univName(), true);
-          if(response.get("success").toString().equals("false")){
+          if(response.get("success") == "false"){
                throw new IOException(response.get("message").toString());
           }
           System.err.println(response.toString());
@@ -49,4 +56,5 @@ public class UnivService {
           }
           return response;
      }
+
 }
