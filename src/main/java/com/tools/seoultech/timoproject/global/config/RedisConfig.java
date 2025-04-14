@@ -1,5 +1,7 @@
 package com.tools.seoultech.timoproject.global.config;
 
+import com.tools.seoultech.timoproject.version2.matching.board.entity.Redis_BaseSearchBoard;
+import com.tools.seoultech.timoproject.version2.matching.user.entity.Redis_BaseUserEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +40,24 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, Redis_BaseSearchBoard> baseSearchBoardRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Redis_BaseSearchBoard> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // JSON 직렬화
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, Redis_BaseUserEntity> baseUserEntityRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Redis_BaseUserEntity> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // JSON 직렬화
+        return template;
     }
 
     /** ZSetOperations Bean 추가 */

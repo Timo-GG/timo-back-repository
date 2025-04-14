@@ -16,7 +16,6 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorValue("Duo-Type")
 @PrimaryKeyJoinColumn(name = "user_id")
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

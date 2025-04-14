@@ -23,6 +23,7 @@ public class BaseSearchBoard extends BaseEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
     private BaseUserEntity baseUser;
 
     private String memo;
