@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.post.domain.dto.PostDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
