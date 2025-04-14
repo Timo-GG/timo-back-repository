@@ -100,13 +100,15 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'io.micrometer:micrometer-core'
 
-    //SpringDocs
-    implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
+    // SpringDoc
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 
     //UnivCert
     implementation 'com.github.in-seo:univcert:master-SNAPSHOT'
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+

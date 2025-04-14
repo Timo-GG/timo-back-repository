@@ -86,6 +86,7 @@ public class SecurityConfig {
                         .requestMatchers(whitelistProperties.getUrls().toArray(new String[0])).permitAll()
                         .requestMatchers(HttpMethod.GET, whitelistProperties.getPublicUrls().toArray(new String[0])).permitAll()
                         .requestMatchers(new RegexRequestMatcher("^/api/v1/members/\\d+$", "GET")).permitAll()
+                        .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         // API 인증 필요 URL 설정
                         .requestMatchers("/api/v1/posts/**", "/api/v1/comments/**").authenticated()
                         .requestMatchers("/api/v1/**", "/api/v1/members/**").authenticated()
