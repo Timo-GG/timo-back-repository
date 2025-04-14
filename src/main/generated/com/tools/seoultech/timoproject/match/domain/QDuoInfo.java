@@ -19,9 +19,9 @@ public class QDuoInfo extends EntityPathBase<DuoInfo> {
 
     public static final QDuoInfo duoInfo = new QDuoInfo("duoInfo");
 
-    public final EnumPath<PlayPosition> duoPlayPosition = createEnum("duoPlayPosition", PlayPosition.class);
+    public final EnumPath<com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayPosition> duoPlayPosition = createEnum("duoPlayPosition", com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayPosition.class);
 
-    public final EnumPath<PlayStyle> duoPlayStyle = createEnum("duoPlayStyle", PlayStyle.class);
+    public final EnumPath<com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayStyle> duoPlayStyle = createEnum("duoPlayStyle", com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayStyle.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

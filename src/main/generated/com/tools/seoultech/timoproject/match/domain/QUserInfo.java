@@ -25,13 +25,13 @@ public class QUserInfo extends EntityPathBase<UserInfo> {
 
     public final StringPath introduce = createString("introduce");
 
-    public final EnumPath<PlayCondition> playCondition = createEnum("playCondition", PlayCondition.class);
+    public final EnumPath<com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayCondition> playCondition = createEnum("playCondition", com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayCondition.class);
 
-    public final EnumPath<PlayPosition> playPosition = createEnum("playPosition", PlayPosition.class);
+    public final EnumPath<com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayPosition> playPosition = createEnum("playPosition", com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayPosition.class);
 
-    public final EnumPath<PlayStyle> playStyle = createEnum("playStyle", PlayStyle.class);
+    public final EnumPath<com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayStyle> playStyle = createEnum("playStyle", com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayStyle.class);
 
-    public final EnumPath<VoiceChat> voiceChat = createEnum("voiceChat", VoiceChat.class);
+    public final EnumPath<com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.VoiceChat> voiceChat = createEnum("voiceChat", com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.VoiceChat.class);
 
     public QUserInfo(String variable) {
         super(UserInfo.class, forVariable(variable));

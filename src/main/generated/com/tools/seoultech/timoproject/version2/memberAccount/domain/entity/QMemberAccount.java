@@ -1,0 +1,56 @@
+package com.tools.seoultech.timoproject.version2.memberAccount.domain.entity;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.processing.Generated;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
+
+
+/**
+ * QMemberAccount is a Querydsl query type for MemberAccount
+ */
+@Generated("com.querydsl.codegen.DefaultEntitySerializer")
+public class QMemberAccount extends EntityPathBase<MemberAccount> {
+
+    private static final long serialVersionUID = -781468589L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
+
+    public static final QMemberAccount memberAccount = new QMemberAccount("memberAccount");
+
+    public final QCertifiedUnivInfo certifiedUnivInfo;
+
+    public final NumberPath<Long> memberId = createNumber("memberId", Long.class);
+
+    public final QRiotAccount riotAccount;
+
+    public final StringPath userName = createString("userName");
+
+    public QMemberAccount(String variable) {
+        this(MemberAccount.class, forVariable(variable), INITS);
+    }
+
+    public QMemberAccount(Path<? extends MemberAccount> path) {
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+    }
+
+    public QMemberAccount(PathMetadata metadata) {
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QMemberAccount(PathMetadata metadata, PathInits inits) {
+        this(MemberAccount.class, metadata, inits);
+    }
+
+    public QMemberAccount(Class<? extends MemberAccount> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.certifiedUnivInfo = inits.isInitialized("certifiedUnivInfo") ? new QCertifiedUnivInfo(forProperty("certifiedUnivInfo")) : null;
+        this.riotAccount = inits.isInitialized("riotAccount") ? new QRiotAccount(forProperty("riotAccount")) : null;
+    }
+
+}
+
