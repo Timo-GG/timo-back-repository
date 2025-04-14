@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.match.domain;
+package com.tools.seoultech.timoproject.version2.matching.user.entity.enumType;
 
 public enum PlayPosition {
     TOP,
