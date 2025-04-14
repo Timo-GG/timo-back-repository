@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("Duo-Type")
 @PrimaryKeyJoinColumn(name = "board_id")
 @Entity
+@Getter
 @NoArgsConstructor
 //@AllArgsConstructor
-@Getter
 public class DuoSearchBoard extends BaseSearchBoard{
     @Builder
     public DuoSearchBoard(BaseUserEntity baseUserEntity, String memo) {

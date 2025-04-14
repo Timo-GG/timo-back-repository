@@ -3,8 +3,14 @@ package com.tools.seoultech.timoproject.version2.matching.user.entity.embeddable
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.RiotAccount;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PartyMemberInfo {
     @Embedded
     private RiotAccount riotAccount;

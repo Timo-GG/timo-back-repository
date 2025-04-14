@@ -17,9 +17,9 @@ import java.util.List;
 @DiscriminatorValue("Colosseum-Type")
 @PrimaryKeyJoinColumn(name = "user_id")
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class ColosseumUserEntity extends BaseUserEntity{
     @ElementCollection
     private List<PartyMemberInfo> partyMemberList;

@@ -13,9 +13,9 @@ import lombok.experimental.SuperBuilder;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class BaseSearchBoard extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -15,5 +15,7 @@ public class MatchingService {
     // TODO:
     //  1. CRUD
     //  2. redis board to myPage
-    // 
+    public void createRedisBoard() {
+        redisBoardTemplate.opsForValue().set("board", null);
+    }
 }

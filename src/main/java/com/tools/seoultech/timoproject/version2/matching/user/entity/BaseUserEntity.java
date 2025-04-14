@@ -12,9 +12,9 @@ import lombok.experimental.SuperBuilder;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class BaseUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

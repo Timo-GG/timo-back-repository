@@ -16,9 +16,9 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorValue("Duo-Type")
 @PrimaryKeyJoinColumn(name = "user_id")
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class DuoUserEntity extends BaseUserEntity {
     @Embedded
     private UserInfo_Ver2 userInfo;

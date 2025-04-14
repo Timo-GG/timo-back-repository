@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("Duo-Type")
 @PrimaryKeyJoinColumn(name = "board_id")
 @Entity
+@Getter
 @NoArgsConstructor
 //@AllArgsConstructor
-@Getter
 public class ColloseumSearchBoard extends BaseSearchBoard{
     @Builder
     public ColloseumSearchBoard(BaseUserEntity baseUserEntity, String memo) {
