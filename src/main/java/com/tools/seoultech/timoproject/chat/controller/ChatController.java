@@ -4,6 +4,8 @@ package com.tools.seoultech.timoproject.chat.controller;
 import com.tools.seoultech.timoproject.chat.domain.ChatRoom;
 import com.tools.seoultech.timoproject.chat.dto.ChatMessageDTO;
 import com.tools.seoultech.timoproject.chat.dto.ChatRoomResponse;
+import com.tools.seoultech.timoproject.chat.dto.CreateChatRoomRequest;
+import com.tools.seoultech.timoproject.chat.dto.JoinRoomRequest;
 import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
@@ -20,8 +22,16 @@ public class ChatController {
     private final ChatService chatService;
 
     @GetMapping("/rooms")
-    public APIDataResponse<ChatRoomResponse> getRoom(@RequestParam Long roomId) {
-        return APIDataResponse.of(chatService.getChatRoom(roomId));
+    public APIDataResponse<List<ChatRoomResponse>> getMyChatRooms(@CurrentMemberId Long memberId) {
+        List<ChatRoomResponse> rooms = chatService.getChatRoomsByMemberId(memberId);
+        return APIDataResponse.of(rooms);
+    }
+    @PostMapping("/rooms")
+    public APIDataResponse<ChatRoomResponse> createOrGetRoom(
+            @CurrentMemberId Long memberId,
+            @RequestBody CreateChatRoomRequest request) {
+        ChatRoomResponse response = chatService.createOrGetChatRoom(memberId, request.opponentId());
+        return APIDataResponse.of(response);
     }
 
     @GetMapping("/rooms/{roomId}/messages")
@@ -52,7 +62,13 @@ public class ChatController {
 
     @PostMapping("/test")
     public APIDataResponse<?> test() {
-        chatService.createChatRoomForMatch("test", 1L, 2L);
+        chatService.createChatRoomForMatch("test", 1L, 11L);
         return APIDataResponse.of("멤버 1, 멤버 2, 채팅방 이름 : test 생성");
+    }
+
+    @PostMapping("/rooms/{roomId}/leave")
+    public APIDataResponse<Void> leaveChatRoom(@PathVariable Long roomId, @CurrentMemberId Long memberId) {
+        chatService.leaveRoom(memberId, roomId);
+        return APIDataResponse.empty();
     }
 }

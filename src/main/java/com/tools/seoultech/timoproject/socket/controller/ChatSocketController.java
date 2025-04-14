@@ -3,10 +3,7 @@ package com.tools.seoultech.timoproject.socket.controller;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.tools.seoultech.timoproject.chat.domain.ChatRoomMember;
-import com.tools.seoultech.timoproject.chat.dto.ChatMessageDTO;
-import com.tools.seoultech.timoproject.chat.dto.ChatSocketDTO;
-import com.tools.seoultech.timoproject.chat.dto.LeaveRoomRequest;
-import com.tools.seoultech.timoproject.chat.dto.ReadMessageRequest;
+import com.tools.seoultech.timoproject.chat.dto.*;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomMemberRepository;
 import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.global.annotation.SocketController;
@@ -83,7 +80,7 @@ public class ChatSocketController {
         client.leaveRoom(roomName);
 
         // 2) DB에서 ChatRoomMember 삭제 또는 상태 변경
-        chatService.leaveRoom(memberId, roomId);
+//        chatService.leaveRoom(memberId, roomId);
 
         // 3) 시스템 메시지를 위한 공통 DTO 생성
         ChatSocketDTO<String> systemEventDTO = ChatSocketDTO.<String>builder()
@@ -97,5 +94,16 @@ public class ChatSocketController {
         server.getRoomOperations(roomName).sendEvent("leave", systemEventDTO);
 
         log.info("[leave_room] {}번 회원이 {} 방에서 나갔습니다.", memberId, roomName);
+    }
+
+    @SocketMapping(endpoint = "join_room", requestCls = JoinRoomRequest.class)
+    public void handleJoinRoom(SocketIOClient client, SocketIOServer server, JoinRoomRequest request) {
+        Long memberId = client.get("memberId");
+        Long roomId = request.roomId();
+        String roomName = "chat_" + roomId;
+
+        client.joinRoom(roomName);
+        chatService.joinRoom(memberId, roomId);
+        log.info("[join_room] memberId={} joined room={}", memberId, roomName);
     }
 }

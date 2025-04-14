@@ -30,21 +30,21 @@ public class AuthController {
 
 
     @PostMapping("/naver")
-    public ResponseEntity<TokenCollection> loginNaver(@RequestBody NaverLoginParams params) {
-        TokenCollection tokens = oAuthLoginService.login(params);
-        return ResponseEntity.ok(tokens);
+    public ResponseEntity<APIDataResponse<LoginResponse>> loginNaver(@RequestBody NaverLoginParams params) {
+        LoginResponse tokens = oAuthLoginService.login(params);
+        return ResponseEntity.ok(APIDataResponse.of(tokens));
     }
 
     @PostMapping("/kakao")
-    public ResponseEntity<TokenCollection> loginKakao(@RequestBody KakaoLoginParams params) {
-        TokenCollection tokens = oAuthLoginService.login(params);
-        return ResponseEntity.ok(tokens);
+    public ResponseEntity<APIDataResponse<LoginResponse>> loginKakao(@RequestBody KakaoLoginParams params) {
+        LoginResponse tokens = oAuthLoginService.login(params);
+        return ResponseEntity.ok(APIDataResponse.of(tokens));
     }
 
     @PostMapping("/discord")
-    public ResponseEntity<TokenCollection> loginDiscord(@RequestBody DiscordLoginParams params) {
-        TokenCollection tokens = oAuthLoginService.login(params);
-        return ResponseEntity.ok(tokens);
+    public ResponseEntity<APIDataResponse<LoginResponse>> loginDiscord(@RequestBody DiscordLoginParams params) {
+        LoginResponse tokens = oAuthLoginService.login(params);
+        return ResponseEntity.ok(APIDataResponse.of(tokens));
     }
 
     @PostMapping("/refresh")

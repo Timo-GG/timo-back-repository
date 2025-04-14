@@ -9,8 +9,8 @@ import lombok.Getter;
 public class AccountDto {
     @Getter
     public static class Request{
-        @NotBlank private final String gameName;
-        @NotBlank private final String tagLine;
+        private final String gameName;
+        private final String tagLine;
 
         @JsonCreator
         public Request(@JsonProperty("gameName") String gameName,
