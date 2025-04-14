@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.member.controller;
 
+import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
@@ -13,6 +14,7 @@ import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.Memb
 import com.tools.seoultech.timoproject.version2.memberAccount.dto.MemberAccountDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/v1/members")
 @Tag(name = "Member", description = "Member API")
 public class MemberController {
@@ -56,22 +59,44 @@ public class MemberController {
         return ResponseEntity.ok(APIDataResponse.of(updatedInfo));
     }
 
-    @GetMapping("/player/verify")
+    @PostMapping("/player/verify")
     public ResponseEntity<APIDataResponse<?>> verifyPlayer(
-            AccountDto.Request request
+            @CurrentMemberId Long memberId,
+            @RequestBody AccountDto.Request request
+
     ) {
-        AccountDto.Response response = memberFacade.verifyPlayer(request);
-
-        return ResponseEntity.ok(APIDataResponse.of(response));
+        MemberAccountDto dto = memberFacade.verifyPlayer(memberId, request);
+        return ResponseEntity.ok(APIDataResponse.of(dto));
     }
 
-    @GetMapping("/nickname/check")
-    public ResponseEntity<APIDataResponse<?>> checkUsername(@RequestParam String username) {
-        if(memberFacade.checkUsername(username)) {
-            return ResponseEntity.badRequest().body(APIDataResponse.of("사용 중인 닉네임입니다."));
-        } else {
-            return ResponseEntity.ok(APIDataResponse.of("사용 가능한 닉네임입니다."));
-        }
+    @PutMapping("/username")
+    public ResponseEntity<APIDataResponse<?>> updateUsername(
+            @CurrentMemberId Long memberId,
+            @RequestBody String username
+    ) {
+        MemberAccountDto dto = memberFacade.updateUsername(memberId, username);
+
+        return ResponseEntity.ok(APIDataResponse.of(dto));
     }
+
+    @PostMapping("/riot/reset")
+    public ResponseEntity<APIDataResponse<?>> resetRiotAccount(
+            @CurrentMemberId Long memberId
+    ) {
+        MemberAccountDto dto = memberFacade.resetRiotAccount(memberId);
+
+        return ResponseEntity.ok(APIDataResponse.of(dto));
+    }
+
+    @PutMapping("/univ")
+    public ResponseEntity<APIDataResponse<?>> updateUniv(
+            @CurrentMemberId Long memberId,
+            @RequestBody UnivRequestDTO univ
+            ) {
+        MemberAccountDto dto = memberFacade.updateUniv(memberId, univ);
+
+        return ResponseEntity.ok(APIDataResponse.of(dto));
+    }
+
 
 }

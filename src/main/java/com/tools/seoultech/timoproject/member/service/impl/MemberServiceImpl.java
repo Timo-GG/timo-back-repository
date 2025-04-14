@@ -1,5 +1,8 @@
     package com.tools.seoultech.timoproject.member.service.impl;
 
+    import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
+    import com.tools.seoultech.timoproject.global.constant.ErrorCode;
+    import com.tools.seoultech.timoproject.global.exception.BusinessException;
     import com.tools.seoultech.timoproject.member.domain.Member;
     import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
     import com.tools.seoultech.timoproject.member.repository.MemberRepository;
@@ -55,6 +58,45 @@
             member.updateUnivAccount(request.univName(), request.univEmail());
 
             // 3) 저장 (영속성 컨텍스트에서 변경 감지로 자동 반영)
+            return member;
+        }
+
+        @Override
+        @Transactional
+        public MemberAccount updateRiotAccount(Long memberId, String puuid, String playerName, String playerTag) {
+            MemberAccount member = getById(memberId);
+            // 중복된 소환사 puuid 존재 여부 체크
+            if (puuid != null && memberAccountRepository.existsByRiotAccount_PuuidAndMemberIdNot(puuid, memberId)) {
+                throw new BusinessException(ErrorCode.ALREADY_USED_RIOT_ACCOUNT);
+            }
+            member.updateRiotAccount(puuid, playerName, playerTag);
+
+            return member;
+        }
+
+        @Transactional
+        @Override
+        public MemberAccount updateUsername(Long memberId, String username) {
+            MemberAccount member = getById(memberId);
+            if(checkUsername(username)) {
+                throw new BusinessException(ErrorCode.ALREADY_USED_USERNAME);
+            }
+            member.updateUsername(username);
+
+            return member;
+        }
+
+        @Transactional
+        @Override
+        public MemberAccount updateUniv(Long memberId, UnivRequestDTO univ) {
+            MemberAccount member = getById(memberId);
+
+            if (univ.univEmail() != null && memberAccountRepository.existsByCertifiedUnivInfo_UnivCertifiedEmail(univ.univEmail())) {
+                throw new BusinessException(ErrorCode.ALREADY_USED_UNIV_ACCOUNT);
+            }
+
+            member.updateUnivAccount(univ.univName(), univ.univEmail());
+
             return member;
         }
     }

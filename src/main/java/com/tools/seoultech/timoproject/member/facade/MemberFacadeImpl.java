@@ -1,5 +1,7 @@
 package com.tools.seoultech.timoproject.member.facade;
 
+import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
+import com.tools.seoultech.timoproject.global.exception.BusinessException;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.service.MemberService;
@@ -25,12 +27,19 @@ public class MemberFacadeImpl implements MemberFacade {
     }
 
     @Override
-    public AccountDto.Response verifyPlayer(AccountDto.Request request) {
+    public MemberAccountDto verifyPlayer(Long memberId, AccountDto.Request request) {
         try {
-            return riotService.findUserAccount(request);
+
+            AccountDto.Response response = riotService.findUserAccount(request);
+
+            MemberAccount memberAccount = memberService.updateRiotAccount(memberId, response.getPuuid(), response.getGameName(), response.getTagLine());
+            return MemberAccountDto.from(memberAccount);
+
+
+        } catch (BusinessException e) {
+            throw e;
         } catch (Exception e) {
-            log.error("Failed to verify player: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to verify player", e);
+            throw new RuntimeException("Failed to verify player", e); // ❗예상 못한 예외만 래핑
         }
     }
 
@@ -51,5 +60,24 @@ public class MemberFacadeImpl implements MemberFacade {
         MemberAccount member = memberService.getById(memberId);
         return MemberAccountDto.from(member);
     }
+
+    @Override
+    public MemberAccountDto updateUsername(Long memberId, String username) {
+        MemberAccount memberAccount = memberService.updateUsername(memberId, username);
+        return MemberAccountDto.from(memberAccount);
+    }
+
+    @Override
+    public MemberAccountDto updateUniv(Long memberId, UnivRequestDTO univ) {
+        MemberAccount memberAccount = memberService.updateUniv(memberId, univ);
+        return MemberAccountDto.from(memberAccount);
+    }
+
+    @Override
+    public MemberAccountDto resetRiotAccount(Long memberId) {
+        MemberAccount memberAccount = memberService.updateRiotAccount(memberId, null, null, null);
+        return MemberAccountDto.from(memberAccount);
+    }
+
 }
 

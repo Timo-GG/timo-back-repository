@@ -10,4 +10,11 @@ public interface MemberAccountRepository extends JpaRepository<MemberAccount, Lo
     boolean existsByUsername(String username);
 
     Optional<MemberAccount> findByEmail(String email);
+
+    boolean existsByRiotAccount_Puuid(String puuid);
+
+    boolean existsByCertifiedUnivInfo_UnivCertifiedEmail(String email);
+
+    boolean existsByRiotAccount_PuuidAndMemberIdNot(String puuid, Long memberId);
+
 }

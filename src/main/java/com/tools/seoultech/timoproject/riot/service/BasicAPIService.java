@@ -49,24 +49,22 @@ public class BasicAPIService {
         String encodedGameName = encodeUrlParameter(dto.getGameName());
         String encodedTagLine = encodeUrlParameter(dto.getTagLine());
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/")
-                .append(encodedGameName).append("/")
-                .append(encodedTagLine).append("/")
-                .append("?api_key=").append(api_key);
+        String url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/"
+                + encodedGameName + "/" + encodedTagLine;
 
-        System.out.println("API URL: " + sb);
+        log.info("API URL: " + url);
 
         request = HttpRequest.newBuilder()
-                .uri(URI.create(sb.toString()))
+                .uri(URI.create(url))
+                .header("X-Riot-Token", api_key) // ✅ 필수
                 .GET()
                 .build();
-        response = httpClient.send(
-                request,
-                HttpResponse.BodyHandlers.ofString());
+
+        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         riotAPI_validation(response);
         return mapper.readValue(response.body(), AccountDto.Response.class);
     }
+
 
     private void riotAPI_validation(HttpResponse<String> response) {
         System.out.println("Response Status Code: " + response.statusCode());
