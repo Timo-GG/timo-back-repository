@@ -23,6 +23,8 @@ public class QCertifiedUnivInfo extends BeanPath<CertifiedUnivInfo> {
 
     public final StringPath univCertifiedEmail = createString("univCertifiedEmail");
 
+    public final StringPath univName = createString("univName");
+
     public QCertifiedUnivInfo(String variable) {
         super(CertifiedUnivInfo.class, forVariable(variable));
     }

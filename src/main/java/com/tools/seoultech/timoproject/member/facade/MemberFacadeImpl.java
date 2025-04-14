@@ -1,38 +1,27 @@
 package com.tools.seoultech.timoproject.member.facade;
 
-import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
-import com.tools.seoultech.timoproject.member.dto.MemberInfoResponse;
-import com.tools.seoultech.timoproject.member.dto.MemberProfileDto;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.service.MemberService;
-import com.tools.seoultech.timoproject.post.repository.CommentRepository;
-import com.tools.seoultech.timoproject.post.repository.PostRepository;
-import com.tools.seoultech.timoproject.rating.RatingRepository;
-import com.tools.seoultech.timoproject.rating.RatingService;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.version2.memberAccount.dto.MemberAccountDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class MemberFacadeImpl implements MemberFacade {
 
-    private final RatingService ratingService;
     private final MemberService memberService;
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
-    private final RatingRepository ratingRepository;
     private final BasicAPIService riotService;
 
     @Override
-    public MemberInfoResponse getMemberInfo(Long memberId) {
-        Member member = memberService.getById(memberId);
-        return buildMemberInfoResponse(member);
+    public MemberAccountDto getMemberInfo(Long memberId) {
+        MemberAccount member = memberService.getById(memberId);
+        return MemberAccountDto.from(member);
     }
 
     @Override
@@ -46,49 +35,21 @@ public class MemberFacadeImpl implements MemberFacade {
     }
 
     @Override
-    public boolean checkNickname(String nickname) {
-        return memberService.checkNickname(nickname);
+    public boolean checkUsername(String nickname) {
+        return memberService.checkUsername(nickname);
     }
 
     @Override
-    public String createRandomNickname() {
-        return memberService.randomCreateNickname();
+    public MemberAccountDto updateAccountInfo(Long memberId, UpdateMemberInfoRequest request) {
+        memberService.updateAccountInfo(memberId, request);
+        return null;
     }
+
 
     @Override
-    public MemberInfoResponse updateMemberInfo(Long memberId, UpdateMemberInfoRequest request) {
-        // 1) 회원 정보 업데이트
-        Member member = memberService.updateAdditionalInfo(
-                memberId,
-                request.nickname(),
-                request.playerName(),
-                request.playerTag()
-        );
-        // 2) 업데이트된 Member로부터 응답 DTO 생성
-        return buildMemberInfoResponse(member);
-    }
-
-    @Override
-    public Integer updateProfileImageId(Long memberId, Integer imageId) {
-        return memberService.updateProfileImageId(memberId, imageId);
-    }
-
-    @Override
-    public MemberProfileDto getMemberProfile(Long memberId) {
-        Member member = memberService.getById(memberId);
-        return MemberProfileDto.from(member);
-    }
-
-    /**
-     * 중복되는 통계 조회(평균 평점, 게시글/댓글/평가 수) 로직을 하나의 메서드로 추출
-     */
-    private MemberInfoResponse buildMemberInfoResponse(Member member) {
-        BigDecimal ratingAverage = ratingService.getRatingAverage(member.getId());
-        long postCount = postRepository.countByMemberId(member.getId());
-        long commentCount = commentRepository.countByMemberId(member.getId());
-        long ratingCount = ratingRepository.countByMemberId(member.getId());
-
-        return MemberInfoResponse.of(member, postCount, commentCount, ratingCount, ratingAverage);
+    public MemberAccountDto getMemberProfile(Long memberId) {
+        MemberAccount member = memberService.getById(memberId);
+        return MemberAccountDto.from(member);
     }
 }
 

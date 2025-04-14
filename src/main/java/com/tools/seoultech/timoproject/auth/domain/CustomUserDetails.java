@@ -3,6 +3,7 @@ package com.tools.seoultech.timoproject.auth.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.member.domain.Role;
+import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,31 +15,19 @@ import java.util.Collection;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomUserDetails implements UserDetails {
 
-    private final Member member;
+    private final MemberAccount member;
 
-    public static CustomUserDetails from (Member member) {
+    public static CustomUserDetails from (MemberAccount member) {
         return new CustomUserDetails(member);
     }
 
     public Long getMemberId() {
-        return member.getId();
+        return member.getMemberId();
     }
 
     @Override
     public String getUsername() {
-        return member.getNickname();
-    }
-
-    public String getEmail() {
-        return member.getEmail();
-    }
-
-    public String getNickname() {
-        return member.getNickname();
-    }
-
-    public Role getRole() {
-        return member.getRole();
+        return member.getUserName();
     }
 
     @Override

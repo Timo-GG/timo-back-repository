@@ -1,7 +1,9 @@
 package com.tools.seoultech.timoproject.version2.ranking;
 
-import com.nimbusds.openid.connect.sdk.claims.Gender;
+
+import com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.Gender;
 import com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayPosition;
+import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,5 +28,10 @@ public class RankingInfo {
     private Gender gender;
 
     private String memo;
+
+    @OneToOne
+    @JoinColumn(name = "member_account_id")
+    private MemberAccount memberAccount;
+
 
 }

@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QReivew is a Querydsl query type for Reivew
+ * QReview is a Querydsl query type for Review
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QReivew extends EntityPathBase<Reivew> {
+public class QReview extends EntityPathBase<Review> {
 
-    private static final long serialVersionUID = -1199163337L;
+    private static final long serialVersionUID = -1198788547L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QReivew reivew = new QReivew("reivew");
+    public static final QReview review = new QReview("review");
 
     public final com.tools.seoultech.timoproject.global.QBaseEntity _super = new com.tools.seoultech.timoproject.global.QBaseEntity(this);
 
@@ -44,23 +44,23 @@ public class QReivew extends EntityPathBase<Reivew> {
 
     public final EnumPath<com.tools.seoultech.timoproject.version2.matching.myPage.entity.EnumType.OpponentTalent> talent_score = createEnum("talent_score", com.tools.seoultech.timoproject.version2.matching.myPage.entity.EnumType.OpponentTalent.class);
 
-    public QReivew(String variable) {
-        this(Reivew.class, forVariable(variable), INITS);
+    public QReview(String variable) {
+        this(Review.class, forVariable(variable), INITS);
     }
 
-    public QReivew(Path<? extends Reivew> path) {
+    public QReview(Path<? extends Review> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QReivew(PathMetadata metadata) {
+    public QReview(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QReivew(PathMetadata metadata, PathInits inits) {
-        this(Reivew.class, metadata, inits);
+    public QReview(PathMetadata metadata, PathInits inits) {
+        this(Review.class, metadata, inits);
     }
 
-    public QReivew(Class<? extends Reivew> type, PathMetadata metadata, PathInits inits) {
+    public QReview(Class<? extends Review> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.QMemberAccount(forProperty("member"), inits.get("member")) : null;
     }

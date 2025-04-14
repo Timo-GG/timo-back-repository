@@ -9,6 +9,8 @@ import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.facade.MemberFacade;
 import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
+import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.version2.memberAccount.dto.MemberAccountDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,37 +31,27 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<APIDataResponse<MemberInfoResponse>> getMember(@CurrentMemberId Long memberId) {
+    public ResponseEntity<APIDataResponse<MemberAccountDto>> getMember(@CurrentMemberId Long memberId) {
 
-        MemberInfoResponse memberInfo = memberFacade.getMemberInfo(memberId);
+        MemberAccountDto memberInfo = memberFacade.getMemberInfo(memberId);
 
         return ResponseEntity.ok(APIDataResponse.of(memberInfo));
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<APIDataResponse<MemberProfileDto>> findById(@PathVariable Long memberId) {
-        MemberProfileDto memberProfile = memberFacade.getMemberProfile(memberId);
+    public ResponseEntity<APIDataResponse<MemberAccountDto>> findById(@PathVariable Long memberId) {
+        MemberAccountDto memberProfile = memberFacade.getMemberProfile(memberId);
         return ResponseEntity.ok(APIDataResponse.of(memberProfile));
     }
 
     @PutMapping("/me/info")
-    public ResponseEntity<APIDataResponse<MemberInfoResponse>> updateAdditionalInfo(
+    public ResponseEntity<APIDataResponse<MemberAccountDto>> updateAdditionalInfo(
             @CurrentMemberId Long memberId,
             @RequestBody UpdateMemberInfoRequest request
     ) {
-        MemberInfoResponse updatedInfo = memberFacade.updateMemberInfo(memberId, request);
+        MemberAccountDto updatedInfo = memberFacade.updateAccountInfo(memberId, request);
 
         return ResponseEntity.ok(APIDataResponse.of(updatedInfo));
-    }
-
-    @PutMapping("/me/profile-image")
-    public ResponseEntity<APIDataResponse<Integer>> updateProfileImageId(
-            @CurrentMemberId Long memberId,
-            @RequestBody Integer imageId
-    ) {
-        Integer updatedImageId = memberFacade.updateProfileImageId(memberId, imageId);
-
-        return ResponseEntity.ok(APIDataResponse.of(updatedImageId));
     }
 
     @GetMapping("/player/verify")
@@ -72,8 +64,8 @@ public class MemberController {
     }
 
     @GetMapping("/nickname/check")
-    public ResponseEntity<APIDataResponse<?>> checkNickname(@RequestParam String nickname) {
-        if(memberFacade.checkNickname(nickname)) {
+    public ResponseEntity<APIDataResponse<?>> checkUsername(@RequestParam String username) {
+        if(memberFacade.checkUsername(username)) {
             return ResponseEntity.badRequest().body(APIDataResponse.of("사용 중인 닉네임입니다."));
         } else {
             return ResponseEntity.ok(APIDataResponse.of("사용 가능한 닉네임입니다."));

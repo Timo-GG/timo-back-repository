@@ -4,20 +4,17 @@ import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.member.dto.MemberInfoResponse;
 import com.tools.seoultech.timoproject.member.dto.MemberProfileDto;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
+import com.tools.seoultech.timoproject.version2.memberAccount.dto.MemberAccountDto;
 
 public interface MemberFacade {
 
-    MemberInfoResponse getMemberInfo(Long memberId);
+    MemberAccountDto getMemberInfo(Long memberId);
 
     AccountDto.Response verifyPlayer(AccountDto.Request request);
 
-    boolean checkNickname(String nickname);
+    boolean checkUsername(String username);
 
-    String createRandomNickname();
+    MemberAccountDto updateAccountInfo(Long memberId, UpdateMemberInfoRequest request);
 
-    MemberInfoResponse updateMemberInfo(Long memberId, UpdateMemberInfoRequest request);
-
-    Integer updateProfileImageId(Long memberId, Integer imageId);
-
-    MemberProfileDto getMemberProfile(Long memberId);
+    MemberAccountDto getMemberProfile(Long memberId);
 }

@@ -24,9 +24,13 @@ public class QMemberAccount extends EntityPathBase<MemberAccount> {
 
     public final QCertifiedUnivInfo certifiedUnivInfo;
 
+    public final StringPath email = createString("email");
+
     public final NumberPath<Long> memberId = createNumber("memberId", Long.class);
 
     public final QRiotAccount riotAccount;
+
+    public final EnumPath<com.tools.seoultech.timoproject.member.domain.Role> role = createEnum("role", com.tools.seoultech.timoproject.member.domain.Role.class);
 
     public final StringPath userName = createString("userName");
 
