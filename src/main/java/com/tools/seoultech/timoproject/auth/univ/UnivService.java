@@ -14,14 +14,6 @@ import java.util.Map;
 public class UnivService {
      @Value("${univ_api_key}")
      private String api_key;
-     private final ObjectMapper objectMapper;
-
-     public void checkUniv(String univName) throws IOException{
-          Map<String, Object> response = UnivCert.check(univName);
-          if(response.get("success").toString().equals("false")){
-public class UnivService {
-     @Value("${univ_api_key}")
-     private String api_key;
 
      public void checkUniv(String univName) throws IOException{
           Map<String, Object> response = UnivCert.check(univName);
