@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 /**
  * 인증이 필요없는 API에는 @Operation(summary = "공개 API", security = @SecurityRequirement(name = "")) 추가.
@@ -34,6 +35,7 @@ import org.springframework.context.annotation.Configuration;
         bearerFormat = "JWT",
         in = SecuritySchemeIn.HEADER
 )
+@Profile("dev")
 @Configuration
 @RequiredArgsConstructor
 public class SwaggerConfig {
