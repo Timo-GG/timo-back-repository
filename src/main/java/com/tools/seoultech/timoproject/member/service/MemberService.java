@@ -10,7 +10,7 @@ public interface MemberService {
 
     boolean checkUsername(String nickname);
 
-    String randomCreateNickname();
+    String randomCreateUsername();
 
     Integer randomCreateProfileImageId();
 

@@ -8,7 +8,7 @@ import com.tools.seoultech.timoproject.member.domain.Role;
 public record MemberAccountDto(
         Long memberId,
         String email,
-        String userName,
+        String username,
         RiotAccountDto riotAccount,
         CertifiedUnivInfoDto certifiedUnivInfo,
         Role role
@@ -17,7 +17,7 @@ public record MemberAccountDto(
         return new MemberAccountDto(
                 entity.getMemberId(),
                 entity.getEmail(),
-                entity.getUserName(),
+                entity.getUsername(),
                 entity.getRiotAccount() != null ? RiotAccountDto.from(entity.getRiotAccount()) : null,
                 entity.getCertifiedUnivInfo() != null ? CertifiedUnivInfoDto.from(entity.getCertifiedUnivInfo()) : null,
                 entity.getRole()

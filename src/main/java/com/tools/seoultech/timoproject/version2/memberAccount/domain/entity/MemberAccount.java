@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.version2.memberAccount.domain.entity;
 
+import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
 import com.tools.seoultech.timoproject.member.domain.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class MemberAccount {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_account_id")
     private Long memberId;
 
@@ -24,7 +25,7 @@ public class MemberAccount {
     private String email;
 
     @Column(nullable = false, unique = true)
-    private String userName;
+    private String username;
 
     @Embedded
     private RiotAccount riotAccount;
@@ -33,10 +34,13 @@ public class MemberAccount {
     private CertifiedUnivInfo certifiedUnivInfo;
 
     @Enumerated(value = EnumType.STRING)
+    private OAuthProvider oAuthProvider;
+
+    @Enumerated(value = EnumType.STRING)
     private Role role;
 
     public void updateUsername(String username) {
-        this.userName = username;
+        this.username = username;
     }
 
     public void updateRiotAccount(String puuid, String name, String tag) {

@@ -50,7 +50,8 @@ public class SwaggerConfig {
         String[] paths = {"/api/v1/**"};
         String[] packagesToScan = {
                 "com.tools.seoultech.timoproject.post",
-                "com.tools.seoultech.timoproject.riot"
+                "com.tools.seoultech.timoproject.riot",
+                "com.tools.seoultech.timoproject.member"
         };
         return GroupedOpenApi.builder()
                 .group("springdoc-openapi")

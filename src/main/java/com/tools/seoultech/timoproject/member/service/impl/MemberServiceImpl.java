@@ -26,11 +26,11 @@
         }
 
         public boolean checkUsername(String username) {
-            return memberAccountRepository.existsByUserName(username);
+            return memberAccountRepository.existsByUsername(username);
         }
 
         @Override
-        public String randomCreateNickname() {
+        public String randomCreateUsername() {
             return "티모대위" + "-" + UUID.randomUUID().toString().substring(0, 5);
         }
 

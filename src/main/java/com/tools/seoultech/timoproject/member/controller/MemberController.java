@@ -11,6 +11,7 @@ import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
 import com.tools.seoultech.timoproject.version2.memberAccount.dto.MemberAccountDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/members")
+@Tag(name = "Member", description = "Member API")
 public class MemberController {
 
     private final MemberRepository memberRepository;

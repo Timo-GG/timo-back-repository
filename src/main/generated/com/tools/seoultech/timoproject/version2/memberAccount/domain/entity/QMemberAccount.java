@@ -28,11 +28,13 @@ public class QMemberAccount extends EntityPathBase<MemberAccount> {
 
     public final NumberPath<Long> memberId = createNumber("memberId", Long.class);
 
+    public final EnumPath<com.tools.seoultech.timoproject.member.domain.OAuthProvider> oAuthProvider = createEnum("oAuthProvider", com.tools.seoultech.timoproject.member.domain.OAuthProvider.class);
+
     public final QRiotAccount riotAccount;
 
     public final EnumPath<com.tools.seoultech.timoproject.member.domain.Role> role = createEnum("role", com.tools.seoultech.timoproject.member.domain.Role.class);
 
-    public final StringPath userName = createString("userName");
+    public final StringPath username = createString("username");
 
     public QMemberAccount(String variable) {
         this(MemberAccount.class, forVariable(variable), INITS);
