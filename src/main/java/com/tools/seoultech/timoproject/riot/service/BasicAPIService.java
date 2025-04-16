@@ -6,8 +6,10 @@ import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.dto.Detail_MatchInfoDTO;
 import com.tools.seoultech.timoproject.riot.dto.MatchInfoDTO;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
+import com.tools.seoultech.timoproject.riot.dto.MatchSummaryDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,17 +22,21 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
 @Validated
 @Slf4j
+@RequiredArgsConstructor
 public class BasicAPIService {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
     private HttpRequest request;
     private HttpResponse<String> response;
+    private final ChampionCacheService championCacheService;
 
     @Value("${api_key}") private String api_key;
 
@@ -157,6 +163,62 @@ public class BasicAPIService {
                 HttpResponse.BodyHandlers.ofString());
         log.info("BasicAPIService: Completed MatchList request");
         return mapper.readValue(response.body(), List.class);
+    }
+
+    public List<String> getMost3ChampionNames(String puuid) throws Exception {
+        String url = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/" + puuid;
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("X-Riot-Token", api_key)
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        riotAPI_validation(response);
+
+        List<Map<String, Object>> masteryList = mapper.readValue(response.body(), List.class);
+        Map<Integer, String> champMap = championCacheService.getChampionIdToNameMap();
+
+        return masteryList.stream()
+                .sorted((a, b) -> Integer.compare((int) b.get("championPoints"), (int) a.get("championPoints")))
+                .limit(3)
+                .map(champ -> {
+                    Integer champId = (Integer) champ.get("championId");
+                    return champMap.getOrDefault(champId, "Unknown");
+                })
+                .toList();
+    }
+
+    @Transactional
+    public List<MatchSummaryDTO> getRecentMatchSummaries(String puuid) throws Exception {
+        List<String> matchIds = requestMatchList(puuid).stream().limit(10).toList();
+
+        List<MatchSummaryDTO> summaries = new ArrayList<>();
+
+        for (String matchId : matchIds) {
+            Detail_MatchInfoDTO detail = requestMatchInfo(matchId, puuid, requestRuneData());
+
+            MatchSummaryDTO summary = MatchSummaryDTO.builder()
+                    .gameDuration(detail.getTime())
+                    .playedAt(detail.getLastGameEnd())
+                    .gameMode(detail.getMode())
+                    .championName(detail.getMyName())
+                    .championIconUrl(detail.getIcon())
+                    .championLevel(detail.getChampionLevel() != null ? detail.getChampionLevel() : 0)
+                    .kills(detail.getKills())
+                    .deaths(detail.getDeaths())
+                    .assists(detail.getAssists())
+                    .isWin(detail.getWin())
+                    .minionsPerMinute(detail.getMinionskilledPerMin())
+                    .runes(List.of(detail.getRune3(), detail.getRune4()))
+                    .summonerSpells(List.of(detail.getSummoner1Id(), detail.getSummoner2Id()))
+                    .items(detail.getItems())
+                    .build();
+
+            summaries.add(summary);
+        }
+        return summaries;
     }
 }
 

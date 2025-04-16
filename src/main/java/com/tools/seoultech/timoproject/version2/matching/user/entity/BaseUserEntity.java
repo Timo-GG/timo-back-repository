@@ -22,7 +22,7 @@ public class BaseUserEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="member_id")
+    @JoinColumn(name="member_account_id")
     private MemberAccount memberAccount;
 
     protected BaseUserEntity(MemberAccount memberAccount) {

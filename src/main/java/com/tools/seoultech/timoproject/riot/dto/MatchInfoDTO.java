@@ -25,7 +25,6 @@ public class MatchInfoDTO {
     private final String gameMode;
     private final Long gameDuration;
     private final Long gameEndTimestamp;
-
     private final List<UserInfo> userInfo;
     //    @com.fasterxml.jackson.databind.annotation.JsonDeserialize(builder = UserInfo.UserInfoBuilder.class)
     @Getter
@@ -41,6 +40,7 @@ public class MatchInfoDTO {
         private final Integer kills;
         private final Integer deaths;
         private final Integer assists;
+        private final Integer championLevel;
 
         private final String multiKill;
         private final Integer totalMinionsKilled;
@@ -67,6 +67,7 @@ public class MatchInfoDTO {
                 @JsonProperty("kills") Integer kills,
                 @JsonProperty("deaths") Integer deaths,
                 @JsonProperty("assists") Integer assists,
+                @JsonProperty("champLevel") Integer championLevel,
                 @JsonProperty("totalMinionsKilled") Integer totalMinionsKilled,
                 @JsonProperty("summoner1Id") Integer summoner1Id,
                 @JsonProperty("summoner2Id") Integer summoner2Id,
@@ -95,7 +96,8 @@ public class MatchInfoDTO {
             this.kills = kills;
             this.deaths = deaths;
             this.assists = assists;
-
+            this.championLevel = championLevel;
+            System.out.println("championLevel2" + championLevel);
 
             if(pentaKills>0) this.multiKill="펜타킬";
             else if(quadraKillB>0) this.multiKill="쿼드라킬";
@@ -129,19 +131,23 @@ public class MatchInfoDTO {
         TypeRef<List<UserInfo>> typeRef = new TypeRef<>() {};
 
         DocumentContext node = JsonPath.using(conf).parse(json);
+
+        List<UserInfo> userInfos = node.read("$.info.participants.*['puuid',  'riotIdGameName', 'riotIdTagline', 'championName'," +
+                " 'kills', 'deaths', 'assists', 'champLevel', 'totalMinionsKilled', 'summoner1Id', 'summoner2Id', " +
+                "'item0', 'item1', 'item2', 'item3', 'item4', 'item5', 'item6', " +
+                "'doubleKills', 'tripleKills','quadraKills', 'pentaKills','perks', 'gameEndedInEarlySurrender','teamId', 'win']", typeRef);
+        System.out.println("champion Level" + userInfos.get(0).getChampionLevel());
         MatchInfoDTO testDTO = new MatchInfoDTO(
                 node.read("$.metadata.participants"),
                 node.read("$.info.queueId"),
                 node.read("$.info.gameMode"),
                 node.read("$.info.gameDuration", Long.class),
                 node.read("$.info.gameEndTimestamp", Long.class),
-                node.read("$.info.participants.*['puuid',  'riotIdGameName', 'riotIdTagline', 'championName'," +
-                        " 'kills', 'deaths', 'assists', 'totalMinionsKilled', 'summoner1Id', 'summoner2Id', " +
-                        "'item0', 'item1', 'item2', 'item3', 'item4', 'item5', 'item6', " +
-                        "'doubleKills', 'tripleKills','quadraKills', 'pentaKills','perks', 'gameEndedInEarlySurrender','teamId', 'win']", typeRef)
+                userInfos
         );
         return testDTO;
     }
+
 
     public UserInfo getMyInfo(String puuid) {
         return userInfo.stream()

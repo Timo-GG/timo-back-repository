@@ -6,6 +6,7 @@ import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.dto.Detail_MatchInfoDTO;
 import com.tools.seoultech.timoproject.riot.dto.MatchInfoDTO;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
+import com.tools.seoultech.timoproject.riot.dto.MatchSummaryDTO;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -73,5 +74,19 @@ public class BasicAPIController {
                        } catch(Exception e){ throw new RiotAPIException("Detail_matchInfo(matchId)중 오류 발생.");}
                 });
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(dto_List));
+    }
+
+    @GetMapping("/request/most-champ/{puuid}")
+    public ResponseEntity<APIDataResponse<List<String>>> requestMostChamp(
+            @PathVariable String puuid) throws Exception{
+        List<String> mostChamp = bas.getMost3ChampionNames(puuid);
+        return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(mostChamp));
+    }
+
+    @GetMapping("/request/recent-match/{puuid}")
+    public ResponseEntity<APIDataResponse<List<MatchSummaryDTO>>> requestRecentMatch(
+            @PathVariable String puuid) throws Exception{
+        List<MatchSummaryDTO> recentMatch = bas.getRecentMatchSummaries(puuid);
+        return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(recentMatch));
     }
 }
