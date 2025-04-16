@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.version2.matching.user.entity;
+package com.tools.seoultech.timoproject.version2.matching.user.entity.redis;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import lombok.Getter;
@@ -9,10 +9,10 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @NoArgsConstructor
 //@AllArgsConstructor
-public class Redis_BaseUserEntity extends BaseEntity {
+public class Redis_BaseUser extends BaseEntity {
     private Long memberId;
 
-    protected Redis_BaseUserEntity(Long memberId ){
+    protected Redis_BaseUser(Long memberId ){
         this.memberId = memberId;
     }
 }

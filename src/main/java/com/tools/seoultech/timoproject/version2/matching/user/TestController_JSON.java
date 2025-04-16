@@ -1,10 +1,8 @@
 package com.tools.seoultech.timoproject.version2.matching.user;
 
-import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
-import com.tools.seoultech.timoproject.version2.matching.board.entity.DuoSearchBoard;
-import com.tools.seoultech.timoproject.version2.matching.user.entity.BaseUserEntity;
-import com.tools.seoultech.timoproject.version2.matching.user.entity.DuoUserEntity;
+import com.tools.seoultech.timoproject.version2.matching.board.entity.mysql.DuoSearchBoard;
+import com.tools.seoultech.timoproject.version2.matching.user.entity.mysql.DuoUser;
 import com.tools.seoultech.timoproject.version2.matching.user.entity.embeddableType.DuoInfo_Ver2;
 import com.tools.seoultech.timoproject.version2.matching.user.entity.embeddableType.UserInfo_Ver2;
 import com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayCondition;
@@ -32,7 +30,7 @@ public class TestController_JSON {
             .certifiedUnivInfo(new CertifiedUnivInfo("louis5103@seoultech.ac.kr","의과대학"))
             .build();
 
-    private final DuoUserEntity user = DuoUserEntity.builder()
+    private final DuoUser user = DuoUser.builder()
             .member(member)
             .duoInfo(new DuoInfo_Ver2(PlayPosition.MID, PlayStyle.FUN))
             .userInfo(new UserInfo_Ver2(PlayPosition.JUNGLE, PlayStyle.FUN,PlayCondition.FIRST, VoiceChat.DISABLED))
@@ -56,7 +54,7 @@ public class TestController_JSON {
                 .body(APIDataResponse.of(duoBoard));
     }
     @GetMapping("/DuoUserEntity")
-    public ResponseEntity<APIDataResponse<DuoUserEntity>> getDuoUserEntity() {
+    public ResponseEntity<APIDataResponse<DuoUser>> getDuoUserEntity() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIDataResponse.of(user));

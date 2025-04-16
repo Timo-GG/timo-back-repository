@@ -1,7 +1,7 @@
-package com.tools.seoultech.timoproject.version2.matching.board.entity;
+package com.tools.seoultech.timoproject.version2.matching.board.entity.redis;
 
+import com.tools.seoultech.timoproject.global.BaseEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -11,11 +11,12 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Redis_BaseSearchBoard extends BaseSearchBoard {
+public class Redis_BaseSearchBoard extends BaseEntity {
     @Id
     private Long id;
 
     private Long redisBaseUserEntity_id;
+
     private String memo;
 
     protected Redis_BaseSearchBoard(Long redisBaseUserEntity_id, String memo) {

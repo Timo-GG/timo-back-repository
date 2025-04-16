@@ -1,13 +1,9 @@
-package com.tools.seoultech.timoproject.version2.matching.board.entity;
+package com.tools.seoultech.timoproject.version2.matching.board.entity.redis;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.redis.core.RedisHash;
 
-@Deprecated
-@RedisHash("searchBoard")
 @Getter
 //@AllArgsConstructor
 @NoArgsConstructor

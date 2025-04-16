@@ -1,17 +1,13 @@
-package com.tools.seoultech.timoproject.version2.matching.user.entity;
+package com.tools.seoultech.timoproject.version2.matching.user.entity.mysql;
 
 import com.tools.seoultech.timoproject.version2.matching.user.entity.embeddableType.PartyMemberInfo;
-import com.tools.seoultech.timoproject.version2.matching.user.entity.embeddableType.UserInfo_Ver2;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @DiscriminatorValue("Colosseum-Type")
@@ -20,12 +16,12 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ColosseumUserEntity extends BaseUserEntity{
+public class ColosseumUser extends BaseUser {
     @ElementCollection
     private List<PartyMemberInfo> partyMemberList;
 
     @Builder
-    public ColosseumUserEntity(MemberAccount member, List<PartyMemberInfo> partyMemberList) {
+    public ColosseumUser(MemberAccount member, List<PartyMemberInfo> partyMemberList) {
         super(member);
         this.partyMemberList = partyMemberList;
     }

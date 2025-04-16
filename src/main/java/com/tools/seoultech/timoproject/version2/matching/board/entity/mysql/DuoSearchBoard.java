@@ -1,10 +1,9 @@
-package com.tools.seoultech.timoproject.version2.matching.board.entity;
+package com.tools.seoultech.timoproject.version2.matching.board.entity.mysql;
 
-import com.tools.seoultech.timoproject.version2.matching.user.entity.BaseUserEntity;
+import com.tools.seoultech.timoproject.version2.matching.user.entity.mysql.BaseUser;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,7 @@ import lombok.NoArgsConstructor;
 //@AllArgsConstructor
 public class DuoSearchBoard extends BaseSearchBoard{
     @Builder
-    public DuoSearchBoard(BaseUserEntity baseUserEntity, String memo) {
-        super(baseUserEntity, memo);
+    public DuoSearchBoard(BaseUser baseUser, String memo) {
+        super(baseUser, memo);
     }
 }
