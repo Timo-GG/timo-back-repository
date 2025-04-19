@@ -30,6 +30,8 @@ public class QMemberAccount extends EntityPathBase<MemberAccount> {
 
     public final EnumPath<com.tools.seoultech.timoproject.member.domain.OAuthProvider> oAuthProvider = createEnum("oAuthProvider", com.tools.seoultech.timoproject.member.domain.OAuthProvider.class);
 
+    public final com.tools.seoultech.timoproject.version2.ranking.QRankingInfo rankingInfo;
+
     public final QRiotAccount riotAccount;
 
     public final EnumPath<com.tools.seoultech.timoproject.member.domain.Role> role = createEnum("role", com.tools.seoultech.timoproject.member.domain.Role.class);
@@ -55,6 +57,7 @@ public class QMemberAccount extends EntityPathBase<MemberAccount> {
     public QMemberAccount(Class<? extends MemberAccount> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.certifiedUnivInfo = inits.isInitialized("certifiedUnivInfo") ? new QCertifiedUnivInfo(forProperty("certifiedUnivInfo")) : null;
+        this.rankingInfo = inits.isInitialized("rankingInfo") ? new com.tools.seoultech.timoproject.version2.ranking.QRankingInfo(forProperty("rankingInfo"), inits.get("rankingInfo")) : null;
         this.riotAccount = inits.isInitialized("riotAccount") ? new QRiotAccount(forProperty("riotAccount")) : null;
     }
 

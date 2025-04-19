@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.version2.memberAccount.domain.entity;
 
 import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
 import com.tools.seoultech.timoproject.member.domain.Role;
+import com.tools.seoultech.timoproject.version2.ranking.RankingInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -38,6 +39,9 @@ public class MemberAccount {
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
+
+    @OneToOne(mappedBy = "memberAccount", cascade = CascadeType.ALL)
+    private RankingInfo rankingInfo;
 
     public void updateUsername(String username) {
         this.username = username;

@@ -4,9 +4,13 @@ import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.service.MemberService;
+import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
+import com.tools.seoultech.timoproject.riot.facade.RiotFacade;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
 import com.tools.seoultech.timoproject.version2.memberAccount.dto.MemberAccountDto;
+import com.tools.seoultech.timoproject.version2.ranking.dto.RankingCreateRequestDto;
+import com.tools.seoultech.timoproject.version2.ranking.facade.RankingFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,7 +22,6 @@ public class MemberFacadeImpl implements MemberFacade {
 
     private final MemberService memberService;
     private final BasicAPIService riotService;
-
     @Override
     public MemberAccountDto getMemberInfo(Long memberId) {
         MemberAccount member = memberService.getById(memberId);
@@ -30,7 +33,6 @@ public class MemberFacadeImpl implements MemberFacade {
         AccountDto.Response response = riotService.findUserAccount(request);
         MemberAccount memberAccount = memberService.updateRiotAccount(
             memberId, response.getPuuid(), response.getGameName(), response.getTagLine());
-
         return MemberAccountDto.from(memberAccount);
     }
 
