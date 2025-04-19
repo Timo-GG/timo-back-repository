@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.riot.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
@@ -7,6 +8,7 @@ import com.tools.seoultech.timoproject.riot.dto.Detail_MatchInfoDTO;
 import com.tools.seoultech.timoproject.riot.dto.MatchInfoDTO;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
 import com.tools.seoultech.timoproject.riot.dto.MatchSummaryDTO;
+import com.tools.seoultech.timoproject.riot.dto.RankInfoDto;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -51,24 +54,30 @@ public class BasicAPIService {
     }
 
     @Transactional
-    public AccountDto.Response findUserAccount(@Valid AccountDto.Request dto) throws Exception {
-        String encodedGameName = encodeUrlParameter(dto.getGameName());
-        String encodedTagLine = encodeUrlParameter(dto.getTagLine());
+    public AccountDto.Response findUserAccount(@Valid AccountDto.Request dto) {
+        try {
+            String encodedGameName = encodeUrlParameter(dto.getGameName());
+            String encodedTagLine = encodeUrlParameter(dto.getTagLine());
 
-        String url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/"
-                + encodedGameName + "/" + encodedTagLine;
+            String url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/"
+                    + encodedGameName + "/" + encodedTagLine;
 
-        log.info("API URL: " + url);
+            log.info("API URL: " + url);
 
-        request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("X-Riot-Token", api_key) // ✅ 필수
-                .GET()
-                .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("X-Riot-Token", api_key)
+                    .GET()
+                    .build();
 
-        response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        riotAPI_validation(response);
-        return mapper.readValue(response.body(), AccountDto.Response.class);
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            riotAPI_validation(response);
+            return mapper.readValue(response.body(), AccountDto.Response.class);
+        } catch (IOException | InterruptedException e) {
+            log.error("라이엇 API 호출 중 예외 발생", e);
+            throw new RiotAPIException("라이엇 계정 조회 실패");
+        }
     }
 
 
@@ -220,5 +229,56 @@ public class BasicAPIService {
         }
         return summaries;
     }
-}
 
+    public RankInfoDto getSoloRankInfoByPuuid(String puuid) {
+        final String BASE_URL = "https://kr.api.riotgames.com/lol/league/v4/entries/by-puuid/";
+        final String QUEUE_TYPE_SOLO = "RANKED_SOLO_5x5";
+
+        try {
+            URI uri = URI.create(BASE_URL + puuid);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .header("X-Riot-Token", api_key)
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            riotAPI_validation(response);
+            log.info("랭크 정보 API 응답 받음: {}", puuid);
+
+            List<Map<String, Object>> rankList = mapper.readValue(response.body(), new TypeReference<>() {});
+            return findSoloRankInfo(rankList, QUEUE_TYPE_SOLO);
+        } catch (IOException | InterruptedException e) {
+            log.error("랭크 정보 조회 중 예외 발생", e);
+            throw new RiotAPIException("랭크 정보 조회 실패", ErrorCode.API_ACCESS_ERROR);
+        }
+    }
+
+    private RankInfoDto findSoloRankInfo(List<Map<String, Object>> rankList, String queueType) {
+        return rankList.stream()
+                .filter(rank -> queueType.equals(rank.get("queueType")))
+                .findFirst()
+                .map(rank -> buildRankInfoFrom(rank))
+                .orElse(buildUnrankedInfo());
+    }
+
+    private RankInfoDto buildRankInfoFrom(Map<String, Object> rank) {
+        return RankInfoDto.builder()
+                .tier((String) rank.get("tier"))
+                .rank((String) rank.get("rank"))
+                .lp((Integer) rank.get("leaguePoints"))
+                .wins((Integer) rank.get("wins"))
+                .losses((Integer) rank.get("losses"))
+                .build();
+    }
+
+    private RankInfoDto buildUnrankedInfo() {
+        return RankInfoDto.builder()
+                .tier("UNRANKED")
+                .rank("")
+                .lp(0)
+                .wins(0)
+                .losses(0)
+                .build();
+    }
+}

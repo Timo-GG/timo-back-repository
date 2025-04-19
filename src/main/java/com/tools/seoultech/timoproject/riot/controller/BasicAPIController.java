@@ -1,12 +1,9 @@
 package com.tools.seoultech.timoproject.riot.controller;
 
-import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
+import com.tools.seoultech.timoproject.riot.dto.*;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 
-import com.tools.seoultech.timoproject.riot.dto.Detail_MatchInfoDTO;
-import com.tools.seoultech.timoproject.riot.dto.MatchInfoDTO;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
-import com.tools.seoultech.timoproject.riot.dto.MatchSummaryDTO;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -88,5 +85,13 @@ public class BasicAPIController {
             @PathVariable String puuid) throws Exception{
         List<MatchSummaryDTO> recentMatch = bas.getRecentMatchSummaries(puuid);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(recentMatch));
+    }
+
+    @GetMapping("/request/rank-info/{puuid}")
+    public ResponseEntity<APIDataResponse<RankInfoDto>> requestRankInfo(
+            @PathVariable String puuid) throws Exception {
+
+        RankInfoDto rankInfo = bas.getSoloRankInfoByPuuid(puuid); // 서비스에서 처리
+        return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(rankInfo));
     }
 }
