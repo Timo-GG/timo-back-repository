@@ -1,21 +1,18 @@
-package com.tools.seoultech.timoproject.version2.matching.user.entity;
+package com.tools.seoultech.timoproject.version2.matching.user.entity.mysql;
 
-import com.tools.seoultech.timoproject.member.domain.Member;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-public class BaseUserEntity {
+public class BaseUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
@@ -25,7 +22,7 @@ public class BaseUserEntity {
     @JoinColumn(name="member_account_id")
     private MemberAccount memberAccount;
 
-    protected BaseUserEntity(MemberAccount memberAccount) {
+    protected BaseUser(MemberAccount memberAccount) {
         this.memberAccount = memberAccount;
     }
 }

@@ -1,8 +1,7 @@
-package com.tools.seoultech.timoproject.version2.matching.board.entity;
+package com.tools.seoultech.timoproject.version2.matching.board.entity.mysql;
 
 
-import com.tools.seoultech.timoproject.version2.matching.user.entity.BaseUserEntity;
-import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.version2.matching.user.entity.mysql.BaseUser;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -13,12 +12,12 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("Duo-Type")
 @PrimaryKeyJoinColumn(name = "board_id")
 @Entity
+@Getter
 @NoArgsConstructor
 //@AllArgsConstructor
-@Getter
 public class ColloseumSearchBoard extends BaseSearchBoard{
     @Builder
-    public ColloseumSearchBoard(BaseUserEntity baseUserEntity, String memo) {
-        super(baseUserEntity, memo);
+    public ColloseumSearchBoard(BaseUser baseUser, String memo) {
+        super(baseUser, memo);
     }
 }

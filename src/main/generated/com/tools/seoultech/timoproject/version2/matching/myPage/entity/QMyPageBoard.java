@@ -24,7 +24,7 @@ public class QMyPageBoard extends EntityPathBase<MyPageBoard> {
 
     public final com.tools.seoultech.timoproject.global.QBaseEntity _super = new com.tools.seoultech.timoproject.global.QBaseEntity(this);
 
-    public final com.tools.seoultech.timoproject.version2.matching.user.entity.QBaseUserEntity acceptor;
+    public final com.tools.seoultech.timoproject.version2.matching.user.entity.mysql.QBaseUser acceptor;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -34,7 +34,7 @@ public class QMyPageBoard extends EntityPathBase<MyPageBoard> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> regDate = _super.regDate;
 
-    public final com.tools.seoultech.timoproject.version2.matching.user.entity.QBaseUserEntity requestor;
+    public final com.tools.seoultech.timoproject.version2.matching.user.entity.mysql.QBaseUser requestor;
 
     public QMyPageBoard(String variable) {
         this(MyPageBoard.class, forVariable(variable), INITS);
@@ -54,8 +54,8 @@ public class QMyPageBoard extends EntityPathBase<MyPageBoard> {
 
     public QMyPageBoard(Class<? extends MyPageBoard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.acceptor = inits.isInitialized("acceptor") ? new com.tools.seoultech.timoproject.version2.matching.user.entity.QBaseUserEntity(forProperty("acceptor"), inits.get("acceptor")) : null;
-        this.requestor = inits.isInitialized("requestor") ? new com.tools.seoultech.timoproject.version2.matching.user.entity.QBaseUserEntity(forProperty("requestor"), inits.get("requestor")) : null;
+        this.acceptor = inits.isInitialized("acceptor") ? new com.tools.seoultech.timoproject.version2.matching.user.entity.mysql.QBaseUser(forProperty("acceptor"), inits.get("acceptor")) : null;
+        this.requestor = inits.isInitialized("requestor") ? new com.tools.seoultech.timoproject.version2.matching.user.entity.mysql.QBaseUser(forProperty("requestor"), inits.get("requestor")) : null;
     }
 
 }

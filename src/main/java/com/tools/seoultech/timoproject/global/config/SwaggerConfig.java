@@ -53,7 +53,9 @@ public class SwaggerConfig {
         String[] packagesToScan = {
                 "com.tools.seoultech.timoproject.post",
                 "com.tools.seoultech.timoproject.riot",
-                "com.tools.seoultech.timoproject.member"
+                "com.tools.seoultech.timoproject.member",
+                "com.tools.seoultech.timoproject.version2.matching.user"
+
         };
         return GroupedOpenApi.builder()
                 .group("springdoc-openapi")

@@ -6,6 +6,7 @@ TRUNCATE TABLE rating;
 TRUNCATE TABLE comment;
 TRUNCATE TABLE post;
 TRUNCATE TABLE member;
+TRUNCATE TABLE member_account;
 
 -------------------------------------------------
 -- 1. MEMBER 테이블

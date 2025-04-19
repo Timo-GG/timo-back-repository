@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.version2.matching.user.entity;
+package com.tools.seoultech.timoproject.version2.matching.user.entity.mysql;
 
 import com.tools.seoultech.timoproject.version2.matching.user.entity.embeddableType.DuoInfo_Ver2;
 import com.tools.seoultech.timoproject.version2.matching.user.entity.embeddableType.UserInfo_Ver2;
@@ -11,16 +11,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @DiscriminatorValue("Duo-Type")
 @PrimaryKeyJoinColumn(name = "user_id")
 @Entity
-@Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-public class DuoUserEntity extends BaseUserEntity {
+public class DuoUser extends BaseUser {
+
     @Embedded
     private UserInfo_Ver2 userInfo;
 
@@ -28,7 +27,7 @@ public class DuoUserEntity extends BaseUserEntity {
     private DuoInfo_Ver2 duoInfo;
 
     @Builder
-    public DuoUserEntity(MemberAccount member, UserInfo_Ver2 userInfo, DuoInfo_Ver2 duoInfo){
+    public DuoUser(MemberAccount member, UserInfo_Ver2 userInfo, DuoInfo_Ver2 duoInfo){
         super(member);
         this.userInfo = userInfo;
         this.duoInfo = duoInfo;
