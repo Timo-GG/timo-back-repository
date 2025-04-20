@@ -3,10 +3,13 @@
 <br>
 
 ## 주요 기능
-- 듀오 매칭 
-- 게시판 기능 
+- 랭킹 기능
+- 게시글 기능
+    - 내전 찾기
+    - 듀오 찾기
 - 대화 기능
-- 소셜로그인
+- 소셜 로그인
+- 대학교 인증
 - 평점 기능
 
 ## Backend Developer
@@ -34,4 +37,4 @@
 **Other** - <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-social&logo=Socket.io&logoColor=white"> 
 
 ## ERD
-<img width="1279" alt="스크린샷 2025-03-16 오후 9 07 53" src="https://github.com/user-attachments/assets/4ff6b8eb-5a69-44cf-9211-2d2620180c4c" />
+<img width="1181" alt="스크린샷 2025-04-20 오후 7 36 38" src="https://github.com/user-attachments/assets/1e22414a-46fc-4828-a2b7-9525bb4b38a0" />
