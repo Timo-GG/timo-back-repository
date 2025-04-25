@@ -6,6 +6,7 @@ import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.tools.seoultech.timoproject.auth.jwt.JwtResolver;
 import com.tools.seoultech.timoproject.chat.service.ChatService;
+import com.tools.seoultech.timoproject.socket.controller.OnlineStatusSocketController;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class SocketModule implements DisposableBean {
     private final SocketIOServer socketIOServer;
     private final JwtResolver jwtResolver;
     private final WebSocketAddMappingSupporter webSocketAddMappingSupporter;
+    private static int onlineCount = 0;
 
     @PostConstruct
     public void initSocketServer() {
@@ -27,6 +29,7 @@ public class SocketModule implements DisposableBean {
         socketIOServer.start();
         socketIOServer.addConnectListener(onConnected());
         socketIOServer.addDisconnectListener(onDisconnected());
+
     }
 
     @Override
@@ -49,39 +52,55 @@ public class SocketModule implements DisposableBean {
     private DisconnectListener onDisconnected() {
         return client -> {
             Long memberId = client.get("memberId");
-            log.info("[disconnect] memberId = {}, sessionId = {}",
-                    memberId, client.getSessionId());
+            Boolean isGuest = client.get("isGuest");
+
+            log.info("[disconnect] memberId = {}, sessionId = {}", memberId, client.getSessionId());
+
+            onlineCount = Math.max(0, onlineCount - 1);
+            socketIOServer.getBroadcastOperations().sendEvent("online_count", new OnlineStatusSocketController.OnlineCountResponse(onlineCount));
         };
     }
 
-    /**
-     * 연결된 클라이언트에 대한 처리:
-     * 1) 토큰 추출
-     * 2) memberId 파싱
-     * 3) 소켓 세션에 저장
-     * 4) 방(room) 추출 & join
-     * 5) connected_info 이벤트로 memberId 전송
-     */
     private void handleConnection(SocketIOClient client) {
-        String token = extractToken(client);
-        Long memberId = parseMemberId(token);
-        setMemberId(client, memberId);
+        String token = client.getHandshakeData().getSingleUrlParam("token");
+        String guest = client.getHandshakeData().getSingleUrlParam("guest");
 
-        joinRoom(client, "member_" + memberId.toString());
-        broadcastSystemMessage(memberId.toString(), memberId + " 님이 입장했습니다.");
+        Long memberId = null;
 
-        client.sendEvent("connected_info", memberId);
+        if (token != null && !token.isEmpty()) {
+            memberId = jwtResolver.getMemberIdFromAccessToken(token);
+            client.set("memberId", memberId);
+            client.set("isGuest", false);
+            joinRoom(client, "member_" + memberId);
+            broadcastSystemMessage("member_" + memberId, memberId + " 님이 입장했습니다.");
+            client.sendEvent("connected_info", memberId);
+            log.info("[connect] 로그인 유저 연결됨: memberId = {}, sessionId = {}", memberId, client.getSessionId());
+            log.info("counter = {}", onlineCount);
+        } else if ("true".equals(guest)) {
+            client.set("isGuest", true);
+            log.info("[connect] 게스트 유저 연결됨: sessionId = {}", client.getSessionId());
+        } else {
+            throw new IllegalArgumentException("Token 또는 guest=true 쿼리 파라미터가 필요합니다.");
+        }
 
-        log.info("[connect] Socket connected. memberId = {}, sessionId = {}, room = {}",
-                memberId, client.getSessionId(), "member_" + memberId);
+        // 모든 유저 대상 접속자 수 증가
+        onlineCount++;
+        socketIOServer.getBroadcastOperations().sendEvent("online_count", new OnlineStatusSocketController.OnlineCountResponse(onlineCount));
     }
+
 
     private String extractToken(SocketIOClient client) {
         String token = client.getHandshakeData().getSingleUrlParam("token");
-        log.info("[extractToken] token param = {}", token);
+        String guest = client.getHandshakeData().getSingleUrlParam("guest");
+
         if (token == null || token.isEmpty()) {
+            if ("true".equals(guest)) {
+                log.info("[extractToken] 게스트 유저 접속 허용");
+                return null; // 게스트는 토큰 없이 통과
+            }
             throw new IllegalArgumentException("Token is missing or empty");
         }
+
         return token;
     }
 

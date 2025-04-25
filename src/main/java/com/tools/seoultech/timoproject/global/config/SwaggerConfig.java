@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Profile;
                 version = "v1",
                 description = "swagger v1 UI Test"
         ),
-        security = {@SecurityRequirement(name = "access-token")}  // 기본 적용
+        security = @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME)
 )
 @SecurityScheme(
         name = SwaggerConfig.SECURITY_SCHEME_NAME,
@@ -53,7 +53,10 @@ public class SwaggerConfig {
         String[] packagesToScan = {
                 "com.tools.seoultech.timoproject.post",
                 "com.tools.seoultech.timoproject.riot",
-                "com.tools.seoultech.timoproject.member"
+                "com.tools.seoultech.timoproject.member",
+                "com.tools.seoultech.timoproject.version2.matching.user",
+                "com.tools.seoultech.timoproject.version2.ranking",
+
         };
         return GroupedOpenApi.builder()
                 .group("springdoc-openapi")

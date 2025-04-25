@@ -1,5 +1,7 @@
 package com.tools.seoultech.timoproject.global.config;
 
+import com.tools.seoultech.timoproject.version2.matching.board.entity.redis.Redis_BaseSearchBoard;
+import com.tools.seoultech.timoproject.version2.matching.user.entity.redis.Redis_BaseUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,12 +34,31 @@ public class RedisConfig {
 
         // Key를 String으로 저장
         redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer()); // 이거 추가!
 
         // Value를 JSON 형식으로 직렬화
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, Redis_BaseSearchBoard> baseSearchBoardRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Redis_BaseSearchBoard> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // JSON 직렬화
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, Redis_BaseUser> baseUserEntityRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Redis_BaseUser> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // JSON 직렬화
+        return template;
     }
 
     /** ZSetOperations Bean 추가 */

@@ -34,6 +34,8 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN_EXCEPTION(604, HttpStatus.UNAUTHORIZED,  "유효하지 않은 리프레시 토큰입니다."),
     UNSUPPORTED_JWT_TOKEN_EXCEPTION(605, HttpStatus.UNAUTHORIZED,  "지원하지 않는 JWT 토큰입니다."),
     UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION(606, HttpStatus.UNAUTHORIZED,  "지원하지 않는 소셜 플랫폼입니다."),
+    MEMBER_NOT_FOUND(607, HttpStatus.UNAUTHORIZED,  "존재하지 않는 사용자입니다."),
+
     /**
      * resource. code prefix: 700번대
      */
@@ -56,6 +58,7 @@ public enum ErrorCode {
     NOT_FOUND_CHATROOM_EXCEPTION(810, HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다."),
     CHATROOM_NOT_TERMINATED_EXCEPTION(811, HttpStatus.BAD_REQUEST, "채팅방이 종료되지 않았습니다."),
     DUPLICATE_RATING_EXCEPTION(812, HttpStatus.CONFLICT, "이미 평점을 제출한 매칭입니다."),
+    INVALID_RANKING_INFO(813, HttpStatus.BAD_REQUEST, "소환사 계정 또는 학교 계정 정보가 누락되었습니다."),
 
     /**
      * my-setting. code prefix: 900번대
