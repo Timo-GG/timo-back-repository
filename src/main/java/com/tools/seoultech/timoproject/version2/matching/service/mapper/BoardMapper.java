@@ -1,8 +1,8 @@
 package com.tools.seoultech.timoproject.version2.matching.service.mapper;
 
 
-import com.tools.seoultech.timoproject.version2.matching.board.dto.SearchBoardDTO;
-import com.tools.seoultech.timoproject.version2.matching.board.entity.redis.Redis_BaseSearchBoard;
+import com.tools.seoultech.timoproject.version2.matching.domain.board.dto.SearchBoardDTO;
+import com.tools.seoultech.timoproject.version2.matching.domain.board.entity.redis.Redis_BaseSearchBoard;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;

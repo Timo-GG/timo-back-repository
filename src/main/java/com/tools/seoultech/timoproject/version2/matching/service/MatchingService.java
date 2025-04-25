@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MatchingService {
     private final BoardService boardService;
-    private final UserService userService;;
+    private final UserService userService;
+
 
 }

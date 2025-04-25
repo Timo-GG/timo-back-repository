@@ -1,17 +1,15 @@
 package com.tools.seoultech.timoproject.version2.matching.service;
 
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
-import com.tools.seoultech.timoproject.version2.matching.board.dto.SearchBoardDTO;
-import com.tools.seoultech.timoproject.version2.matching.board.entity.mysql.BaseSearchBoard;
-import com.tools.seoultech.timoproject.version2.matching.board.entity.redis.Redis_BaseSearchBoard;
+import com.tools.seoultech.timoproject.version2.matching.domain.board.dto.SearchBoardDTO;
+import com.tools.seoultech.timoproject.version2.matching.domain.board.entity.mysql.BaseSearchBoard;
+import com.tools.seoultech.timoproject.version2.matching.domain.board.entity.redis.Redis_BaseSearchBoard;
 import com.tools.seoultech.timoproject.version2.matching.service.mapper.BoardMapper;
 import com.tools.seoultech.timoproject.version2.matching.service.mapper.UserMapper;
-import com.tools.seoultech.timoproject.version2.matching.user.entity.redis.Redis_BaseUser;
+import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.redis.Redis_BaseUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +40,8 @@ public class BoardService {
     ) {
         // TODO #1 : 레디스에 UserEntity template 생성 및 KEY_ID 값 반환.
         Redis_BaseUser redisUser = userService.dtoToRedis(null);
+
+
         // TODO #2 : 레디스에 SearchBoard template 생성 및 KEY_ID 값 반환.
         Redis_BaseSearchBoard redisBoard = this.dtoToRedis(requestDto);
 

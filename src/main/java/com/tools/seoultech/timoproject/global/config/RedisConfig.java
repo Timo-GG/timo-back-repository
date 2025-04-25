@@ -1,10 +1,13 @@
 package com.tools.seoultech.timoproject.global.config;
 
-import com.tools.seoultech.timoproject.version2.matching.board.entity.redis.Redis_BaseSearchBoard;
-import com.tools.seoultech.timoproject.version2.matching.user.entity.redis.Redis_BaseUser;
+import com.tools.seoultech.timoproject.version2.matching.domain.board.dto.SearchBoardDTO;
+import com.tools.seoultech.timoproject.version2.matching.domain.board.entity.redis.Redis_BaseSearchBoard;
+import com.tools.seoultech.timoproject.version2.matching.domain.user.dto.UserDTO;
+import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.redis.Redis_BaseUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,6 +31,7 @@ public class RedisConfig {
 
     /** Spring <-> Redis 간에 전송 형태 설정 : Sorted-Set 및 Hash 데이터 처리를 위한 RedisTemplate 설정 */
     @Bean
+    @Primary
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
@@ -42,18 +46,18 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean
-    public RedisTemplate<String, Redis_BaseSearchBoard> baseSearchBoardRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Redis_BaseSearchBoard> template = new RedisTemplate<>();
+
+    public RedisTemplate<String, SearchBoardDTO> SearBoardDTO_RedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, SearchBoardDTO> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // JSON 직렬화
         return template;
     }
 
-    @Bean
-    public RedisTemplate<String, Redis_BaseUser> baseUserEntityRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Redis_BaseUser> template = new RedisTemplate<>();
+
+    public RedisTemplate<String, UserDTO> UserDTO_RedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, UserDTO> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // JSON 직렬화
