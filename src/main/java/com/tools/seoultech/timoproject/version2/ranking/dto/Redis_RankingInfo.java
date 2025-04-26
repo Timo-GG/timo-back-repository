@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor // ✅ 이거 추가해야 Jackson 역직렬화 가능
+@NoArgsConstructor
 public class Redis_RankingInfo implements Serializable {
     private Long memberId;
     private String puuid;
@@ -22,7 +22,8 @@ public class Redis_RankingInfo implements Serializable {
     // 소환사 정보
     private String gameName;
     private String tagLine;
-    
+    private String profileIconUrl;
+
     // 대학 정보
     private String university;
     private String department;
@@ -88,6 +89,7 @@ public class Redis_RankingInfo implements Serializable {
                 .memberId(memberId)
                 .puuid(riotAccount.getPuuid())
                 .gameName(riotAccount.getAccountName())
+                .profileIconUrl(riotRankingDto.profileIconUrl())
                 .tagLine(riotAccount.getAccountTag())
                 .university(univInfo.getUnivName())
                 .department(univInfo.getDepartment())
