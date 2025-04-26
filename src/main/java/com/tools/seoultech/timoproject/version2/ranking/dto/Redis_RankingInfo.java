@@ -76,6 +76,7 @@ public class Redis_RankingInfo implements Serializable {
         if (dto.memo() != null) this.memo = dto.memo();
         if (dto.position() != null) this.position = dto.position();
         if (dto.gender() != null) this.gender = dto.gender();
+        if (dto.department() != null) this.department = dto.department();
     }
 
     public static Redis_RankingInfo from(Long memberId, MemberAccount account, RiotRankingDto riotRankingDto) {
