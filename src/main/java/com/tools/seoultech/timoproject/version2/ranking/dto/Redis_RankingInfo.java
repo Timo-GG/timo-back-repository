@@ -54,10 +54,11 @@ public class Redis_RankingInfo implements Serializable {
             case "SILVER" -> 800;
             case "GOLD" -> 1200;
             case "PLATINUM" -> 1600;
-            case "DIAMOND" -> 2000;
-            case "MASTER" -> 2400;
-            case "GRANDMASTER" -> 2800;
-            case "CHALLENGER" -> 3200;
+            case "EMERALD" -> 2000;
+            case "DIAMOND" -> 2400;
+            case "MASTER" -> 2800;
+            case "GRANDMASTER" -> 3200;
+            case "CHALLENGER" -> 3600;
             default -> 0;
         };
         
