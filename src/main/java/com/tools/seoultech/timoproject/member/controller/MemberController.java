@@ -12,6 +12,7 @@ import com.tools.seoultech.timoproject.member.repository.MemberRepository;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
 import com.tools.seoultech.timoproject.version2.memberAccount.dto.MemberAccountDto;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +61,7 @@ public class MemberController {
     }
 
     @PostMapping("/player/verify")
+    @Operation(summary = "라이엇 계정 인증", description = "게임 닉네임과 태그를 입력받아 라이엇 계정 인증을 수행합니다.")
     public ResponseEntity<APIDataResponse<?>> verifyPlayer(
             @CurrentMemberId Long memberId,
             @RequestBody AccountDto.Request request
