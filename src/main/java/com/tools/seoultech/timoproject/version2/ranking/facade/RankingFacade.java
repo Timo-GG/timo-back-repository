@@ -10,4 +10,5 @@ public interface RankingFacade {
     void updateRankingInfo(Long memberId, RankingUpdateRequestDto rankingInfo);
     List<Redis_RankingInfo> getTopRankings(int limit);
 
+    Redis_RankingInfo getMyRankingInfo(Long memberId);
 }

@@ -38,4 +38,9 @@ public class RankingFacadeImpl implements RankingFacade {
     public List<Redis_RankingInfo> getTopRankings(int limit) {
         return rankingRedisService.getTopRankings(limit);
     }
+
+    @Override
+    public Redis_RankingInfo getMyRankingInfo(Long memberId) {
+        return rankingRedisService.getMyRankingInfo(memberId);
+    }
 }

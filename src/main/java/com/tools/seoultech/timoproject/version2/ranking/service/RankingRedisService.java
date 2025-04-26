@@ -128,4 +128,19 @@ public class RankingRedisService {
         }
     }
 
+    public Redis_RankingInfo getMyRankingInfo(Long memberId) {
+        try {
+            Redis_RankingInfo rankInfo = (Redis_RankingInfo) redisTemplate.opsForHash()
+                    .get(RANKING_OBJECT_KEY, memberId.toString());
+
+            if (rankInfo == null) {
+                throw new BusinessException(ErrorCode.REDIS_RANKING_NOT_FOUND);
+            }
+
+            return rankInfo;
+        } catch (Exception e) {
+            log.error("내 랭킹 정보 조회 중 오류 발생: {}", e.getMessage(), e);
+            throw new BusinessException(ErrorCode.REDIS_ERROR);
+        }
+    }
 }
