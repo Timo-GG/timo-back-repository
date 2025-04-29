@@ -72,10 +72,10 @@ INSERT INTO image(image_id, post_id, base64)
 --     (2.5, 'BAD', 'AGGRESSIVE', 'NORMAL', 1, 2);
 
 INSERT INTO member_account (member_account_id, username, email, role)
-VALUES (1, 'user1', 'test1@gmail.com', 'MEMBER');
+VALUES (1, 'member1', 'Test1@gmail.com', 'MEMBER');
 
 INSERT INTO member_account (member_account_id, username, email, role)
-VALUES (2, 'user2', 'test2@gmail.com', 'ADMIN');
+VALUES (2, 'member2', 'Test2@gmail.com', 'ADMIN');
 -------------------------------------------------
 -- 5. MatchingOption  테이블
 -------------------------------------------------

@@ -143,4 +143,29 @@ public class RankingRedisService {
             throw new BusinessException(ErrorCode.REDIS_ERROR);
         }
     }
+
+    public void flushAllRankingData() {
+        redisTemplate.delete(RANKING_KEY); // 전체 키 삭제
+        redisTemplate.delete(RANKING_OBJECT_KEY); // 객체 저장소 삭제
+    }
+
+    public void deleteRankingByMemberId(Long memberId) {
+        String id = memberId.toString();
+
+        // 1) 해시에서 정보 꺼내서 대학교별 ZSET 삭제할 키 알아내기
+        Object raw = redisTemplate.opsForHash().get(RANKING_OBJECT_KEY, id);
+        if (raw instanceof Redis_RankingInfo) {
+            Redis_RankingInfo info = (Redis_RankingInfo) raw;
+            String univKey = "lol:ranking:univ:" + info.getUniversity().trim();
+            redisTemplate.opsForZSet().remove(univKey, id);
+        }
+
+        // 2) 전체 랭킹 ZSET 에서 제거
+        redisTemplate.opsForZSet().remove(RANKING_KEY, id);
+        // 3) 해시(객체 저장소) 에서 제거
+        redisTemplate.opsForHash().delete(RANKING_OBJECT_KEY, id);
+
+        log.info("[Redis 랭킹 삭제 완료] memberId={}", memberId);
+    }
+
 }
