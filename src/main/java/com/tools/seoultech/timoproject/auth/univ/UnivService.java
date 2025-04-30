@@ -1,6 +1,8 @@
 package com.tools.seoultech.timoproject.auth.univ;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tools.seoultech.timoproject.global.constant.ErrorCode;
+import com.tools.seoultech.timoproject.global.exception.BusinessException;
 import com.univcert.api.UnivCert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,14 +27,18 @@ public class UnivService {
 
      public void certifyUniv(UnivRequestDTO requestDto) throws IOException {
           Map<String, Object> response = UnivCert.certify(api_key, requestDto.univEmail(), requestDto.univName(), true);
-          if(response.get("success").toString().equals("false")){
-               throw new IOException(response.get("message").toString());
+          System.out.println("✅ UnivCert 응답 전체: " + response);
+          if (response.get("success").toString().equals("false")) {
+               String message = response.get("message").toString();
+               if ("400".equals(response.get("code").toString())) {
+                    throw new BusinessException(ErrorCode.UNIV_ALREADY_VERIFIED);
+               }
+               throw new IOException(message);
           }
-          System.err.println(response.toString());
      }
      public void verifyRequest(UnivRequestDTO requestDto, int code) throws IOException {
           Map<String, Object> response = UnivCert.certifyCode(api_key, requestDto.univEmail(), requestDto.univName(), code);
-          System.err.println(response.toString());
+          System.err.println("[verifyRequest] response: " + response);
      }
      public Object checkStatus(UnivRequestDTO requestDto) throws IOException {
           Map<String, Object> response = UnivCert.status(api_key, requestDto.univEmail());
