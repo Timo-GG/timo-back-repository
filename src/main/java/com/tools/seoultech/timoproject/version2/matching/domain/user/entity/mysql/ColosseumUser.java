@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.version2.matching.domain.user.entity.mys
 
 import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.RiotAccount;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +19,10 @@ import java.util.List;
 @AllArgsConstructor
 public class ColosseumUser extends BaseUser {
     @ElementCollection
-    private List<PartyMemberInfo> partyMemberList;
+    private List<RiotAccount> partyMemberList;
 
     @Builder
-    public ColosseumUser(MemberAccount member, List<PartyMemberInfo> partyMemberList) {
+    public ColosseumUser(MemberAccount member, List<RiotAccount> partyMemberList) {
         super(member);
         this.partyMemberList = partyMemberList;
     }

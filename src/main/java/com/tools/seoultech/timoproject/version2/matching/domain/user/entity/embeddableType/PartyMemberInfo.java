@@ -3,14 +3,13 @@ package com.tools.seoultech.timoproject.version2.matching.domain.user.entity.emb
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.RiotAccount;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Embeddable
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class PartyMemberInfo {
     @Embedded
     private RiotAccount riotAccount;
