@@ -241,8 +241,8 @@ public class BasicAPIService {
                     })
                     .toList();
         } catch (IOException | InterruptedException e) {
-            log.error("챔피언 숙련도 조회 중 예외 발생", e);
-            throw new RiotAPIException("챔피언 숙련도 조회 실패", ErrorCode.API_ACCESS_ERROR);
+            log.warn("챔피언 숙련도 조회 실패, 빈 리스트 반환", e);
+            return Collections.emptyList();
         }
     }
 

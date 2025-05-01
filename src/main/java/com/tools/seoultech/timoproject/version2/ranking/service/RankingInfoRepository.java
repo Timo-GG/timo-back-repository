@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface RankingInfoRepository extends JpaRepository<RankingInfo, Long> {
     Optional<RankingInfo> findByMemberAccountMemberId(Long memberId);
+
+    boolean existsByMemberAccountMemberId(Long memberId);
 }

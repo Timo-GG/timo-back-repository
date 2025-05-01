@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.version2.ranking.dto;
 
 import com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.Gender;
 import com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayPosition;
+import com.tools.seoultech.timoproject.version2.ranking.RankingInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "랭킹 업데이트 요청 DTO")
@@ -21,4 +22,14 @@ public record RankingUpdateRequestDto(
 
         @Schema(description = "한 줄 소개 메모", example = "함께 즐겜할 유저 찾아요!")
         String memo
-) {}
+) {
+        public static RankingUpdateRequestDto fromEntity(RankingInfo entity, String department) {
+                return new RankingUpdateRequestDto(
+                        entity.getMbti(),
+                        entity.getPosition(),
+                        entity.getGender(),
+                        department,
+                        entity.getMemo()
+                );
+        }
+}

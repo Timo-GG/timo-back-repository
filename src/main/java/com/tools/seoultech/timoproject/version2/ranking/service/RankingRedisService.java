@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.global.exception.BusinessException;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
 import com.tools.seoultech.timoproject.version2.memberAccount.MemberAccountRepository;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.version2.ranking.RankingInfo;
 import com.tools.seoultech.timoproject.version2.ranking.dto.RankingUpdateRequestDto;
 import com.tools.seoultech.timoproject.version2.ranking.dto.Redis_RankingInfo;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -23,6 +25,7 @@ public class RankingRedisService {
     private static final String RANKING_KEY = "lol:ranking";
     private static final String RANKING_OBJECT_KEY = "lol:ranking:objects";
     private final MemberAccountRepository memberAccountRepository;
+    private final RankingInfoRepository rankingInfoRepository;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -35,6 +38,12 @@ public class RankingRedisService {
         }
 
         Redis_RankingInfo rankingInfo = Redis_RankingInfo.from(memberId, account, riotRankingDto);
+        Optional<RankingInfo> maybe = rankingInfoRepository.findByMemberAccountMemberId(memberId);
+        if (maybe.isPresent()) {
+            String department = account.getCertifiedUnivInfo().getDepartment();
+            RankingUpdateRequestDto updateRequestDto = RankingUpdateRequestDto.fromEntity(maybe.get(), department);
+            rankingInfo.updateRankingInfo(updateRequestDto);
+        }
         saveRankInfo(memberId, rankingInfo);
         log.info("[Redis 랭킹 등록 완료] memberId={}, score={}", memberId, rankingInfo.getScore());
     }
