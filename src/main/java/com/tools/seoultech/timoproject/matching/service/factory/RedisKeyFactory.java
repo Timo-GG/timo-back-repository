@@ -1,7 +1,7 @@
-package com.tools.seoultech.timoproject.version2.matching.service.factory;
+package com.tools.seoultech.timoproject.matching.service.factory;
 
-import com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.dto.UserDTO;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 
 import java.util.List;
 import java.util.Map;

@@ -1,11 +1,11 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.user.dto;
+package com.tools.seoultech.timoproject.matching.domain.user.dto;
 
-import com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.DuoInfo_Ver2;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.PartyMemberInfo;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.UserInfo_Ver2;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.DuoInfo_Ver2;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.PartyMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.UserInfo_Ver2;
 
-import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.RiotAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
 import lombok.Getter;
 

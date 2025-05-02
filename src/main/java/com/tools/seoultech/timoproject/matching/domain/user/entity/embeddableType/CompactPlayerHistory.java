@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType;
+package com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

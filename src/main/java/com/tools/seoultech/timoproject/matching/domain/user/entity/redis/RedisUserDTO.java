@@ -1,9 +1,9 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.user.entity.redis;
+package com.tools.seoultech.timoproject.matching.domain.user.entity.redis;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.RiotAccount;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;

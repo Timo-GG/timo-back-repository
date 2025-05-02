@@ -1,9 +1,9 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType;
+package com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType;
 
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.enumType.PlayCondition;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.enumType.PlayPosition;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.enumType.PlayStyle;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.enumType.VoiceChat;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayCondition;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayStyle;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.VoiceChat;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

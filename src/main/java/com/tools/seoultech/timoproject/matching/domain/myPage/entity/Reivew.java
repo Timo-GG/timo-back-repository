@@ -1,10 +1,10 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity;
+package com.tools.seoultech.timoproject.matching.domain.myPage.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
-import com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity.EnumType.OpponentAttitude;
-import com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity.EnumType.OpponentConversation;
-import com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity.EnumType.OpponentTalent;
-import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentAttitude;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentConversation;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentTalent;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

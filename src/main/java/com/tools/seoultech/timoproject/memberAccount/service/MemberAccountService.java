@@ -3,7 +3,7 @@ package com.tools.seoultech.timoproject.memberAccount.service;
 
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.memberAccount.dto.UpdateMemberInfoRequest;
-import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 
 public interface MemberAccountService {
 

@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.memberAccount.domain;
+package com.tools.seoultech.timoproject.memberAccount.domain.entity.enumType;
 
 public enum MemberStatus {
     ACTIVE,    // 정상 회원

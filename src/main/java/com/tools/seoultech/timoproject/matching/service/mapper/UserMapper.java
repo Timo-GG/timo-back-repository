@@ -1,9 +1,9 @@
-package com.tools.seoultech.timoproject.version2.matching.service.mapper;
+package com.tools.seoultech.timoproject.matching.service.mapper;
 
-import com.tools.seoultech.timoproject.version2.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.PartyMemberInfo;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.redis.RedisUserDTO;
-import com.tools.seoultech.timoproject.version2.matching.service.UserService;
+import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.PartyMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserDTO;
+import com.tools.seoultech.timoproject.matching.service.UserService;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

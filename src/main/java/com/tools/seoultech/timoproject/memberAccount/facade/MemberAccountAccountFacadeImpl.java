@@ -5,7 +5,7 @@ import com.tools.seoultech.timoproject.memberAccount.dto.AccountDto;
 import com.tools.seoultech.timoproject.memberAccount.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.memberAccount.service.MemberAccountService;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
-import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 import com.tools.seoultech.timoproject.memberAccount.dto.MemberAccountDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

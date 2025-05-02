@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.board.entity.enumType;
+package com.tools.seoultech.timoproject.matching.domain.board.entity.enumType;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

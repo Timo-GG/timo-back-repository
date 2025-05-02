@@ -1,10 +1,10 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.board.entity.enumType;
+package com.tools.seoultech.timoproject.matching.domain.board.entity.enumType;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import static com.tools.seoultech.timoproject.version2.matching.domain.board.entity.enumType.ColosseumMapCode.ABYSS;
-import static com.tools.seoultech.timoproject.version2.matching.domain.board.entity.enumType.ColosseumMapCode.RIFT;
+import static com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode.ABYSS;
+import static com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode.RIFT;
 
 @Getter
 @RequiredArgsConstructor

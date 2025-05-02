@@ -1,11 +1,12 @@
-package com.tools.seoultech.timoproject.version2.matching.service;
+package com.tools.seoultech.timoproject.matching.service;
 
-import com.tools.seoultech.timoproject.version2.matching.domain.board.dto.BoardDTO;
-import com.tools.seoultech.timoproject.version2.matching.domain.board.entity.redis.RedisBoardDTO;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.redis.RedisUserDTO;
-import com.tools.seoultech.timoproject.version2.matching.service.mapper.BoardMapper;
-import com.tools.seoultech.timoproject.version2.matching.service.mapper.UserMapper;
+import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoardDTO;
+import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserDTO;
+import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
+import com.tools.seoultech.timoproject.matching.service.mapper.UserMapper;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

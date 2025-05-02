@@ -1,7 +1,7 @@
 package com.tools.seoultech.timoproject.global.config;
 
-import com.tools.seoultech.timoproject.version2.matching.domain.board.entity.redis.RedisBoardDTO;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.redis.RedisUserDTO;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoardDTO;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

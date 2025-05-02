@@ -1,11 +1,11 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.board.dto;
+package com.tools.seoultech.timoproject.matching.domain.board.dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.tools.seoultech.timoproject.version2.matching.domain.board.entity.enumType.ColosseumModeCode;
-import com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.CompactPlayerHistory;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumModeCode;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.CompactPlayerHistory;
 import lombok.Builder;
 import lombok.Getter;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type") // NOTE: 직렬화 시 타입정보 저장

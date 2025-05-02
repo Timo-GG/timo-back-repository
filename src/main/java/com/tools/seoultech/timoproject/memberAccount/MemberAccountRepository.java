@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.memberAccount;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

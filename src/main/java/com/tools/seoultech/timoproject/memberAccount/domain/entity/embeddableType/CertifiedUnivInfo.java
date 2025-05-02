@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.memberAccount.domain;
+package com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

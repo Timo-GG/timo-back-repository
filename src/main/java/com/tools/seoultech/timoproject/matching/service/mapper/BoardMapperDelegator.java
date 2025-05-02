@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.version2.matching.service.mapper;
+package com.tools.seoultech.timoproject.matching.service.mapper;
 
 public class BoardMapperDelegator {
 }

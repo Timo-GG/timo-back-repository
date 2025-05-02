@@ -1,9 +1,10 @@
 package com.tools.seoultech.timoproject.ranking.dto;
 
+
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Gender;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.Gender;
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.PlayPosition;
-import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 import lombok.*;
 
 import java.io.Serializable;

@@ -1,7 +1,11 @@
 package com.tools.seoultech.timoproject.matching.service;
 
-
-
+import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.PartyMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserDTO;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserRepository;
+import com.tools.seoultech.timoproject.matching.service.mapper.UserMapper;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

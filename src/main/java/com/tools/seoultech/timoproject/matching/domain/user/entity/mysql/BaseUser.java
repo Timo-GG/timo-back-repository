@@ -1,6 +1,6 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.user.entity.mysql;
+package com.tools.seoultech.timoproject.matching.domain.user.entity.mysql;
 
-import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.board.entity.mysql;
+package com.tools.seoultech.timoproject.matching.domain.board.entity.mysql;
 
 
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.mysql.BaseUser;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.mysql.BaseUser;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;

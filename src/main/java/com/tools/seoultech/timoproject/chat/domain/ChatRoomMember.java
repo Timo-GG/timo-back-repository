@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.chat.domain;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

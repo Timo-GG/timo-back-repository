@@ -1,7 +1,7 @@
-package com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity;
+package com.tools.seoultech.timoproject.matching.domain.myPage.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.mysql.BaseUser;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.mysql.BaseUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
