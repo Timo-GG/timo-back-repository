@@ -1,48 +1,61 @@
 package com.tools.seoultech.timoproject.auth.service;
 
-import com.tools.seoultech.timoproject.auth.dto.AuthTokens;
+import com.tools.seoultech.timoproject.auth.dto.LoginResponse;
 import com.tools.seoultech.timoproject.auth.dto.OAuthInfoResponse;
 import com.tools.seoultech.timoproject.auth.dto.OAuthLoginParams;
 import com.tools.seoultech.timoproject.auth.jwt.JwtProvider;
 import com.tools.seoultech.timoproject.auth.jwt.TokenCollection;
 import com.tools.seoultech.timoproject.auth.jwt.TokenInfo;
-import com.tools.seoultech.timoproject.member.domain.Member;
-import com.tools.seoultech.timoproject.member.repository.MemberRepository;
-import com.tools.seoultech.timoproject.member.service.MemberService;
+import com.tools.seoultech.timoproject.memberAccount.domain.Role;
+import com.tools.seoultech.timoproject.memberAccount.service.MemberAccountService;
+import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
+import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class OAuthLoginService {
 
-    private final MemberRepository memberRepository;
-    private final MemberService memberService;
+    private final MemberAccountRepository memberAccountRepository;
+    private final MemberAccountService memberAccountService;
     private final RequestOAuthInfoService requestOAuthInfoService;
     private final JwtProvider jwtProvider;
 
-    public TokenCollection login(OAuthLoginParams params) {
+    public LoginResponse login(OAuthLoginParams params) {
         OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
-        Long memberId = findOrCreateMember(oAuthInfoResponse);
-        return jwtProvider.createTokenCollection(TokenInfo.from(memberId));
-    }
 
-    private Long findOrCreateMember(OAuthInfoResponse oAuthInfoResponse) {
-        return memberRepository.findByEmail(oAuthInfoResponse.getEmail())
-                .map(Member::getId)
-                .orElseGet(() -> newMember(oAuthInfoResponse));
-    }
+        if (oAuthInfoResponse.getEmail() == null) {
+            throw new IllegalArgumentException("Discord 계정에 이메일이 존재하지 않거나 비공개입니다.");
+        }
 
-    private Long newMember(OAuthInfoResponse oAuthInfoResponse) {
-        Member member = Member.builder()
-                .email(oAuthInfoResponse.getEmail())
-                .nickname(memberService.randomCreateNickname())
-                .profileImageId(memberService.randomCreateProfileImageId())
-                .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
+        // 기존 회원이면 false, 신규 회원이면 true를 반환하기 위한 플래그
+        Optional<MemberAccount> optionalMember = memberAccountRepository.findByEmail(oAuthInfoResponse.getEmail());
+        boolean isNewUser = optionalMember.isEmpty();
+        MemberAccount member = optionalMember.orElseGet(() -> createNewMember(oAuthInfoResponse));
+        log.info("isNewUser: " + isNewUser);
+
+
+        TokenCollection tokenCollection = jwtProvider.createTokenCollection(TokenInfo.from(member.getMemberId()));
+
+        return LoginResponse.builder()
+                .accessToken(tokenCollection.getAccessToken())
+                .refreshToken(tokenCollection.getRefreshToken())
+                .isNewUser(isNewUser)
                 .build();
+    }
 
-        return memberRepository.save(member).getId();
+    private MemberAccount createNewMember(OAuthInfoResponse oAuthInfoResponse) {
+        MemberAccount member = MemberAccount.builder()
+                .email(oAuthInfoResponse.getEmail())
+                .username(memberAccountService.randomCreateUsername())
+                .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
+                .role(Role.MEMBER)
+                .build();
+        return memberAccountRepository.save(member);
     }
 }

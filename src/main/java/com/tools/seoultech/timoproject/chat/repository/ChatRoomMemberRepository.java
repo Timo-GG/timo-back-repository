@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, Long> {
     List<ChatRoomMember> findByChatRoom(ChatRoom chatRoom);
 
-    Optional<ChatRoomMember> findByChatRoomIdAndMemberId(Long chatRoomId, Long memberId);
+    Optional<ChatRoomMember> findByChatRoomIdAndMember_MemberId(Long chatRoomId, Long memberId);
 
     Collection<ChatRoomMember> findByChatRoomId(Long roomId);
 
@@ -24,5 +24,8 @@ public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, 
     List<ChatRoomMember> findByMemberIdWithDuo(@Param("memberId") Long memberId);
 
     // 현재 활성화된(참여중이고 종료되지 않은) 채팅방 조회
-    Optional<ChatRoomMember> findFirstByMember_IdAndIsLeftFalse(Long memberId);
+    Optional<ChatRoomMember> findFirstByMember_MemberIdAndIsLeftFalse(Long memberId);
+
+    List<ChatRoomMember> findByMember_MemberIdAndIsLeftFalse(Long memberId);
+
 }

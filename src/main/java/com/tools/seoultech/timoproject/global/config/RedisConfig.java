@@ -38,6 +38,7 @@ public class RedisConfig {
 
         // Key를 String으로 저장
         redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer()); // 이거 추가!
 
         // Value를 JSON 형식으로 직렬화
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());

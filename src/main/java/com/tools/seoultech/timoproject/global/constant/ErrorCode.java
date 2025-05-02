@@ -34,6 +34,8 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN_EXCEPTION(604, HttpStatus.UNAUTHORIZED,  "유효하지 않은 리프레시 토큰입니다."),
     UNSUPPORTED_JWT_TOKEN_EXCEPTION(605, HttpStatus.UNAUTHORIZED,  "지원하지 않는 JWT 토큰입니다."),
     UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION(606, HttpStatus.UNAUTHORIZED,  "지원하지 않는 소셜 플랫폼입니다."),
+    MEMBER_NOT_FOUND(607, HttpStatus.UNAUTHORIZED,  "존재하지 않는 사용자입니다."),
+
     /**
      * resource. code prefix: 700번대
      */
@@ -55,7 +57,21 @@ public enum ErrorCode {
     NOT_FOUND_DUO_EXCEPTION(809, HttpStatus.NOT_FOUND, "존재하지 않는 듀오입니다."),
     NOT_FOUND_CHATROOM_EXCEPTION(810, HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다."),
     CHATROOM_NOT_TERMINATED_EXCEPTION(811, HttpStatus.BAD_REQUEST, "채팅방이 종료되지 않았습니다."),
-    DUPLICATE_RATING_EXCEPTION(812, HttpStatus.CONFLICT, "이미 평점을 제출한 매칭입니다.");
+    DUPLICATE_RATING_EXCEPTION(812, HttpStatus.CONFLICT, "이미 평점을 제출한 매칭입니다."),
+    INVALID_RANKING_INFO(813, HttpStatus.BAD_REQUEST, "소환사 계정 또는 학교 계정 정보가 누락되었습니다."),
+
+    /**
+     * my-setting. code prefix: 900번대
+     */
+
+    ALREADY_USED_RIOT_ACCOUNT(900, HttpStatus.BAD_REQUEST, "이미 사용중인 소환사 계정입니다."),
+    ALREADY_USED_USERNAME(901, HttpStatus.BAD_REQUEST, "이미 사용중인 닉네임입니다."),
+    ALREADY_USED_UNIV_ACCOUNT(902, HttpStatus.BAD_REQUEST, "이미 사용중인 학교 계정입니다."),
+    UNIV_ALREADY_VERIFIED(903, HttpStatus.CREATED, "이미 인증이 완료된 사용자입니다."),
+    RANKING_NOT_FOUND(904, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
+
+    REDIS_RANKING_NOT_FOUND(1000, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
+    REDIS_ERROR(1001, HttpStatus.INTERNAL_SERVER_ERROR, "Redis 서버 에러입니다.");
 
 
     private final int code;
@@ -63,9 +79,8 @@ public enum ErrorCode {
     private final String message;
 
     public String getMessage(Throwable e) {
-        return this.getMessage(this.message + " : " + e.getMessage());
-    }
-    public String getMessage(String message) {
+        return this.message;
+    }    public String getMessage(String message) {
         return Optional.ofNullable(message)
                 .filter(Predicate.not(String::isBlank))
                 .orElse(getMessage());

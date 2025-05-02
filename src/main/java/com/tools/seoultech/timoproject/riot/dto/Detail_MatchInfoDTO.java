@@ -36,6 +36,8 @@ public class Detail_MatchInfoDTO {
     private final Integer totalKillsPencentage;
     private final String multiKill;
     private final Boolean mvpYes;
+    private final Integer championLevel;
+
 
     private final String summoner1Id; // TODO: id to url img
     private final String summoner2Id; // TODO: "
@@ -129,6 +131,7 @@ public class Detail_MatchInfoDTO {
                 .totalKillsPencentage(totalKillSum)
                 .multiKill(myInfo.getMultiKill())
                 .mvpYes(mvpBool)
+                .championLevel(myInfo.getChampionLevel())
                 .summoner1Id(spell1URL)
                 .summoner2Id(spell2URL)
                 .rune3(mainRuneURL)

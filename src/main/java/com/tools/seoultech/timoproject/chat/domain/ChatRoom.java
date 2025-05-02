@@ -41,6 +41,13 @@ public class ChatRoom extends BaseEntity {
         return room;
     }
 
+    public static ChatRoom createChatRoom(Long memberId1, Long memberId2) {
+        ChatRoom room = new ChatRoom();
+        room.isGroupChat = false;
+        room.lastMessageTime = LocalDateTime.now();
+        return room;
+    }
+
     public void updateLastMessage(Message message) {
         this.lastMessageSenderId = message.getSenderId();
         this.lastMessageTime = message.getRegDate();

@@ -5,101 +5,130 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.tools.seoultech.timoproject.auth.jwt.JwtResolver;
-import com.tools.seoultech.timoproject.chat.service.ChatService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class SocketModule implements DisposableBean {
+public class SocketModule {
 
     private final SocketIOServer socketIOServer;
     private final JwtResolver jwtResolver;
-    private final WebSocketAddMappingSupporter webSocketAddMappingSupporter;
+
+    private int onlineCount = 0;
 
     @PostConstruct
-    public void initSocketServer() {
-        webSocketAddMappingSupporter.addListeners(socketIOServer);
-        socketIOServer.start();
+    public void init() {
+        // 1) 연결 리스너 (카운터 변경은 handleJoin에서)
         socketIOServer.addConnectListener(onConnected());
+        // 2) 해제 리스너 (카운터 변경은 leave_online / onDisconnected 에서)
         socketIOServer.addDisconnectListener(onDisconnected());
-    }
 
-    @Override
-    public void destroy() throws Exception {
-        log.info("Shutting down SocketIOServer...");
-        socketIOServer.stop();
+        // 3) join_online 이벤트 직접 핸들링
+        socketIOServer.addEventListener(
+                "join_online",
+                JoinOnlineRequest.class,
+                (client, data, ack) -> {
+                    onlineCount++;
+                    log.info("[join_online] memberId={} 접속, 현재 접속자 수={}", data.getMemberId(), onlineCount);
+                    socketIOServer.getBroadcastOperations()
+                            .sendEvent("online_count", new OnlineCountResponse(onlineCount));
+                    // 클라이언트 세션에 멤버 정보 보관
+                    client.set("memberId", data.getMemberId());
+                    client.set("isGuest", false);
+                }
+        );
+
+        // 4) leave_online 이벤트 직접 핸들링
+        socketIOServer.addEventListener(
+                "leave_online",
+                LeaveOnlineRequest.class,
+                (client, data, ack) -> {
+                    onlineCount = Math.max(0, onlineCount - 1);
+                    log.info("[leave_online] memberId={} 퇴장, 현재 접속자 수={}", data.getMemberId(), onlineCount);
+                    socketIOServer.getBroadcastOperations()
+                            .sendEvent("online_count", new OnlineCountResponse(onlineCount));
+                    client.set("memberId", null);
+                }
+        );
+
+        // 5) 서버 시작
+        socketIOServer.start();
+        log.info("⚡ Socket server started.");
     }
 
     private ConnectListener onConnected() {
         return client -> {
-            try {
-                handleConnection(client);
-            } catch (Exception e) {
-                log.error("[connect] Invalid token or connection error: {}", e.getMessage(), e);
+            String token = client.getHandshakeData().getSingleUrlParam("token");
+            String guest = client.getHandshakeData().getSingleUrlParam("guest");
+            if (token != null && !token.isEmpty()) {
+                Long memberId = jwtResolver.getMemberIdFromAccessToken(token);
+                client.set("memberId", memberId);
+                client.set("isGuest", false);
+                client.joinRoom("member_" + memberId);
+                log.info("[connect] 로그인 유저 연결됨: memberId={}, sessionId={}", memberId, client.getSessionId());
+            } else if ("true".equals(guest)) {
+                client.set("isGuest", true);
+                log.info("[connect] 게스트 유저 연결됨: sessionId={}", client.getSessionId());
+            } else {
+                log.warn("[connect] 토큰 또는 guest 파라미터 누락, 연결 거부");
                 client.disconnect();
             }
+            // **여기서는 카운터를 올리지 않습니다!**
         };
     }
 
     private DisconnectListener onDisconnected() {
         return client -> {
             Long memberId = client.get("memberId");
-            log.info("[disconnect] memberId = {}, sessionId = {}",
-                    memberId, client.getSessionId());
+            Boolean isGuest = client.get("isGuest");
+            log.info("[disconnect] memberId={}, sessionId={}", memberId, client.getSessionId());
+            // 만약 leave_online 으로 빠져나가지 않은 경우, 여기서 한번 더 감소시켜 줌
+            if (memberId != null || Boolean.TRUE.equals(isGuest)) {
+                onlineCount = Math.max(0, onlineCount - 1);
+                socketIOServer.getBroadcastOperations()
+                        .sendEvent("online_count", new OnlineCountResponse(onlineCount));
+            }
         };
     }
 
-    /**
-     * 연결된 클라이언트에 대한 처리:
-     * 1) 토큰 추출
-     * 2) memberId 파싱
-     * 3) 소켓 세션에 저장
-     * 4) 방(room) 추출 & join
-     * 5) connected_info 이벤트로 memberId 전송
-     */
-    private void handleConnection(SocketIOClient client) {
-        String token = extractToken(client);
-        Long memberId = parseMemberId(token);
-        setMemberId(client, memberId);
+    // 이벤트 바인딩용 요청/응답 DTO
+    public static class JoinOnlineRequest {
+        private Long memberId;
 
-        joinRoom(client, "member_" + memberId.toString());
-        broadcastSystemMessage(memberId.toString(), memberId + " 님이 입장했습니다.");
-
-        client.sendEvent("connected_info", memberId);
-
-        log.info("[connect] Socket connected. memberId = {}, sessionId = {}, room = {}",
-                memberId, client.getSessionId(), "member_" + memberId);
-    }
-
-    private String extractToken(SocketIOClient client) {
-        String token = client.getHandshakeData().getSingleUrlParam("token");
-        log.info("[extractToken] token param = {}", token);
-        if (token == null || token.isEmpty()) {
-            throw new IllegalArgumentException("Token is missing or empty");
+        public Long getMemberId() {
+            return memberId;
         }
-        return token;
+
+        public void setMemberId(Long m) {
+            this.memberId = m;
+        }
     }
 
-    private Long parseMemberId(String token) {
-        return jwtResolver.getMemberIdFromAccessToken(token);
+    public static class LeaveOnlineRequest {
+        private Long memberId;
+
+        public Long getMemberId() {
+            return memberId;
+        }
+
+        public void setMemberId(Long m) {
+            this.memberId = m;
+        }
     }
 
-    private void setMemberId(SocketIOClient client, Long memberId) {
-        client.set("memberId", memberId);
-    }
+    public static class OnlineCountResponse {
+        private final int count;
 
-    private void joinRoom(SocketIOClient client, String room) {
-        client.joinRoom(room);
-    }
+        public OnlineCountResponse(int count) {
+            this.count = count;
+        }
 
-    // 시스템 메시지 브로드캐스트
-    private void broadcastSystemMessage(String room, String message) {
-        socketIOServer.getRoomOperations(room).sendEvent("system_message", message);
+        public int getCount() {
+            return count;
+        }
     }
-
 }
