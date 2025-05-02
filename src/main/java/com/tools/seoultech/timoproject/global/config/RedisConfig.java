@@ -1,7 +1,7 @@
 package com.tools.seoultech.timoproject.global.config;
 
-import com.tools.seoultech.timoproject.version2.matching.board.entity.redis.Redis_BaseSearchBoard;
-import com.tools.seoultech.timoproject.version2.matching.user.entity.redis.Redis_BaseUser;
+import com.tools.seoultech.timoproject.matching.board.entity.redis.Redis_BaseSearchBoard;
+import com.tools.seoultech.timoproject.matching.user.entity.redis.Redis_BaseUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

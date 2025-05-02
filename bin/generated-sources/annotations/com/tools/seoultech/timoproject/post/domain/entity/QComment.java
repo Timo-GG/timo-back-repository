@@ -28,7 +28,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final com.tools.seoultech.timoproject.member.domain.QMember member;
+    public final com.tools.seoultech.timoproject.memberAccount.domain.QMember member;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
@@ -56,7 +56,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.member.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.memberAccount.domain.QMember(forProperty("member"), inits.get("member")) : null;
         this.post = inits.isInitialized("post") ? new QPost(forProperty("post")) : null;
     }
 

@@ -1,13 +1,14 @@
 package com.tools.seoultech.timoproject.version2.ranking.facade;
 
+import com.tools.seoultech.timoproject.ranking.facade.RankingFacadeImpl;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
 import com.tools.seoultech.timoproject.riot.facade.RiotFacade;
-import com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.Gender;
-import com.tools.seoultech.timoproject.version2.matching.user.entity.enumType.PlayPosition;
-import com.tools.seoultech.timoproject.version2.ranking.dto.RankingUpdateRequestDto;
-import com.tools.seoultech.timoproject.version2.ranking.dto.Redis_RankingInfo;
-import com.tools.seoultech.timoproject.version2.ranking.service.RankingRedisService;
-import com.tools.seoultech.timoproject.version2.ranking.service.RankingService;
+import com.tools.seoultech.timoproject.matching.user.entity.enumType.Gender;
+import com.tools.seoultech.timoproject.matching.user.entity.enumType.PlayPosition;
+import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
+import com.tools.seoultech.timoproject.ranking.dto.Redis_RankingInfo;
+import com.tools.seoultech.timoproject.ranking.service.RankingRedisService;
+import com.tools.seoultech.timoproject.ranking.service.RankingService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -85,6 +86,7 @@ class RankingFacadeImplTest {
                 "INTJ",
                 PlayPosition.TOP,
                 Gender.MALE,
+                "컴퓨터공학과",
                 "한줄소개입니다"
         );
 
@@ -95,6 +97,7 @@ class RankingFacadeImplTest {
                 .mbti("ENFP")
                 .memo("기존 메모")
                 .position(PlayPosition.MID)
+                .department("컴퓨터공학과")
                 .gender(Gender.FEMALE)
                 .score(1000)
                 .build();

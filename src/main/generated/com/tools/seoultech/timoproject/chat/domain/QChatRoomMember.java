@@ -30,7 +30,7 @@ public class QChatRoomMember extends EntityPathBase<ChatRoomMember> {
 
     public final NumberPath<Long> lastReadMessageId = createNumber("lastReadMessageId", Long.class);
 
-    public final com.tools.seoultech.timoproject.member.domain.QMember member;
+    public final com.tools.seoultech.timoproject.memberAccount.domain.QMemberAccount member;
 
     public final NumberPath<Integer> unreadCount = createNumber("unreadCount", Integer.class);
 
@@ -53,7 +53,7 @@ public class QChatRoomMember extends EntityPathBase<ChatRoomMember> {
     public QChatRoomMember(Class<? extends ChatRoomMember> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.chatRoom = inits.isInitialized("chatRoom") ? new QChatRoom(forProperty("chatRoom")) : null;
-        this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.member.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.memberAccount.domain.QMemberAccount(forProperty("member"), inits.get("member")) : null;
     }
 
 }

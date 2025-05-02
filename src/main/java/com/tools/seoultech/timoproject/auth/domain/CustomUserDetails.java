@@ -1,9 +1,7 @@
 package com.tools.seoultech.timoproject.auth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tools.seoultech.timoproject.member.domain.Member;
-import com.tools.seoultech.timoproject.member.domain.Role;
-import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
