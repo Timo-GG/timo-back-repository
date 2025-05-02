@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.memberAccount.dto.AccountDto;
 
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -19,19 +20,20 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1/riot")
 @Validated
+@Tag(name = "RiotAPI", description = "Riot API")
 public class BasicAPIController {
     private final BasicAPIService bas;
 
-    @GetMapping("/request/Account")
+    @GetMapping("/Account")
     public ResponseEntity<APIDataResponse<AccountDto.Response>> requestAccount(
             @Valid AccountDto.Request dto) throws RiotAPIException, Exception
     {
         AccountDto.Response response_dto = bas.findUserAccount(dto);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(response_dto));
     }
-    @GetMapping("/request/MatchV5/matches/matchList")
+    @GetMapping("/MatchV5/matches/matchList")
     public ResponseEntity<APIDataResponse<List<String>>> requestMatchList(
             @Valid AccountDto.Request dto) throws RiotAPIException, Exception{
         AccountDto.Response response_dto = bas.findUserAccount(dto);
@@ -39,7 +41,7 @@ public class BasicAPIController {
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(matchList));
     }
 
-    @GetMapping("/request/MatchV5/matches/matchInfoDTO")
+    @GetMapping("/MatchV5/matches/matchInfoDTO")
     public ResponseEntity<APIDataResponse<List<MatchInfoDTO>>> requestMatchV5(
             @Valid AccountDto.Request dto
     )throws RiotAPIException, Exception{
@@ -55,7 +57,7 @@ public class BasicAPIController {
                 });
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(dto_List));
     }
-    @GetMapping("/request/MatchV5/matches/전적검색")
+    @GetMapping("/MatchV5/matches/전적검색")
     public ResponseEntity<APIDataResponse<List<Detail_MatchInfoDTO>>> requestMatchInfo(
             @Valid AccountDto.Request dto) throws Exception{
         String puuid = bas.findUserAccount(dto).getPuuid();
@@ -73,21 +75,36 @@ public class BasicAPIController {
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(dto_List));
     }
 
-    @GetMapping("/request/most-champ/{puuid}")
+    @GetMapping("/most-champ/{puuid}")
     public ResponseEntity<APIDataResponse<List<String>>> requestMostChamp(
             @PathVariable String puuid) throws Exception{
         List<String> mostChamp = bas.getMost3ChampionNames(puuid);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(mostChamp));
     }
 
-    @GetMapping("/request/recent-match/{puuid}")
-    public ResponseEntity<APIDataResponse<List<MatchSummaryDTO>>> requestRecentMatch(
-            @PathVariable String puuid) throws Exception{
+    @PostMapping("/recent-match")
+    public ResponseEntity<APIDataResponse<RecentMatchFullResponse>> requestRecentMatch(
+            @RequestBody AccountDto.Request request) throws Exception {
+
+        AccountDto.Response account = bas.findUserAccount(request);
+        String puuid = account.getPuuid();
+
         List<MatchSummaryDTO> recentMatch = bas.getRecentMatchSummaries(puuid);
-        return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(recentMatch));
+        RankInfoDto rankInfo = bas.getSoloRankInfoByPuuid(puuid);
+        String profileIconUrl = bas.getProfileIconUrlByPuuid(puuid);
+
+        RecentMatchFullResponse response = new RecentMatchFullResponse(
+                account.getGameName(),
+                account.getTagLine(),
+                profileIconUrl,
+                rankInfo,
+                recentMatch
+        );
+
+        return ResponseEntity.ok(APIDataResponse.of(response));
     }
 
-    @GetMapping("/request/rank-info/{puuid}")
+    @GetMapping("/rank-info/{puuid}")
     public ResponseEntity<APIDataResponse<RankInfoDto>> requestRankInfo(
             @PathVariable String puuid) throws Exception {
 
@@ -95,7 +112,7 @@ public class BasicAPIController {
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(rankInfo));
     }
 
-    @GetMapping("/request/image/{puuid}")
+    @GetMapping("/image/{puuid}")
     public ResponseEntity<APIDataResponse<String>> requestImage(
             @PathVariable String puuid) throws Exception {
         String imageUrl = bas.getProfileIconUrlByPuuid(puuid);
