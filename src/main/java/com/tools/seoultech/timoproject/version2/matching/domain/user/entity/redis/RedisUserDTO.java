@@ -16,7 +16,7 @@ import java.util.UUID;
 @RedisHash(value = "userDTO", timeToLive = 15 * 60)
 @Getter
 @JsonIgnoreProperties(value = {"matchingCategory"}, allowGetters = true, allowSetters = false)
-public class RedisUserDTO<T extends UserDTO.UserResponseDTOInterface> {
+public class RedisUserDTO<T extends UserDTO.Response> {
     @Id
     private final String uuid;
 
@@ -31,7 +31,7 @@ public class RedisUserDTO<T extends UserDTO.UserResponseDTOInterface> {
 
     @Builder
     @PersistenceCreator
-    protected RedisUserDTO(Long memberId, RiotAccount riotAccount, T body) {
+    public RedisUserDTO(Long memberId, RiotAccount riotAccount, T body) {
         this.uuid = UUID.randomUUID().toString();
         this.memberId = memberId;
         this.riotAccount = riotAccount;

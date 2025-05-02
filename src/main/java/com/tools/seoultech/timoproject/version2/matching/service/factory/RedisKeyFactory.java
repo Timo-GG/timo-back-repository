@@ -21,9 +21,9 @@ public class RedisKeyFactory {
         // Key : User:Member:1L
         return String.format("User:%s:%d", "Member", memberId);
     }
-    public static List<String> getKeySetList(UserDTO requestDto){
-        String categoryKey = RedisKeyFactory.UserSetKeyBy(requestDto.getMatchingCategory());
-        String memberKey = RedisKeyFactory.UserSetKeyBy(requestDto.getMemberId());
-        return List.of(categoryKey, memberKey);
-    }
+//    public static List<String> getKeySetList(UserDTO requestDto){
+//        String categoryKey = RedisKeyFactory.UserSetKeyBy(requestDto.getMatchingCategory());
+//        String memberKey = RedisKeyFactory.UserSetKeyBy(requestDto.getMemberId());
+//        return List.of(categoryKey, memberKey);
+//    }
 }

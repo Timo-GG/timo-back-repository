@@ -1,27 +1,18 @@
 package com.tools.seoultech.timoproject.version2.matching.domain.user.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.CompactPlayerHistory;
 import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.DuoInfo_Ver2;
 import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.UserInfo_Ver2;
 
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.RiotAccount;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceCreator;
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
-public class UserDTO<T extends UserDTO.UserDTOInterface> {
+public class UserDTO<T extends UserDTO.BaseInterface> {
 
     // 공통 필드.
     private final Long memberId;
@@ -32,26 +23,26 @@ public class UserDTO<T extends UserDTO.UserDTOInterface> {
 
     // 중첩 Record 필드. 1. Request•Response, 2. Duo•Colosseum
     @Builder
-    public record RequestDuoUser(
+    public record RequestDuo(
             UserInfo_Ver2 userInfo,
             DuoInfo_Ver2 duoInfo
-    )implements UserRequestDTOInterface{}
+    )implements Request {}
 
     @Builder
-    public record RequestColosseumUser(
+    public record RequestColosseum(
             List<RiotAccount> partyMemberRiotAccountList
-    )implements UserRequestDTOInterface{}
+    )implements Request {}
 
     @Builder
-    public record ResponseDuoUser(
+    public record ResponseDuo(
             UserInfo_Ver2 userInfo,
             DuoInfo_Ver2 duoInfo
-    )implements UserResponseDTOInterface{}
+    )implements Response {}
 
     @Builder
-    public record ResponseColoseumUser(
+    public record ResponseColosseum(
                 List<PartyMemberInfo> partyMemberInfoList
-    )implements UserResponseDTOInterface{}
+    )implements Response {}
 
     // 생성자 Builder
     @Builder
@@ -62,11 +53,11 @@ public class UserDTO<T extends UserDTO.UserDTOInterface> {
     }
 
     // 인터페이스 태그
-    public interface UserRequestDTOInterface extends UserDTOInterface{}
-    public interface UserResponseDTOInterface extends UserDTOInterface{}
-    public interface UserDTOInterface{
+    public interface Request extends BaseInterface {}
+    public interface Response extends BaseInterface {}
+    public interface BaseInterface {
         default MatchingCategory getMatchingCategory(){
-            if(this instanceof RequestDuoUser || this instanceof ResponseDuoUser)
+            if(this instanceof UserDTO.RequestDuo || this instanceof UserDTO.ResponseDuo)
                 return MatchingCategory.Duo;
             else
                 return MatchingCategory.Colosseum;
