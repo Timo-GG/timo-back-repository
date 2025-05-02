@@ -24,11 +24,11 @@ public class QRating extends EntityPathBase<Rating> {
 
     public final EnumPath<Rating.Attitude> attitude = createEnum("attitude", Rating.Attitude.class);
 
-    public final com.tools.seoultech.timoproject.member.domain.QMember duo;
+    public final com.tools.seoultech.timoproject.memberAccount.domain.QMember duo;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final com.tools.seoultech.timoproject.member.domain.QMember member;
+    public final com.tools.seoultech.timoproject.memberAccount.domain.QMember member;
 
     public final NumberPath<java.math.BigDecimal> score = createNumber("score", java.math.BigDecimal.class);
 
@@ -54,8 +54,8 @@ public class QRating extends EntityPathBase<Rating> {
 
     public QRating(Class<? extends Rating> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.duo = inits.isInitialized("duo") ? new com.tools.seoultech.timoproject.member.domain.QMember(forProperty("duo"), inits.get("duo")) : null;
-        this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.member.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.duo = inits.isInitialized("duo") ? new com.tools.seoultech.timoproject.memberAccount.domain.QMember(forProperty("duo"), inits.get("duo")) : null;
+        this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.memberAccount.domain.QMember(forProperty("member"), inits.get("member")) : null;
     }
 
 }

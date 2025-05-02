@@ -24,7 +24,7 @@ public class QPostLike extends EntityPathBase<PostLike> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final com.tools.seoultech.timoproject.member.domain.QMember member;
+    public final com.tools.seoultech.timoproject.memberAccount.domain.QMember member;
 
     public final QPost post;
 
@@ -46,7 +46,7 @@ public class QPostLike extends EntityPathBase<PostLike> {
 
     public QPostLike(Class<? extends PostLike> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.member.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.memberAccount.domain.QMember(forProperty("member"), inits.get("member")) : null;
         this.post = inits.isInitialized("post") ? new QPost(forProperty("post")) : null;
     }
 

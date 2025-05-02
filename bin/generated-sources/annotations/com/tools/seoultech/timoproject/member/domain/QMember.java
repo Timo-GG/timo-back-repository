@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.member.domain;
+package com.tools.seoultech.timoproject.memberAccount.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 

@@ -32,7 +32,7 @@ public class QReadStatus extends EntityPathBase<ReadStatus> {
 
     public final BooleanPath isRead = createBoolean("isRead");
 
-    public final com.tools.seoultech.timoproject.member.domain.QMember member;
+    public final com.tools.seoultech.timoproject.memberAccount.domain.QMember member;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modDate = _super.modDate;
@@ -60,7 +60,7 @@ public class QReadStatus extends EntityPathBase<ReadStatus> {
         super(type, metadata, inits);
         this.chatMessage = inits.isInitialized("chatMessage") ? new QChatMessage(forProperty("chatMessage"), inits.get("chatMessage")) : null;
         this.chatRoom = inits.isInitialized("chatRoom") ? new QChatRoom(forProperty("chatRoom")) : null;
-        this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.member.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.member = inits.isInitialized("member") ? new com.tools.seoultech.timoproject.memberAccount.domain.QMember(forProperty("member"), inits.get("member")) : null;
     }
 
 }

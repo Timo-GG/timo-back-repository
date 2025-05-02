@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.post.domain.mapper;
 
-import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.memberAccount.domain.Member;
 import com.tools.seoultech.timoproject.post.domain.dto.CommentDTO;
 import com.tools.seoultech.timoproject.post.domain.entity.Comment;
 import com.tools.seoultech.timoproject.post.domain.entity.Post;

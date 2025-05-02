@@ -1,24 +1,20 @@
 package com.tools.seoultech.timoproject.auth.service;
 
-import com.tools.seoultech.timoproject.auth.dto.AuthTokens;
 import com.tools.seoultech.timoproject.auth.dto.LoginResponse;
 import com.tools.seoultech.timoproject.auth.dto.OAuthInfoResponse;
 import com.tools.seoultech.timoproject.auth.dto.OAuthLoginParams;
 import com.tools.seoultech.timoproject.auth.jwt.JwtProvider;
 import com.tools.seoultech.timoproject.auth.jwt.TokenCollection;
 import com.tools.seoultech.timoproject.auth.jwt.TokenInfo;
-import com.tools.seoultech.timoproject.member.domain.Member;
-import com.tools.seoultech.timoproject.member.domain.Role;
-import com.tools.seoultech.timoproject.member.repository.MemberRepository;
-import com.tools.seoultech.timoproject.member.service.MemberService;
-import com.tools.seoultech.timoproject.version2.memberAccount.MemberAccountRepository;
-import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.Role;
+import com.tools.seoultech.timoproject.memberAccount.service.MemberAccountService;
+import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
+import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -26,7 +22,7 @@ import java.util.UUID;
 public class OAuthLoginService {
 
     private final MemberAccountRepository memberAccountRepository;
-    private final MemberService memberService;
+    private final MemberAccountService memberAccountService;
     private final RequestOAuthInfoService requestOAuthInfoService;
     private final JwtProvider jwtProvider;
 
@@ -56,7 +52,7 @@ public class OAuthLoginService {
     private MemberAccount createNewMember(OAuthInfoResponse oAuthInfoResponse) {
         MemberAccount member = MemberAccount.builder()
                 .email(oAuthInfoResponse.getEmail())
-                .username(memberService.randomCreateUsername())
+                .username(memberAccountService.randomCreateUsername())
                 .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
                 .role(Role.MEMBER)
                 .build();

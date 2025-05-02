@@ -53,8 +53,8 @@ public class SwaggerConfig {
         String[] packagesToScan = {
                 "com.tools.seoultech.timoproject.riot",
                 "com.tools.seoultech.timoproject.member",
-                "com.tools.seoultech.timoproject.version2.matching.user",
-                "com.tools.seoultech.timoproject.version2.ranking",
+                "com.tools.seoultech.timoproject.matching.user",
+                "com.tools.seoultech.timoproject.ranking",
                 "com.tools.seoultech.timoproject.auth",
 
         };

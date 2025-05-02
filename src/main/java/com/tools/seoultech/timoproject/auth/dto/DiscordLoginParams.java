@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.auth.dto;
 
-import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
+import com.tools.seoultech.timoproject.memberAccount.domain.OAuthProvider;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.LinkedMultiValueMap;
