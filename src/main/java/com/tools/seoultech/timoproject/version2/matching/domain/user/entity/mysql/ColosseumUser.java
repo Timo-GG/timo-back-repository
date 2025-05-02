@@ -1,15 +1,8 @@
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/version2/matching/domain/user/entity/mysql/ColosseumUser.java
 package com.tools.seoultech.timoproject.version2.matching.domain.user.entity.mysql;
 
 import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.RiotAccount;
-========
-package com.tools.seoultech.timoproject.matching.user.entity.mysql;
-
-import com.tools.seoultech.timoproject.matching.user.entity.embeddableType.PartyMemberInfo;
-import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
->>>>>>>> develop:src/main/java/com/tools/seoultech/timoproject/matching/user/entity/mysql/ColosseumUser.java
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

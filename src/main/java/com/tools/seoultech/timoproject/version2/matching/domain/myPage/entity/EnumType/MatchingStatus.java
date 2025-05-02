@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/version2/matching/domain/myPage/entity/EnumType/MatchingStatus.java
 package com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity.EnumType;
-========
-package com.tools.seoultech.timoproject.matching.myPage.entity.EnumType;
->>>>>>>> develop:src/main/java/com/tools/seoultech/timoproject/matching/myPage/entity/EnumType/MatchingStatus.java
 
 public enum MatchingStatus {
     WAITING,           // 수락 대기.

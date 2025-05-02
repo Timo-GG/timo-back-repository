@@ -1,14 +1,7 @@
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/version2/matching/domain/myPage/entity/MyPageBoard.java
 package com.tools.seoultech.timoproject.version2.matching.domain.myPage.entity;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.mysql.BaseUser;
-========
-package com.tools.seoultech.timoproject.matching.myPage.entity;
-
-import com.tools.seoultech.timoproject.global.BaseEntity;
-import com.tools.seoultech.timoproject.matching.user.entity.mysql.BaseUser;
->>>>>>>> develop:src/main/java/com/tools/seoultech/timoproject/matching/myPage/entity/MyPageBoard.java
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

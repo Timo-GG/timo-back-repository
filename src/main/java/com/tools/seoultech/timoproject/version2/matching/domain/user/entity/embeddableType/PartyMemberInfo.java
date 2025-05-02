@@ -1,10 +1,6 @@
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/version2/matching/domain/user/entity/embeddableType/PartyMemberInfo.java
 package com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType;
-========
-package com.tools.seoultech.timoproject.matching.user.entity.embeddableType;
->>>>>>>> develop:src/main/java/com/tools/seoultech/timoproject/matching/user/entity/embeddableType/PartyMemberInfo.java
 
-import com.tools.seoultech.timoproject.memberAccount.domain.RiotAccount;
+import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.RiotAccount;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.*;

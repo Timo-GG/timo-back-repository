@@ -1,4 +1,3 @@
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/version2/matching/domain/user/TestController_JSON.java
 package com.tools.seoultech.timoproject.version2.matching.domain.user;
 
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
@@ -13,23 +12,6 @@ import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.enum
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.CertifiedUnivInfo;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.RiotAccount;
-========
-package com.tools.seoultech.timoproject.matching.user;
-
-import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
-import com.tools.seoultech.timoproject.matching.board.entity.mysql.DuoSearchBoard;
-import com.tools.seoultech.timoproject.matching.user.entity.mysql.DuoUser;
-import com.tools.seoultech.timoproject.matching.user.entity.embeddableType.DuoInfo_Ver2;
-import com.tools.seoultech.timoproject.matching.user.entity.embeddableType.UserInfo_Ver2;
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.PlayCondition;
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.PlayPosition;
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.PlayStyle;
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.VoiceChat;
-import com.tools.seoultech.timoproject.memberAccount.domain.CertifiedUnivInfo;
-import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
-import com.tools.seoultech.timoproject.memberAccount.domain.RiotAccount;
-import io.swagger.v3.oas.annotations.tags.Tag;
->>>>>>>> develop:src/main/java/com/tools/seoultech/timoproject/matching/user/TestController_JSON.java
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,11 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/test/json")
 @RequiredArgsConstructor
-@Tag(name = "TestController_JSON", description = "JSON 테스트용 API")
 public class TestController_JSON {
     private final MemberAccount member = MemberAccount.builder()
             .memberId(1l)
-            .username("티모대위#1235653")
+            .userName("티모대위#1235653")
             .riotAccount(new RiotAccount("puuid", "롤찍먹만할게요", "#5103"))
             .certifiedUnivInfo(new CertifiedUnivInfo("louis5103@seoultech.ac.kr","의과대학"))
             .build();
@@ -65,11 +46,7 @@ public class TestController_JSON {
     public ResponseEntity<APIDataResponse<DuoSearchBoard>> getDuoSearchBoard() {
 
         DuoSearchBoard duoBoard = DuoSearchBoard.builder()
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/version2/matching/domain/user/TestController_JSON.java
 //                .baseUserEntity(user)
-========
-                .baseUser(user)
->>>>>>>> develop:src/main/java/com/tools/seoultech/timoproject/matching/user/TestController_JSON.java
                 .memo("memo")
                 .build();
         return ResponseEntity

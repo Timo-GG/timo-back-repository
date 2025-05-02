@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/version2/matching/domain/user/entity/embeddableType/CompactPlayerHistory.java
 package com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType;
-========
-package com.tools.seoultech.timoproject.matching.user.entity.embeddableType;
->>>>>>>> develop:src/main/java/com/tools/seoultech/timoproject/matching/user/entity/embeddableType/CompactPlayerHistory.java
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

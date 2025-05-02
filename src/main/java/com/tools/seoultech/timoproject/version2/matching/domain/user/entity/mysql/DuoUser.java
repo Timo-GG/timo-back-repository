@@ -1,16 +1,8 @@
-<<<<<<<< HEAD:src/main/java/com/tools/seoultech/timoproject/version2/matching/domain/user/entity/mysql/DuoUser.java
 package com.tools.seoultech.timoproject.version2.matching.domain.user.entity.mysql;
 
 import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.DuoInfo_Ver2;
 import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.UserInfo_Ver2;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
-========
-package com.tools.seoultech.timoproject.matching.user.entity.mysql;
-
-import com.tools.seoultech.timoproject.matching.user.entity.embeddableType.DuoInfo_Ver2;
-import com.tools.seoultech.timoproject.matching.user.entity.embeddableType.UserInfo_Ver2;
-import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
->>>>>>>> develop:src/main/java/com/tools/seoultech/timoproject/matching/user/entity/mysql/DuoUser.java
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -27,7 +19,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DuoUser extends BaseUser {
-
     @Embedded
     private UserInfo_Ver2 userInfo;
 
