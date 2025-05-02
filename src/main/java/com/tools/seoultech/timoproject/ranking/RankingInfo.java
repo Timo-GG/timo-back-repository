@@ -1,9 +1,9 @@
 package com.tools.seoultech.timoproject.ranking;
 
 
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.Gender;
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.PlayPosition;
-import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Gender;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

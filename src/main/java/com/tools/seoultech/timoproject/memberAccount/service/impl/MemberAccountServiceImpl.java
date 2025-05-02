@@ -6,7 +6,7 @@
     import com.tools.seoultech.timoproject.memberAccount.dto.UpdateMemberInfoRequest;
     import com.tools.seoultech.timoproject.memberAccount.service.MemberAccountService;
     import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
-    import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
+    import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
     import jakarta.persistence.EntityNotFoundException;
     import lombok.RequiredArgsConstructor;
     import org.springframework.stereotype.Service;

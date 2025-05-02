@@ -1,10 +1,10 @@
 package com.tools.seoultech.timoproject.ranking;
 
 import com.tools.seoultech.timoproject.memberAccount.domain.OAuthProvider;
-import com.tools.seoultech.timoproject.memberAccount.domain.Role;
-import com.tools.seoultech.timoproject.memberAccount.domain.CertifiedUnivInfo;
-import com.tools.seoultech.timoproject.memberAccount.domain.MemberAccount;
-import com.tools.seoultech.timoproject.memberAccount.domain.RiotAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.enumType.Role;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.CertifiedUnivInfo;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
 import com.tools.seoultech.timoproject.ranking.facade.RankingFacade;
 import lombok.RequiredArgsConstructor;
