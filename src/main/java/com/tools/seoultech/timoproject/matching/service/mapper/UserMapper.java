@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.matching.service.mapper;
+package com.tools.seoultech.timoproject.version2.matching.service.mapper;
 
 import com.tools.seoultech.timoproject.version2.matching.domain.user.dto.UserDTO;
 import com.tools.seoultech.timoproject.version2.matching.domain.user.entity.embeddableType.PartyMemberInfo;

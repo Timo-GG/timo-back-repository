@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.matching.service;
+package com.tools.seoultech.timoproject.version2.matching.service;
 
 import com.tools.seoultech.timoproject.version2.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.version2.matching.domain.board.entity.redis.RedisBoardDTO;
