@@ -31,7 +31,7 @@ public class RedisUserDTO<T extends UserDTO.UserResponseDTOInterface> {
 
     @Builder
     @PersistenceCreator
-    public RedisUserDTO(Long memberId, RiotAccount riotAccount, T body) {
+    protected RedisUserDTO(Long memberId, RiotAccount riotAccount, T body) {
         this.uuid = UUID.randomUUID().toString();
         this.memberId = memberId;
         this.riotAccount = riotAccount;

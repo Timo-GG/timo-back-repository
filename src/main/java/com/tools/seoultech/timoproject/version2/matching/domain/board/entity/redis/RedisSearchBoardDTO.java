@@ -28,7 +28,7 @@ public class RedisSearchBoardDTO<T extends SearchBoardDTO.BoardResponseDTOInterf
 
     @Builder
     @PersistenceCreator
-    protected RedisSearchBoardDTO(String user_uuid, T body, String memo) {
+    protected RedisSearchBoardDTO(T body, String memo) {
         this.uuid = UUID.randomUUID().toString();
         this.matchingCategory = body.getMatchingCategory();
         this.body = body;
