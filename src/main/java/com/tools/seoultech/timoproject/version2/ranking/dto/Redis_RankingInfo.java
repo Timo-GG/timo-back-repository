@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor // ✅ 이거 추가해야 Jackson 역직렬화 가능
+@NoArgsConstructor
 public class Redis_RankingInfo implements Serializable {
     private Long memberId;
     private String puuid;
@@ -22,7 +22,8 @@ public class Redis_RankingInfo implements Serializable {
     // 소환사 정보
     private String gameName;
     private String tagLine;
-    
+    private String profileIconUrl;
+
     // 대학 정보
     private String university;
     private String department;
@@ -53,10 +54,11 @@ public class Redis_RankingInfo implements Serializable {
             case "SILVER" -> 800;
             case "GOLD" -> 1200;
             case "PLATINUM" -> 1600;
-            case "DIAMOND" -> 2000;
-            case "MASTER" -> 2400;
-            case "GRANDMASTER" -> 2800;
-            case "CHALLENGER" -> 3200;
+            case "EMERALD" -> 2000;
+            case "DIAMOND" -> 2400;
+            case "MASTER" -> 2800;
+            case "GRANDMASTER" -> 3200;
+            case "CHALLENGER" -> 3600;
             default -> 0;
         };
         
@@ -76,6 +78,7 @@ public class Redis_RankingInfo implements Serializable {
         if (dto.memo() != null) this.memo = dto.memo();
         if (dto.position() != null) this.position = dto.position();
         if (dto.gender() != null) this.gender = dto.gender();
+        if (dto.department() != null) this.department = dto.department();
     }
 
     public static Redis_RankingInfo from(Long memberId, MemberAccount account, RiotRankingDto riotRankingDto) {
@@ -87,6 +90,7 @@ public class Redis_RankingInfo implements Serializable {
                 .memberId(memberId)
                 .puuid(riotAccount.getPuuid())
                 .gameName(riotAccount.getAccountName())
+                .profileIconUrl(riotRankingDto.profileIconUrl())
                 .tagLine(riotAccount.getAccountTag())
                 .university(univInfo.getUnivName())
                 .department(univInfo.getDepartment())

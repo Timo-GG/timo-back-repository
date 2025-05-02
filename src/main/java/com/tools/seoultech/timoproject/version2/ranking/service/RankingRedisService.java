@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.global.exception.BusinessException;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
 import com.tools.seoultech.timoproject.version2.memberAccount.MemberAccountRepository;
 import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.version2.ranking.RankingInfo;
 import com.tools.seoultech.timoproject.version2.ranking.dto.RankingUpdateRequestDto;
 import com.tools.seoultech.timoproject.version2.ranking.dto.Redis_RankingInfo;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -23,6 +25,7 @@ public class RankingRedisService {
     private static final String RANKING_KEY = "lol:ranking";
     private static final String RANKING_OBJECT_KEY = "lol:ranking:objects";
     private final MemberAccountRepository memberAccountRepository;
+    private final RankingInfoRepository rankingInfoRepository;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -35,6 +38,12 @@ public class RankingRedisService {
         }
 
         Redis_RankingInfo rankingInfo = Redis_RankingInfo.from(memberId, account, riotRankingDto);
+        Optional<RankingInfo> maybe = rankingInfoRepository.findByMemberAccountMemberId(memberId);
+        if (maybe.isPresent()) {
+            String department = account.getCertifiedUnivInfo().getDepartment();
+            RankingUpdateRequestDto updateRequestDto = RankingUpdateRequestDto.fromEntity(maybe.get(), department);
+            rankingInfo.updateRankingInfo(updateRequestDto);
+        }
         saveRankInfo(memberId, rankingInfo);
         log.info("[Redis 랭킹 등록 완료] memberId={}, score={}", memberId, rankingInfo.getScore());
     }
@@ -126,6 +135,46 @@ public class RankingRedisService {
             log.error("상위 랭킹 정보 조회 중 오류 발생: {}", e.getMessage(), e);
             return new ArrayList<>();
         }
+    }
+
+    public Redis_RankingInfo getMyRankingInfo(Long memberId) {
+        try {
+            Redis_RankingInfo rankInfo = (Redis_RankingInfo) redisTemplate.opsForHash()
+                    .get(RANKING_OBJECT_KEY, memberId.toString());
+
+            if (rankInfo == null) {
+                throw new BusinessException(ErrorCode.REDIS_RANKING_NOT_FOUND);
+            }
+
+            return rankInfo;
+        } catch (Exception e) {
+            log.error("내 랭킹 정보 조회 중 오류 발생: {}", e.getMessage(), e);
+            throw new BusinessException(ErrorCode.REDIS_ERROR);
+        }
+    }
+
+    public void flushAllRankingData() {
+        redisTemplate.delete(RANKING_KEY); // 전체 키 삭제
+        redisTemplate.delete(RANKING_OBJECT_KEY); // 객체 저장소 삭제
+    }
+
+    public void deleteRankingByMemberId(Long memberId) {
+        String id = memberId.toString();
+
+        // 1) 해시에서 정보 꺼내서 대학교별 ZSET 삭제할 키 알아내기
+        Object raw = redisTemplate.opsForHash().get(RANKING_OBJECT_KEY, id);
+        if (raw instanceof Redis_RankingInfo) {
+            Redis_RankingInfo info = (Redis_RankingInfo) raw;
+            String univKey = "lol:ranking:univ:" + info.getUniversity().trim();
+            redisTemplate.opsForZSet().remove(univKey, id);
+        }
+
+        // 2) 전체 랭킹 ZSET 에서 제거
+        redisTemplate.opsForZSet().remove(RANKING_KEY, id);
+        // 3) 해시(객체 저장소) 에서 제거
+        redisTemplate.opsForHash().delete(RANKING_OBJECT_KEY, id);
+
+        log.info("[Redis 랭킹 삭제 완료] memberId={}", memberId);
     }
 
 }

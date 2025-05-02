@@ -2,14 +2,18 @@ package com.tools.seoultech.timoproject.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 public class AccountDto {
     @Getter
+    @Schema(description = "라이엇 계정 인증 요청 DTO")
     public static class Request{
+        @Schema(description = "롤 닉네임", example = "짱아깨비")
         private final String gameName;
+        @Schema(description = "태그라인", example = "k r    ")
         private final String tagLine;
 
         @JsonCreator

@@ -25,4 +25,11 @@ public class CertifiedUnivInfo {
         this.univCertifiedEmail = univCertifiedEmail;
         this.univName = univName;
     }
+
+    public void updateDepartment(String department) {
+        if (department == null || department.isBlank()) {
+            throw new IllegalArgumentException("학과명은 비어 있을 수 없습니다.");
+        }
+        this.department = department;
+    }
 }

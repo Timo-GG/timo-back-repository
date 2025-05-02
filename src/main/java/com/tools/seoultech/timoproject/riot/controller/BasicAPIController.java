@@ -94,4 +94,11 @@ public class BasicAPIController {
         RankInfoDto rankInfo = bas.getSoloRankInfoByPuuid(puuid); // 서비스에서 처리
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(rankInfo));
     }
+
+    @GetMapping("/request/image/{puuid}")
+    public ResponseEntity<APIDataResponse<String>> requestImage(
+            @PathVariable String puuid) throws Exception {
+        String imageUrl = bas.getProfileIconUrlByPuuid(puuid);
+        return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(imageUrl));
+    }
 }

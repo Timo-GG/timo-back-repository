@@ -9,6 +9,7 @@ import com.tools.seoultech.timoproject.auth.service.OAuthLoginService;
 import com.tools.seoultech.timoproject.auth.service.RequestOAuthInfoService;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Auth", description = "Auth API")
 public class AuthController {
 
     private final OAuthLoginService oAuthLoginService;

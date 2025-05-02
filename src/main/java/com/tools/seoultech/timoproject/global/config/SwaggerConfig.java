@@ -51,11 +51,11 @@ public class SwaggerConfig {
     public GroupedOpenApi groupedOpenApi() {
         String[] paths = {"/api/v1/**"};
         String[] packagesToScan = {
-                "com.tools.seoultech.timoproject.post",
                 "com.tools.seoultech.timoproject.riot",
                 "com.tools.seoultech.timoproject.member",
                 "com.tools.seoultech.timoproject.version2.matching.user",
                 "com.tools.seoultech.timoproject.version2.ranking",
+                "com.tools.seoultech.timoproject.auth",
 
         };
         return GroupedOpenApi.builder()

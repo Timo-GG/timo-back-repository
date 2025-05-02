@@ -6,6 +6,7 @@ import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.dto.*;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +38,41 @@ public class BasicAPIService {
     private static final String KR_API_URL = "https://kr.api.riotgames.com";
     private static final String DDRAGON_URL = "https://ddragon.leagueoflegends.com";
     private static final String QUEUE_TYPE_SOLO = "RANKED_SOLO_5x5";
-    
+    private static final String DDRAGON_VERSIONS_URL = DDRAGON_URL + "/api/versions.json";
+
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
     private final ChampionCacheService championCacheService;
 
-    @Value("${api_key}") private String api_key;
+    @Value("${api_key}")
+    private String api_key;
+
+    private String ddragonVersion;
+
+    @PostConstruct
+    private void fetchLatestDdragonVersion() {
+        try {
+            HttpRequest req = HttpRequest.newBuilder()
+                    .uri(URI.create(DDRAGON_VERSIONS_URL))
+                    .GET()
+                    .build();
+            HttpResponse<String> resp = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
+            if (resp.statusCode() == HttpStatus.OK.value()) {
+                List<String> versions = mapper.readValue(resp.body(), new TypeReference<List<String>>() {});
+                if (!versions.isEmpty()) {
+                    ddragonVersion = versions.get(0);
+                    log.info("DataDragon 최신 버전: {}", ddragonVersion);
+                    return;
+                }
+            }
+            log.warn("DataDragon 버전 리스트 응답 이상: status={}", resp.statusCode());
+        } catch (Exception e) {
+            log.error("DataDragon 버전 조회 실패", e);
+        }
+        // 실패 시 fallback
+        ddragonVersion = "14.23.1";
+        log.info("DataDragon 버전 fallback: {}", ddragonVersion);
+    }
 
     // URL 인코딩 메서드
     private String encodeUrlParameter(String param) {
@@ -110,10 +140,10 @@ public class BasicAPIService {
                     .header("X-Riot-Token", api_key)
                     .GET()
                     .build();
-                    
+
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             riotAPI_validation(response);
-            
+
             log.info("매치 정보 API 응답 받음: {}", matchid);
             return MatchInfoDTO.of(response.body());
         } catch (IOException | InterruptedException e) {
@@ -136,19 +166,19 @@ public class BasicAPIService {
     public String requestRuneData() {
         try {
             String url = DDRAGON_URL + "/cdn/14.23.1/data/en_US/runesReforged.json";
-            
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .GET()
                     .build();
-                    
+
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            
+
             if (response.statusCode() != HttpStatus.OK.value()) {
                 log.error("룬 데이터 API 응답 오류 - 상태 코드: {}", response.statusCode());
                 throw new RiotAPIException("룬 데이터 API 응답 오류", ErrorCode.API_ACCESS_ERROR);
             }
-            
+
             log.info("룬 데이터 API 응답 받음");
             return response.body();
         } catch (IOException | InterruptedException e) {
@@ -161,22 +191,22 @@ public class BasicAPIService {
         try {
             String encodedPuuid = encodeUrlParameter(puuid);
             String baseUrl = BASE_API_URL + "/lol/match/v5/matches/by-puuid/" + encodedPuuid + "/ids";
-            
+
             URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                     .queryParam("start", 0)
                     .queryParam("count", 20)
                     .build()
                     .toUri();
-            
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
                     .header("X-Riot-Token", api_key)
                     .GET()
                     .build();
-                    
+
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             riotAPI_validation(response);
-            
+
             log.info("매치 목록 API 응답 받음: {}", puuid);
             return mapper.readValue(response.body(), List.class);
         } catch (IOException | InterruptedException e) {
@@ -211,8 +241,8 @@ public class BasicAPIService {
                     })
                     .toList();
         } catch (IOException | InterruptedException e) {
-            log.error("챔피언 숙련도 조회 중 예외 발생", e);
-            throw new RiotAPIException("챔피언 숙련도 조회 실패", ErrorCode.API_ACCESS_ERROR);
+            log.warn("챔피언 숙련도 조회 실패, 빈 리스트 반환", e);
+            return Collections.emptyList();
         }
     }
 
@@ -255,7 +285,7 @@ public class BasicAPIService {
                     // 개별 매치 오류는 무시하고 계속 진행
                 }
             }
-            
+
             log.info("최근 매치 요약 정보 생성 완료: {} 개 매치", summaries.size());
             return summaries;
         } catch (Exception e) {
@@ -299,8 +329,6 @@ public class BasicAPIService {
         }
     }
 
-
-
     public RankInfoDto getSoloRankInfoByPuuid(String puuid) {
         try {
             URI uri = URI.create(KR_API_URL + "/lol/league/v4/entries/by-puuid/" + puuid);
@@ -314,11 +342,38 @@ public class BasicAPIService {
             riotAPI_validation(response);
             log.info("랭크 정보 API 응답 받음: {}", puuid);
 
-            List<Map<String, Object>> rankList = mapper.readValue(response.body(), new TypeReference<>() {});
+            List<Map<String, Object>> rankList = mapper.readValue(response.body(), new TypeReference<>() {
+            });
             return findSoloRankInfo(rankList, QUEUE_TYPE_SOLO);
         } catch (IOException | InterruptedException e) {
             log.error("랭크 정보 조회 중 예외 발생", e);
             throw new RiotAPIException("랭크 정보 조회 실패", ErrorCode.API_ACCESS_ERROR);
+        }
+    }
+
+    public String getProfileIconUrlByPuuid(String puuid) {
+        try {
+            String url = KR_API_URL + "/lol/summoner/v4/summoners/by-puuid/" + puuid;
+            HttpRequest req = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("X-Riot-Token", api_key)
+                    .GET()
+                    .build();
+            HttpResponse<String> resp = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
+            riotAPI_validation(resp);
+
+            Map<String,Object> data = mapper.readValue(resp.body(), new TypeReference<>() {});
+            Integer iconId = (Integer)data.get("profileIconId");
+            if (iconId == null) {
+                log.warn("profileIconId 누락: {}", puuid);
+                return null;
+            }
+            // 캐싱된 최신 버전 사용
+            return DDRAGON_URL + "/cdn/" + ddragonVersion + "/img/profileicon/" + iconId + ".png";
+
+        } catch (IOException | InterruptedException e) {
+            log.error("프로필 이미지 URL 생성 실패", e);
+            throw new RiotAPIException("프로필 이미지 조회 실패", ErrorCode.API_ACCESS_ERROR);
         }
     }
 

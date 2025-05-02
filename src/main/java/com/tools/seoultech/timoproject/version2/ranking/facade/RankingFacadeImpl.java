@@ -35,7 +35,28 @@ public class RankingFacadeImpl implements RankingFacade {
     }
 
     @Override
+    public void flushAllRedisRankings() {
+        rankingRedisService.flushAllRankingData();
+    }
+
+
+    @Override
+    public void deleteRanking(Long memberId) {
+        rankingRedisService.deleteRankingByMemberId(memberId);
+    }
+
+    @Override
     public List<Redis_RankingInfo> getTopRankings(int limit) {
         return rankingRedisService.getTopRankings(limit);
+    }
+
+    @Override
+    public List<Redis_RankingInfo> getTopRankingsByUniversity(String university, int limit) {
+        return rankingRedisService.getTopRankingsByUniversity(university, limit);
+    }
+
+    @Override
+    public Redis_RankingInfo getMyRankingInfo(Long memberId) {
+        return rankingRedisService.getMyRankingInfo(memberId);
     }
 }

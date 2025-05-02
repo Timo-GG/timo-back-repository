@@ -20,6 +20,7 @@ public class RiotFacadeImpl implements RiotFacade {
         List<String> most3ChampionNames = basicAPIService.getMost3ChampionNames(puuid);
         RankInfoDto soloRankInfoByPuuid = basicAPIService.getSoloRankInfoByPuuid(puuid);
         WinLossSummaryDto recentWinLossSummary = basicAPIService.getRecentWinLossSummary(puuid);
-        return RiotRankingDto.of(most3ChampionNames, soloRankInfoByPuuid, recentWinLossSummary);
+        String profileIconUrl = basicAPIService.getProfileIconUrlByPuuid(puuid);
+        return RiotRankingDto.of(most3ChampionNames, profileIconUrl, soloRankInfoByPuuid, recentWinLossSummary);
     }
 }
