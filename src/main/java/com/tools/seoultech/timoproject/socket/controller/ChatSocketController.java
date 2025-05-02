@@ -58,7 +58,7 @@ public class ChatSocketController {
                                   ReadMessageRequest request) {
         Long memberId = client.get("memberId");
 
-        ChatRoomMember chatRoomMember = chatRoomMemberRepository.findByChatRoomIdAndMemberId(request.roomId(), memberId)
+        ChatRoomMember chatRoomMember = chatRoomMemberRepository.findByChatRoomIdAndMember_MemberId(request.roomId(), memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
 
         chatRoomMember.resetUnreadCount();

@@ -170,7 +170,6 @@ public class ChatService implements DisposableBean {
             // (1) ChatRoom의 lastMessage 갱신
             chatRoomRepository.findById(roomId).ifPresent(chatRoom -> {
                 chatRoom.updateLastMessage(
-                        // pseudoMessage를 굳이 만들 필요 없이 setter 가능
                         Message.createMessage(chatRoom, meta.getLastMessageSenderId(), meta.getLastMessage())
                 );
                 chatRoomRepository.save(chatRoom);
@@ -179,18 +178,18 @@ public class ChatService implements DisposableBean {
             // (2) unreadCount 배치 업데이트
             List<ChatRoomMember> updateList = new ArrayList<>();
             for (Map.Entry<Long, Integer> e : meta.getUnreadMap().entrySet()) {
-                chatRoomMemberRepository.findByChatRoomIdAndMemberId(roomId, e.getKey())
+                chatRoomMemberRepository.findByChatRoomIdAndMember_MemberId(roomId, e.getKey())
                         .ifPresent(crm -> {
                             crm.increaseUnreadCount();
                             updateList.add(crm);
                         });
             }
-            chatRoomMemberRepository.saveAll(updateList);  // ✅ saveAll() 사용
+            chatRoomMemberRepository.saveAll(updateList);
         }
-        // 모든 메타데이터 flush 후, 캐시 비우기 (혹은 재설정)
         chatRoomMetadataMap.clear();
         log.info("[flushChatRoomMetadata] 메타데이터 배치 저장 완료");
     }
+
 
     // ====================================
     // 3) 종료 시 처리
@@ -279,17 +278,16 @@ public class ChatService implements DisposableBean {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
 
-        ChatRoomMember chatRoomMember = chatRoomMemberRepository.findByChatRoomIdAndMemberId(chatRoom.getId(), memberId)
+        ChatRoomMember chatRoomMember = chatRoomMemberRepository.findByChatRoomIdAndMember_MemberId(chatRoom.getId(), memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방 멤버입니다."));
 
         return chatRoomMember.getUnreadCount();
-
     }
 
 
     @Transactional(readOnly = true)
     public List<ChatRoomResponse> getChatRoomsByMemberId(Long memberId) {
-        List<ChatRoomMember> memberships = chatRoomMemberRepository.findByMemberIdAndIsLeftFalse(memberId);
+        List<ChatRoomMember> memberships = chatRoomMemberRepository.findByMember_MemberIdAndIsLeftFalse(memberId);
 
         return memberships.stream()
                 .map(member -> ChatRoomResponse.of(member.getChatRoom()))
@@ -301,8 +299,7 @@ public class ChatService implements DisposableBean {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방"));
 
-        // 중복 체크
-        ChatRoomMember existing = chatRoomMemberRepository.findByChatRoomIdAndMemberId(roomId, memberId)
+        ChatRoomMember existing = chatRoomMemberRepository.findByChatRoomIdAndMember_MemberId(roomId, memberId)
                 .orElse(null);
         if (existing != null) {
             log.info("🔁 이미 참여한 채팅방입니다. roomId={}, memberId={}", roomId, memberId);
@@ -312,7 +309,6 @@ public class ChatService implements DisposableBean {
         MemberAccount member = memberAccountRepository.findById(memberId).orElseThrow();
         ChatRoomMember newMember = ChatRoomMember.createChatRoomMember(chatRoom, member);
         chatRoomMemberRepository.save(newMember);
-
     }
 
     @Transactional
@@ -321,14 +317,12 @@ public class ChatService implements DisposableBean {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방"));
 
         ChatRoomMember chatRoomMember = chatRoomMemberRepository
-                .findByChatRoomIdAndMemberId(chatRoom.getId(), memberId)
+                .findByChatRoomIdAndMember_MemberId(chatRoom.getId(), memberId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 멤버가 이 방에 없습니다."));
 
-        // 실제로 delete하지 않고, isLeft = true 설정
         chatRoomMember.leave();
         chatRoomMemberRepository.save(chatRoomMember);
 
-        // (옵션) 방 인원이 전부 나갔다면, 방 자체도 isTerminated = true
         boolean allLeft = chatRoomMemberRepository.findByChatRoom(chatRoom).stream()
                 .allMatch(ChatRoomMember::isLeft);
         if (allLeft) {
@@ -383,7 +377,7 @@ public class ChatService implements DisposableBean {
     }
 
     public Long findActiveChatRoomIdForMember(Long memberId) {
-        return chatRoomMemberRepository.findFirstByMember_IdAndIsLeftFalse(memberId)
+        return chatRoomMemberRepository.findFirstByMember_MemberIdAndIsLeftFalse(memberId)
                 .map(ChatRoomMember::getChatRoom)
                 .filter(chatRoom -> !chatRoom.isTerminated())
                 .map(ChatRoom::getId)

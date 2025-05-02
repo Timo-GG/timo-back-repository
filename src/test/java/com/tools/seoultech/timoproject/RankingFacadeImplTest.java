@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.version2.ranking.facade;
+package com.tools.seoultech.timoproject;
 
 import com.tools.seoultech.timoproject.ranking.facade.RankingFacadeImpl;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
