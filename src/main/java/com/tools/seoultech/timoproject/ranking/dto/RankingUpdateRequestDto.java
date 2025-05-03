@@ -1,7 +1,8 @@
 package com.tools.seoultech.timoproject.ranking.dto;
 
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.Gender;
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.PlayPosition;
+
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Gender;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.ranking.RankingInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -33,3 +34,4 @@ public record RankingUpdateRequestDto(
                 );
         }
 }
+
