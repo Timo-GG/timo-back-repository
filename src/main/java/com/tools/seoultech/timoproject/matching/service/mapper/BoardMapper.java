@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisB
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserDTO;
 import com.tools.seoultech.timoproject.matching.service.BoardService;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -61,25 +62,53 @@ public interface BoardMapper {
     );
 
 
+//    @Named("toResponseDuo")
+//    default BoardDTO.ResponseDuo toResponseDuo(
+//            BoardDTO.RequestDuo requestBody,
+//            @Context BoardService boardService,
+//            @Context UserMapper userMapper
+//    ){
+//        RedisUserDTO<UserDTO.ResponseDuo> responseUser = userMapper.toRedisFromDuo(requestBody.requestUserDto());
+//        BoardDTO.ResponseDuo.builder()
+//                .responseUserDto(null)
+//                .compactPlayerHistory(null)
+//                .build();
+//        return null;
+//        // NOTE:
+//        //  1. redis Board 엔티티에 담기는 userDTO 는 redisDTO가 아닌 ResponseDTO.
+//        //  2. redis User 엔티티에 대한 참조를 userUUID로 담음.
+//
+//        // NOTE: board request dto >>> (user request dto -> user redis dto -> user response dto)  >>> board redis dto
+//        //  1. 각 redis 도메인에는 다른 레디스 도메인이 알 필요없는 메타 데이터도 담긴다는 의미로 활용 (확장성).
+//    }
+
     @Named("toResponseDuo")
     default BoardDTO.ResponseDuo toResponseDuo(
             BoardDTO.RequestDuo requestBody,
             @Context BoardService boardService,
             @Context UserMapper userMapper
-    ){
-        RedisUserDTO<UserDTO.ResponseDuo> responseUser = userMapper.toRedisFromDuo(requestBody.requestUserDto());
-        BoardDTO.ResponseDuo.builder()
-                .responseUserDto(null)
+    ) {
+        // 1. userMapper로 ResponseDuo 생성
+        UserDTO.ResponseDuo responseUserBody = userMapper.toResponseDuo(requestBody.requestUserDto().getBody());
+
+        // 2. RedisUserDTO에 들어 있던 공통 필드 가져오기
+        Long memberId = requestBody.requestUserDto().getMemberId();
+        RiotAccount riotAccount = requestBody.requestUserDto().getRiotAccount();
+
+        // 3. UserDTO<ResponseDuo> 생성
+        UserDTO<UserDTO.ResponseDuo> responseUserDto = UserDTO.<UserDTO.ResponseDuo>builder()
+                .memberId(memberId)
+                .riotAccount(riotAccount)
+                .body(responseUserBody)
+                .build();
+
+        // 4. ResponseDuo 생성해서 리턴
+        return BoardDTO.ResponseDuo.builder()
+                .responseUserDto(responseUserDto)
                 .compactPlayerHistory(null)
                 .build();
-        return null;
-        // NOTE:
-        //  1. redis Board 엔티티에 담기는 userDTO 는 redisDTO가 아닌 ResponseDTO.
-        //  2. redis User 엔티티에 대한 참조를 userUUID로 담음.
-
-        // NOTE: board request dto >>> (user request dto -> user redis dto -> user response dto)  >>> board redis dto
-        //  1. 각 redis 도메인에는 다른 레디스 도메인이 알 필요없는 메타 데이터도 담긴다는 의미로 활용 (확장성).
     }
+
     @Named("toResponseColosseum")
     default BoardDTO.ResponseColosseum toResponseColosseum(
             BoardDTO.RequestColosseum requestBody,
