@@ -8,15 +8,17 @@ import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.CompactPlayerHistory;
 import lombok.Builder;
 import lombok.Getter;
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type") // NOTE: 직렬화 시 타입정보 저장
-@JsonSubTypes({  // NOTE: 역직렬화 시 허용된 클래스만 역직렬화
-        @JsonSubTypes.Type(value = BoardDTO.ResponseDuo.class, name = "duo"),
-        @JsonSubTypes.Type(value = BoardDTO.ResponseColosseum.class, name = "colosseum")
-})
+
 @Getter
 public class BoardDTO<T extends BoardDTO.BaseInterface> {
-    // 공통 필드
+
     private final String memo;
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type") // NOTE: 직렬화 시 타입정보 저장
+    @JsonSubTypes({  // NOTE: 역직렬화 시 허용된 클래스만 역직렬화
+            @JsonSubTypes.Type(value = BoardDTO.RequestDuo.class, name = "duo"),
+            @JsonSubTypes.Type(value = BoardDTO.RequestColosseum.class, name = "colosseum")
+    })
     private final T body;
 
     // 중첩 Record 필드. 1. Request•Response, 2. Duo•Colosseum
