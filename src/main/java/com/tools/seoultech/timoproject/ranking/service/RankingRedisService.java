@@ -8,11 +8,15 @@ import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount
 import com.tools.seoultech.timoproject.ranking.RankingInfo;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
 import com.tools.seoultech.timoproject.ranking.dto.Redis_RankingInfo;
+import com.tools.seoultech.timoproject.socket.controller.RankingSocketController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,9 +28,11 @@ import java.util.Set;
 public class RankingRedisService {
     private static final String RANKING_KEY = "lol:ranking";
     private static final String RANKING_OBJECT_KEY = "lol:ranking:objects";
+
     private final MemberAccountRepository memberAccountRepository;
     private final RankingInfoRepository rankingInfoRepository;
 
+    @Qualifier("rankingRedisTemplate")
     private final RedisTemplate<String, Object> redisTemplate;
 
     public void createInitialRanking(Long memberId, RiotRankingDto riotRankingDto) {
@@ -38,14 +44,15 @@ public class RankingRedisService {
         }
 
         Redis_RankingInfo rankingInfo = Redis_RankingInfo.from(memberId, account, riotRankingDto);
-        Optional<RankingInfo> maybe = rankingInfoRepository.findByMemberAccountMemberId(memberId);
-        if (maybe.isPresent()) {
-            String department = account.getCertifiedUnivInfo().getDepartment();
-            RankingUpdateRequestDto updateRequestDto = RankingUpdateRequestDto.fromEntity(maybe.get(), department);
-            rankingInfo.updateRankingInfo(updateRequestDto);
-        }
+        rankingInfoRepository.findByMemberAccountMemberId(memberId)
+                .ifPresent(existing -> {
+                    String department = account.getCertifiedUnivInfo().getDepartment();
+                    RankingUpdateRequestDto updateRequestDto = RankingUpdateRequestDto.fromEntity(existing, department);
+                    rankingInfo.updateRankingInfo(updateRequestDto);
+                });
+
         saveRankInfo(memberId, rankingInfo);
-        log.info("[Redis 랭킹 등록 완료] memberId={}, score={}", memberId, rankingInfo.getScore());
+        log.info("[Redis 등록 완료] memberId={}, score={}", memberId, rankingInfo.getScore());
     }
 
     public void saveRankInfo(Long memberId, Redis_RankingInfo rankingInfo) {
@@ -55,9 +62,10 @@ public class RankingRedisService {
             redisTemplate.opsForZSet().add(RANKING_KEY, memberId.toString(), score);
             redisTemplate.opsForHash().put(RANKING_OBJECT_KEY, memberId.toString(), rankingInfo);
 
-            String universityKey = "lol:ranking:univ:" + rankingInfo.getUniversity().trim();
+            String universityKey = buildUniversityKey(rankingInfo.getUniversity());
             redisTemplate.opsForZSet().add(universityKey, memberId.toString(), score);
 
+            log.info("랭킹 저장 완료: memberId={}, university={}", memberId, rankingInfo.getUniversity());
         } catch (Exception e) {
             log.error("Redis 랭킹 저장 중 오류: {}", e.getMessage(), e);
         }
@@ -69,58 +77,36 @@ public class RankingRedisService {
                     .get(RANKING_OBJECT_KEY, memberId.toString());
 
             if (existing == null) {
-                log.warn("Redis 랭킹 정보가 존재하지 않아 업데이트 불가: memberId={}", memberId);
+                log.warn("업데이트 실패: Redis 랭킹 정보 없음, memberId={}", memberId);
                 return;
             }
 
             existing.updateRankingInfo(dto);
-
             redisTemplate.opsForHash().put(RANKING_OBJECT_KEY, memberId.toString(), existing);
-            log.info("Redis 랭킹 정보 업데이트 완료: memberId={}", memberId);
+
+            log.info("유저 정보 업데이트 완료: memberId={}", memberId);
         } catch (Exception e) {
-            log.error("Redis 랭킹 업데이트 중 오류 발생: {}", e.getMessage(), e);
+            log.error("Redis 랭킹 업데이트 중 오류: {}", e.getMessage(), e);
         }
     }
 
     public List<Redis_RankingInfo> getTopRankingsByUniversity(String university, int limit) {
-        try {
-            String universityKey = "lol:ranking:univ:" + university.trim();
-            Set<Object> topMembers = redisTemplate.opsForZSet().reverseRange(universityKey, 0, limit - 1);
-
-            if (topMembers == null || topMembers.isEmpty()) {
-                return new ArrayList<>();
-            }
-
-            List<Redis_RankingInfo> result = new ArrayList<>();
-
-            for (Object memberId : topMembers) {
-                Redis_RankingInfo rankInfo = (Redis_RankingInfo) redisTemplate.opsForHash()
-                        .get(RANKING_OBJECT_KEY, memberId.toString());
-
-                if (rankInfo != null) {
-                    result.add(rankInfo);
-                }
-            }
-
-            return result;
-        } catch (Exception e) {
-            log.error("대학교별 랭킹 조회 중 오류 발생: {}", e.getMessage(), e);
-            return new ArrayList<>();
-        }
+        return getTopRankings(buildUniversityKey(university), limit);
     }
 
-    // 상위 랭킹 정보 조회
     public List<Redis_RankingInfo> getTopRankings(int limit) {
+        return getTopRankings(RANKING_KEY, limit);
+    }
+
+    private List<Redis_RankingInfo> getTopRankings(String key, int limit) {
         try {
-            // 점수 기준 상위 랭킹 조회
-            Set<Object> topMembers = redisTemplate.opsForZSet().reverseRange(RANKING_KEY, 0, limit - 1);
+            Set<Object> topMembers = redisTemplate.opsForZSet().reverseRange(key, 0, limit - 1);
 
             if (topMembers == null || topMembers.isEmpty()) {
                 return new ArrayList<>();
             }
 
             List<Redis_RankingInfo> result = new ArrayList<>();
-
             for (Object memberId : topMembers) {
                 Redis_RankingInfo rankInfo = (Redis_RankingInfo) redisTemplate.opsForHash()
                         .get(RANKING_OBJECT_KEY, memberId.toString());
@@ -132,7 +118,7 @@ public class RankingRedisService {
 
             return result;
         } catch (Exception e) {
-            log.error("상위 랭킹 정보 조회 중 오류 발생: {}", e.getMessage(), e);
+            log.error("랭킹 조회 중 오류: {}", e.getMessage(), e);
             return new ArrayList<>();
         }
     }
@@ -148,33 +134,38 @@ public class RankingRedisService {
 
             return rankInfo;
         } catch (Exception e) {
-            log.error("내 랭킹 정보 조회 중 오류 발생: {}", e.getMessage(), e);
+            log.error("내 랭킹 조회 중 오류: {}", e.getMessage(), e);
             throw new BusinessException(ErrorCode.REDIS_ERROR);
         }
     }
 
     public void flushAllRankingData() {
-        redisTemplate.delete(RANKING_KEY); // 전체 키 삭제
-        redisTemplate.delete(RANKING_OBJECT_KEY); // 객체 저장소 삭제
+        redisTemplate.delete(RANKING_KEY);
+        redisTemplate.delete(RANKING_OBJECT_KEY);
+        log.info("모든 랭킹 데이터 플러시 완료");
     }
 
     public void deleteRankingByMemberId(Long memberId) {
         String id = memberId.toString();
 
-        // 1) 해시에서 정보 꺼내서 대학교별 ZSET 삭제할 키 알아내기
         Object raw = redisTemplate.opsForHash().get(RANKING_OBJECT_KEY, id);
-        if (raw instanceof Redis_RankingInfo) {
-            Redis_RankingInfo info = (Redis_RankingInfo) raw;
-            String univKey = "lol:ranking:univ:" + info.getUniversity().trim();
+        if (raw instanceof Redis_RankingInfo info) {
+            String univKey = buildUniversityKey(info.getUniversity());
             redisTemplate.opsForZSet().remove(univKey, id);
         }
 
-        // 2) 전체 랭킹 ZSET 에서 제거
         redisTemplate.opsForZSet().remove(RANKING_KEY, id);
-        // 3) 해시(객체 저장소) 에서 제거
         redisTemplate.opsForHash().delete(RANKING_OBJECT_KEY, id);
 
-        log.info("[Redis 랭킹 삭제 완료] memberId={}", memberId);
+        log.info("랭킹 삭제 완료: memberId={}", memberId);
     }
 
+    private String buildUniversityKey(String university) {
+        try {
+            return "lol:ranking:univ:" + URLEncoder.encode(university.trim(), StandardCharsets.UTF_8.toString());
+        } catch (Exception e) {
+            log.warn("대학교 키 인코딩 실패, 원본 사용: {}", university, e);
+            return "lol:ranking:univ:" + university.trim();
+        }
+    }
 }

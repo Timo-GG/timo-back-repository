@@ -34,8 +34,23 @@ public class RedisDataSeeder {
                 new Record("m3o0FUiBjjMmqX7-bMZFRzGewooBHhN6aj333bEGkXMuCyssOAvR56x07JyORW8Sv-8tq-M4vT9Mww", "도구야정신좀차려"),
                 new Record("7B9KnS5HSZOYoLN67yeVnnB65lgfCWe5DoTWMYMbWhtAsmX-sUu4pDYo-Yv-D_skyInq9WjTQQcyIg", "귀 염"),
                 new Record("eFLOP2cvyxtg9Ig3kF-0tlu8Ijo5HobweVSmZPWFrm_2GBFj72Rs5C19Qbz6H_mA1RouMlAsWLCnBA", "으댜다"),
-                new Record("0xCXf-g6dYIBAtfV_eJtfZSqX_gQtUmd5AxSAoohvaAXOP_jEELCBkwC3RpoB2tGNN4iKa8RLeH_g", "Cuzz")
+                new Record("0xCXf-g6dYIBAtfV_eJtfZSqX_gQtUmd5AxSAoohvaAXOP_jEELCBkwC3RpoB2tGNN4iKa8RLeH_g", "Cuzz"),
+                new Record("newPuuid1", "페이커"),
+                new Record("newPuuid2", "데프트"),
+                new Record("newPuuid3", "쵸비"),
+                new Record("newPuuid4", "칸나"),
+                new Record("newPuuid5", "케리아")
         );
+
+        String[] universities = {
+                "서울과학기술대학교",
+                "연세대학교",
+                "고려대학교",
+                "한양대학교",
+                "중앙대학교",
+                "동국대학교",
+                "홍익대학교"
+        };
 
         for (int i = 0; i < accounts.size(); i++) {
             String username = "user" + (i + 1);
@@ -43,20 +58,25 @@ public class RedisDataSeeder {
                 log.info("Skip seeding for {}: already exists", username);
                 continue;
             }
+
             Record r = accounts.get(i);
 
+            // 랜덤 대학 및 학과 선택
+            String university = universities[i % universities.length];
+            String univEmail = "test" + i + "@" + university.replace(" ", "").toLowerCase() + ".ac.kr";
+
             MemberAccount account = MemberAccount.builder()
-                    .email(username+i + "@example.com")
+                    .email(username + i + "@example.com")
                     .username(username)
                     .riotAccount(new RiotAccount(r.puuid(), r.gameName(), "KR1"))
-                    .certifiedUnivInfo(new CertifiedUnivInfo("test" + i +  "@school.ac.kr", "서울과학기술대학교"))
+                    .certifiedUnivInfo(new CertifiedUnivInfo(univEmail, university))
                     .oAuthProvider(OAuthProvider.KAKAO)
                     .role(Role.MEMBER)
                     .build();
 
             account = memberAccountRepository.save(account);
             rankingFacade.createRanking(account.getMemberId(), r.puuid());
-            log.info("Seeded and ranked {}", username);
+            log.info("Seeded and ranked {} at {}", username, university);
         }
 
         log.info("✅ Redis seeding complete: {} accounts processed.", accounts.size());
