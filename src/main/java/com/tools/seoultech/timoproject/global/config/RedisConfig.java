@@ -79,8 +79,10 @@ public class RedisConfig {
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
 
-        // Hash value는 JSON, ZSET value는 String 점수로만 쓰이므로 Object로 OK
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        // ✅ ZSET value: memberId (String)
+        template.setValueSerializer(new StringRedisSerializer());
+
+        // ✅ HASH value: 복잡한 JSON 객체
         template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         return template;
