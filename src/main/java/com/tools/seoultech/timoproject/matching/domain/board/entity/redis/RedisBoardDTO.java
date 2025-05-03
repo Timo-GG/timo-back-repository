@@ -29,11 +29,11 @@ public class RedisBoardDTO<T extends BoardDTO.Response> {
 
     @Builder
     @PersistenceCreator
-    public RedisBoardDTO(T body, String userUUID, String memo) {
-        this.uuid = UUID.randomUUID().toString();
-        this.matchingCategory = body.getMatchingCategory();
+    public RedisBoardDTO(String uuid, String userUUID, T body, String memo, MatchingCategory matchingCategory) {
+        this.uuid = uuid == null ? UUID.randomUUID().toString() : uuid;
         this.userUUID = userUUID;
         this.body = body;
         this.memo = memo;
+        this.matchingCategory = matchingCategory == null && body != null ? body.getMatchingCategory() : matchingCategory;
     }
 }
