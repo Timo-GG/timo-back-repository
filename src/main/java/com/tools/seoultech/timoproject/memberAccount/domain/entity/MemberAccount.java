@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class MemberAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_account_id")
+    @Column(name = "member_id")
     private Long memberId;
 
     @Column(nullable = false, unique = true)

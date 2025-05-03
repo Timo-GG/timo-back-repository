@@ -33,7 +33,7 @@ public class RankingInfo {
     private String memo;
 
     @OneToOne
-    @JoinColumn(name = "member_account_id")
+    @JoinColumn(name = "member_id")
     private MemberAccount memberAccount;
 
     public void updateFrom(RankingUpdateRequestDto dto) {
