@@ -48,7 +48,7 @@ public class BoardDTO {
     @Builder
     public record ResponseColosseum(
             UUID boardUUID,
-            UserDTO.ResponseDuo responseUserDto,
+            UserDTO.ResponseColosseum responseUserDto,
             String memo,
             ColosseumMapCode mapCode,
             Integer headCount
