@@ -8,4 +8,6 @@ public interface UnivApiFacade {
     void verify(UnivRequestDTO requestDto, Integer code) throws Exception;
     Object getVerifiedUserList() throws Exception;
     Object checkStatus(UnivRequestDTO requestDto) throws Exception;
+    void certify(UnivRequestDTO requestDto) throws Exception;
+    void verify(UnivRequestDTO requestDto, Integer code) throws Exception;
 }
