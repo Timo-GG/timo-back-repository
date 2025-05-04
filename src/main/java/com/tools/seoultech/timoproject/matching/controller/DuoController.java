@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/duo")
 @RequiredArgsConstructor
@@ -47,5 +49,12 @@ public class DuoController {
     ) {
         RedisBoardDTO<?> duo = boardService.getDuoBoardFromRedis(uuid);
         return ResponseEntity.ok(duo);
+    }
+
+    /** 등록된 듀오 게시글 전체 목록 조회 */
+    @GetMapping
+    public ResponseEntity<List<RedisBoardDTO<BoardDTO.ResponseDuo>>> listDuo() {
+        List<RedisBoardDTO<BoardDTO.ResponseDuo>> allDuos = boardService.listAllDuoBoards();
+        return ResponseEntity.ok(allDuos);
     }
 }

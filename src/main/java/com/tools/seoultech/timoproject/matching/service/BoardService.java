@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.stream.StreamSupport;
+
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -26,7 +29,7 @@ public class BoardService {
 
     @Transactional
     public RedisBoardDTO<?> setBoardInRedis(BoardDTO<? extends BoardDTO.Request> boardDto){
-        UserDTO<? extends UserDTO.Request> userDto = boardDto.getBody().getUserDtoInRequestBody();
+        UserDTO<? extends UserDTO.Request> userDto = boardDto.body().getUserDtoInRequestBody();
         RedisUserDTO<?> savedUser = userService.setUserInRedis(userDto);
         RedisBoardDTO<?> savedBoard = boardMapper.dtoToRedis(boardDto, savedUser , this, userMapper);
         redisBoardRepository.save(savedBoard);
@@ -49,6 +52,16 @@ public class BoardService {
         @SuppressWarnings("unchecked")
         RedisBoardDTO<BoardDTO.ResponseDuo> duoBoard = (RedisBoardDTO<BoardDTO.ResponseDuo>) result;
         return duoBoard;
+    }
+
+    /**
+     * 듀오 게시글 전체 목록 조회
+     */
+    public List<RedisBoardDTO<BoardDTO.ResponseDuo>> listAllDuoBoards() {
+        return StreamSupport.stream(redisBoardRepository.findAll().spliterator(), false)
+                .filter(dto -> dto.getBody() instanceof BoardDTO.ResponseDuo)
+                .map(dto -> (RedisBoardDTO<BoardDTO.ResponseDuo>) dto)
+                .toList();
     }
 
     /** 듀오 게시글 삭제 */
