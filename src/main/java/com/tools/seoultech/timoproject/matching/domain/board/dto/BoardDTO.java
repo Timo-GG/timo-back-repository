@@ -10,19 +10,6 @@ import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
-@Schema(
-        description = "Duo 또는 Colosseum 게시글 공통 DTO",
-        discriminatorProperty = "type",
-        discriminatorMapping = {
-                @DiscriminatorMapping(value = "duo", schema = BoardDTO.RequestDuo.class),
-                @DiscriminatorMapping(value = "colosseum", schema = BoardDTO.RequestColosseum.class)
-        }
-)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = BoardDTO.RequestDuo.class, name = "duo"),
-        @JsonSubTypes.Type(value = BoardDTO.RequestColosseum.class, name = "colosseum")
-})
 public record BoardDTO<T extends BoardDTO.BaseInterface>(String memo, T body) {
 
     // 중첩 Record 필드. 1. Request•Response, 2. Duo•Colosseum
