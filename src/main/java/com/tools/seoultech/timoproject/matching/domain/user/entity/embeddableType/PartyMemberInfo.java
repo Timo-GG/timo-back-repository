@@ -8,8 +8,8 @@ import lombok.*;
 @Embeddable
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class PartyMemberInfo {
     @Embedded
     private RiotAccount riotAccount;
