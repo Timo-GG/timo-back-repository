@@ -20,7 +20,7 @@ public interface BoardMapper {
             @Context BoardService boardService,
             @Context UserMapper userMapper
     ) {
-        var body = dto.getBody();
+        var body = dto.body();
 
         if (body instanceof BoardDTO.RequestDuo) {
             @SuppressWarnings("unchecked") // TODO: DTO 단에서 티입보존 클래스 필드 추가 예정.
