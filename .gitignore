@@ -237,19 +237,16 @@ src/main/resources/application.properties
 *.properties
 .env
 
-/build/
 docker-compose.yml
-/build
+application-*.properties
+
+node_modules
+package-lock.json
 
 /build
-application.properties
-build/
-
 /bin
 /out
-*.class
+/.idea
 *.exe
 *.dll
-docker-compose.yml
-
 src/test/java/com/tools/seoultech/timoproject/post/repository/UserAccountRepositoryTest.java

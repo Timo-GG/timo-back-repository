@@ -1,7 +1,7 @@
 package com.tools.seoultech.timoproject.global.config;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoardDTO;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserDTO;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,8 +56,8 @@ public class RedisConfig {
     }
 
     @Bean(name = "userRedisTemplate")
-    public RedisTemplate<String, RedisUserDTO<?>> userRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, RedisUserDTO<?>> template = new RedisTemplate<>();
+    public RedisTemplate<String, RedisUser<?>> userRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, RedisUser<?>> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());

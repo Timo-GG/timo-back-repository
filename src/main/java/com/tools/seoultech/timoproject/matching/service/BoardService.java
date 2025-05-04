@@ -4,7 +4,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoardRepository;
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserDTO;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
 import com.tools.seoultech.timoproject.matching.service.mapper.UserMapper;
 
@@ -30,7 +30,7 @@ public class BoardService {
     @Transactional
     public RedisBoardDTO<?> setBoardInRedis(BoardDTO<? extends BoardDTO.Request> boardDto){
         UserDTO<? extends UserDTO.Request> userDto = boardDto.body().getUserDtoInRequestBody();
-        RedisUserDTO<?> savedUser = userService.setUserInRedis(userDto);
+        RedisUser<?> savedUser = userService.setUserInRedis(userDto);
         RedisBoardDTO<?> savedBoard = boardMapper.dtoToRedis(boardDto, savedUser , this, userMapper);
         redisBoardRepository.save(savedBoard);
         return savedBoard;
