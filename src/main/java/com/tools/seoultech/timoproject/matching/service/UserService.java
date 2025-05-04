@@ -1,31 +1,59 @@
 package com.tools.seoultech.timoproject.matching.service;
 
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserRepository;
 import com.tools.seoultech.timoproject.matching.service.mapper.UserMapper;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final RedisUserRepository redisUserRepository;
-    private final UserMapper mapper;
 
-    public RedisUser<?> setUserInRedis(UserDTO<? extends UserDTO.Request> requestDto){
-        RedisUser<? extends UserDTO.Response> redisUser = mapper.dtoToRedis(requestDto, this);
+    private final RedisUserRepository redisUserRepository;
+    private final UserMapper userMapper;
+
+    /**
+     * Duo 사용자 정보를 Redis에 저장
+     */
+    public RedisUser.Duo saveDuoUser(UserDTO.RequestDuo requestDuo) {
+        RedisUser.Duo redisUser = userMapper.toRedisDuo(requestDuo);
         return redisUserRepository.save(redisUser);
     }
 
-    public PartyMemberInfo getRiotInfoOfUser(RiotAccount riotAccount){
-        return PartyMemberInfo.builder()
-                .riotAccount(riotAccount)
-                .userInfo(null)
-                .compactPlayerHistory(null)
-                .build();
+    /**
+     * Colosseum 사용자 정보를 Redis에 저장
+     */
+    public RedisUser.Colosseum saveColosseumUser(UserDTO.RequestColosseum requestColosseum) {
+        RedisUser.Colosseum redisUser = userMapper.toRedisColosseum(requestColosseum);
+        return redisUserRepository.save(redisUser);
+    }
+
+    /**
+     * Redis에서 Duo 사용자 정보 조회
+     */
+    public UserDTO.ResponseDuo getDuoUser(UUID userUUID) throws Exception {
+        RedisUser redisUser = redisUserRepository.findById(userUUID).orElseThrow(() -> new Exception("User not found"));
+        return userMapper.toResponseDuo((RedisUser.Duo) redisUser);
+    }
+
+    /**
+     * Redis에서 Colosseum 사용자 정보 조회
+     */
+    public UserDTO.ResponseColosseum getColosseumUser(UUID userUUID) throws Exception {
+        RedisUser redisUser = redisUserRepository.findById(userUUID).orElseThrow(() -> new Exception("User not found"));
+        return userMapper.toResponseColosseum((RedisUser.Colosseum) redisUser);
+    }
+
+    /**
+     * UUID로 사용자 삭제
+     */
+    public void deleteUserByUUID(UUID userUUID) throws Exception {
+        RedisUser redisUser = redisUserRepository.findById(userUUID)
+                .orElseThrow(() -> new Exception("User not found"));
+        redisUserRepository.delete(redisUser);
     }
 }
