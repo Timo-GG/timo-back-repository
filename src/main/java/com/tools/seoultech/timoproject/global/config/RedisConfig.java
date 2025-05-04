@@ -69,4 +69,22 @@ public class RedisConfig {
     public ZSetOperations<String, String> zSetOperations(RedisTemplate<String, String> redisTemplate) {
         return redisTemplate.opsForZSet();
     }
+
+    /** ZSET용 + 해시용 통합 RedisTemplate */
+    @Bean(name = "rankingRedisTemplate")
+    public RedisTemplate<String, Object> rankingRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+
+        // ✅ ZSET value: memberId (String)
+        template.setValueSerializer(new StringRedisSerializer());
+
+        // ✅ HASH value: 복잡한 JSON 객체
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+
+        return template;
+    }
 }

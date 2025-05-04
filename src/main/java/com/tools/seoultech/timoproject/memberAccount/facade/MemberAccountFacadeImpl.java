@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class MemberAccountAccountFacadeImpl implements MemberAccountFacade {
+public class MemberAccountFacadeImpl implements MemberAccountFacade {
 
     private final MemberAccountService memberAccountService;
     private final BasicAPIService riotService;

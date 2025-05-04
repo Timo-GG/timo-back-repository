@@ -22,7 +22,7 @@ public class ColosseumUser extends BaseUser {
 
     @Builder
     public ColosseumUser(MemberAccount member, List<RiotAccount> partyMemberList) {
-        super(member);
+        super(member);  
         this.partyMemberList = partyMemberList;
     }
 }
