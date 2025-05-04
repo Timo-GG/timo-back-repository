@@ -1,22 +1,22 @@
 package com.tools.seoultech.timoproject.matching.service.mapper;
 
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
-import com.tools.seoultech.timoproject.matching.service.UserService;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
     UserMapper userMapperInstance = Mappers.getMapper(UserMapper.class);
 
-    @Mapping(target = "uuid", ignore = true)
+    /**
+     * uuid는 부모 생성자에서 자동으로 UUID.randomUUID()로 처리되고 있기 때문에, MapStruct가 신경 쓸 필요도 없음
+     */
+
+    // 삭제: @Mapping(target = "uuid", ignore = true)
     RedisUser.Duo toRedisDuo(UserDTO.RequestDuo requestDtoDuo);
 
-    @Mapping(target = "uuid", ignore = true)
+    // 삭제: @Mapping(target = "uuid", ignore = true)
     RedisUser.Colosseum toRedisColosseum(UserDTO.RequestColosseum requestDtoColosseum);
 
     @Mapping(target = "userUUID", source = "uuid")
