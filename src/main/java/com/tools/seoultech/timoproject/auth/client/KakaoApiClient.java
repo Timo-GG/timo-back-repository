@@ -4,7 +4,7 @@ import com.tools.seoultech.timoproject.auth.dto.KakaoInfoResponse;
 import com.tools.seoultech.timoproject.auth.dto.KakaoTokens;
 import com.tools.seoultech.timoproject.auth.dto.OAuthInfoResponse;
 import com.tools.seoultech.timoproject.auth.dto.OAuthLoginParams;
-import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
+import com.tools.seoultech.timoproject.memberAccount.domain.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

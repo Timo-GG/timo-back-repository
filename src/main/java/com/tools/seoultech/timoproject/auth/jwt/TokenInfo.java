@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.auth.jwt;
 
-import com.tools.seoultech.timoproject.member.domain.Member;
-import com.tools.seoultech.timoproject.version2.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
