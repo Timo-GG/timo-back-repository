@@ -9,7 +9,6 @@ import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableTyp
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
-import lombok.Getter;
 
 @Schema(
         description = "Duo 또는 Colosseum 게시글 공통 DTO",

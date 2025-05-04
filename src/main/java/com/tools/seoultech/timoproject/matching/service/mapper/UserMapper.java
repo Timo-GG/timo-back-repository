@@ -17,7 +17,7 @@ public interface UserMapper {
             UserDTO<? extends UserDTO.Request> dto,
             @Context UserService userService
     ){
-        var body = dto.getBody();
+        var body = dto.body();
 
         if(body instanceof UserDTO.RequestDuo){
             @SuppressWarnings("unchecked")

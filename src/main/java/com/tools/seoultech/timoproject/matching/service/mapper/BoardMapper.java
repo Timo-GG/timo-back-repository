@@ -89,11 +89,11 @@ public interface BoardMapper {
             @Context UserMapper userMapper
     ) {
         // 1. userMapper로 ResponseDuo 생성
-        UserDTO.ResponseDuo responseUserBody = userMapper.toResponseDuo(requestBody.requestUserDto().getBody());
+        UserDTO.ResponseDuo responseUserBody = userMapper.toResponseDuo(requestBody.requestUserDto().body());
 
         // 2. RedisUserDTO에 들어 있던 공통 필드 가져오기
-        Long memberId = requestBody.requestUserDto().getMemberId();
-        RiotAccount riotAccount = requestBody.requestUserDto().getRiotAccount();
+        Long memberId = requestBody.requestUserDto().memberId();
+        RiotAccount riotAccount = requestBody.requestUserDto().riotAccount();
 
         // 3. UserDTO<ResponseDuo> 생성
         UserDTO<UserDTO.ResponseDuo> responseUserDto = UserDTO.<UserDTO.ResponseDuo>builder()
