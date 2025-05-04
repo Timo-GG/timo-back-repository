@@ -12,4 +12,3 @@ public class TimoProjectApplication {
         SpringApplication.run(TimoProjectApplication.class, args);
     }
 }
-

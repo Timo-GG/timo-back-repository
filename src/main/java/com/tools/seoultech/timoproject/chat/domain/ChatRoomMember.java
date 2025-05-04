@@ -22,7 +22,7 @@ public class ChatRoomMember {
     private ChatRoom chatRoom;
 
     @ManyToOne
-    @JoinColumn(name = "member_account_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private MemberAccount member;
 
     private int unreadCount;

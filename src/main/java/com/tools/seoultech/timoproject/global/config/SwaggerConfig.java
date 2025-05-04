@@ -58,6 +58,7 @@ public class SwaggerConfig {
                 "com.tools.seoultech.timoproject.matching.controller",
                 "com.tools.seoultech.timoproject.ranking",
                 "com.tools.seoultech.timoproject.auth",
+                "com.tools.seoultech.timoproject.riot"
 
         };
         return GroupedOpenApi.builder()
