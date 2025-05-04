@@ -1,7 +1,7 @@
 package com.tools.seoultech.timoproject.auth.client;
 
 import com.tools.seoultech.timoproject.auth.dto.*;
-import com.tools.seoultech.timoproject.memberAccount.domain.OAuthProvider;
+import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

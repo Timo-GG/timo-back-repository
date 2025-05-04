@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.auth.dto;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.OAuthProvider;
+import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
 import org.springframework.util.MultiValueMap;
 
 public interface OAuthLoginParams {

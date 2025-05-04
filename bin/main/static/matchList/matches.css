@@ -1,0 +1,26 @@
+.kda {
+    outline: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-shrink: 0;
+    transform: none;
+    height: 22px;
+    width: 59px;
+    font-size: 15px;
+}
+
+.ka{
+    font-family: "Noto Sans KR", "Noto Sans KR Placeholder", sans-serif;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: bold;
+}
+
+.level{
+    border-radius: 50%;
+    position: relative;
+    top: 33px;
+    background-color: white;
+}
+

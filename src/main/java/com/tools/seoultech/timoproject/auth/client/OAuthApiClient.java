@@ -2,7 +2,7 @@ package com.tools.seoultech.timoproject.auth.client;
 
 import com.tools.seoultech.timoproject.auth.dto.OAuthInfoResponse;
 import com.tools.seoultech.timoproject.auth.dto.OAuthLoginParams;
-import com.tools.seoultech.timoproject.memberAccount.domain.OAuthProvider;
+import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
 
 public interface OAuthApiClient {
 

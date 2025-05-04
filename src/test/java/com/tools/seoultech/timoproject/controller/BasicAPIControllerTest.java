@@ -3,7 +3,7 @@ package com.tools.seoultech.timoproject.controller;
 import com.tools.seoultech.timoproject.global.config.TestSecurityConfig;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.error.APIExceptionHandler;
-import com.tools.seoultech.timoproject.memberAccount.dto.AccountDto;
+import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
 import com.tools.seoultech.timoproject.riot.controller.BasicAPIController;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;

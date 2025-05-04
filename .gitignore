@@ -245,11 +245,7 @@ docker-compose.yml
 application.properties
 build/
 
-/bin
-/out
-*.class
-*.exe
-*.dll
+
 docker-compose.yml
 
 src/test/java/com/tools/seoultech/timoproject/post/repository/UserAccountRepositoryTest.java
