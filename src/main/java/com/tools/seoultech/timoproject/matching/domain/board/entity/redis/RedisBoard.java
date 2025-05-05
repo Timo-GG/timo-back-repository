@@ -45,8 +45,8 @@ public abstract class RedisBoard {
     public static class Duo extends RedisBoard{
         @Builder
         @PersistenceCreator
-        public Duo(UUID userUUID, String memo, MatchingCategory matchingCategory) {
-            super(UUID.randomUUID(), userUUID, memo, matchingCategory);
+        public Duo(UUID userUUID, String memo) {
+            super(UUID.randomUUID(), userUUID, memo, MatchingCategory.Duo);
         }
     }
 
@@ -57,8 +57,8 @@ public abstract class RedisBoard {
 
         @Builder
         @PersistenceCreator
-        public Colosseum(UUID userUUID, String memo, MatchingCategory matchingCategory, ColosseumMapCode mapCode, Integer headCount) {
-            super(UUID.randomUUID(), userUUID, memo, matchingCategory);
+        public Colosseum(UUID userUUID, String memo, ColosseumMapCode mapCode, Integer headCount) {
+            super(UUID.randomUUID(), userUUID, memo, MatchingCategory.Colosseum);
             this.mapCode = mapCode;
             this.headCount = headCount;
         }

@@ -51,8 +51,8 @@ public abstract class RedisUser {
 
         @Builder
         @PersistenceCreator
-        public Duo(RiotAccount riotAccount, Long memberId, UserInfo_Ver2 userInfo, DuoInfo_Ver2 duoInfo, MatchingCategory matchingCategory) {
-            super(UUID.randomUUID(), memberId, riotAccount, matchingCategory);
+        public Duo(RiotAccount riotAccount, Long memberId, UserInfo_Ver2 userInfo, DuoInfo_Ver2 duoInfo) {
+            super(UUID.randomUUID(), memberId, riotAccount, MatchingCategory.Duo);
             this.userInfo = userInfo;
             this.duoInfo = duoInfo;
         }
@@ -64,8 +64,8 @@ public abstract class RedisUser {
 
         @Builder
         @PersistenceCreator
-        public Colosseum(RiotAccount riotAccount, Long memberId, MatchingCategory matchingCategory, List<PartyMemberInfo> partyMemberInfoList) {
-            super(UUID.randomUUID(), memberId, riotAccount, matchingCategory);
+        public Colosseum(RiotAccount riotAccount, Long memberId, List<PartyMemberInfo> partyMemberInfoList) {
+            super(UUID.randomUUID(), memberId, riotAccount, MatchingCategory.Colosseum);
             this.partyMemberInfoList = partyMemberInfoList;
         }
     }
