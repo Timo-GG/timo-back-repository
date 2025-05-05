@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.matching.domain.board.dto;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumModeCode;
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,13 +25,13 @@ public class BoardDTO {
     // TODO: CompactRiotHistory 필드 추가.
     @Builder
     public record RequestDuo(
-            UserDTO.RequestDuo RequestUserDto,
+            UserDTO.RequestDuo requestUserDto,
             String memo
     ) implements Request {}
 
     @Builder
     public record RequestColosseum(
-        UserDTO.RequestDuo requestUserDto,
+        UserDTO.RequestColosseum requestUserDto,
         String memo,
         ColosseumMapCode mapCode,
         Integer headCount
