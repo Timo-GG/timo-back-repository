@@ -24,8 +24,8 @@ public class DuoUser extends BaseUser {
     private DuoInfo_Ver2 duoInfo;
 
     @Builder
-    public DuoUser(MemberAccount member, MatchingCategory category, UserInfo_Ver2 userInfo, DuoInfo_Ver2 duoInfo){
-        super(member, category);
+    public DuoUser(MemberAccount member, UserInfo_Ver2 userInfo, DuoInfo_Ver2 duoInfo){
+        super(member);
         this.userInfo = userInfo;
         this.duoInfo = duoInfo;
     }

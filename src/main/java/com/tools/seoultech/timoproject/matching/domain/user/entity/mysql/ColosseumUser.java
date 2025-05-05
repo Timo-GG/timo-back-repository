@@ -19,8 +19,8 @@ public class ColosseumUser extends BaseUser {
     private List<RiotAccount> partyMemberList;
 
     @Builder
-    public ColosseumUser(MemberAccount member, MatchingCategory category, List<RiotAccount> partyMemberList) {
-        super(member, category);
+    public ColosseumUser(MemberAccount member, List<RiotAccount> partyMemberList) {
+        super(member);
         this.partyMemberList = partyMemberList;
     }
 }
