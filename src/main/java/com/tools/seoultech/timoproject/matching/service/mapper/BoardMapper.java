@@ -1,120 +1,69 @@
 package com.tools.seoultech.timoproject.matching.service.mapper;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoardDTO;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserDTO;
-import com.tools.seoultech.timoproject.matching.service.BoardService;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserRepository;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = {UserMapper.class}, componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+import java.util.UUID;
+
+@Mapper(componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = UserMapper.class)
 public interface BoardMapper {
-    BoardMapper INSTANCE = Mappers.getMapper(BoardMapper.class);
 
-    // NOTE: 제네릭 타입 (Duo, Colosseum)에 따라 매핑 분기해주는 default 메서드.
-    default RedisBoardDTO<?> dtoToRedis(
-            BoardDTO<? extends BoardDTO.Request> dto,
-            RedisUserDTO<? extends UserDTO.Response> user,
-            @Context BoardService boardService,
-            @Context UserMapper userMapper
-    ) {
-        var body = dto.body();
+    /** DTO → Redis 엔티티 */
+    @Mapping(target = "userUUID", source = "userUUID")
+    RedisBoard.Duo toRedisDuo(BoardDTO.RequestDuo requestDuo, UUID userUUID);
 
-        if (body instanceof BoardDTO.RequestDuo) {
-            @SuppressWarnings("unchecked") // TODO: DTO 단에서 티입보존 클래스 필드 추가 예정.
-            var casted = (BoardDTO<BoardDTO.RequestDuo>) dto;
-            return toRedisFromDuo(casted, (RedisUserDTO<UserDTO.ResponseDuo>)user, boardService, userMapper);
+    @Mapping(target = "userUUID", source = "userUUID")
+    RedisBoard.Colosseum toRedisColosseum(BoardDTO.RequestColosseum requestColosseum, UUID userUUID);
 
-        } else if (body instanceof BoardDTO.RequestColosseum) {
-            @SuppressWarnings("unchecked") // TODO: DTO 단에서 티입보존 클래스 필드 추가 예정.
-            var casted = (BoardDTO<BoardDTO.RequestColosseum>) dto;
-            return toRedisFromColosseum(casted, (RedisUserDTO<UserDTO.ResponseColosseum>)user, boardService, userMapper);
+    /** RedisBoard.Duo → BoardDTO.ResponseDuo */
+    @Mapping(target = "boardUUID",       source = "uuid")
+    @Mapping(target = "responseUserDto", source = "userUUID",
+            qualifiedByName = "searchUserDuo")
+    BoardDTO.ResponseDuo toResponseDuo(RedisBoard.Duo redisBoard,
+                                       @Context RedisUserRepository redisUserRepository);
 
-        } else {
-            throw new IllegalArgumentException("Unknown board DTO type: " + body.getClass().getName());
+    /** RedisBoard.Colosseum → BoardDTO.ResponseColosseum */
+    @Mapping(target = "boardUUID",       source = "uuid")
+    @Mapping(target = "responseUserDto", source = "userUUID",
+            qualifiedByName = "searchUserColosseum")
+    BoardDTO.ResponseColosseum toResponseColosseum(RedisBoard.Colosseum redisBoard,
+                                                   @Context RedisUserRepository redisUserRepository);
+
+    /** Duo 게시글의 userUUID → UserDTO.ResponseDuo 매핑 */
+    @Named("searchUserDuo")
+    default UserDTO.ResponseDuo searchUserDuo(UUID userUUID,
+                                              @Context RedisUserRepository redisUserRepository) {
+        RedisUser redisUser = redisUserRepository
+                .findById(userUUID)
+                .orElseThrow(() -> new RuntimeException("Duo 유저를 찾을 수 없습니다: " + userUUID));
+
+        if (redisUser instanceof RedisUser.Duo duo) {
+            // UserMapper를 통해 RedisUser.Duo → UserDTO.ResponseDuo로 변환
+            return UserMapper.userMapperInstance.toResponseDuo(duo);
         }
+        throw new IllegalStateException(
+                "searchUserDuo 호출 시, RedisUser.Duo 타입이 아님: " + redisUser.getClass().getSimpleName());
     }
 
-    // NOTE: 각 매핑 매서드
-    @Mapping(target = "uuid", ignore = true)
-    @Mapping(target = "matchingCategory", ignore = true)
-    @Mapping(target = "body", source = "dto.body", qualifiedByName = "toResponseDuo")
-    RedisBoardDTO<BoardDTO.ResponseDuo> toRedisFromDuo
-    (
-            BoardDTO<BoardDTO.RequestDuo> dto,
-            RedisUserDTO<UserDTO.ResponseDuo> user,
-            @Context BoardService boardService,
-            @Context UserMapper userMapper
-    );
+    /** Colosseum 게시글의 userUUID → UserDTO.ResponseColosseum 매핑 */
+    @Named("searchUserColosseum")
+    default UserDTO.ResponseColosseum searchUserColosseum(UUID userUUID,
+                                                          @Context RedisUserRepository redisUserRepository) {
+        RedisUser redisUser = redisUserRepository
+                .findById(userUUID)
+                .orElseThrow(() -> new RuntimeException("Colosseum 유저를 찾을 수 없습니다: " + userUUID));
 
-    @Mapping(target = "uuid", ignore = true)
-    @Mapping(target = "matchingCategory", ignore = true)
-    @Mapping(target = "userUUID", expression = "java(user.getUuid())")
-    @Mapping(target = "body", source = "dto.body", qualifiedByName = "toResponseColosseum")
-    RedisBoardDTO<BoardDTO.ResponseColosseum> toRedisFromColosseum
-    (
-            BoardDTO<BoardDTO.RequestColosseum> dto,
-            RedisUserDTO<UserDTO.ResponseColosseum> user,
-            @Context BoardService boardService,
-            @Context UserMapper userMapper
-    );
-
-
-//    @Named("toResponseDuo")
-//    default BoardDTO.ResponseDuo toResponseDuo(
-//            BoardDTO.RequestDuo requestBody,
-//            @Context BoardService boardService,
-//            @Context UserMapper userMapper
-//    ){
-//        RedisUserDTO<UserDTO.ResponseDuo> responseUser = userMapper.toRedisFromDuo(requestBody.requestUserDto());
-//        BoardDTO.ResponseDuo.builder()
-//                .responseUserDto(null)
-//                .compactPlayerHistory(null)
-//                .build();
-//        return null;
-//        // NOTE:
-//        //  1. redis Board 엔티티에 담기는 userDTO 는 redisDTO가 아닌 ResponseDTO.
-//        //  2. redis User 엔티티에 대한 참조를 userUUID로 담음.
-//
-//        // NOTE: board request dto >>> (user request dto -> user redis dto -> user response dto)  >>> board redis dto
-//        //  1. 각 redis 도메인에는 다른 레디스 도메인이 알 필요없는 메타 데이터도 담긴다는 의미로 활용 (확장성).
-//    }
-
-    @Named("toResponseDuo")
-    default BoardDTO.ResponseDuo toResponseDuo(
-            BoardDTO.RequestDuo requestBody,
-            @Context BoardService boardService,
-            @Context UserMapper userMapper
-    ) {
-        // 1. userMapper로 ResponseDuo 생성
-        UserDTO.ResponseDuo responseUserBody = userMapper.toResponseDuo(requestBody.requestUserDto().getBody());
-
-        // 2. RedisUserDTO에 들어 있던 공통 필드 가져오기
-        Long memberId = requestBody.requestUserDto().getMemberId();
-        RiotAccount riotAccount = requestBody.requestUserDto().getRiotAccount();
-
-        // 3. UserDTO<ResponseDuo> 생성
-        UserDTO<UserDTO.ResponseDuo> responseUserDto = UserDTO.<UserDTO.ResponseDuo>builder()
-                .memberId(memberId)
-                .riotAccount(riotAccount)
-                .body(responseUserBody)
-                .build();
-
-        // 4. ResponseDuo 생성해서 리턴
-        return BoardDTO.ResponseDuo.builder()
-                .responseUserDto(responseUserDto)
-                .compactPlayerHistory(null)
-                .build();
-    }
-
-    @Named("toResponseColosseum")
-    default BoardDTO.ResponseColosseum toResponseColosseum(
-            BoardDTO.RequestColosseum requestBody,
-            @Context BoardService boardService,
-            @Context UserMapper userMapper
-    ){
-        return null;
+        if (redisUser instanceof RedisUser.Colosseum colosseum) {
+            // UserMapper를 통해 RedisUser.Colosseum → UserDTO.ResponseColosseum로 변환
+            return UserMapper.userMapperInstance.toResponseColosseum(colosseum);
+        }
+        throw new IllegalStateException(
+                "searchUserColosseum 호출 시, RedisUser.Colosseum 타입이 아님: " + redisUser.getClass().getSimpleName());
     }
 }

@@ -45,6 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/api/v1/comments/public/**"),
             new AntPathRequestMatcher("/api/v1/riot/recent-match"),
             new AntPathRequestMatcher("/api/v1/ranking/top"),
+            new AntPathRequestMatcher("/api/v1/matching/**"),
             new AntPathRequestMatcher("/bower_components/**"),
             new AntPathRequestMatcher("/dist/**"),
             new AntPathRequestMatcher("/plugins/**"),
@@ -56,9 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/swagger-ui/**"),
             new AntPathRequestMatcher("/swagger-ui.html"),
             new AntPathRequestMatcher("/api/v1/univ/**"),
-            new AntPathRequestMatcher("/swagger-ui.html"),
-            new AntPathRequestMatcher("/api/v1/duo/**")
-
+            new AntPathRequestMatcher("/swagger-ui.html")
     );
 
     @Override
