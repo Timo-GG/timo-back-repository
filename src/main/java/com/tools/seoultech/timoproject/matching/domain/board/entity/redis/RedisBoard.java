@@ -4,6 +4,7 @@ package com.tools.seoultech.timoproject.matching.domain.board.entity.redis;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import org.springframework.data.annotation.PersistenceCreator;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import lombok.AccessLevel;
@@ -11,11 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Reference;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import java.util.UUID;
-
 
 @RedisHash(value = "redisBoard", timeToLive = 15 * 60)
 @JsonTypeInfo(
@@ -33,7 +34,9 @@ import java.util.UUID;
 public abstract class RedisBoard {
     @Id
     private final UUID uuid;
-    private final UUID userUUID;
+
+    @Reference
+    private final RedisUser user;
 
     private final String memo;
 
@@ -43,10 +46,13 @@ public abstract class RedisBoard {
 
     @Getter
     public static class Duo extends RedisBoard{
-        @Builder
         @PersistenceCreator
-        public Duo(UUID userUUID, String memo, MatchingCategory matchingCategory) {
-            super(UUID.randomUUID(), userUUID, memo, matchingCategory);
+        public Duo(UUID uuid, RedisUser redisUser, String memo, MatchingCategory matchingCategory) {
+            super(uuid, redisUser, memo, matchingCategory);
+        }
+        @Builder
+        public Duo(RedisUser redisUser, String memo) {
+            super(UUID.randomUUID(), redisUser, memo, MatchingCategory.Duo);
         }
     }
 
@@ -56,11 +62,17 @@ public abstract class RedisBoard {
         private Integer headCount;
 
         @Builder
+        public Colosseum(RedisUser redisUser, String memo, ColosseumMapCode mapCode, Integer headCount) {
+            super(UUID.randomUUID(), redisUser, memo, MatchingCategory.Colosseum);
+            this.mapCode = mapCode;
+            this.headCount = headCount;
+        }
         @PersistenceCreator
-        public Colosseum(UUID userUUID, String memo, MatchingCategory matchingCategory, ColosseumMapCode mapCode, Integer headCount) {
-            super(UUID.randomUUID(), userUUID, memo, matchingCategory);
+        public Colosseum(UUID uuid, RedisUser redisUser, String memo, MatchingCategory matchingCategory, ColosseumMapCode mapCode, Integer headCount) {
+            super(uuid, redisUser, memo, matchingCategory);
             this.mapCode = mapCode;
             this.headCount = headCount;
         }
     }
 }
+

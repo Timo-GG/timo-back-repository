@@ -19,13 +19,15 @@ public class MyPage extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
-    MatchingCategory matchingCategory;
+    MatchingCategory category;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private BaseBoard board;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private BaseUser acceptor;
+    @Transient
+    public BaseUser getAcceptor() {
+        return board.getUser();
+    }
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private BaseUser requestor;
