@@ -20,7 +20,7 @@ import java.util.UUID;
 //        }
 //)
 @Getter
-public class BoardDTO {
+public abstract class BoardDTO {
     // TODO: CompactRiotHistory 필드 추가.
     @Builder
     public record RequestSearch(

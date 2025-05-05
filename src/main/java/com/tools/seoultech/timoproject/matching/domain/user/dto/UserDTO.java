@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
-public class UserDTO{
+public abstract class UserDTO{
     // 중첩 Record 필드. [Request Duo•Colosseum], [Response Duo•Colosseum]
     @Builder
     public record RequestDuo(
