@@ -24,8 +24,8 @@ public class RedisController {
      * Duo 게시판에 게시글을 추가
      */
     @PostMapping("/duo")
-    public ResponseEntity<RedisBoard.Duo> createDuoBoard(@RequestBody BoardDTO.RequestDuo requestDuo, @RequestParam UUID userUUID) {
-        RedisBoard.Duo savedBoard = boardService.saveDuoBoard(requestDuo, userUUID);
+    public ResponseEntity<RedisBoard.Duo> createDuoBoard(@RequestBody BoardDTO.RequestDuo requestDuo) {
+        RedisBoard.Duo savedBoard = boardService.saveDuoBoard(requestDuo);
         return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
     }
 
@@ -33,8 +33,8 @@ public class RedisController {
      * Colosseum 게시판에 게시글을 추가
      */
     @PostMapping("/colosseum")
-    public ResponseEntity<RedisBoard.Colosseum> createColosseumBoard(@RequestBody BoardDTO.RequestColosseum requestColosseum, @RequestParam UUID userUUID) {
-        RedisBoard.Colosseum savedBoard = boardService.saveColosseumBoard(requestColosseum, userUUID);
+    public ResponseEntity<RedisBoard.Colosseum> createColosseumBoard(@RequestBody BoardDTO.RequestColosseum requestColosseum) {
+        RedisBoard.Colosseum savedBoard = boardService.saveColosseumBoard(requestColosseum);
         return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
     }
 
