@@ -99,4 +99,27 @@ public class BoardService {
                 .orElseThrow(() -> new Exception("Board not found: " + boardUUID));
         redisBoardRepository.delete(redisBoard);
     }
+
+    /**
+     * 모든 게시글 삭제
+     */
+    public void deleteAllBoards() {
+        redisBoardRepository.deleteAll();
+    }
+
+    /**
+     * 유형별(Duo) 전체 삭제
+     */
+    public void deleteAllDuoBoards() {
+        redisBoardRepository.deleteAll(redisBoardRepository
+                .findAllByMatchingCategory(MatchingCategory.Duo));
+    }
+
+    /**
+     * 유형별(Colosseum) 전체 삭제
+     */
+    public void deleteAllColosseumBoards() {
+        redisBoardRepository.deleteAll(redisBoardRepository
+                .findAllByMatchingCategory(MatchingCategory.Colosseum));
+    }
 }

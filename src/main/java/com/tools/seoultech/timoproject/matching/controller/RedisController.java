@@ -94,4 +94,31 @@ public class RedisController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    /**
+     * 모든 게시글 삭제
+     */
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAllBoards() {
+        boardService.deleteAllBoards();
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Duo 게시글 전체 삭제
+     */
+    @DeleteMapping("/duo")
+    public ResponseEntity<Void> deleteAllDuoBoards() {
+        boardService.deleteAllDuoBoards();
+        return ResponseEntity.noContent().build();
+    }
+
+    /**ㅣ
+     * Colosseum 게시글 전체 삭제
+     */
+    @DeleteMapping("/colosseum")
+    public ResponseEntity<Void> deleteAllColosseumBoards() {
+        boardService.deleteAllColosseumBoards();
+        return ResponseEntity.noContent().build();
+    }
 }
