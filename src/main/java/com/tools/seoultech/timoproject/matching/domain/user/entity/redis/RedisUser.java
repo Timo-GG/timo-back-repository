@@ -29,7 +29,6 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = RedisUser.Colosseum.class, name = "Colosseum")
 })
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class RedisUser {
     @Id
     private final UUID uuid;
@@ -44,29 +43,78 @@ public abstract class RedisUser {
     // 서버 내부 필드. 역직렬화에 사용되지 않음. 직렬화에서는 편의성 때문에 보여주긴 함.
     private final MatchingCategory matchingCategory;
 
+    /** Redis 조회용 생성자 */
+    @PersistenceCreator
+    protected RedisUser(UUID uuid,
+                        Long memberId,
+                        RiotAccount riotAccount,
+                        MatchingCategory matchingCategory) {
+        this.uuid = uuid;
+        this.memberId = memberId;
+        this.riotAccount = riotAccount;
+        this.matchingCategory = matchingCategory;
+    }
+
+    /** Builder용 생성자 (서브클래스에서 호출) */
+    protected RedisUser(Long memberId,
+                        RiotAccount riotAccount,
+                        MatchingCategory matchingCategory) {
+        this(UUID.randomUUID(), memberId, riotAccount, matchingCategory);
+    }
+
     @Getter
-    public static class Duo extends RedisUser{
+    public static class Duo extends RedisUser {
         private UserInfo_Ver2 userInfo;
         private DuoInfo_Ver2 duoInfo;
 
-        @Builder
+        /** Redis 조회용 생성자 */
         @PersistenceCreator
-        public Duo(RiotAccount riotAccount, Long memberId, UserInfo_Ver2 userInfo, DuoInfo_Ver2 duoInfo) {
-            super(UUID.randomUUID(), memberId, riotAccount, MatchingCategory.Duo);
+        protected Duo(UUID uuid,
+                      Long memberId,
+                      RiotAccount riotAccount,
+                      MatchingCategory matchingCategory,
+                      UserInfo_Ver2 userInfo,
+                      DuoInfo_Ver2 duoInfo) {
+            super(uuid, memberId, riotAccount, matchingCategory);
             this.userInfo = userInfo;
-            this.duoInfo = duoInfo;
+            this.duoInfo  = duoInfo;
+        }
+
+        /** Builder용 생성자: 신규 사용자 생성 시 호출 */
+        @Builder
+        public Duo(RiotAccount riotAccount,
+                   Long memberId,
+                   UserInfo_Ver2 userInfo,
+                   DuoInfo_Ver2 duoInfo) {
+            super(memberId, riotAccount, MatchingCategory.Duo);
+            this.userInfo = userInfo;
+            this.duoInfo  = duoInfo;
         }
     }
 
     @Getter
-    public static class Colosseum extends RedisUser{
+    public static class Colosseum extends RedisUser {
         private List<PartyMemberInfo> partyMemberInfoList;
 
-        @Builder
+        /** Redis 조회용 생성자 */
         @PersistenceCreator
-        public Colosseum(RiotAccount riotAccount, Long memberId, List<PartyMemberInfo> partyMemberInfoList) {
-            super(UUID.randomUUID(), memberId, riotAccount, MatchingCategory.Colosseum);
+        protected Colosseum(UUID uuid,
+                            Long memberId,
+                            RiotAccount riotAccount,
+                            MatchingCategory matchingCategory,
+                            List<PartyMemberInfo> partyMemberInfoList) {
+            super(uuid, memberId, riotAccount, matchingCategory);
+            this.partyMemberInfoList = partyMemberInfoList;
+        }
+
+        /** Builder용 생성자 */
+        @Builder
+        public Colosseum(RiotAccount riotAccount,
+                         Long memberId,
+                         List<PartyMemberInfo> partyMemberInfoList) {
+            super(memberId, riotAccount, MatchingCategory.Colosseum);
             this.partyMemberInfoList = partyMemberInfoList;
         }
     }
+
 }
