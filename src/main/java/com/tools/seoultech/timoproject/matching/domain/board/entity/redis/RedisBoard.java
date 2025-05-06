@@ -35,24 +35,23 @@ public abstract class RedisBoard {
     @Id
     private final UUID uuid;
 
-    @Reference
-    private final RedisUser user;
+    private final UUID userUUID;
 
     private final String memo;
 
     @Indexed
     // 서버 내부 필드. 역직렬화에 사용되지 않음. 직렬화에서는 편의성 때문에 보여주긴 함.
-    private final MatchingCategory matchingCategory;
+    private final MatchingCategory category;
 
     @Getter
     public static class Duo extends RedisBoard{
         @PersistenceCreator
-        public Duo(UUID uuid, RedisUser redisUser, String memo, MatchingCategory matchingCategory) {
-            super(uuid, redisUser, memo, matchingCategory);
+        public Duo(UUID uuid, UUID userUUID, String memo, MatchingCategory matchingCategory) {
+            super(uuid, userUUID, memo, matchingCategory);
         }
         @Builder
-        public Duo(RedisUser redisUser, String memo) {
-            super(UUID.randomUUID(), redisUser, memo, MatchingCategory.Duo);
+        public Duo(UUID userUUID, String memo) {
+            super(UUID.randomUUID(), userUUID, memo, MatchingCategory.Duo);
         }
     }
 
@@ -62,14 +61,14 @@ public abstract class RedisBoard {
         private Integer headCount;
 
         @Builder
-        public Colosseum(RedisUser redisUser, String memo, ColosseumMapCode mapCode, Integer headCount) {
-            super(UUID.randomUUID(), redisUser, memo, MatchingCategory.Colosseum);
+        public Colosseum(UUID userUUID, String memo, ColosseumMapCode mapCode, Integer headCount) {
+            super(UUID.randomUUID(), userUUID, memo, MatchingCategory.Colosseum);
             this.mapCode = mapCode;
             this.headCount = headCount;
         }
         @PersistenceCreator
-        public Colosseum(UUID uuid, RedisUser redisUser, String memo, MatchingCategory matchingCategory, ColosseumMapCode mapCode, Integer headCount) {
-            super(uuid, redisUser, memo, matchingCategory);
+        public Colosseum(UUID uuid, UUID userUUID, String memo, MatchingCategory matchingCategory, ColosseumMapCode mapCode, Integer headCount) {
+            super(uuid, userUUID, memo, matchingCategory);
             this.mapCode = mapCode;
             this.headCount = headCount;
         }

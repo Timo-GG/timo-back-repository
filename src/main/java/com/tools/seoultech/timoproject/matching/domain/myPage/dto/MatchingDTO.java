@@ -12,10 +12,10 @@ public abstract class MatchingDTO {
     @Builder
     public record RequestDuo(
             UUID boardUUID,
-            UserDTO.RequestDuo requestorDto
+            UserDTO.RequestDuo duoRequestorDto
     ){}
     public record RequestColosseum(
             UUID boardUUID,
-            UserDTO.RequestColosseum requestorDto
+            UserDTO.RequestColosseum colosseumRequestorDto
     ){}
 }

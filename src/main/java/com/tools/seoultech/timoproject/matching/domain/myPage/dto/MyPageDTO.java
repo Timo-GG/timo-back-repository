@@ -33,5 +33,11 @@ public abstract class MyPageDTO {
             RedisUser.Duo requestor,
             RedisUser.Duo acceptor
     ){}
-
+    public record responseMyPage(
+            UUID mypageUUID,
+            MatchingCategory matchingCategory,
+            RedisUser requestor,
+            RedisUser acceptor,
+            MatchingStatus status
+    ){}
 }

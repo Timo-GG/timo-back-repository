@@ -2,7 +2,11 @@ package com.tools.seoultech.timoproject.matching.controller;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
+import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
 import com.tools.seoultech.timoproject.matching.service.BoardService;
+import com.tools.seoultech.timoproject.matching.service.MatchingService;
+import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +23,7 @@ import java.util.UUID;
 public class RedisController {
 
     private final BoardService boardService;
+    private final MatchingService matchingService;
 
     /**
      * Duo 게시판에 게시글을 추가
@@ -94,4 +99,17 @@ public class RedisController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
+    @GetMapping("/myPage/{myPageUUID}")
+    public ResponseEntity<APIDataResponse<RedisMyPage>> getMyPage(@PathVariable UUID myPageUUID) throws Exception{
+        RedisMyPage testDto = matchingService.getBoardInRedis(myPageUUID);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        APIDataResponse.of(testDto)
+                );
+    }
+    @PostMapping("/myPage")
+    public ResponseEntity<APIDataResponse<RedisMyPage>> getMyPage(@RequestBody MyPageDTO myPageDTO) throws Exception{}
 }

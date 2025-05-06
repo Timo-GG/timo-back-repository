@@ -3,6 +3,7 @@ package com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql;
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.mysql.BaseBoard;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.mysql.BaseUser;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,6 +21,10 @@ public class MyPage extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
     MatchingCategory category;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    MatchingStatus status;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private BaseBoard board;
