@@ -29,8 +29,8 @@ public class RedisController {
      * Duo 게시판에 게시글을 추가
      */
     @PostMapping("/duo")
-    public ResponseEntity<RedisBoard.Duo> createDuoBoard(@RequestBody BoardDTO.RequestDuo requestDuo, @RequestParam UUID userUUID) {
-        RedisBoard.Duo savedBoard = boardService.saveDuoBoard(requestDuo, userUUID);
+    public ResponseEntity<RedisBoard.Duo> createDuoBoard(@RequestBody BoardDTO.RequestDuo requestDuo) {
+        RedisBoard.Duo savedBoard = boardService.saveDuoBoard(requestDuo);
         return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
     }
 
@@ -38,8 +38,8 @@ public class RedisController {
      * Colosseum 게시판에 게시글을 추가
      */
     @PostMapping("/colosseum")
-    public ResponseEntity<RedisBoard.Colosseum> createColosseumBoard(@RequestBody BoardDTO.RequestColosseum requestColosseum, @RequestParam UUID userUUID) {
-        RedisBoard.Colosseum savedBoard = boardService.saveColosseumBoard(requestColosseum, userUUID);
+    public ResponseEntity<RedisBoard.Colosseum> createColosseumBoard(@RequestBody BoardDTO.RequestColosseum requestColosseum) {
+        RedisBoard.Colosseum savedBoard = boardService.saveColosseumBoard(requestColosseum);
         return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
     }
 
@@ -100,6 +100,33 @@ public class RedisController {
         }
     }
 
+    /**
+     * 모든 게시글 삭제
+     */
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAllBoards() {
+        boardService.deleteAllBoards();
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Duo 게시글 전체 삭제
+     */
+    @DeleteMapping("/duo")
+    public ResponseEntity<Void> deleteAllDuoBoards() {
+        boardService.deleteAllDuoBoards();
+        return ResponseEntity.noContent().build();
+    }
+
+    /**ㅣ
+     * Colosseum 게시글 전체 삭제
+     */
+    @DeleteMapping("/colosseum")
+    public ResponseEntity<Void> deleteAllColosseumBoards() {
+        boardService.deleteAllColosseumBoards();
+        return ResponseEntity.noContent().build();
+    }
+
 
     @GetMapping("/myPage/{myPageUUID}")
     public ResponseEntity<APIDataResponse<RedisMyPage>> getMyPage(@PathVariable UUID myPageUUID) throws Exception{
@@ -111,5 +138,7 @@ public class RedisController {
                 );
     }
     @PostMapping("/myPage")
-    public ResponseEntity<APIDataResponse<RedisMyPage>> getMyPage(@RequestBody MyPageDTO myPageDTO) throws Exception{}
+    public ResponseEntity<APIDataResponse<RedisMyPage>> getMyPage(@RequestBody MyPageDTO myPageDTO) throws Exception{
+        
+    }
 }

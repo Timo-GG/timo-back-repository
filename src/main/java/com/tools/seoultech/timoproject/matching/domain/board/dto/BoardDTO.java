@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.matching.domain.board.dto;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Getter
 public abstract class BoardDTO {
     // TODO: CompactRiotHistory 필드 추가.
+
     @Builder
     public record RequestSearch(
             Long memberAccountId,
@@ -31,13 +33,14 @@ public abstract class BoardDTO {
 
     @Builder
     public record RequestDuo(
-            UserDTO.RequestDuo RequestUserDto,
-            String memo
+            UserDTO.RequestDuo requestUserDto,
+            String memo,
+            DuoMapCode duoMapCode
     ) implements Request {}
 
     @Builder
     public record RequestColosseum(
-        UserDTO.RequestDuo requestUserDto,
+        UserDTO.RequestColosseum requestUserDto,
         String memo,
         ColosseumMapCode mapCode,
         Integer headCount
@@ -47,7 +50,8 @@ public abstract class BoardDTO {
     public record ResponseDuo(
             UUID boardUUID,
             UserDTO.ResponseDuo responseUserDto,
-            String memo
+            String memo,
+            DuoMapCode duoMapCode
     ) implements Response {}
 
     @Builder
