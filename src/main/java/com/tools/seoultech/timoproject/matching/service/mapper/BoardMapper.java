@@ -15,23 +15,23 @@ import java.util.UUID;
 public interface BoardMapper {
 
     /** DTO → Redis 엔티티 */
-    @Mapping(target = "userUUID", source = "userUUID")
-    RedisBoard.Duo toRedisDuo(BoardDTO.RequestDuo requestDuo, UUID userUUID);
+    @Mapping(target = "redisUser", source = "duoUser")
+    RedisBoard.Duo toRedisDuo(BoardDTO.RequestDuo requestDuo, RedisUser.Duo duoUser);
 
-    @Mapping(target = "userUUID", source = "userUUID")
-    RedisBoard.Colosseum toRedisColosseum(BoardDTO.RequestColosseum requestColosseum, UUID userUUID);
+    @Mapping(target = "redisUser", source = "colosseumUser")
+    RedisBoard.Colosseum toRedisColosseum(BoardDTO.RequestColosseum requestColosseum, RedisUser.Colosseum colosseumUser);
 
     /** RedisBoard.Duo → BoardDTO.ResponseDuo */
     @Mapping(target = "boardUUID",       source = "uuid")
-    @Mapping(target = "responseUserDto", source = "userUUID",
-            qualifiedByName = "searchUserDuo")
+//    @Mapping(target = "responseUserDto", source = "userUUID",
+//            qualifiedByName = "searchUserDuo")
     BoardDTO.ResponseDuo toResponseDuo(RedisBoard.Duo redisBoard,
                                        @Context RedisUserRepository redisUserRepository);
 
     /** RedisBoard.Colosseum → BoardDTO.ResponseColosseum */
     @Mapping(target = "boardUUID",       source = "uuid")
-    @Mapping(target = "responseUserDto", source = "userUUID",
-            qualifiedByName = "searchUserColosseum")
+//    @Mapping(target = "responseUserDto", source = "userUUID",
+//            qualifiedByName = "searchUserColosseum")
     BoardDTO.ResponseColosseum toResponseColosseum(RedisBoard.Colosseum redisBoard,
                                                    @Context RedisUserRepository redisUserRepository);
 
