@@ -38,7 +38,7 @@ public abstract class RedisBoard {
 
     @Indexed
     // 서버 내부 필드. 역직렬화에 사용되지 않음. 직렬화에서는 편의성 때문에 보여주긴 함.
-    private final MatchingCategory category;
+    private final MatchingCategory matchingCategory;
 
     /** 역직렬화용 생성자 : Redis 조회 시 사용 */
     @PersistenceCreator

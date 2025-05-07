@@ -6,19 +6,23 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.Ma
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.annotation.Reference;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.util.UUID;
 
 @RedisHash(value = "MyPage", timeToLive = 15 * 60)
 @Getter
 public class RedisMyPage {
+    @Id
     private final UUID uuid;
 
-    private final MatchingCategory category;
+    @Indexed
+    private final MatchingCategory matchingCategory;
     private final MatchingStatus status;
 
     @Reference private final RedisBoard board;
@@ -30,17 +34,17 @@ public class RedisMyPage {
     }
 
     @PersistenceCreator
-    public RedisMyPage(UUID uuid, MatchingCategory category, MatchingStatus status, RedisBoard board, RedisUser requestor) {
+    public RedisMyPage(UUID uuid, MatchingCategory matchingCategory, MatchingStatus status, RedisBoard board, RedisUser requestor) {
             this.uuid = uuid;
-            this.category = category;
+            this.matchingCategory = matchingCategory;
             this.status = status;
             this.board = board;
             this.requestor = requestor;
     }
     @Builder
-    public RedisMyPage(MatchingCategory category, RedisBoard board, RedisUser requestor) {
+    public RedisMyPage(MatchingCategory matchingCategory, RedisBoard board, RedisUser requestor) {
             this.uuid = UUID.randomUUID();
-            this.category = category;
+            this.matchingCategory = matchingCategory;
             this.status = MatchingStatus.WAITING;
             this.board = board;
             this.requestor = requestor;

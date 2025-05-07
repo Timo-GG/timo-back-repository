@@ -1,8 +1,12 @@
 package com.tools.seoultech.timoproject.matching.controller;
 
+import com.tools.seoultech.timoproject.global.APIErrorResponse;
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
+import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.MyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
 import com.tools.seoultech.timoproject.matching.service.BoardService;
 import com.tools.seoultech.timoproject.matching.service.MatchingService;
@@ -11,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,10 +35,10 @@ public class RedisController {
      */
     @PostMapping("/duo")
     public ResponseEntity<RedisBoard.Duo> createDuoBoard(@RequestBody BoardDTO.RequestDuo requestDuo) {
+        System.err.println("Board Controller @Post");
         RedisBoard.Duo savedBoard = boardService.saveDuoBoard(requestDuo);
         return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
     }
-
     /**
      * Colosseum 게시판에 게시글을 추가
      */
@@ -129,16 +134,49 @@ public class RedisController {
 
 
     @GetMapping("/myPage/{myPageUUID}")
-    public ResponseEntity<APIDataResponse<RedisMyPage>> getMyPage(@PathVariable UUID myPageUUID) throws Exception{
-        RedisMyPage testDto = matchingService.getBoardInRedis(myPageUUID);
+    public ResponseEntity<APIDataResponse<MyPageDTO.ResponseMyPage>> getMyPage(@PathVariable UUID myPageUUID) throws Exception{
+        MyPageDTO.ResponseMyPage testDto = matchingService.getMyPage(myPageUUID);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
                         APIDataResponse.of(testDto)
                 );
     }
+    @GetMapping("/myPage/category/{category}")
+    public ResponseEntity<APIDataResponse<List<MyPageDTO.ResponseMyPage>>> getMyPage(@PathVariable MatchingCategory category) throws Exception{
+        List<MyPageDTO.ResponseMyPage> testDtoList = matchingService.getMyPage(category);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        APIDataResponse.of(testDtoList)
+                );
+    }
     @PostMapping("/myPage")
-    public ResponseEntity<APIDataResponse<RedisMyPage>> getMyPage(@RequestBody MyPageDTO myPageDTO) throws Exception{
-        
+    public ResponseEntity<APIDataResponse<RedisMyPage>> createMyPage(@RequestBody MatchingDTO.RequestDuo matchingDuo) throws Exception{
+        System.err.println("MyPage Controller @Post");
+        RedisMyPage testDto = matchingService.saveDuoMatchingToMyPage(matchingDuo);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        APIDataResponse.of(testDto)
+                );
+    }
+    @DeleteMapping("/myPage/{myPageUUID}")
+    public ResponseEntity<APIDataResponse> deleteMyPage(@PathVariable UUID myPageUUID) throws Exception{
+        matchingService.deleteMyPage(myPageUUID);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        APIDataResponse.empty()
+                );
+    }
+    @DeleteMapping("/myPage")
+    public ResponseEntity<APIDataResponse> deleteAllMyPage ()throws Exception{
+        matchingService.deleteAllMyPage();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        APIDataResponse.empty()
+                );
     }
 }

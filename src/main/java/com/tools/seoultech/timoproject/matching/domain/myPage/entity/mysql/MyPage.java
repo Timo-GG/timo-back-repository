@@ -20,7 +20,7 @@ public class MyPage extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
-    MatchingCategory category;
+    MatchingCategory matchingCategory;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

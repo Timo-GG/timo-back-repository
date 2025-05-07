@@ -19,22 +19,22 @@ public abstract class MyPageDTO {
             MatchingStatus status
     ){}
     // Note: 2. 검색 결과 Response
-    public record responseDuo(
+    public record ResponseDuo(
             UUID mypageUUID,
             MatchingCategory matchingCategory,
             RedisMyPage redisMyPage,
             RedisUser.Duo requestor,
             RedisUser.Duo acceptor
     ){}
-    public record responseColosseum(
+    public record ResponseColosseum(
             UUID mypageUUID,
             MatchingCategory matchingCategory,
             RedisMyPage redisMyPage,
             RedisUser.Duo requestor,
             RedisUser.Duo acceptor
     ){}
-    public record responseMyPage(
-            UUID mypageUUID,
+    public record ResponseMyPage(
+            UUID myPageUUID,
             MatchingCategory matchingCategory,
             RedisUser requestor,
             RedisUser acceptor,

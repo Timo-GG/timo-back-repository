@@ -18,15 +18,15 @@ public interface MyPageMapper {
     @Mappings(value = {
         @Mapping(target = "board", source = "redisBoard"),
         @Mapping(target = "requestor", source = "redisRequestor"),
-        @Mapping(target = "category", expression = "java(redisBoard.getCategory())")
+        @Mapping(target = "matchingCategory", expression = "java(redisBoard.getMatchingCategory())")
     })
     RedisMyPage toRedisMyPage(RedisBoard redisBoard, RedisUser redisRequestor);
 
 //    @Mapping(target = "id", ignore = true)
 //    MyPage toMysqlMyPage(RedisMyPage redisMyPage);
-//
-//    @Mapping(target = "myPageUUID", source = "uuid")
-//    MyPageDTO.responseMyPage toDtoFromRedis(RedisMyPage redisMyPage);
+
+    @Mapping(target = "myPageUUID", source = "uuid")
+    MyPageDTO.ResponseMyPage toDtoFromRedis(RedisMyPage redisMyPage);
 
 //    MyPageDTO.responseMyPage toDtoFromMysql(MyPage myPage);
 

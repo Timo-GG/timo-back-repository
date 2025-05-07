@@ -27,7 +27,7 @@ public abstract class BoardDTO {
     @Builder
     public record RequestSearch(
             Long memberAccountId,
-            MatchingCategory category,
+            MatchingCategory matchingCategory,
             PlayPosition position
     ) implements Request {}
 
