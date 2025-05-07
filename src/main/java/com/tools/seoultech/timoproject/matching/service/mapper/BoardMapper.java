@@ -13,6 +13,7 @@ import java.util.UUID;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = UserMapper.class)
 public interface BoardMapper {
+    BoardMapper Instance = Mappers.getMapper(BoardMapper.class);
 
     /** DTO → Redis 엔티티 */
     @Mapping(target = "redisUser", source = "duoUser")

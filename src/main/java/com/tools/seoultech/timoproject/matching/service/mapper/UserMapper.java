@@ -7,7 +7,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
-    UserMapper userMapperInstance = Mappers.getMapper(UserMapper.class);
+    UserMapper Instance = Mappers.getMapper(UserMapper.class);
 
     /**
      * uuid는 부모 생성자에서 자동으로 UUID.randomUUID()로 처리되고 있기 때문에, MapStruct가 신경 쓸 필요도 없음
