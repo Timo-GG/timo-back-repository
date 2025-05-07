@@ -22,13 +22,30 @@ public interface BoardMapper {
     RedisBoard.Colosseum toRedisColosseum(BoardDTO.RequestColosseum requestColosseum, RedisUser.Colosseum colosseumUser);
 
     /** RedisBoard.Duo → BoardDTO.ResponseDuo */
-    @Mapping(target = "boardUUID",       source = "uuid")
-    BoardDTO.ResponseDuo toResponseDuo(RedisBoard.Duo redisBoard,
-                                       @Context RedisUserRepository redisUserRepository);
+    @Mapping(target = "boardUUID", source = "uuid")
+    @Mapping(target = "responseUserDto", source = "redisUser", qualifiedByName = "mapUserDuo")
+    BoardDTO.ResponseDuo toResponseDuo(RedisBoard.Duo redisBoard);
 
     /** RedisBoard.Colosseum → BoardDTO.ResponseColosseum */
-    @Mapping(target = "boardUUID",       source = "uuid")
-    BoardDTO.ResponseColosseum toResponseColosseum(RedisBoard.Colosseum redisBoard,
-                                                   @Context RedisUserRepository redisUserRepository);
+    @Mapping(target = "boardUUID", source = "uuid")
+    @Mapping(target = "responseUserDto", source = "redisUser", qualifiedByName = "mapUserColosseum")
+    BoardDTO.ResponseColosseum toResponseColosseum(RedisBoard.Colosseum redisBoard);
 
+    /** RedisUser.Duo → UserDTO.ResponseDuo 매핑 */
+    @Named("mapUserDuo")
+    default UserDTO.ResponseDuo mapUserDuo(RedisUser redisUser) {
+        if (redisUser instanceof RedisUser.Duo duo) {
+            return UserMapper.userMapperInstance.toResponseDuo(duo);
+        }
+        throw new IllegalStateException("mapUserDuo 호출 시 RedisUser.Duo가 아님: " + redisUser.getClass().getSimpleName());
+    }
+
+    /** RedisUser.Colosseum → UserDTO.ResponseColosseum 매핑 */
+    @Named("mapUserColosseum")
+    default UserDTO.ResponseColosseum mapUserColosseum(RedisUser redisUser) {
+        if (redisUser instanceof RedisUser.Colosseum colosseum) {
+            return UserMapper.userMapperInstance.toResponseColosseum(colosseum);
+        }
+        throw new IllegalStateException("mapUserColosseum 호출 시 RedisUser.Colosseum이 아님: " + redisUser.getClass().getSimpleName());
+    }
 }
