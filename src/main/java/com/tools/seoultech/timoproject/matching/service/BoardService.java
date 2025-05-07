@@ -55,7 +55,7 @@ public class BoardService {
         RedisBoard.Duo redisBoard = (RedisBoard.Duo) redisBoardRepository
                 .findById(boardUUID)
                 .orElseThrow(() -> new Exception("Board Not Found : " + boardUUID));
-        return boardMapper.toResponseDuo(redisBoard, redisUserRepository);
+        return boardMapper.toResponseDuo(redisBoard);
     }
 
     /**
@@ -65,7 +65,7 @@ public class BoardService {
         RedisBoard.Colosseum redisBoard = (RedisBoard.Colosseum) redisBoardRepository
                 .findById(boardUUID)
                 .orElseThrow(() -> new Exception("Board not found: " + boardUUID));
-        return boardMapper.toResponseColosseum(redisBoard, redisUserRepository);
+        return boardMapper.toResponseColosseum(redisBoard);
     }
 
     /**
@@ -75,7 +75,7 @@ public class BoardService {
         return redisBoardRepository
                 .findAllByMatchingCategory(MatchingCategory.Duo)
                 .stream()
-                .map(b -> boardMapper.toResponseDuo((RedisBoard.Duo) b, redisUserRepository))
+                .map(b -> boardMapper.toResponseDuo((RedisBoard.Duo) b))
                 .toList();
     }
 
@@ -86,7 +86,7 @@ public class BoardService {
         return redisBoardRepository
                 .findAllByMatchingCategory(MatchingCategory.Colosseum)
                 .stream()
-                .map(b -> boardMapper.toResponseColosseum((RedisBoard.Colosseum) b, redisUserRepository))
+                .map(b -> boardMapper.toResponseColosseum((RedisBoard.Colosseum) b))
                 .toList();
     }
 
