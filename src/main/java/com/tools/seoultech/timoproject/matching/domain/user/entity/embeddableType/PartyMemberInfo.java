@@ -8,14 +8,14 @@ import lombok.*;
 @Embeddable
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class PartyMemberInfo {
     @Embedded
     private RiotAccount riotAccount;
 
     @Embedded
-    private UserInfo_Ver2 userInfo;
+    private UserInfo userInfo;
 
     // #TODO: Compact Riot 전적 조회
     @Embedded

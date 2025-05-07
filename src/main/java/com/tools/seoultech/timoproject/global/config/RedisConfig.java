@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.global.config;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -60,6 +61,15 @@ public class RedisConfig {
     @Bean(name = "userRedisTemplate")
     public RedisTemplate<String, RedisUser> userRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, RedisUser> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
+    /** 마이페이지 관련 RedisTemplate 설정 */
+    @Bean(name = "myPageRedisTemplate")
+    public RedisTemplate<String, RedisMyPage> myPageRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, RedisMyPage> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());

@@ -5,16 +5,17 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import org.springframework.data.annotation.PersistenceCreator;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Reference;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import java.util.UUID;
-
 
 @RedisHash(value = "redisBoard", timeToLive = 15 * 60)
 @JsonTypeInfo(
