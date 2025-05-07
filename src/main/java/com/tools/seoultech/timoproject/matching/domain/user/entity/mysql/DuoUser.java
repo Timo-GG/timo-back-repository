@@ -1,8 +1,7 @@
 package com.tools.seoultech.timoproject.matching.domain.user.entity.mysql;
 
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.DuoInfo_Ver2;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.UserInfo_Ver2;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.DuoInfo;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Embedded;
@@ -18,13 +17,13 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DuoUser extends BaseUser {
     @Embedded
-    private UserInfo_Ver2 userInfo;
+    private UserInfo userInfo;
 
     @Embedded
-    private DuoInfo_Ver2 duoInfo;
+    private DuoInfo duoInfo;
 
     @Builder
-    public DuoUser(MemberAccount member, UserInfo_Ver2 userInfo, DuoInfo_Ver2 duoInfo){
+    public DuoUser(MemberAccount member, UserInfo userInfo, DuoInfo duoInfo){
         super(member);
         this.userInfo = userInfo;
         this.duoInfo = duoInfo;

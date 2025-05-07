@@ -1,9 +1,7 @@
 package com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType;
 
-import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayCondition;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayStyle;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.VoiceChat;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,9 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserInfo_Ver2 {
-    private PlayPosition myPosition;
-    private PlayStyle myStyle;
-    private PlayCondition myStatus;
-    private VoiceChat myVoice;
+public class DuoInfo {
+    private PlayPosition opponentPosition;
+    private PlayStyle opponentStyle;
 }

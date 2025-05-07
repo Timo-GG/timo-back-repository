@@ -1,9 +1,9 @@
 package com.tools.seoultech.timoproject.matching.domain.user.dto;
 
 
-import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.DuoInfo_Ver2;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.DuoInfo;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.PartyMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.UserInfo_Ver2;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.UserInfo;
 
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
@@ -19,8 +19,8 @@ public abstract class UserDTO{
     public record RequestDuo(
             Long memberId,
             RiotAccount riotAccount,
-            UserInfo_Ver2 userInfo,
-            DuoInfo_Ver2 duoInfo
+            UserInfo userInfo,
+            DuoInfo duoInfo
     )implements Request {}
 
     @Builder
@@ -34,8 +34,8 @@ public abstract class UserDTO{
     public record ResponseDuo(
             UUID userUUID,
             RiotAccount riotAccount,
-            UserInfo_Ver2 userInfo,
-            DuoInfo_Ver2 duoInfo
+            UserInfo userInfo,
+            DuoInfo duoInfo
     )implements Response {}
 
     @Builder

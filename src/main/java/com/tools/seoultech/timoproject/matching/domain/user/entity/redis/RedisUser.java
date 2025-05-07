@@ -3,9 +3,9 @@ package com.tools.seoultech.timoproject.matching.domain.user.entity.redis;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.DuoInfo_Ver2;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.DuoInfo;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.PartyMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.UserInfo_Ver2;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -64,8 +64,8 @@ public abstract class RedisUser {
 
     @Getter
     public static class Duo extends RedisUser {
-        private UserInfo_Ver2 userInfo;
-        private DuoInfo_Ver2 duoInfo;
+        private UserInfo userInfo;
+        private DuoInfo duoInfo;
 
         /** Redis 조회용 생성자 */
         @PersistenceCreator
@@ -73,8 +73,8 @@ public abstract class RedisUser {
                       Long memberId,
                       RiotAccount riotAccount,
                       MatchingCategory matchingCategory,
-                      UserInfo_Ver2 userInfo,
-                      DuoInfo_Ver2 duoInfo) {
+                      UserInfo userInfo,
+                      DuoInfo duoInfo) {
             super(uuid, memberId, riotAccount, matchingCategory);
             this.userInfo = userInfo;
             this.duoInfo  = duoInfo;
@@ -84,8 +84,8 @@ public abstract class RedisUser {
         @Builder
         public Duo(RiotAccount riotAccount,
                    Long memberId,
-                   UserInfo_Ver2 userInfo,
-                   DuoInfo_Ver2 duoInfo) {
+                   UserInfo userInfo,
+                   DuoInfo duoInfo) {
             super(memberId, riotAccount, MatchingCategory.Duo);
             this.userInfo = userInfo;
             this.duoInfo  = duoInfo;
