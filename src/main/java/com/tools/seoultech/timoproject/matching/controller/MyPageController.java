@@ -36,6 +36,7 @@ public class MyPageController {
                         APIDataResponse.of(testDto)
                 );
     }
+
     @GetMapping("/myPage/category/{category}")
     @Operation(
             summary = "카테고리별 조회",
@@ -49,6 +50,7 @@ public class MyPageController {
                         APIDataResponse.of(testDtoList)
                 );
     }
+
     @PostMapping("/myPage")
     @Operation(
             summary = "매칭 생성",
@@ -63,6 +65,7 @@ public class MyPageController {
                         APIDataResponse.of(testDto)
                 );
     }
+
     @DeleteMapping("/myPage/{myPageUUID}")
     @Operation(
             summary = "단일 삭제",
@@ -76,6 +79,7 @@ public class MyPageController {
                         APIDataResponse.empty()
                 );
     }
+
     @DeleteMapping("/myPage")
     @Operation(
             summary = "전체 삭제",
