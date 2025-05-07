@@ -11,15 +11,6 @@ import lombok.Getter;
 import java.util.UUID;
 
 
-
-//@Schema(
-//        description = "Duo 또는 Colosseum 게시글 공통 DTO",
-//        discriminatorProperty = "type",
-//        discriminatorMapping = {
-//                @DiscriminatorMapping(value = "duo", schema = BoardDTO.RequestDuo.class),
-//                @DiscriminatorMapping(value = "colosseum", schema = BoardDTO.RequestColosseum.class)
-//        }
-//)
 @Getter
 public abstract class BoardDTO {
     // TODO: CompactRiotHistory 필드 추가.

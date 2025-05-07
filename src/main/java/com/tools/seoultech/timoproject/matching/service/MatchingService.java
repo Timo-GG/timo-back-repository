@@ -29,10 +29,6 @@ public class MatchingService {
     private final RedisMyPageRepository redisMyPageRepository;
 
     @Transactional
-    @Operation(
-            summary = "매칭 신청시 MyPage 엔티티 생성",
-            description = "매칭 보드에 신청자 등장 시에 마이페이지 정보로 전환."
-    )
     public RedisMyPage saveDuoMatchingToMyPage(MatchingDTO.RequestDuo matchingDto) {
         RedisBoard redisBoard = redisBoardRepository.findById(matchingDto.boardUUID())
                 .orElseThrow(() -> new GeneralException("Board UUID에 해당하는 Redis 엔티티가 존재하지 않습니다."));
@@ -45,19 +41,12 @@ public class MatchingService {
         RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor);
         return redisMyPageRepository.save(redisMyPage); // FIXME: Response 대체.
     }
-    @Operation(
-            summary = "UUID 값으로 마이페이지 엔티티 조회 ",
-            description = "매칭 보드에 신청자 등장 시에 마이페이지 정보로 전환."
-    )
     public MyPageDTO.ResponseMyPage getMyPage(UUID myPageUUID) throws Exception {
         RedisMyPage redisMyPage = redisMyPageRepository.findById(myPageUUID)
                 .orElseThrow(() -> new GeneralException("해당 MyPage는 Redis안에 없습니다."));
         return myPageMapper.toDtoFromRedis(redisMyPage);
     }
-    @Operation(
-            summary = "매칭 신청시 MyPage 엔티티 생성",
-            description = "매칭 보드에 신청자 등장 시에 마이페이지 정보로 전환."
-    )
+
     public List<MyPageDTO.ResponseMyPage> getMyPage(MatchingCategory matchingCategory) throws Exception {
         List<RedisMyPage> redisMyPageList = redisMyPageRepository.findAllByMatchingCategory(matchingCategory);
         return redisMyPageList.stream()
