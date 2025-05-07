@@ -1,10 +1,10 @@
 package com.tools.seoultech.timoproject;
 
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Gender;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.ranking.facade.RankingFacadeImpl;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
 import com.tools.seoultech.timoproject.riot.facade.RiotFacade;
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.Gender;
-import com.tools.seoultech.timoproject.matching.user.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
 import com.tools.seoultech.timoproject.ranking.dto.Redis_RankingInfo;
 import com.tools.seoultech.timoproject.ranking.service.RankingRedisService;

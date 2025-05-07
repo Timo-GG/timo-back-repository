@@ -5,15 +5,16 @@ import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Play
 import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayStyle;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.VoiceChat;
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserInfo_Ver2 {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class UserInfo {
     private PlayPosition myPosition;
     private PlayStyle myStyle;
     private PlayCondition myStatus;

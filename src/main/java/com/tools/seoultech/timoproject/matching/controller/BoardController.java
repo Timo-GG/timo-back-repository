@@ -2,7 +2,13 @@ package com.tools.seoultech.timoproject.matching.controller;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
+import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
+import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
 import com.tools.seoultech.timoproject.matching.service.BoardService;
+import com.tools.seoultech.timoproject.matching.service.MatchingService;
+import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,19 +22,18 @@ import java.util.UUID;
 @RequestMapping("/api/v1/matching")
 @RequiredArgsConstructor
 @Tag(name = "Matching", description = "Matching API")
-public class RedisController {
+public class BoardController {
 
     private final BoardService boardService;
-
     /**
      * Duo 게시판에 게시글을 추가
      */
     @PostMapping("/duo")
     public ResponseEntity<RedisBoard.Duo> createDuoBoard(@RequestBody BoardDTO.RequestDuo requestDuo) {
+        System.err.println("Board Controller @Post");
         RedisBoard.Duo savedBoard = boardService.saveDuoBoard(requestDuo);
         return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
     }
-
     /**
      * Colosseum 게시판에 게시글을 추가
      */

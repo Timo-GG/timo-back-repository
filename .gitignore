@@ -209,7 +209,6 @@ $RECYCLE.BIN/
 **/build/
 !src/**/build/
 ..gradle/
-.gradle
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -237,16 +236,14 @@ src/main/resources/application.properties
 *.properties
 .env
 
-docker-compose.yml
-application-*.properties
-
-node_modules
 package-lock.json
+docker-compose.yml
 
+/node_modules
 /build
 /bin
 /out
-/.idea
 *.exe
 *.dll
+
 src/test/java/com/tools/seoultech/timoproject/post/repository/UserAccountRepositoryTest.java

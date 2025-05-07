@@ -1,10 +1,10 @@
 package com.tools.seoultech.timoproject.matching.domain.board.entity.mysql;
 
-
 import com.tools.seoultech.timoproject.matching.domain.user.entity.mysql.BaseUser;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +13,10 @@ import lombok.NoArgsConstructor;
 @PrimaryKeyJoinColumn(name = "board_id")
 @Entity
 @Getter
-@NoArgsConstructor
-//@AllArgsConstructor
-public class ColloseumSearchBoard extends BaseSearchBoard{
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class DuoBoard extends BaseBoard {
     @Builder
-    public ColloseumSearchBoard(BaseUser baseUser, String memo) {
+    public DuoBoard(BaseUser baseUser, String memo) {
         super(baseUser, memo);
     }
 }

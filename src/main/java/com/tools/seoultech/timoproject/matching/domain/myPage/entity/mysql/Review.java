@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.matching.domain.myPage.entity;
+package com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentAttitude;
@@ -22,10 +22,13 @@ public class Review extends BaseEntity {
     @Column(name = "review_id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {})
-    @JoinColumn(name = "member_id")
-    // TODO: 듀오 같은 경우, Timo.GG 사용자가 아닌 비회원 사용자면 어떻게 리뷰를 저장할건지?
-    private MemberAccount member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", insertable = false, updatable = false)
+    private MemberAccount reviewer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", insertable = false, updatable = false)
+    private MemberAccount reviewee;
 
     @Column(nullable = false)
     private OpponentAttitude attitude_score;
