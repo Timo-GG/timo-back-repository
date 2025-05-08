@@ -6,6 +6,7 @@ import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserRepository;
 import org.mapstruct.*;
+import org.mapstruct.factory.Mappers;
 
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = UserMapper.class)
 public interface BoardMapper {
+    BoardMapper Instance = Mappers.getMapper(BoardMapper.class);
 
     /** DTO → Redis 엔티티 */
     @Mapping(target = "redisUser", source = "duoUser")
@@ -23,12 +25,18 @@ public interface BoardMapper {
 
     /** RedisBoard.Duo → BoardDTO.ResponseDuo */
     @Mapping(target = "boardUUID",       source = "uuid")
-    BoardDTO.ResponseDuo toResponseDuo(RedisBoard.Duo redisBoard,
-                                       @Context RedisUserRepository redisUserRepository);
+    @Mapping(
+            target = "responseUserDto",
+            expression = "java(UserMapper.Instance.toResponseDuo((RedisUser.Duo)redisBoard.getRedisUser()))"
+    )
+    BoardDTO.ResponseDuo toResponseDuo(RedisBoard.Duo redisBoard);
 
     /** RedisBoard.Colosseum → BoardDTO.ResponseColosseum */
     @Mapping(target = "boardUUID",       source = "uuid")
-    BoardDTO.ResponseColosseum toResponseColosseum(RedisBoard.Colosseum redisBoard,
-                                                   @Context RedisUserRepository redisUserRepository);
+    @Mapping(
+            target = "responseUserDto",
+            expression = "java(UserMapper.Instance.toResponseColosseum((RedisUser.Colosseum)redisBoard.getRedisUser()))"
+    )
+    BoardDTO.ResponseColosseum toResponseColosseum(RedisBoard.Colosseum redisBoard);
 
 }
