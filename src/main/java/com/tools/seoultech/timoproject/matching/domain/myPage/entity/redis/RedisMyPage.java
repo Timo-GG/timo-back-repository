@@ -30,7 +30,7 @@ public class RedisMyPage {
 
     @Transient
     private UUID getAcceptor(){
-        return board.getUserUUID();
+        return board.getRedisUser().getUuid();
     }
 
     @PersistenceCreator

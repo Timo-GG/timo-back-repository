@@ -33,7 +33,9 @@ public abstract class RedisBoard {
     @Id
     private final UUID uuid;
 
-    private final UUID userUUID;
+    @Reference
+    private final RedisUser redisUser;
+
     private final String memo;
 
     @Indexed
@@ -43,20 +45,20 @@ public abstract class RedisBoard {
     /** 역직렬화용 생성자 : Redis 조회 시 사용 */
     @PersistenceCreator
     protected RedisBoard(UUID uuid,
-                         UUID userUUID,
+                         RedisUser redisUser,
                          String memo,
                          MatchingCategory matchingCategory) {
         this.uuid             = uuid;
-        this.userUUID         = userUUID;
+        this.redisUser         = redisUser;
         this.memo             = memo;
         this.matchingCategory = matchingCategory;
     }
 
     /** Builder용 생성자 : 서브클래스에서 호출 */
-    protected RedisBoard(UUID userUUID,
+    protected RedisBoard(RedisUser redisUser,
                          String memo,
                          MatchingCategory matchingCategory) {
-        this(UUID.randomUUID(), userUUID, memo, matchingCategory);
+        this(UUID.randomUUID(), redisUser, memo, matchingCategory);
     }
 
     // Duo 게시판용 서브클래스
@@ -67,20 +69,20 @@ public abstract class RedisBoard {
         /** Redis 조회 시 사용할 생성자 */
         @PersistenceCreator
         protected Duo(UUID uuid,
-                      UUID userUUID,
+                      RedisUser redisUser,
                       String memo,
                       MatchingCategory matchingCategory,
                       DuoMapCode duoMapCode) {
-            super(uuid, userUUID, memo, matchingCategory);
+            super(uuid, redisUser, memo, matchingCategory);
             this.duoMapCode = duoMapCode;
         }
 
         /** 빌더용 생성자 : 신규 게시글 생성 시 */
         @Builder
-        public Duo(UUID userUUID,
+        public Duo(RedisUser redisUser,
                    String memo,
                    DuoMapCode duoMapCode) {
-            super(userUUID, memo, MatchingCategory.Duo);
+            super(redisUser, memo, MatchingCategory.Duo);
             this.duoMapCode = duoMapCode;
         }
     }
@@ -93,22 +95,22 @@ public abstract class RedisBoard {
 
         @PersistenceCreator
         protected Colosseum(UUID uuid,
-                            UUID userUUID,
+                            RedisUser redisUser,
                             String memo,
                             MatchingCategory matchingCategory,
                             ColosseumMapCode mapCode,
                             Integer headCount) {
-            super(uuid, userUUID, memo, matchingCategory);
+            super(uuid, redisUser, memo, matchingCategory);
             this.mapCode   = mapCode;
             this.headCount = headCount;
         }
 
         @Builder
-        public Colosseum(UUID userUUID,
+        public Colosseum(RedisUser redisUser,
                          String memo,
                          ColosseumMapCode mapCode,
                          Integer headCount) {
-            super(userUUID, memo, MatchingCategory.Colosseum);
+            super(redisUser, memo, MatchingCategory.Colosseum);
             this.mapCode   = mapCode;
             this.headCount = headCount;
         }

@@ -25,6 +25,8 @@ import java.util.UUID;
 public class BoardController {
 
     private final BoardService boardService;
+    private final MatchingService matchingService;
+
     /**
      * Duo 게시판에 게시글을 추가
      */
