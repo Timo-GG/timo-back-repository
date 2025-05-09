@@ -10,7 +10,6 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.Redis
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPageRepository;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,7 @@ public class MatchingService {
 
         RedisUser redisRequestor = userService.saveDuoUser(matchingDto.duoRequestorDto());
 
-        if(redisBoard.getMatchingCategory() != MatchingCategory.Duo){
+        if(redisBoard.getMatchingCategory() != MatchingCategory.DUO){
             throw new GeneralException("Board와 User의 매칭 카테고리가 일치하지 않습니다.");
         }
         RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor);
@@ -48,7 +47,7 @@ public class MatchingService {
 
         RedisUser redisRequestor = userService.saveColosseumUser(matchingDto.colosseumRequestorDto());
 
-        if(redisBoard.getMatchingCategory() != MatchingCategory.Colosseum){
+        if(redisBoard.getMatchingCategory() != MatchingCategory.COLOSSEUM){
             throw new GeneralException("Board와 User의 매칭 카테고리가 일치하지 않습니다.");
         }
         RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor);

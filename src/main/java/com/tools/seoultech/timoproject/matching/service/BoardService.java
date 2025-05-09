@@ -28,7 +28,6 @@ public class BoardService {
     public RedisBoard.Duo saveDuoBoard(BoardDTO.RequestDuo requestDuo) {
         // 사용자 정보 저장 및 UUID 추출
         RedisUser.Duo savedUser = userService.saveDuoUser(requestDuo.requestUserDto());
-        UUID userUUID = savedUser.getUuid();
 
         // 게시글 DTO → RedisBoard 엔티티 변환
         RedisBoard.Duo redisBoard = boardMapper.toRedisDuo(requestDuo, savedUser);
@@ -73,7 +72,7 @@ public class BoardService {
      */
     public List<BoardDTO.ResponseDuo> getAllDuoBoards() {
         return redisBoardRepository
-                .findAllByMatchingCategory(MatchingCategory.Duo)
+                .findAllByMatchingCategory(MatchingCategory.DUO)
                 .stream()
                 .map(b -> boardMapper.toResponseDuo((RedisBoard.Duo) b))
                 .toList();
@@ -84,7 +83,7 @@ public class BoardService {
      */
     public List<BoardDTO.ResponseColosseum> getAllColosseumBoards() {
         return redisBoardRepository
-                .findAllByMatchingCategory(MatchingCategory.Colosseum)
+                .findAllByMatchingCategory(MatchingCategory.COLOSSEUM)
                 .stream()
                 .map(b -> boardMapper.toResponseColosseum((RedisBoard.Colosseum) b))
                 .toList();
@@ -112,7 +111,7 @@ public class BoardService {
      */
     public void deleteAllDuoBoards() {
         redisBoardRepository.deleteAll(redisBoardRepository
-                .findAllByMatchingCategory(MatchingCategory.Duo));
+                .findAllByMatchingCategory(MatchingCategory.DUO));
     }
 
     /**
@@ -120,6 +119,6 @@ public class BoardService {
      */
     public void deleteAllColosseumBoards() {
         redisBoardRepository.deleteAll(redisBoardRepository
-                .findAllByMatchingCategory(MatchingCategory.Colosseum));
+                .findAllByMatchingCategory(MatchingCategory.COLOSSEUM));
     }
 }

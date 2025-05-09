@@ -113,7 +113,7 @@ public abstract class RedisBoard {
                          String memo,
                          ColosseumMapCode mapCode,
                          Integer headCount) {
-            super(redisUser, memo, MatchingCategory.Colosseum);
+            super(redisUser, memo, MatchingCategory.COLOSSEUM);
             this.mapCode   = mapCode;
             this.headCount = headCount;
         }
