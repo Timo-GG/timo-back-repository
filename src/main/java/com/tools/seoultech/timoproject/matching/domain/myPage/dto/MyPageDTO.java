@@ -1,9 +1,13 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.dto;
 
+import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
+import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
 import java.util.UUID;
@@ -23,8 +27,8 @@ public abstract class MyPageDTO {
     public record ResponseMyPage(
             UUID myPageUUID,
             MatchingCategory matchingCategory,
-            RedisUser requestor,
-            RedisUser acceptor,
+            @Schema(oneOf = {BoardDTO.ResponseDuo.class, BoardDTO.ResponseColosseum.class}) BoardDTO.Response acceptorBoard,
+            @Schema(oneOf = {RedisUser.Duo.class, RedisUser.Colosseum.class}) UserDTO.Response requestor,
             MatchingStatus status
     ){}
 }

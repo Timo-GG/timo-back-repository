@@ -30,7 +30,6 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = RedisBoard.Colosseum.class, name = "Colosseum")
 })
 @Getter
-@Schema(oneOf = {RedisBoard.Duo.class, RedisBoard.Colosseum.class})
 public abstract class RedisBoard {
     @Id
     private final UUID uuid;
@@ -65,7 +64,7 @@ public abstract class RedisBoard {
 
     // Duo 게시판용 서브클래스
     @Getter
-    @Schema(description = "")
+    @Schema(description = "DuoBoard")
     public static class Duo extends RedisBoard {
         private DuoMapCode mapCode;
 
@@ -92,6 +91,7 @@ public abstract class RedisBoard {
 
     // Colosseum 게시판용 서브클래스
     @Getter
+    @Schema(description = "Colosseum Board")
     public static class Colosseum extends RedisBoard {
         private ColosseumMapCode mapCode;
         private Integer          headCount;

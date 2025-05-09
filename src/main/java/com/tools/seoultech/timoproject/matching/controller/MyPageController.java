@@ -1,18 +1,14 @@
 package com.tools.seoultech.timoproject.matching.controller;
 
-import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
+import com.tools.seoultech.timoproject.global.annotation.swagger.RedisOperation;
+import com.tools.seoultech.timoproject.global.annotation.swagger.ResponseOperation;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import com.tools.seoultech.timoproject.matching.service.MatchingService;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.SchemaProperty;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,10 +26,7 @@ public class MyPageController {
     private final MatchingService matchingService;
 
     @GetMapping("/myPage/{myPageUUID}")
-    @Operation(
-            summary = "단일 조회",
-            description = "[조회] UUID 키 값으로 단일 MyPage 엔티티 조회\n[개발자용] 마이페이지 보드 고유 엔티티값 조회. "
-    )
+    @ResponseOperation
     public ResponseEntity<APIDataResponse<MyPageDTO.ResponseMyPage>> getMyPage(@PathVariable UUID myPageUUID) throws Exception{
         MyPageDTO.ResponseMyPage testDto = matchingService.getMyPage(myPageUUID);
         return ResponseEntity
@@ -44,10 +37,7 @@ public class MyPageController {
     }
 
     @GetMapping("/myPage/category/{category}")
-    @Operation(
-            summary = "카테고리별 조회",
-            description = "[개발자용] 마이페이지 보드 공통 카테고리 그룹 엔티티 조회."
-    )
+    @ResponseOperation
     public ResponseEntity<APIDataResponse<List<MyPageDTO.ResponseMyPage>>> getMyPage(@PathVariable MatchingCategory category) throws Exception{
         List<MyPageDTO.ResponseMyPage> testDtoList = matchingService.getMyPage(category);
         return ResponseEntity
@@ -58,27 +48,7 @@ public class MyPageController {
     }
 
     @PostMapping("/myPage/duo")
-    @Operation(
-            summary = "Duo MyPage 생성",
-            description = "Duo 매칭 요청을 기반으로 MyPage를 생성합니다.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Duo MyPage 생성 성공",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RedisMyPage.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Duo MyPage 생성 성공 (Duo 타입)",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RedisBoard.Duo.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Duo MyPage 생성 성공 (Duo 타입)",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RedisUser.Duo.class))
-                    )
-            }
-    )
+    @RedisOperation
     public ResponseEntity<APIDataResponse<RedisMyPage>> createDuoMyPage(@RequestBody MatchingDTO.RequestDuo matchingDuo) throws Exception{
         System.err.println("MyPage Controller @Post");
         RedisMyPage testDto = matchingService.saveDuoMatchingToMyPage(matchingDuo);
@@ -90,27 +60,7 @@ public class MyPageController {
     }
 
     @PostMapping("/myPage/colosseum")
-    @Operation(
-            summary = "Duo MyPage 생성",
-            description = "Duo 매칭 요청을 기반으로 MyPage를 생성합니다.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Duo MyPage 생성 성공",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RedisMyPage.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Duo MyPage 생성 성공 (Duo 타입)",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RedisBoard.Colosseum.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Duo MyPage 생성 성공 (Duo 타입)",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = RedisUser.Colosseum.class))
-                    )
-            }
-    )
+    @RedisOperation
     public ResponseEntity<APIDataResponse<RedisMyPage>> createColosseumMyPage(@RequestBody MatchingDTO.RequestColosseum matchingColosseum) throws Exception{
         System.err.println("MyPage Controller @Post");
         RedisMyPage testDto = matchingService.saveColosseumMatchingToMyPage(matchingColosseum);
@@ -134,7 +84,7 @@ public class MyPageController {
                         APIDataResponse.empty()
                 );
     }
-    
+
     @DeleteMapping("/myPage")
     @Operation(
             summary = "전체 삭제",
