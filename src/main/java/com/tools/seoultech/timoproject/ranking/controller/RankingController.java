@@ -4,7 +4,7 @@ import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import com.tools.seoultech.timoproject.ranking.RedisDataSeeder;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
-import com.tools.seoultech.timoproject.ranking.dto.Redis_RankingInfo;
+import com.tools.seoultech.timoproject.ranking.dto.RedisRankingInfo;
 import com.tools.seoultech.timoproject.ranking.facade.RankingFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,8 +32,8 @@ public class RankingController {
 
     @Operation(summary = "내 랭킹 정보 조회", description = "현재 로그인한 사용자의 랭킹 정보를 조회합니다.")
     @GetMapping("/me")
-    public ResponseEntity<APIDataResponse<Redis_RankingInfo>> getMyRankingInfo(@CurrentMemberId Long memberId) {
-        Redis_RankingInfo myRankingInfo = rankingFacade.getMyRankingInfo(memberId);
+    public ResponseEntity<APIDataResponse<RedisRankingInfo>> getMyRankingInfo(@CurrentMemberId Long memberId) {
+        RedisRankingInfo myRankingInfo = rankingFacade.getMyRankingInfo(memberId);
         return ResponseEntity.ok(APIDataResponse.of(myRankingInfo));
     }
 
@@ -45,11 +45,11 @@ public class RankingController {
 
     @Operation(summary = "대학교별 상위 랭킹 조회", description = "특정 대학교의 상위 랭킹 목록을 조회합니다.")
     @GetMapping("/top/univ")
-    public ResponseEntity<APIDataResponse<List<Redis_RankingInfo>>> getTopByUniversity(
+    public ResponseEntity<APIDataResponse<List<RedisRankingInfo>>> getTopByUniversity(
             @RequestParam String university,
             @RequestParam(defaultValue = "10") int limit
     ) {
-        List<Redis_RankingInfo> list = rankingFacade.getTopRankingsByUniversity(university, limit);
+        List<RedisRankingInfo> list = rankingFacade.getTopRankingsByUniversity(university, limit);
         return ResponseEntity.ok(APIDataResponse.of(list));
     }
 
