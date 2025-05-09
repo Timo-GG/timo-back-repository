@@ -17,9 +17,11 @@ public interface MemberAccountService {
 
     MemberAccount updateAccountInfo(Long memberId, UpdateMemberInfoRequest request);
 
-    MemberAccount updateRiotAccount(Long memberId, String puuid, String playerName, String playerTag);
+    MemberAccount updateRiotAccount(Long memberId, String puuid, String playerName, String playerTag, String profileIconUrl);
 
     MemberAccount updateUsername(Long memberId, String username);
 
     MemberAccount updateUniv(Long memberId, UnivRequestDTO univ);
+
+
 }

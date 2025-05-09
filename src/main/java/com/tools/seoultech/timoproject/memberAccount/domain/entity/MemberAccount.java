@@ -49,8 +49,8 @@ public class MemberAccount {
         this.username = username;
     }
 
-    public void updateRiotAccount(String puuid, String name, String tag) {
-        this.riotAccount = new RiotAccount(puuid, name, tag);
+    public void updateRiotAccount(String puuid, String name, String tag, String profileUrl) {
+        this.riotAccount = new RiotAccount(puuid, name, tag, profileUrl);
     }
 
     public void updateUnivAccount(String univName, String univCertifiedEmail) {
