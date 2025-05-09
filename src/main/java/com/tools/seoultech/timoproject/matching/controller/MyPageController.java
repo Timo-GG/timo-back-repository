@@ -49,12 +49,12 @@ public class MyPageController {
                         APIDataResponse.of(testDtoList)
                 );
     }
-    @PostMapping("/myPage")
+    @PostMapping("/myPage/duo")
     @Operation(
             summary = "매칭 생성",
             description = "[생성] 매칭 이벤트 발생시 마이페이지 엔티티 생성\n[개발자용] 마이페이지 보드 사용자간 연결."
     )
-    public ResponseEntity<APIDataResponse<RedisMyPage>> createMyPage(@RequestBody MatchingDTO.RequestDuo matchingDuo) throws Exception{
+    public ResponseEntity<APIDataResponse<RedisMyPage>> createDuoMyPage(@RequestBody MatchingDTO.RequestDuo matchingDuo) throws Exception{
         System.err.println("MyPage Controller @Post");
         RedisMyPage testDto = matchingService.saveDuoMatchingToMyPage(matchingDuo);
         return ResponseEntity
@@ -63,6 +63,21 @@ public class MyPageController {
                         APIDataResponse.of(testDto)
                 );
     }
+    @PostMapping("/myPage/colosseum")
+    @Operation(
+            summary = "매칭 생성",
+            description = "[생성] 매칭 이벤트 발생시 마이페이지 엔티티 생성\n[개발자용] 마이페이지 보드 사용자간 연결."
+    )
+    public ResponseEntity<APIDataResponse<RedisMyPage>> createColosseumMyPage(@RequestBody MatchingDTO.RequestColosseum matchingColosseum) throws Exception{
+        System.err.println("MyPage Controller @Post");
+        RedisMyPage testDto = matchingService.saveColosseumMatchingToMyPage(matchingColosseum);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        APIDataResponse.of(testDto)
+                );
+    }
+
     @DeleteMapping("/myPage/{myPageUUID}")
     @Operation(
             summary = "단일 삭제",

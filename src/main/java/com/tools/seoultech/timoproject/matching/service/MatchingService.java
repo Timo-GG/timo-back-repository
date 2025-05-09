@@ -41,6 +41,19 @@ public class MatchingService {
         RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor);
         return redisMyPageRepository.save(redisMyPage); // FIXME: Response 대체.
     }
+    @Transactional
+    public RedisMyPage saveColosseumMatchingToMyPage(MatchingDTO.RequestColosseum matchingDto) {
+        RedisBoard redisBoard = redisBoardRepository.findById(matchingDto.boardUUID())
+                .orElseThrow(() -> new GeneralException("Board UUID에 해당하는 Redis 엔티티가 존재하지 않습니다."));
+
+        RedisUser redisRequestor = userService.saveColosseumUser(matchingDto.colosseumRequestorDto());
+
+        if(redisBoard.getMatchingCategory() != MatchingCategory.Colosseum){
+            throw new GeneralException("Board와 User의 매칭 카테고리가 일치하지 않습니다.");
+        }
+        RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor);
+        return redisMyPageRepository.save(redisMyPage); // FIXME: Response 대체.
+    }
     public MyPageDTO.ResponseMyPage getMyPage(UUID myPageUUID) throws Exception {
         RedisMyPage redisMyPage = redisMyPageRepository.findById(myPageUUID)
                 .orElseThrow(() -> new GeneralException("해당 MyPage는 Redis안에 없습니다."));
