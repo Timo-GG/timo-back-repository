@@ -7,6 +7,7 @@ import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableTyp
 import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -28,6 +29,10 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = RedisUser.Duo.class, name = "Duo"),
         @JsonSubTypes.Type(value = RedisUser.Colosseum.class, name = "Colosseum")
 })
+@Schema(
+        description = "Redis 사용자",
+        oneOf = { RedisUser.Duo.class, RedisUser.Colosseum.class }
+)
 @Getter
 public abstract class RedisUser {
     @Id
@@ -63,6 +68,7 @@ public abstract class RedisUser {
     }
 
     @Getter
+    @Schema(description = "듀오 사용자")
     public static class Duo extends RedisUser {
         private UserInfo userInfo;
         private DuoInfo duoInfo;
@@ -93,6 +99,7 @@ public abstract class RedisUser {
     }
 
     @Getter
+    @Schema(description = "콜로세움 사용자")
     public static class Colosseum extends RedisUser {
         private List<PartyMemberInfo> partyMemberInfoList;
 

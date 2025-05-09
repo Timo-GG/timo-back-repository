@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.annotation.PersistenceCreator;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import lombok.Builder;
@@ -29,6 +30,7 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = RedisBoard.Colosseum.class, name = "Colosseum")
 })
 @Getter
+@Schema(oneOf = {RedisBoard.Duo.class, RedisBoard.Colosseum.class})
 public abstract class RedisBoard {
     @Id
     private final UUID uuid;
@@ -63,6 +65,7 @@ public abstract class RedisBoard {
 
     // Duo 게시판용 서브클래스
     @Getter
+    @Schema(description = "")
     public static class Duo extends RedisBoard {
         private DuoMapCode mapCode;
 
