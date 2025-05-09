@@ -64,7 +64,7 @@ public abstract class RedisBoard {
     // Duo 게시판용 서브클래스
     @Getter
     public static class Duo extends RedisBoard {
-        private DuoMapCode duoMapCode;
+        private DuoMapCode mapCode;
 
         /** Redis 조회 시 사용할 생성자 */
         @PersistenceCreator
@@ -74,7 +74,7 @@ public abstract class RedisBoard {
                       MatchingCategory matchingCategory,
                       DuoMapCode duoMapCode) {
             super(uuid, redisUser, memo, matchingCategory);
-            this.duoMapCode = duoMapCode;
+            this.mapCode = duoMapCode;
         }
 
         /** 빌더용 생성자 : 신규 게시글 생성 시 */
@@ -83,7 +83,7 @@ public abstract class RedisBoard {
                    String memo,
                    DuoMapCode duoMapCode) {
             super(redisUser, memo, MatchingCategory.Duo);
-            this.duoMapCode = duoMapCode;
+            this.mapCode = duoMapCode;
         }
     }
 

@@ -8,7 +8,7 @@ TRUNCATE TABLE member_account;
 INSERT INTO member_account (
     member_id, username, email,
     univ_certified_email, univ_name, department,
-    puuid, account_name, account_tag,
+    puuid, game_name, tag_line,
     o_auth_provider, role
 ) VALUES (
              1, 'mockuser', 'mockuser@example.com',

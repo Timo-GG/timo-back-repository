@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RiotAccount {
     private String puuid;
-    private String accountName;
-    private String accountTag;
+    private String gameName;
+    private String tagLine;
 }

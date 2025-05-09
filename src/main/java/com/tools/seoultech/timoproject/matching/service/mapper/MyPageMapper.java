@@ -22,12 +22,6 @@ public interface MyPageMapper {
     })
     RedisMyPage toRedisMyPage(RedisBoard redisBoard, RedisUser redisRequestor);
 
-//    @Mapping(target = "id", ignore = true)
-//    MyPage toMysqlMyPage(RedisMyPage redisMyPage);
-
     @Mapping(target = "myPageUUID", source = "uuid")
     MyPageDTO.ResponseMyPage toDtoFromRedis(RedisMyPage redisMyPage);
-
-//    MyPageDTO.responseMyPage toDtoFromMysql(MyPage myPage);
-
 }
