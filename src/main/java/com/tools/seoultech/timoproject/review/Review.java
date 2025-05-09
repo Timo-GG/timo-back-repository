@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql;
+package com.tools.seoultech.timoproject.review;
 
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentAttitude;
@@ -23,20 +23,23 @@ public class Review extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", insertable = false, updatable = false)
+    @JoinColumn(name = "reviewer_id")
     private MemberAccount reviewer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", insertable = false, updatable = false)
+    @JoinColumn(name = "reviewee_id")
     private MemberAccount reviewee;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private OpponentAttitude attitude_score;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private OpponentConversation conversation_score;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private OpponentTalent talent_score;
 
     @Column(nullable = false)

@@ -27,8 +27,9 @@ public class MemberAccountFacadeImpl implements MemberAccountFacade {
     @Override
     public MemberAccountDto verifyPlayer(Long memberId, AccountDto.Request request) {
         AccountDto.Response response = riotService.findUserAccount(request);
+        String profileUrl = riotService.getProfileIconUrlByPuuid(response.getPuuid());
         MemberAccount memberAccount = memberAccountService.updateRiotAccount(
-            memberId, response.getPuuid(), response.getGameName(), response.getTagLine());
+            memberId, response.getPuuid(), response.getGameName(), response.getTagLine(), profileUrl);
         return MemberAccountDto.from(memberAccount);
     }
 
@@ -64,7 +65,7 @@ public class MemberAccountFacadeImpl implements MemberAccountFacade {
 
     @Override
     public MemberAccountDto resetRiotAccount(Long memberId) {
-        MemberAccount memberAccount = memberAccountService.updateRiotAccount(memberId, null, null, null);
+        MemberAccount memberAccount = memberAccountService.updateRiotAccount(memberId, null, null, null, null);
         return MemberAccountDto.from(memberAccount);
     }
 
