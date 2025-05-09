@@ -5,7 +5,6 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisB
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoardRepository;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserRepository;
 import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ public class BoardService {
 
     private final UserService userService;
     private final RedisBoardRepository redisBoardRepository;
-    private final RedisUserRepository redisUserRepository;
     private final BoardMapper boardMapper;
 
     /**
