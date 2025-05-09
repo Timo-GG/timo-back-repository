@@ -6,7 +6,7 @@ import com.tools.seoultech.timoproject.notification.NotificationType;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
 import com.tools.seoultech.timoproject.riot.facade.RiotFacade;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
-import com.tools.seoultech.timoproject.ranking.dto.Redis_RankingInfo;
+import com.tools.seoultech.timoproject.ranking.dto.RedisRankingInfo;
 import com.tools.seoultech.timoproject.ranking.service.RankingRedisService;
 import com.tools.seoultech.timoproject.ranking.service.RankingService;
 import lombok.RequiredArgsConstructor;
@@ -50,17 +50,17 @@ public class RankingFacadeImpl implements RankingFacade {
     }
 
     @Override
-    public List<Redis_RankingInfo> getTopRankings(int limit) {
+    public List<RedisRankingInfo> getTopRankings(int limit) {
         return rankingRedisService.getTopRankings(limit);
     }
 
     @Override
-    public List<Redis_RankingInfo> getTopRankingsByUniversity(String university, int limit) {
+    public List<RedisRankingInfo> getTopRankingsByUniversity(String university, int limit) {
         return rankingRedisService.getTopRankingsByUniversity(university, limit);
     }
 
     @Override
-    public Redis_RankingInfo getMyRankingInfo(Long memberId) {
+    public RedisRankingInfo getMyRankingInfo(Long memberId) {
         return rankingRedisService.getMyRankingInfo(memberId);
     }
 }

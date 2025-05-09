@@ -34,12 +34,7 @@ public class RedisDataSeeder {
                 new Record("m3o0FUiBjjMmqX7-bMZFRzGewooBHhN6aj333bEGkXMuCyssOAvR56x07JyORW8Sv-8tq-M4vT9Mww", "도구야정신좀차려"),
                 new Record("7B9KnS5HSZOYoLN67yeVnnB65lgfCWe5DoTWMYMbWhtAsmX-sUu4pDYo-Yv-D_skyInq9WjTQQcyIg", "귀 염"),
                 new Record("eFLOP2cvyxtg9Ig3kF-0tlu8Ijo5HobweVSmZPWFrm_2GBFj72Rs5C19Qbz6H_mA1RouMlAsWLCnBA", "으댜다"),
-                new Record("0xCXf-g6dYIBAtfV_eJtfZSqX_gQtUmd5AxSAoohvaAXOP_jEELCBkwC3RpoB2tGNN4iKa8RLeH_g", "Cuzz"),
-                new Record("newPuuid1", "페이커"),
-                new Record("newPuuid2", "데프트"),
-                new Record("newPuuid3", "쵸비"),
-                new Record("newPuuid4", "칸나"),
-                new Record("newPuuid5", "케리아")
+                new Record("0xCXf-g6dYIBAtfV_eJtfZSqX_gQtUmd5AxSAoohvaAXOP_jEELCBkwC3RpoB2tGNN4iKa8RLeH_g", "Cuzz")
         );
 
         String[] universities = {

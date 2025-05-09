@@ -6,7 +6,7 @@ import com.tools.seoultech.timoproject.ranking.facade.RankingFacadeImpl;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
 import com.tools.seoultech.timoproject.riot.facade.RiotFacade;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
-import com.tools.seoultech.timoproject.ranking.dto.Redis_RankingInfo;
+import com.tools.seoultech.timoproject.ranking.dto.RedisRankingInfo;
 import com.tools.seoultech.timoproject.ranking.service.RankingRedisService;
 import com.tools.seoultech.timoproject.ranking.service.RankingService;
 import org.junit.jupiter.api.Test;
@@ -49,13 +49,13 @@ class RankingFacadeImplTest {
         when(riotFacade.getRiotRanking("puuid2")).thenReturn(dummyDto2);
 
         // 랭킹 리스트 모의 응답 (이미 정렬된 형태로 가정)
-        Redis_RankingInfo rank1 = Redis_RankingInfo.builder()
+        RedisRankingInfo rank1 = RedisRankingInfo.builder()
                 .memberId(memberId1)
                 .gameName("Player1")
                 .score(1000)
                 .build();
 
-        Redis_RankingInfo rank2 = Redis_RankingInfo.builder()
+        RedisRankingInfo rank2 = RedisRankingInfo.builder()
                 .memberId(memberId2)
                 .gameName("Player2")
                 .score(800)
@@ -67,7 +67,7 @@ class RankingFacadeImplTest {
         rankingFacade.createRanking(memberId1, "puuid1");
         rankingFacade.createRanking(memberId2, "puuid2");
 
-        List<Redis_RankingInfo> topRankings = rankingFacade.getTopRankings(2);
+        List<RedisRankingInfo> topRankings = rankingFacade.getTopRankings(2);
 
         // then
         assertEquals(2, topRankings.size());
@@ -91,7 +91,7 @@ class RankingFacadeImplTest {
         );
 
         // mock: Redis_RankingInfo 기존 데이터
-        Redis_RankingInfo existing = Redis_RankingInfo.builder()
+        RedisRankingInfo existing = RedisRankingInfo.builder()
                 .memberId(memberId)
                 .gameName("Player1")
                 .mbti("ENFP")
