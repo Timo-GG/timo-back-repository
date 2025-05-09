@@ -1,9 +1,11 @@
 package com.tools.seoultech.timoproject.matching.controller;
 
+import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import com.tools.seoultech.timoproject.matching.service.MatchingService;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Tag(name = "MyPage", description = "Matching API")
 public class MyPageController {
+
     private final MatchingService matchingService;
 
     @GetMapping("/myPage/{myPageUUID}")
@@ -36,6 +39,7 @@ public class MyPageController {
                         APIDataResponse.of(testDto)
                 );
     }
+
     @GetMapping("/myPage/category/{category}")
     @Operation(
             summary = "카테고리별 조회",
@@ -49,6 +53,33 @@ public class MyPageController {
                         APIDataResponse.of(testDtoList)
                 );
     }
+
+    /** 보낸 요청 조회 */
+    @GetMapping("/myPage/requestor")
+    @Operation(
+            summary = "요청자 UUID로 조회",
+            description = "[조회] 요청자 UUID로 MyPage 엔티티 조회"
+    )
+    public ResponseEntity<APIDataResponse<List<MyPageDTO.ResponseMyPage>>> getMyPageByRequestor(@CurrentMemberId Long memberId) {
+        List<MyPageDTO.ResponseMyPage> responseList = matchingService.getMyPageByRequester(memberId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(APIDataResponse.of(responseList));
+    }
+
+    /** 받은 요청 조회 */
+    @GetMapping("/myPage/acceptor/{memberId}")
+    @Operation(
+            summary = "수신자 UUID로 조회",
+            description = "[조회] 수신자 UUID로 MyPage 엔티티 조회"
+    )
+    public ResponseEntity<APIDataResponse<List<MyPageDTO.ResponseMyPage>>> getMyPageByRecipient(@PathVariable Long memberId) {
+        List<MyPageDTO.ResponseMyPage> responseList = matchingService.getMyPageByRecipient(memberId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(APIDataResponse.of(responseList));
+    }
+
     @PostMapping("/myPage")
     @Operation(
             summary = "매칭 생성",
@@ -63,6 +94,7 @@ public class MyPageController {
                         APIDataResponse.of(testDto)
                 );
     }
+
     @DeleteMapping("/myPage/{myPageUUID}")
     @Operation(
             summary = "단일 삭제",
@@ -76,6 +108,7 @@ public class MyPageController {
                         APIDataResponse.empty()
                 );
     }
+
     @DeleteMapping("/myPage")
     @Operation(
             summary = "전체 삭제",

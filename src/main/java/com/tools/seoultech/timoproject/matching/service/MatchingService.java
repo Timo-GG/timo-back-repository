@@ -9,22 +9,23 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.Ma
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPageRepository;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserRepository;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Member;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class MatchingService {
+
     private final UserService userService;
-
     private final MyPageMapper myPageMapper;
-
+    private final RedisUserRepository redisUserRepository;
     private final RedisBoardRepository redisBoardRepository;
     private final RedisMyPageRepository redisMyPageRepository;
 
@@ -41,6 +42,7 @@ public class MatchingService {
         RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor);
         return redisMyPageRepository.save(redisMyPage); // FIXME: Response 대체.
     }
+
     public MyPageDTO.ResponseMyPage getMyPage(UUID myPageUUID) throws Exception {
         RedisMyPage redisMyPage = redisMyPageRepository.findById(myPageUUID)
                 .orElseThrow(() -> new GeneralException("해당 MyPage는 Redis안에 없습니다."));
@@ -57,6 +59,25 @@ public class MatchingService {
     public void deleteMyPage(UUID myPageUUID) {
         redisMyPageRepository.deleteById(myPageUUID);
     }
+
+    /** 보낸 요청 조회 */
+    public List<MyPageDTO.ResponseMyPage> getMyPageByRequester(Long memberId) {
+        RedisUser requestor = redisUserRepository.findByMemberId(memberId);
+        List<RedisMyPage> redisMyPageList = redisMyPageRepository.findByRequestor(requestor);
+        return redisMyPageList.stream()
+                .map(myPageMapper::toDtoFromRedis)
+                .toList();
+    }
+
+    /** 받은 요청 조회 */
+    public List<MyPageDTO.ResponseMyPage> getMyPageByRecipient(Long memberId) {
+        RedisUser acceptor = redisUserRepository.findByMemberId(memberId);
+        List<RedisMyPage> redisMyPageList = redisMyPageRepository.findByAcceptor(acceptor);
+        return redisMyPageList.stream()
+                .map(myPageMapper::toDtoFromRedis)
+                .toList();
+    }
+
     public void deleteAllMyPage(){
         redisMyPageRepository.deleteAll();
     }

@@ -27,6 +27,9 @@ public class RedisMyPage {
 
     @Reference private final RedisBoard board;
     @Reference private final RedisUser requestor;
+    @Reference private final RedisUser acceptor;
+
+    // TODO : 수신자 어떻게 처리할지 고민..
 
     @Transient
     private UUID getAcceptor(){
@@ -34,19 +37,22 @@ public class RedisMyPage {
     }
 
     @PersistenceCreator
-    public RedisMyPage(UUID uuid, MatchingCategory matchingCategory, MatchingStatus status, RedisBoard board, RedisUser requestor) {
-            this.uuid = uuid;
-            this.matchingCategory = matchingCategory;
-            this.status = status;
-            this.board = board;
-            this.requestor = requestor;
+    public RedisMyPage(UUID uuid, MatchingCategory matchingCategory, MatchingStatus status, RedisBoard board, RedisUser requestor, RedisUser acceptor) {
+        this.uuid = uuid;
+        this.matchingCategory = matchingCategory;
+        this.status = status;
+        this.board = board;
+        this.requestor = requestor;
+        this.acceptor = acceptor;
     }
+
     @Builder
-    public RedisMyPage(MatchingCategory matchingCategory, RedisBoard board, RedisUser requestor) {
-            this.uuid = UUID.randomUUID();
-            this.matchingCategory = matchingCategory;
-            this.status = MatchingStatus.WAITING;
-            this.board = board;
-            this.requestor = requestor;
+    public RedisMyPage(MatchingCategory matchingCategory, RedisBoard board, RedisUser requestor, RedisUser acceptor) {
+        this.uuid = UUID.randomUUID();
+        this.matchingCategory = matchingCategory;
+        this.status = MatchingStatus.WAITING;
+        this.board = board;
+        this.requestor = requestor;
+        this.acceptor = acceptor;
     }
 }
