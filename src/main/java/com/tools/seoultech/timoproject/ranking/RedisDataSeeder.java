@@ -68,7 +68,7 @@ public class RedisDataSeeder {
             MemberAccount account = MemberAccount.builder()
                     .email(username + i + "@example.com")
                     .username(username)
-                    .riotAccount(new RiotAccount(r.puuid(), r.gameName(), "KR1"))
+                    .riotAccount(new RiotAccount(r.puuid(), r.gameName(), "KR1", "iconUrl"))
                     .certifiedUnivInfo(new CertifiedUnivInfo(univEmail, university))
                     .oAuthProvider(OAuthProvider.KAKAO)
                     .role(Role.MEMBER)
