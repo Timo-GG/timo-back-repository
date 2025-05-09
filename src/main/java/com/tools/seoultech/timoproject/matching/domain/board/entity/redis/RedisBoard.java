@@ -75,18 +75,18 @@ public abstract class RedisBoard {
                       RedisUser redisUser,
                       String memo,
                       MatchingCategory matchingCategory,
-                      DuoMapCode duoMapCode) {
+                      DuoMapCode mapCode) {
             super(uuid, redisUser, memo, matchingCategory);
-            this.mapCode = duoMapCode;
+            this.mapCode = mapCode;
         }
 
         /** 빌더용 생성자 : 신규 게시글 생성 시 */
         @Builder
         public Duo(RedisUser redisUser,
                    String memo,
-                   DuoMapCode duoMapCode) {
-            super(redisUser, memo, MatchingCategory.Duo);
-            this.mapCode = duoMapCode;
+                   DuoMapCode mapCode) {
+            super(redisUser, memo, MatchingCategory.DUO);
+            this.mapCode = mapCode;
         }
     }
 

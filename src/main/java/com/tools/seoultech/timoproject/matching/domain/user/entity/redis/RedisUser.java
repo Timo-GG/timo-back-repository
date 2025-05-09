@@ -29,10 +29,6 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = RedisUser.Duo.class, name = "Duo"),
         @JsonSubTypes.Type(value = RedisUser.Colosseum.class, name = "Colosseum")
 })
-@Schema(
-        description = "Redis 사용자",
-        oneOf = { RedisUser.Duo.class, RedisUser.Colosseum.class }
-)
 @Getter
 public abstract class RedisUser {
     @Id
@@ -92,7 +88,7 @@ public abstract class RedisUser {
                    Long memberId,
                    UserInfo userInfo,
                    DuoInfo duoInfo) {
-            super(memberId, riotAccount, MatchingCategory.Duo);
+            super(memberId, riotAccount, MatchingCategory.DUO);
             this.userInfo = userInfo;
             this.duoInfo  = duoInfo;
         }
@@ -119,7 +115,7 @@ public abstract class RedisUser {
         public Colosseum(RiotAccount riotAccount,
                          Long memberId,
                          List<PartyMemberInfo> partyMemberInfoList) {
-            super(memberId, riotAccount, MatchingCategory.Colosseum);
+            super(memberId, riotAccount, MatchingCategory.COLOSSEUM);
             this.partyMemberInfoList = partyMemberInfoList;
         }
     }

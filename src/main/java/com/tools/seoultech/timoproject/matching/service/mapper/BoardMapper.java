@@ -2,13 +2,11 @@ package com.tools.seoultech.timoproject.matching.service.mapper;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
-import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserRepository;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-import java.util.UUID;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
@@ -38,5 +36,4 @@ public interface BoardMapper {
             expression = "java(UserMapper.Instance.toResponseColosseum((RedisUser.Colosseum)redisBoard.getRedisUser()))"
     )
     BoardDTO.ResponseColosseum toResponseColosseum(RedisBoard.Colosseum redisBoard);
-
 }

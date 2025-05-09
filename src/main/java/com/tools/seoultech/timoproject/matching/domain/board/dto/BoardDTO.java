@@ -1,5 +1,7 @@
 package com.tools.seoultech.timoproject.matching.domain.board.dto;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
@@ -26,7 +28,7 @@ public abstract class BoardDTO {
     public record RequestDuo(
             UserDTO.RequestDuo requestUserDto,
             String memo,
-            DuoMapCode duoMapCode
+            DuoMapCode mapCode
     ) implements Request {}
 
     @Builder
@@ -40,14 +42,16 @@ public abstract class BoardDTO {
     @Builder
     public record ResponseDuo(
             UUID boardUUID,
+            MatchingCategory matchingCategory,
             UserDTO.ResponseDuo responseUserDto,
             String memo,
-            DuoMapCode duoMapCode
+            DuoMapCode mapCode
     ) implements Response {}
 
     @Builder
     public record ResponseColosseum(
             UUID boardUUID,
+            MatchingCategory matchingCategory,
             UserDTO.ResponseColosseum responseUserDto,
             String memo,
             ColosseumMapCode mapCode,
