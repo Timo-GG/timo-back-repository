@@ -4,9 +4,9 @@ import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.BusinessException;
 import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
-import com.tools.seoultech.timoproject.ranking.RankingInfo;
+import com.tools.seoultech.timoproject.ranking.RankingInfoRedisRepository;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
-import com.tools.seoultech.timoproject.ranking.dto.Redis_RankingInfo;
+import com.tools.seoultech.timoproject.ranking.dto.RedisRankingInfo;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
 
 import lombok.RequiredArgsConstructor;
@@ -25,118 +25,96 @@ import java.util.*;
 @Slf4j
 public class RankingRedisService {
 	private static final String RANKING_KEY = "lol:ranking";
-	private static final String RANKING_OBJECT_KEY = "lol:ranking:objects";
 
 	private final MemberAccountRepository memberAccountRepository;
-	private final RankingInfoRepository rankingInfoRepository;
+	private final RankingInfoRedisRepository rankingInfoRedisRepository;
 
 	@Qualifier("rankingRedisTemplate")
 	private final RedisTemplate<String, Object> redisTemplate;
 
 	public void createInitialRanking(Long memberId, RiotRankingDto riotRankingDto) {
 		MemberAccount account = memberAccountRepository.findById(memberId)
-			.orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
+				.orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
-		if (account.getRiotAccount() == null || account.getCertifiedUnivInfo() == null) {
-			throw new BusinessException(ErrorCode.INVALID_RANKING_INFO);
-		}
+		RedisRankingInfo rankingInfo = RedisRankingInfo.from(memberId, account, riotRankingDto);
+		rankingInfo.updateId(memberId);
 
-		Redis_RankingInfo rankingInfo = Redis_RankingInfo.from(memberId, account, riotRankingDto);
-		rankingInfoRepository.findByMemberAccountMemberId(memberId)
-			.ifPresent(existing -> {
-				String department = account.getCertifiedUnivInfo().getDepartment();
-				RankingUpdateRequestDto updateRequestDto = RankingUpdateRequestDto.fromEntity(existing, department);
-				rankingInfo.updateRankingInfo(updateRequestDto);
-			});
+		rankingInfoRedisRepository.save(rankingInfo);
 
 		saveRankInfo(memberId, rankingInfo);
 		log.info("[Redis 등록 완료] memberId={}, score={}", memberId, rankingInfo.getScore());
 	}
 
-	public void saveRankInfo(Long memberId, Redis_RankingInfo rankingInfo) {
+	public void saveRankInfo(Long memberId, RedisRankingInfo rankingInfo) {
 		int score = rankingInfo.getScore();
 		String memberIdStr = memberId.toString();
 		String universityKey = buildUniversityKey(rankingInfo.getUniversity());
 
 		redisTemplate.opsForZSet().add(RANKING_KEY, memberIdStr, score);
-		redisTemplate.opsForHash().put(RANKING_OBJECT_KEY, memberIdStr, rankingInfo);
 		redisTemplate.opsForZSet().add(universityKey, memberIdStr, score);
 
 		log.info("랭킹 저장 완료: memberId={}, university={}", memberId, rankingInfo.getUniversity());
 	}
 
 	public void updateRankingInfo(Long memberId, RankingUpdateRequestDto dto) {
-		Redis_RankingInfo existing = (Redis_RankingInfo)redisTemplate.opsForHash()
-			.get(RANKING_OBJECT_KEY, memberId.toString());
-
-		if (existing == null) {
-			log.warn("업데이트 실패: Redis 랭킹 정보 없음, memberId={}", memberId);
-			return;
-		}
+		RedisRankingInfo existing = rankingInfoRedisRepository.findById(memberId.toString())
+				.orElseThrow(() -> new BusinessException(ErrorCode.REDIS_RANKING_NOT_FOUND));
 
 		existing.updateRankingInfo(dto);
-		redisTemplate.opsForHash().put(RANKING_OBJECT_KEY, memberId.toString(), existing);
+		rankingInfoRedisRepository.save(existing);
 		log.info("유저 정보 업데이트 완료: memberId={}", memberId);
 	}
 
-	public List<Redis_RankingInfo> getTopRankingsByUniversity(String university, int limit) {
+	public List<RedisRankingInfo> getTopRankingsByUniversity(String university, int limit) {
 		return getTopRankings(buildUniversityKey(university), limit);
 	}
 
-	public List<Redis_RankingInfo> getTopRankings(int limit) {
+	public List<RedisRankingInfo> getTopRankings(int limit) {
 		return getTopRankings(RANKING_KEY, limit);
 	}
 
-	private List<Redis_RankingInfo> getTopRankings(String key, int limit) {
+	private List<RedisRankingInfo> getTopRankings(String key, int limit) {
 		Set<Object> topMembers = redisTemplate.opsForZSet().reverseRange(key, 0, limit - 1);
 
 		if (topMembers == null || topMembers.isEmpty()) {
 			return Collections.emptyList();
 		}
 
-		List<Redis_RankingInfo> result = new ArrayList<>();
+		List<RedisRankingInfo> result = new ArrayList<>();
 		for (Object memberId : topMembers) {
-			Redis_RankingInfo rankInfo = (Redis_RankingInfo)redisTemplate.opsForHash()
-				.get(RANKING_OBJECT_KEY, memberId.toString());
-			if (rankInfo != null) {
-				result.add(rankInfo);
-			}
+			rankingInfoRedisRepository.findById(memberId.toString())
+					.ifPresent(result::add);
 		}
 		return result;
 	}
 
-	public Redis_RankingInfo getMyRankingInfo(Long memberId) {
-		Redis_RankingInfo rankInfo = (Redis_RankingInfo)redisTemplate.opsForHash()
-			.get(RANKING_OBJECT_KEY, memberId.toString());
-
-		if (rankInfo == null) {
-			throw new BusinessException(ErrorCode.REDIS_RANKING_NOT_FOUND);
-		}
-		return rankInfo;
+	public RedisRankingInfo getMyRankingInfo(Long memberId) {
+		return rankingInfoRedisRepository.findById(memberId.toString())
+				.orElseThrow(() -> new BusinessException(ErrorCode.REDIS_RANKING_NOT_FOUND));
 	}
 
 	public void flushAllRankingData() {
 		redisTemplate.delete(RANKING_KEY);
-		redisTemplate.delete(RANKING_OBJECT_KEY);
 		Set<String> univKeys = redisTemplate.keys("lol:ranking:univ:*");
 		if (univKeys != null && !univKeys.isEmpty()) {
 			redisTemplate.delete(univKeys);
 		}
+		rankingInfoRedisRepository.deleteAll();
 		log.info("모든 랭킹 데이터 플러시 완료");
 	}
 
 	public void deleteRankingByMemberId(Long memberId) {
 		String id = memberId.toString();
 
-		Redis_RankingInfo info = (Redis_RankingInfo)redisTemplate.opsForHash()
-			.get(RANKING_OBJECT_KEY, id);
+		RedisRankingInfo info = rankingInfoRedisRepository.findById(id)
+				.orElse(null);
 		if (info != null) {
 			String univKey = buildUniversityKey(info.getUniversity());
 			redisTemplate.opsForZSet().remove(univKey, id);
 		}
 
 		redisTemplate.opsForZSet().remove(RANKING_KEY, id);
-		redisTemplate.opsForHash().delete(RANKING_OBJECT_KEY, id);
+		rankingInfoRedisRepository.deleteById(id);
 
 		log.info("랭킹 삭제 완료: memberId={}", memberId);
 	}
