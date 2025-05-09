@@ -29,6 +29,7 @@ public class BoardController {
         RedisBoard.Duo savedBoard = boardService.saveDuoBoard(requestDuo);
         return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
     }
+
     /**
      * Colosseum 게시판에 게시글을 추가
      */
