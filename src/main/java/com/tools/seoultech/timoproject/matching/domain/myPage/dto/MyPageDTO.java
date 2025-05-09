@@ -23,8 +23,8 @@ public abstract class MyPageDTO {
     public record ResponseMyPage(
             UUID myPageUUID,
             MatchingCategory matchingCategory,
-            RedisUser requestor,
-            RedisUser acceptor,
+            Long requestorMemberId,
+            Long acceptorMemberId,
             MatchingStatus status
     ){}
 }

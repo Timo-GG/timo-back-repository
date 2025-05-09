@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface RedisMyPageRepository extends CrudRepository<RedisMyPage, UUID> {
     List<RedisMyPage> findAllByMatchingCategory(MatchingCategory matchingCategory);
 
-    List<RedisMyPage> findByRequestor(RedisUser requestor);
+    List<RedisMyPage> findAllByRequestorMemberId(Long requestorMemberId);
 
-    List<RedisMyPage> findByAcceptor(RedisUser acceptor);
+    List<RedisMyPage> findAllByAcceptorMemberId(Long acceptorMemberId);
 }

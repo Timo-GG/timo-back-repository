@@ -13,21 +13,18 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MyPageMapper {
+
     UserMapper myPageMapperInstance = Mappers.getMapper(UserMapper.class);
 
-    @Mappings(value = {
-        @Mapping(target = "board", source = "redisBoard"),
-        @Mapping(target = "requestor", source = "redisRequestor"),
-        @Mapping(target = "matchingCategory", expression = "java(redisBoard.getMatchingCategory())")
+    @Mappings({
+            @Mapping(target = "board", source = "redisBoard"),
+            @Mapping(target = "requestorMemberId", source = "requestorMemberId"),
+            @Mapping(target = "acceptorMemberId", expression = "java(redisBoard.getRedisUser().getMemberId())"),
+            @Mapping(target = "matchingCategory", expression = "java(redisBoard.getMatchingCategory())"),
     })
-    RedisMyPage toRedisMyPage(RedisBoard redisBoard, RedisUser redisRequestor);
-
-//    @Mapping(target = "id", ignore = true)
-//    MyPage toMysqlMyPage(RedisMyPage redisMyPage);
+    RedisMyPage toRedisMyPage(RedisBoard redisBoard, Long requestorMemberId);
 
     @Mapping(target = "myPageUUID", source = "uuid")
     MyPageDTO.ResponseMyPage toDtoFromRedis(RedisMyPage redisMyPage);
-
-//    MyPageDTO.responseMyPage toDtoFromMysql(MyPage myPage);
 
 }

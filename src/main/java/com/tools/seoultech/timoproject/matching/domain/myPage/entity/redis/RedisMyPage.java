@@ -26,10 +26,9 @@ public class RedisMyPage {
     private final MatchingStatus status;
 
     @Reference private final RedisBoard board;
-    @Reference private final RedisUser requestor;
-    @Reference private final RedisUser acceptor;
 
-    // TODO : 수신자 어떻게 처리할지 고민..
+    @Indexed private final Long requestorMemberId;
+    @Indexed private final Long acceptorMemberId;
 
     @Transient
     private UUID getAcceptor(){
@@ -37,22 +36,22 @@ public class RedisMyPage {
     }
 
     @PersistenceCreator
-    public RedisMyPage(UUID uuid, MatchingCategory matchingCategory, MatchingStatus status, RedisBoard board, RedisUser requestor, RedisUser acceptor) {
+    public RedisMyPage(UUID uuid, MatchingCategory matchingCategory, MatchingStatus status, RedisBoard board, Long requestorMemberId, Long acceptorMemberId) {
         this.uuid = uuid;
         this.matchingCategory = matchingCategory;
         this.status = status;
         this.board = board;
-        this.requestor = requestor;
-        this.acceptor = acceptor;
+        this.requestorMemberId = requestorMemberId;
+        this.acceptorMemberId = acceptorMemberId;
     }
 
     @Builder
-    public RedisMyPage(MatchingCategory matchingCategory, RedisBoard board, RedisUser requestor, RedisUser acceptor) {
+    public RedisMyPage(MatchingCategory matchingCategory, RedisBoard board, Long requestorMemberId, Long acceptorMemberId) {
         this.uuid = UUID.randomUUID();
         this.matchingCategory = matchingCategory;
         this.status = MatchingStatus.WAITING;
         this.board = board;
-        this.requestor = requestor;
-        this.acceptor = acceptor;
+        this.requestorMemberId = requestorMemberId;
+        this.acceptorMemberId = acceptorMemberId;
     }
 }

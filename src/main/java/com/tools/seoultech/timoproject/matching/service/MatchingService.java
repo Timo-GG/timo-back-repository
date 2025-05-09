@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Member;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +24,6 @@ public class MatchingService {
 
     private final UserService userService;
     private final MyPageMapper myPageMapper;
-    private final RedisUserRepository redisUserRepository;
     private final RedisBoardRepository redisBoardRepository;
     private final RedisMyPageRepository redisMyPageRepository;
 
@@ -39,7 +37,7 @@ public class MatchingService {
         if(redisBoard.getMatchingCategory() != MatchingCategory.Duo){
             throw new GeneralException("Board와 User의 매칭 카테고리가 일치하지 않습니다.");
         }
-        RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor);
+        RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor.getMemberId());
         return redisMyPageRepository.save(redisMyPage); // FIXME: Response 대체.
     }
 
@@ -62,8 +60,7 @@ public class MatchingService {
 
     /** 보낸 요청 조회 */
     public List<MyPageDTO.ResponseMyPage> getMyPageByRequester(Long memberId) {
-        RedisUser requestor = redisUserRepository.findByMemberId(memberId);
-        List<RedisMyPage> redisMyPageList = redisMyPageRepository.findByRequestor(requestor);
+        List<RedisMyPage> redisMyPageList = redisMyPageRepository.findAllByRequestorMemberId(memberId);
         return redisMyPageList.stream()
                 .map(myPageMapper::toDtoFromRedis)
                 .toList();
@@ -71,8 +68,7 @@ public class MatchingService {
 
     /** 받은 요청 조회 */
     public List<MyPageDTO.ResponseMyPage> getMyPageByRecipient(Long memberId) {
-        RedisUser acceptor = redisUserRepository.findByMemberId(memberId);
-        List<RedisMyPage> redisMyPageList = redisMyPageRepository.findByAcceptor(acceptor);
+        List<RedisMyPage> redisMyPageList = redisMyPageRepository.findAllByAcceptorMemberId(memberId);
         return redisMyPageList.stream()
                 .map(myPageMapper::toDtoFromRedis)
                 .toList();
