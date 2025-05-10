@@ -1,10 +1,13 @@
 package com.tools.seoultech.timoproject.matching.domain.user.dto;
 
 
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.CompactPlayerHistory;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.DuoInfo;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.UserInfo;
 
+import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Gender;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.CertifiedUnivInfo;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +21,11 @@ public abstract class UserDTO{
     @Builder
     public record RequestDuo(
             Long memberId,
+            CertifiedUnivInfo certifiedUnivInfo,
+            Gender gender,
+            String mbti,
             RiotAccount riotAccount,
+            CompactPlayerHistory compactPlayerHistory,
             UserInfo userInfo,
             DuoInfo duoInfo
     )implements Request {}
@@ -33,7 +40,11 @@ public abstract class UserDTO{
     @Builder
     public record ResponseDuo(
             UUID userUUID,
+            CertifiedUnivInfo certifiedUnivInfo,
+            Gender gender,
+            String mbti,
             RiotAccount riotAccount,
+            CompactPlayerHistory compactPlayerHistory,
             UserInfo userInfo,
             DuoInfo duoInfo
     )implements Response {}
