@@ -7,6 +7,7 @@ import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableTyp
 import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.UserInfo;
 
 import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Gender;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.CertifiedUnivInfo;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
@@ -21,11 +22,6 @@ public abstract class UserDTO{
     @Builder
     public record RequestDuo(
             Long memberId,
-            CertifiedUnivInfo certifiedUnivInfo,
-            Gender gender,
-            String mbti,
-            RiotAccount riotAccount,
-            CompactPlayerHistory compactPlayerHistory,
             UserInfo userInfo,
             DuoInfo duoInfo
     )implements Request {}
@@ -33,17 +29,13 @@ public abstract class UserDTO{
     @Builder
     public record RequestColosseum(
             Long memberId,
-            RiotAccount riotAccount,
             List<RiotAccount> partyMemberRiotAccountList
     )implements Request {}
 
     @Builder
     public record ResponseDuo(
             UUID userUUID,
-            CertifiedUnivInfo certifiedUnivInfo,
-            Gender gender,
-            String mbti,
-            RiotAccount riotAccount,
+            MemberAccount memberAccount,
             CompactPlayerHistory compactPlayerHistory,
             UserInfo userInfo,
             DuoInfo duoInfo
@@ -52,7 +44,7 @@ public abstract class UserDTO{
     @Builder
     public record ResponseColosseum(
             UUID userUUID,
-            RiotAccount riotAccount,
+            MemberAccount memberAccount,
             List<PartyMemberInfo> partyMemberInfoList
     )implements Response {}
 

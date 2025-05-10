@@ -16,11 +16,9 @@ public interface MyPageMapper {
 
     @Mappings({
             @Mapping(target = "board", source = "redisBoard"),
-            @Mapping(target = "requestorMemberId", source = "requestorMemberId"),
-            @Mapping(target = "acceptorMemberId", expression = "java(redisBoard.getRedisUser().getMemberId())"),
             @Mapping(target = "matchingCategory", expression = "java(redisBoard.getMatchingCategory())"),
     })
-    RedisMyPage toRedisMyPage(RedisBoard redisBoard, Long requestorMemberId);
+    RedisMyPage toRedisMyPage(RedisBoard redisBoard, RedisUser requestor);
 
     @Mapping(target = "acceptorBoard", source = ".", qualifiedByName = "boardDtoMapping")
     @Mapping(target = "requestor", source = ".", qualifiedByName = "userDtoMapping")

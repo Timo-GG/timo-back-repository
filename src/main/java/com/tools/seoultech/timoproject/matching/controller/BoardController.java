@@ -26,6 +26,7 @@ public class BoardController {
     @PostMapping("/duo")
     public ResponseEntity<RedisBoard.Duo> createDuoBoard(@RequestBody BoardDTO.RequestDuo requestDuo) {
         System.err.println("Board Controller @Post");
+        // TODO: memberAccount에 riotAccount 등록 유뮤 확인하는 로직 추가 필요.
         RedisBoard.Duo savedBoard = boardService.saveDuoBoard(requestDuo);
         return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
     }

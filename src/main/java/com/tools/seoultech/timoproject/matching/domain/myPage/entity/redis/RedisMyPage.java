@@ -49,22 +49,20 @@ public class RedisMyPage {
     }
 
     @PersistenceCreator
-    public RedisMyPage(UUID uuid, MatchingCategory matchingCategory, MatchingStatus status, RedisBoard board, Long requestorMemberId, Long acceptorMemberId) {
+    public RedisMyPage(UUID uuid, MatchingCategory matchingCategory, MatchingStatus status, RedisBoard board, RedisUser requestor) {
         this.uuid = uuid;
         this.matchingCategory = matchingCategory;
         this.status = status;
         this.board = board;
-        this.requestorMemberId = requestorMemberId;
-        this.acceptorMemberId = acceptorMemberId;
+        this.requestor = requestor;
     }
 
     @Builder
-    public RedisMyPage(MatchingCategory matchingCategory, RedisBoard board, Long requestorMemberId, Long acceptorMemberId) {
+    public RedisMyPage(MatchingCategory matchingCategory, RedisBoard board, RedisUser requestor) {
         this.uuid = UUID.randomUUID();
         this.matchingCategory = matchingCategory;
         this.status = MatchingStatus.WAITING;
         this.board = board;
-        this.requestorMemberId = requestorMemberId;
-        this.acceptorMemberId = acceptorMemberId;
+        this.requestor = requestor;
     }
 }

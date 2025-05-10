@@ -33,8 +33,8 @@
             public static RiotAccountDto from(RiotAccount entity) {
                 return new RiotAccountDto(
                         entity.getPuuid(),
-                        entity.getAccountName(),
-                        entity.getAccountTag(),
+                        entity.getGameName(),
+                        entity.getTagLine(),
                         entity.getProfileUrl()
                 );
             }

@@ -49,7 +49,7 @@ public class MatchingService {
         if(redisBoard.getMatchingCategory() != MatchingCategory.COLOSSEUM){
             throw new GeneralException("Board와 User의 매칭 카테고리가 일치하지 않습니다.");
         }
-        RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor.getMemberId());
+        RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor);
         return redisMyPageRepository.save(redisMyPage); // FIXME: Response 대체.
     }
 

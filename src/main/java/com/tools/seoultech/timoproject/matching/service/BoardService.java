@@ -38,7 +38,6 @@ public class BoardService {
     public RedisBoard.Colosseum saveColosseumBoard(BoardDTO.RequestColosseum requestColosseum) {
         // 사용자 정보 저장 및 UUID 추출
         RedisUser.Colosseum savedUser = userService.saveColosseumUser(requestColosseum.requestUserDto());
-//        UUID userUUID = savedUser.getUuid();
 
         // 게시글 DTO → RedisBoard 엔티티 변환
         RedisBoard.Colosseum redisBoard = boardMapper.toRedisColosseum(requestColosseum, savedUser);

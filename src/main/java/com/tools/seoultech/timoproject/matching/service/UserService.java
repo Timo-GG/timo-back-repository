@@ -4,6 +4,7 @@ import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserRepository;
 import com.tools.seoultech.timoproject.matching.service.mapper.UserMapper;
+import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +16,13 @@ public class UserService {
 
     private final RedisUserRepository redisUserRepository;
     private final UserMapper userMapper;
+    private final MemberAccountRepository memberAccountRepository;
 
     /**
      * Duo 사용자 정보를 Redis에 저장
      */
     public RedisUser.Duo saveDuoUser(UserDTO.RequestDuo requestDuo) {
-        RedisUser.Duo redisUser = userMapper.toRedisDuo(requestDuo);
+        RedisUser.Duo redisUser = userMapper.toRedisDuo(requestDuo, memberAccountRepository);
         return redisUserRepository.save(redisUser);
     }
 
@@ -28,7 +30,7 @@ public class UserService {
      * Colosseum 사용자 정보를 Redis에 저장
      */
     public RedisUser.Colosseum saveColosseumUser(UserDTO.RequestColosseum requestColosseum) {
-        RedisUser.Colosseum redisUser = userMapper.toRedisColosseum(requestColosseum);
+        RedisUser.Colosseum redisUser = userMapper.toRedisColosseum(requestColosseum, memberAccountRepository);
         return redisUserRepository.save(redisUser);
     }
 
