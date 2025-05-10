@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.riot.controller;
 
+import com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType.CompactPlayerHistory;
 import com.tools.seoultech.timoproject.riot.dto.*;
 import com.tools.seoultech.timoproject.memberAccount.dto.AccountDto;
 
@@ -82,6 +83,7 @@ public class BasicAPIController {
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(mostChamp));
     }
 
+    /** 최근 전적 10개 가져오기 */
     @PostMapping("/recent-match")
     public ResponseEntity<APIDataResponse<RecentMatchFullResponse>> requestRecentMatch(
             @RequestBody AccountDto.Request request) throws Exception {
@@ -104,6 +106,21 @@ public class BasicAPIController {
         return ResponseEntity.ok(APIDataResponse.of(response));
     }
 
+    @PostMapping("/compactHistory")
+    public ResponseEntity<APIDataResponse<CompactPlayerHistory>> requestCompactPlayerHistory(
+            @RequestBody AccountDto.Request request) throws Exception {
+        AccountDto.Response account = bas.findUserAccount(request);
+        String puuid = account.getPuuid();
+
+        RankInfoDto rankInfo = bas.getSoloRankInfoByPuuid(puuid);
+        List<String> most3Champion = bas.getMost3ChampionNames(puuid);
+        List<MatchSummaryDTO> recentMatch = bas.getRecentMatchSummaries(puuid);
+
+        CompactPlayerHistory response = new CompactPlayerHistory(rankInfo, most3Champion, recentMatch);
+        return ResponseEntity.ok(APIDataResponse.of(response));
+    }
+
+    /** 소환사 티어 정보 가져오기 */
     @GetMapping("/rank-info/{puuid}")
     public ResponseEntity<APIDataResponse<RankInfoDto>> requestRankInfo(
             @PathVariable String puuid) throws Exception {
