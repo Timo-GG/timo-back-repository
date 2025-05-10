@@ -1,21 +1,28 @@
 package com.tools.seoultech.timoproject.ranking.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Gender;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import jakarta.persistence.Id;
 import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.util.List;
 
+@RedisHash(value = "rankingInfo")
 @Getter
 @ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Redis_RankingInfo implements Serializable {
+public class RedisRankingInfo implements Serializable {
+    @Id
+    private String id;
+
     private Long memberId;
     private String puuid;
     
@@ -41,7 +48,9 @@ public class Redis_RankingInfo implements Serializable {
 
     // RankingInfo
     private String mbti;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private PlayPosition position;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Gender gender;
     private String memo;
 
@@ -73,6 +82,10 @@ public class Redis_RankingInfo implements Serializable {
         return baseScore + rankScore + lp;
     }
 
+    public void updateId(Long memberId) {
+        this.id = memberId.toString();
+    }
+
     public void updateRankingInfo(RankingUpdateRequestDto dto) {
         if (dto.mbti() != null) this.mbti = dto.mbti();
         if (dto.memo() != null) this.memo = dto.memo();
@@ -81,12 +94,12 @@ public class Redis_RankingInfo implements Serializable {
         if (dto.department() != null) this.department = dto.department();
     }
 
-    public static Redis_RankingInfo from(Long memberId, MemberAccount account, RiotRankingDto riotRankingDto) {
+    public static RedisRankingInfo from(Long memberId, MemberAccount account, RiotRankingDto riotRankingDto) {
         var riotAccount = account.getRiotAccount();
         var univInfo = account.getCertifiedUnivInfo();
         var soloRank = riotRankingDto.soloRankInfo();
 
-        return Redis_RankingInfo.builder()
+        return RedisRankingInfo.builder()
                 .memberId(memberId)
                 .puuid(riotAccount.getPuuid())
                 .gameName(riotAccount.getGameName())

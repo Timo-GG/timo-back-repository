@@ -34,6 +34,7 @@ public abstract class RedisUser {
     @Id
     private final UUID uuid;
 
+    @Indexed
     private final Long memberId;
 
 //    Note: 중첩구조가 복잡해서 Flat 필드로 사용하고 싶다면

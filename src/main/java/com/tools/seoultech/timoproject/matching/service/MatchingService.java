@@ -20,10 +20,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class MatchingService {
+
     private final UserService userService;
-
     private final MyPageMapper myPageMapper;
-
     private final RedisBoardRepository redisBoardRepository;
     private final RedisMyPageRepository redisMyPageRepository;
 
@@ -50,9 +49,10 @@ public class MatchingService {
         if(redisBoard.getMatchingCategory() != MatchingCategory.COLOSSEUM){
             throw new GeneralException("Board와 User의 매칭 카테고리가 일치하지 않습니다.");
         }
-        RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor);
+        RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor.getMemberId());
         return redisMyPageRepository.save(redisMyPage); // FIXME: Response 대체.
     }
+
     public MyPageDTO.ResponseMyPage getMyPage(UUID myPageUUID) throws Exception {
         RedisMyPage redisMyPage = redisMyPageRepository.findById(myPageUUID)
                 .orElseThrow(() -> new GeneralException("해당 MyPage는 Redis안에 없습니다."));
@@ -69,6 +69,23 @@ public class MatchingService {
     public void deleteMyPage(UUID myPageUUID) {
         redisMyPageRepository.deleteById(myPageUUID);
     }
+
+    /** 보낸 요청 조회 */
+    public List<MyPageDTO.ResponseMyPage> getMyPageByRequester(Long memberId) {
+        List<RedisMyPage> redisMyPageList = redisMyPageRepository.findAllByRequestorMemberId(memberId);
+        return redisMyPageList.stream()
+                .map(myPageMapper::toDtoFromRedis)
+                .toList();
+    }
+
+    /** 받은 요청 조회 */
+    public List<MyPageDTO.ResponseMyPage> getMyPageByRecipient(Long memberId) {
+        List<RedisMyPage> redisMyPageList = redisMyPageRepository.findAllByAcceptorMemberId(memberId);
+        return redisMyPageList.stream()
+                .map(myPageMapper::toDtoFromRedis)
+                .toList();
+    }
+
     public void deleteAllMyPage(){
         redisMyPageRepository.deleteAll();
     }

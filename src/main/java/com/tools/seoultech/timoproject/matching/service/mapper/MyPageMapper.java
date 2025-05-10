@@ -14,15 +14,17 @@ import org.mapstruct.factory.Mappers;
 public interface MyPageMapper {
     MyPageMapper Instance = Mappers.getMapper(MyPageMapper.class);
 
-    @Mappings(value = {
-        @Mapping(target = "board", source = "redisBoard"),
-        @Mapping(target = "requestor", source = "redisRequestor"),
-        @Mapping(target = "matchingCategory", expression = "java(redisBoard.getMatchingCategory())")
+    @Mappings({
+            @Mapping(target = "board", source = "redisBoard"),
+            @Mapping(target = "requestorMemberId", source = "requestorMemberId"),
+            @Mapping(target = "acceptorMemberId", expression = "java(redisBoard.getRedisUser().getMemberId())"),
+            @Mapping(target = "matchingCategory", expression = "java(redisBoard.getMatchingCategory())"),
     })
-    RedisMyPage toRedisMyPage(RedisBoard redisBoard, RedisUser redisRequestor);
+    RedisMyPage toRedisMyPage(RedisBoard redisBoard, Long requestorMemberId);
 
     @Mapping(target = "acceptorBoard", source = ".", qualifiedByName = "boardDtoMapping")
     @Mapping(target = "requestor", source = ".", qualifiedByName = "userDtoMapping")
+    @Mapping(target = "myPageUUID", source = "uuid")
     MyPageDTO.ResponseMyPage toDtoFromRedis(RedisMyPage redisMyPage);
 
     @Named("boardDtoMapping")

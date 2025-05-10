@@ -52,7 +52,7 @@
             }
             // 2) 엔티티 업데이트
             member.updateUsername(request.username());
-            member.updateRiotAccount(request.puuid(), request.playerName(), request.playerTag());
+            member.updateRiotAccount(request.puuid(), request.playerName(), request.playerTag(), request.profileIconUrl());
             member.updateUnivAccount(request.univName(), request.univEmail());
 
             // 3) 저장 (영속성 컨텍스트에서 변경 감지로 자동 반영)
@@ -61,13 +61,13 @@
 
         @Override
         @Transactional
-        public MemberAccount updateRiotAccount(Long memberId, String puuid, String playerName, String playerTag) {
+        public MemberAccount updateRiotAccount(Long memberId, String puuid, String playerName, String playerTag, String profileIconUrl) {
             MemberAccount member = getById(memberId);
             // 중복된 소환사 puuid 존재 여부 체크
             if (puuid != null && memberAccountRepository.existsByRiotAccount_PuuidAndMemberIdNot(puuid, memberId)) {
                 throw new BusinessException(ErrorCode.ALREADY_USED_RIOT_ACCOUNT);
             }
-            member.updateRiotAccount(puuid, playerName, playerTag);
+            member.updateRiotAccount(puuid, playerName, playerTag, profileIconUrl);
 
             return member;
         }
@@ -97,4 +97,5 @@
 
             return member;
         }
+
     }
