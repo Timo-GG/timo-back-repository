@@ -27,13 +27,15 @@
         public record RiotAccountDto(
                 String puuid,
                 String accountName,
-                String accountTag
+                String accountTag,
+                String profileUrl
         ) {
             public static RiotAccountDto from(RiotAccount entity) {
                 return new RiotAccountDto(
                         entity.getPuuid(),
                         entity.getAccountName(),
-                        entity.getAccountTag()
+                        entity.getAccountTag(),
+                        entity.getProfileUrl()
                 );
             }
         }

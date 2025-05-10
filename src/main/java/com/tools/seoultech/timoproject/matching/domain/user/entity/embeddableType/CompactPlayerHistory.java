@@ -1,5 +1,7 @@
 package com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType;
 
+import com.tools.seoultech.timoproject.riot.dto.MatchSummaryDTO;
+import com.tools.seoultech.timoproject.riot.dto.RankInfoDto;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,9 +18,8 @@ public class CompactPlayerHistory {
     /*
     * 해딩 필드 타입들은 RSO 정보 받아와야알 수 있음.
     **/
-    private String rankTier;
-    private String tierStep;
 
+    private RankInfoDto rankInfo;
     private List<String> most3Champ;
-    private List<String> last4Match;
+    private List<MatchSummaryDTO> last10Match;
 }
