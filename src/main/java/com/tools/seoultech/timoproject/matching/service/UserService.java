@@ -23,6 +23,7 @@ public class UserService {
      */
     public RedisUser.Duo saveDuoUser(UserDTO.RequestDuo requestDuo) {
         RedisUser.Duo redisUser = userMapper.toRedisDuo(requestDuo, memberAccountRepository);
+        System.err.println(redisUser.toString());
         return redisUserRepository.save(redisUser);
     }
 
@@ -38,7 +39,7 @@ public class UserService {
      * Redis에서 Duo 사용자 정보 조회
      */
     public UserDTO.ResponseDuo getDuoUser(UUID userUUID) throws Exception {
-        RedisUser redisUser = redisUserRepository.findById(userUUID).orElseThrow(() -> new Exception("User not found"));
+        RedisUser redisUser = redisUserRepository.findById(userUUID.toString()).orElseThrow(() -> new Exception("User not found"));
         return userMapper.toResponseDuo((RedisUser.Duo) redisUser);
     }
 
@@ -46,7 +47,7 @@ public class UserService {
      * Redis에서 Colosseum 사용자 정보 조회
      */
     public UserDTO.ResponseColosseum getColosseumUser(UUID userUUID) throws Exception {
-        RedisUser redisUser = redisUserRepository.findById(userUUID).orElseThrow(() -> new Exception("User not found"));
+        RedisUser redisUser = redisUserRepository.findById(userUUID.toString()).orElseThrow(() -> new Exception("User not found"));
         return userMapper.toResponseColosseum((RedisUser.Colosseum) redisUser);
     }
 
@@ -54,7 +55,7 @@ public class UserService {
      * UUID로 사용자 삭제
      */
     public void deleteUserByUUID(UUID userUUID) throws Exception {
-        RedisUser redisUser = redisUserRepository.findById(userUUID)
+        RedisUser redisUser = redisUserRepository.findById(userUUID.toString())
                 .orElseThrow(() -> new Exception("User not found"));
         redisUserRepository.delete(redisUser);
     }

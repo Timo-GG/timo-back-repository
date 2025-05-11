@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.memberAccount.domain.entity;
 
+import com.redis.om.spring.annotations.Searchable;
 import com.tools.seoultech.timoproject.memberAccount.domain.OAuthProvider;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.enumType.Role;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.CertifiedUnivInfo;
@@ -21,6 +22,7 @@ public class MemberAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
+    @Searchable
     private Long memberId;
 
     @Column(nullable = false, unique = true)

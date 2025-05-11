@@ -17,6 +17,7 @@ public interface MyPageMapper {
     @Mappings({
             @Mapping(target = "board", source = "redisBoard"),
             @Mapping(target = "matchingCategory", expression = "java(redisBoard.getMatchingCategory())"),
+            @Mapping(target = "uuid", ignore = true)
     })
     RedisMyPage toRedisMyPage(RedisBoard redisBoard, RedisUser requestor);
 

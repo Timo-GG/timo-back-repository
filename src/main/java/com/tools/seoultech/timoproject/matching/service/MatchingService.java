@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.matching.service;
 
 
+
 import com.redis.om.spring.search.stream.SearchStream;
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
@@ -10,8 +11,10 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPageRepository;
+import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.Duo$;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
+import io.lettuce.core.protocol.RedisCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import com.redis.om.spring.search.stream.EntityStream;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage$;
@@ -38,7 +40,7 @@ public class MatchingService {
 
     @Transactional
     public RedisMyPage saveDuoMatchingToMyPage(MatchingDTO.RequestDuo matchingDto) {
-        RedisBoard redisBoard = redisBoardRepository.findById(matchingDto.boardUUID())
+        RedisBoard redisBoard = redisBoardRepository.findById(matchingDto.boardUUID().toString())
                 .orElseThrow(() -> new GeneralException("Board UUID에 해당하는 Redis 엔티티가 존재하지 않습니다."));
 
         RedisUser redisRequestor = userService.saveDuoUser(matchingDto.duoRequestorDto());
@@ -51,7 +53,7 @@ public class MatchingService {
     }
     @Transactional
     public RedisMyPage saveColosseumMatchingToMyPage(MatchingDTO.RequestColosseum matchingDto) {
-        RedisBoard redisBoard = redisBoardRepository.findById(matchingDto.boardUUID())
+        RedisBoard redisBoard = redisBoardRepository.findById(matchingDto.boardUUID().toString())
                 .orElseThrow(() -> new GeneralException("Board UUID에 해당하는 Redis 엔티티가 존재하지 않습니다."));
 
         RedisUser redisRequestor = userService.saveColosseumUser(matchingDto.colosseumRequestorDto());
@@ -64,7 +66,7 @@ public class MatchingService {
     }
 
     public MyPageDTO.ResponseMyPage getMyPage(UUID myPageUUID) throws Exception {
-        RedisMyPage redisMyPage = redisMyPageRepository.findById(myPageUUID)
+        RedisMyPage redisMyPage = redisMyPageRepository.findById(myPageUUID.toString())
                 .orElseThrow(() -> new GeneralException("해당 MyPage는 Redis안에 없습니다."));
         return myPageMapper.toDtoFromRedis(redisMyPage);
     }
@@ -77,7 +79,7 @@ public class MatchingService {
     }
 
     public void deleteMyPage(UUID myPageUUID) {
-        redisMyPageRepository.deleteById(myPageUUID);
+        redisMyPageRepository.deleteById(myPageUUID.toString());
     }
 
     /** 보낸 요청 조회 */
@@ -110,18 +112,16 @@ public class MatchingService {
         SearchStream<RedisMyPage> searchStream = entityStream.of(RedisMyPage.class);
 
         if(filterDto.matchingCategory() != null){
-//            searchStream = searchStream.filter(RedisMyPage$.MATCHING_CATEGORY.eq(filterDto.matchingCategory()));
+            searchStream = searchStream.filter(RedisMyPage$.MATCHING_CATEGORY.eq(filterDto.matchingCategory()));
         }
         if(filterDto.memberId() != null){
-
 
         }
 //        if (filterDto.getStatus() != null) {
 ////            searchStream = new OrPredicate<>(searchStream, new EqualPredicate<>(RedisMyPage$.STATUS, filterDto.status()));
 //            searchStream.
 //        }
-
-
         return null;
     }
+
 }

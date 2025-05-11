@@ -41,7 +41,7 @@ public abstract class BoardDTO {
 
     @Builder
     public record ResponseDuo(
-            UUID boardUUID,
+            String boardUUID,
             MatchingCategory matchingCategory,
             UserDTO.ResponseDuo responseUserDto,
             String memo,
@@ -50,7 +50,7 @@ public abstract class BoardDTO {
 
     @Builder
     public record ResponseColosseum(
-            UUID boardUUID,
+            String boardUUID,
             MatchingCategory matchingCategory,
             UserDTO.ResponseColosseum responseUserDto,
             String memo,

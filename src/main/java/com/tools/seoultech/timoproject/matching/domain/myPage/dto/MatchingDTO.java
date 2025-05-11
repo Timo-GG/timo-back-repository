@@ -12,11 +12,11 @@ public abstract class MatchingDTO {
     //  - 유저 조회용 X.
     @Builder
     public record RequestDuo(
-            UUID boardUUID,
+            String boardUUID,
             UserDTO.RequestDuo duoRequestorDto
     ){}
     public record RequestColosseum(
-            UUID boardUUID,
+            String boardUUID,
             UserDTO.RequestColosseum colosseumRequestorDto
     ){}
 }

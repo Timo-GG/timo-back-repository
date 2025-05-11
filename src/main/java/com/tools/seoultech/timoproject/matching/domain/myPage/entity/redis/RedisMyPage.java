@@ -1,24 +1,29 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.redis.om.spring.annotations.Document;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.annotation.Reference;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
+
+
+import com.redis.om.spring.annotations.Indexed;
+import com.redis.om.spring.*;
 
 import java.util.UUID;
 
-@RedisHash(value = "MyPage", timeToLive = 15 * 60)
+//@RedisHash(value = "MyPage", timeToLive = 15 * 60)
+@Document
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "matchingCategory")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = RedisBoard.Duo.class, name = "DUO"),
@@ -27,42 +32,29 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = RedisUser.Colosseum.class, name = "COLOSSEUM")
 })
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RedisMyPage {
     @Id
-    private final UUID uuid;
+    private String uuid;
 
     @Indexed
-    private final MatchingCategory matchingCategory;
-    private final MatchingStatus status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private MatchingCategory matchingCategory;
 
-    @Reference
+    @Indexed
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private MatchingStatus status;
+
+    @Reference @Indexed
     @Schema(type = "object", oneOf = { RedisBoard.Duo.class, RedisBoard.Colosseum.class})
-    private final RedisBoard board;
+    private RedisBoard board;
 
-    @Reference
+    @Reference @Indexed
     @Schema(type = "object", oneOf = { RedisUser.Duo.class, RedisUser.Colosseum.class})
-    private final RedisUser requestor;
+    private RedisUser requestor;
 
-    @Transient
-    private UUID getAcceptor(){
-        return board.getRedisUser().getUuid();
-    }
-
-    @PersistenceCreator
-    public RedisMyPage(UUID uuid, MatchingCategory matchingCategory, MatchingStatus status, RedisBoard board, RedisUser requestor) {
-        this.uuid = uuid;
-        this.matchingCategory = matchingCategory;
-        this.status = status;
-        this.board = board;
-        this.requestor = requestor;
-    }
-
-    @Builder
-    public RedisMyPage(MatchingCategory matchingCategory, RedisBoard board, RedisUser requestor) {
-        this.uuid = UUID.randomUUID();
-        this.matchingCategory = matchingCategory;
-        this.status = MatchingStatus.WAITING;
-        this.board = board;
-        this.requestor = requestor;
-    }
+    @Indexed private Long acceptorMemberId;
+    @Indexed private Long requestorMemberId;
 }

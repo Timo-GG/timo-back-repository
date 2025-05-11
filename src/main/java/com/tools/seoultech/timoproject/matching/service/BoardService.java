@@ -49,7 +49,7 @@ public class BoardService {
      */
     public BoardDTO.ResponseDuo getDuoBoard(UUID boardUUID) throws Exception {
         RedisBoard.Duo redisBoard = (RedisBoard.Duo) redisBoardRepository
-                .findById(boardUUID)
+                .findById(boardUUID.toString())
                 .orElseThrow(() -> new Exception("Board Not Found : " + boardUUID));
         return boardMapper.toResponseDuo(redisBoard);
     }
@@ -59,7 +59,7 @@ public class BoardService {
      */
     public BoardDTO.ResponseColosseum getColosseumBoard(UUID boardUUID) throws Exception {
         RedisBoard.Colosseum redisBoard = (RedisBoard.Colosseum) redisBoardRepository
-                .findById(boardUUID)
+                .findById(boardUUID.toString())
                 .orElseThrow(() -> new Exception("Board not found: " + boardUUID));
         return boardMapper.toResponseColosseum(redisBoard);
     }
@@ -91,7 +91,7 @@ public class BoardService {
      */
     public void deleteBoardByUUID(UUID boardUUID) throws Exception {
         RedisBoard redisBoard = redisBoardRepository
-                .findById(boardUUID)
+                .findById(boardUUID.toString())
                 .orElseThrow(() -> new Exception("Board not found: " + boardUUID));
         redisBoardRepository.delete(redisBoard);
     }

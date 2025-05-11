@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface RedisMyPageRepository extends RedisDocumentRepository<RedisMyPage, UUID> {
+public interface RedisMyPageRepository extends RedisDocumentRepository<RedisMyPage, String> {
     List<RedisMyPage> findAllByMatchingCategory(MatchingCategory matchingCategory);
 
     List<RedisMyPage> findAllByRequestorMemberId(Long requestorMemberId);
 
     List<RedisMyPage> findAllByAcceptorMemberId(Long acceptorMemberId);
+
+    List<RedisMyPage> findAllByRequestor_MemberAccount_MemberId();
 }

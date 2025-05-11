@@ -34,7 +34,7 @@ public abstract class UserDTO{
 
     @Builder
     public record ResponseDuo(
-            UUID userUUID,
+            String userUUID,
             MemberAccount memberAccount,
             CompactPlayerHistory compactPlayerHistory,
             UserInfo userInfo,
@@ -43,7 +43,7 @@ public abstract class UserDTO{
 
     @Builder
     public record ResponseColosseum(
-            UUID userUUID,
+            String userUUID,
             MemberAccount memberAccount,
             List<PartyMemberInfo> partyMemberInfoList
     )implements Response {}

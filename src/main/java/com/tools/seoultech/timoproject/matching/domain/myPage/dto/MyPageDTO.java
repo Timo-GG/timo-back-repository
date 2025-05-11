@@ -15,7 +15,7 @@ public abstract class MyPageDTO {
     // Note: 1. 유저 필터링 기반 조회용.
     @Builder
     public record RequestSearch(
-            UUID myPageUUID,  // NOTE: 단일 조회
+            String myPageUUID,  // NOTE: 단일 조회
             MatchingCategory matchingCategory, // NOTE: 듀오•콜로세움 매칭보드
             Long memberId,
             Boolean isRequestor,  // NOTE: 보낸 요청, 받은 요청
@@ -24,7 +24,7 @@ public abstract class MyPageDTO {
 
     // Note: 2. 검색 결과 Response
     public record ResponseMyPage(
-            UUID myPageUUID,
+            String myPageUUID,
             MatchingCategory matchingCategory,
             @Schema(oneOf = {BoardDTO.ResponseDuo.class, BoardDTO.ResponseColosseum.class}) BoardDTO.Response acceptorBoard,
             @Schema(oneOf = {RedisUser.Duo.class, RedisUser.Colosseum.class}) UserDTO.Response requestor,

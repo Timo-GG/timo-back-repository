@@ -90,6 +90,7 @@ dependencies {
 
     // Socket.io
     implementation 'com.corundumstudio.socketio:netty-socketio:2.0.12'
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
 
     // Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
