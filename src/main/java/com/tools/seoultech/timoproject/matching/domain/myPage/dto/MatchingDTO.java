@@ -8,7 +8,8 @@ import java.util.UUID;
 
 @Getter
 public abstract class MatchingDTO {
-    // NOTE: 듀오, 내전 보드판 보고서 신청했을 때의 매칭 DTO.
+    // NOTE: 시스템 매칭관련 DTO.
+    //  - 유저 조회용 X.
     @Builder
     public record RequestDuo(
             UUID boardUUID,

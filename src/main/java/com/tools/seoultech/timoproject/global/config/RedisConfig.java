@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.global.config;
 
+import com.redis.om.spring.annotations.EnableRedisDocumentRepositories;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
@@ -14,7 +15,9 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+
 @Configuration
+@EnableRedisDocumentRepositories(basePackages = "com.redis.om.documents.*")
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")

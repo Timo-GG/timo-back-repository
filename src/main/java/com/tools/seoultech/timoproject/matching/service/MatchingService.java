@@ -1,5 +1,7 @@
 package com.tools.seoultech.timoproject.matching.service;
 
+
+import com.redis.om.spring.search.stream.SearchStream;
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoardRepository;
@@ -16,15 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import com.redis.om.spring.search.stream.EntityStream;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage$;
 
 @Service
 @RequiredArgsConstructor
 public class MatchingService {
 
     private final UserService userService;
-    private final MyPageMapper myPageMapper;
     private final RedisBoardRepository redisBoardRepository;
     private final RedisMyPageRepository redisMyPageRepository;
+
+    private final MyPageMapper myPageMapper;
+    private final EntityStream entityStream;
+
 
     @Transactional
     public RedisMyPage saveDuoMatchingToMyPage(MatchingDTO.RequestDuo matchingDto) {
@@ -88,5 +98,30 @@ public class MatchingService {
 
     public void deleteAllMyPage(){
         redisMyPageRepository.deleteAll();
+    }
+
+    public List<RedisMyPage> redisMyPageList(MyPageDTO.RequestSearch filterDto){
+        Predicate<RedisMyPage> filter = buildFilter(filterDto);
+        return null;
+
+    }
+
+    private Predicate<RedisMyPage> buildFilter(MyPageDTO.RequestSearch filterDto) {
+        SearchStream<RedisMyPage> searchStream = entityStream.of(RedisMyPage.class);
+
+        if(filterDto.matchingCategory() != null){
+//            searchStream = searchStream.filter(RedisMyPage$.MATCHING_CATEGORY.eq(filterDto.matchingCategory()));
+        }
+        if(filterDto.memberId() != null){
+
+
+        }
+//        if (filterDto.getStatus() != null) {
+////            searchStream = new OrPredicate<>(searchStream, new EqualPredicate<>(RedisMyPage$.STATUS, filterDto.status()));
+//            searchStream.
+//        }
+
+
+        return null;
     }
 }

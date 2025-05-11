@@ -25,7 +25,11 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven{url 'https://jitpack.io'}
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+}
+ext {
+    redisOmVersion = '0.9.11'
 }
 
 dependencies {
@@ -90,7 +94,10 @@ dependencies {
     // Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'io.lettuce:lettuce-core'
+    implementation "com.redis.om:redis-om-spring:$redisOmVersion"
+    annotationProcessor "com.redis.om:redis-om-spring:$redisOmVersion"
 
+    // Socket.io
     testImplementation "io.socket:socket.io-client:2.0.1"
     testImplementation "org.json:json:20230227"
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
@@ -110,4 +117,3 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
-
