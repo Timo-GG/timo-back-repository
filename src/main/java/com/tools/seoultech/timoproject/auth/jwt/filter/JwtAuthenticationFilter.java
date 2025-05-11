@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/discord/callback"),
             new AntPathRequestMatcher("/api/v1/posts/public/**"),
             new AntPathRequestMatcher("/api/v1/comments/public/**"),
-            new AntPathRequestMatcher("/api/v1/riot/recent-match"),
+            new AntPathRequestMatcher("/api/v1/riot/**"),
             new AntPathRequestMatcher("/api/v1/ranking/top"),
             new AntPathRequestMatcher("/api/v1/matching/**"),
             new AntPathRequestMatcher("/api/v1/notifications/subscribe"),
