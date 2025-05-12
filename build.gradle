@@ -95,6 +95,7 @@ dependencies {
     // Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'io.lettuce:lettuce-core'
+    implementation("redis.clients:jedis:5.2.0")
     implementation "com.redis.om:redis-om-spring:$redisOmVersion"
     annotationProcessor "com.redis.om:redis-om-spring:$redisOmVersion"
 

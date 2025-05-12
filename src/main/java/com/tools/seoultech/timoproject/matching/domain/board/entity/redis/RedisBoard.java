@@ -10,7 +10,6 @@ import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUs
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.PersistenceCreator;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +19,7 @@ import org.springframework.data.annotation.Reference;
 import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
 
-import java.util.UUID;
+
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,

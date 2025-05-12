@@ -5,10 +5,6 @@ import com.redis.om.spring.RedisModulesConfiguration;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
-import io.lettuce.core.RedisClient;
-import io.lettuce.core.api.StatefulRedisConnection;
-import io.lettuce.core.api.sync.RedisCommands;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,32 +28,27 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
     private int redisPort;
+
+
+
+    @Bean
+    @Primary
+    public JedisConnectionFactory jedisConnectionFactory() {
+        JedisConnectionFactory factory = new JedisConnectionFactory();
+        factory.setHostName(redisHost);  // 컨테이너 IP 주소
+        factory.setPort(redisPort);  // Redis 포트
+        return factory;
+    }
 //
 //    @Bean
-//    public LettuceConnectionFactory lettuceConnectionFactory() {
-//        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
-//    }
-
-    // 2. Jedis (Redis OM 전용)
-//    @Primary
-    @Bean
-//    @Qualifier("jedisConnectionFactory")
-    public JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
-    }
-
-    // RedisCommands Bean for direct connection to Redis
-//    @Bean
-//    public RedisCommands<String, String> redisCommands(JedisConnectionFactory factory) {
-//        RedisClient client = RedisClient.create("redis://localhost:6379"); // Make sure to match your Redis config
-//        StatefulRedisConnection<String, String> connection = client.connect();
-//        return connection.sync();
+//    public JedisCommands jedisCommands(JedisConnectionFactory jedisConnectionFactory) {
+//        // Jedis 클라이언트 연결
+//        Jedis jedis = (Jedis) jedisConnectionFactory.getConnection().getNativeConnection();
+//        return jedis; // JedisCommands 인터페이스를 반환
 //    }
     @Bean
-    public JedisCommands jedisCommands(JedisConnectionFactory jedisConnectionFactory) {
-        // Jedis 클라이언트 연결
-        Jedis jedis = (Jedis) jedisConnectionFactory.getConnection().getNativeConnection();
-        return jedis; // JedisCommands 인터페이스를 반환
+    public LettuceConnectionFactory lettuceConnectionFactory() {
+        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
     }
 
     /** Spring <-> Redis 간에 전송 형태 설정 : Sorted-Set 및 Hash 데이터 처리를 위한 RedisTemplate 설정 */
@@ -94,7 +85,7 @@ public class RedisConfig {
     @Bean(name = "userRedisTemplate")
     public RedisTemplate<String, RedisUser> userRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, RedisUser> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory());
+        template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
 
@@ -108,7 +99,7 @@ public class RedisConfig {
     @Bean(name = "myPageRedisTemplate")
     public RedisTemplate<String, RedisMyPage> myPageRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, RedisMyPage> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory());
+        template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
 
