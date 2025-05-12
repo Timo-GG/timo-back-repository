@@ -35,7 +35,7 @@ import java.util.UUID;
 @Getter
 public abstract class RedisUser {
     @Id
-    private UUID uuid;
+    private String uuid;
 
     @Indexed @Searchable
     private MemberAccount memberAccount;
@@ -56,7 +56,7 @@ public abstract class RedisUser {
         private DuoInfo duoInfo;
 
         @Builder
-        public Duo(UUID uuid, MatchingCategory matchingCategory, CompactPlayerHistory compactPlayerHistory,
+        public Duo(String uuid, MatchingCategory matchingCategory, CompactPlayerHistory compactPlayerHistory,
                    MemberAccount memberAccount, UserInfo userInfo, DuoInfo duoInfo) {
             super(uuid, memberAccount, matchingCategory, compactPlayerHistory);
             this.userInfo = userInfo;
@@ -74,7 +74,7 @@ public abstract class RedisUser {
         private List<PartyMemberInfo> partyMemberInfoList;
 
         @Builder
-        public Colosseum(UUID uuid, MatchingCategory matchingCategory, CompactPlayerHistory compactPlayerHistory,
+        public Colosseum(String uuid, MatchingCategory matchingCategory, CompactPlayerHistory compactPlayerHistory,
                          MemberAccount memberAccount, List<PartyMemberInfo> partyMemberInfoList) {
             super(uuid, memberAccount, matchingCategory, compactPlayerHistory);
             this.partyMemberInfoList = partyMemberInfoList;

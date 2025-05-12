@@ -24,7 +24,7 @@ import java.util.UUID;
 
 //@RedisHash(value = "MyPage", timeToLive = 15 * 60)
 @Document
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "matchingCategory")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "matchingCategory", visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = RedisBoard.Duo.class, name = "DUO"),
         @JsonSubTypes.Type(value = RedisBoard.Colosseum.class, name = "COLOSSEUM"),

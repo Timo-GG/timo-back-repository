@@ -45,10 +45,8 @@ public abstract class RedisBoard {
     private String memo;
 
     @Indexed
-    // 서버 내부 필드. 역직렬화에 사용되지 않음. 직렬화에서는 편의성 때문에 보여주긴 함.
     private MatchingCategory matchingCategory;
 
-    // Duo 게시판용 서브클래스
     @Schema(description = "DuoBoard")
     @Document
     @Getter
@@ -75,9 +73,10 @@ public abstract class RedisBoard {
         private Integer          headCount;
 
         @Builder
-        public Colosseum(String uuid, RedisUser redisUser, String memo, MatchingCategory matchingCategory, Integer headCount){
+        public Colosseum(String uuid, RedisUser redisUser, String memo, MatchingCategory matchingCategory, ColosseumMapCode mapcode, Integer headCount){
             super(uuid, redisUser, memo, matchingCategory);
-            this.mapCode = null;
+            this.mapCode = mapcode;
+            this.headCount = headCount;
         }
     }
 }
