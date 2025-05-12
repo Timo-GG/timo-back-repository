@@ -8,14 +8,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(exclude = SpringDocDataRestConfiguration.class)
-@EnableRedisDocumentRepositories(basePackages = {
-//        "com.tools.seoultech.timoproject.matching.domain.board.entity.redis",
-//        "com.tools.seoultech.timoproject.matching.domain.user.entity.redis",
-//        "com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis",
-//        "com.tools.seoultech.timoproject.ranking",
-//        "com.redis.om.documents.*"
-        "com.tools.seoultech.timoproject.*"
-})
 public class TimoProjectApplication implements CommandLineRunner {
     public static void main(String[] args) {
         SpringApplication.run(TimoProjectApplication.class, args);

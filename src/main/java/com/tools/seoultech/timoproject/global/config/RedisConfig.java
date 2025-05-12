@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.global.config;
 
 
 import com.redis.om.spring.RedisModulesConfiguration;
+import com.redis.om.spring.annotations.EnableRedisDocumentRepositories;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
@@ -21,7 +22,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.commands.JedisCommands;
 
 @Configuration
-public class RedisConfig {
+@EnableRedisDocumentRepositories(basePackages = "com.tools.seoultech.timoproject")
+public class RedisConfig{
 
     @Value("${spring.data.redis.host}")
     private String redisHost;
@@ -136,4 +138,5 @@ public class RedisConfig {
     public RedisModulesConfiguration redisModulesConfiguration() {
         return new RedisModulesConfiguration();
     }
+
 }

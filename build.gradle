@@ -30,6 +30,7 @@ repositories {
 }
 ext {
     redisOmVersion = '0.9.11'
+    set('springAiVersion', "1.0.0-M8")
 }
 
 dependencies {
@@ -95,9 +96,10 @@ dependencies {
     // Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'io.lettuce:lettuce-core'
-    implementation("redis.clients:jedis:5.2.0")
+    implementation "redis.clients:jedis:5.2.0"
     implementation "com.redis.om:redis-om-spring:$redisOmVersion"
     annotationProcessor "com.redis.om:redis-om-spring:$redisOmVersion"
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-redis'
 
     // Socket.io
     testImplementation "io.socket:socket.io-client:2.0.1"
@@ -115,7 +117,11 @@ dependencies {
     // SpringDoc
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 }
-
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
+}
 tasks.named('test') {
     useJUnitPlatform()
 }

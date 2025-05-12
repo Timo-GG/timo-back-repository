@@ -20,7 +20,6 @@ import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
 
 
-
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
@@ -31,51 +30,47 @@ import com.redis.om.spring.annotations.Indexed;
         @JsonSubTypes.Type(value = RedisBoard.Duo.class, name = "DUO"),
         @JsonSubTypes.Type(value = RedisBoard.Colosseum.class, name = "COLOSSEUM")
 })
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
 public abstract class RedisBoard {
-    @Id
-    private String uuid;
-
-    @Reference @Searchable
-    private RedisUser redisUser;
-
-    private String memo;
-
-    @Indexed
-    private MatchingCategory matchingCategory;
-
+    @Document(timeToLive = 15 * 60)
     @Schema(description = "DuoBoard")
-    @Document
     @Getter
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Duo extends RedisBoard {
-        private DuoMapCode mapCode;
+        @Id
+        private String uuid;
 
-        @Builder
-        public Duo(String uuid, RedisUser redisUser, String memo, MatchingCategory matchingCategory, DuoMapCode mapCode ){
-            super(uuid, redisUser, memo, matchingCategory);
-            this.mapCode = mapCode;
-        }
+        @Reference @Searchable
+        private RedisUser redisUser;
+
+        private String memo;
+
+        @Indexed @Searchable
+        private MatchingCategory matchingCategory;
+        private DuoMapCode mapCode;
     }
 
     // Colosseum 게시판용 서브클래스
+    @Document(timeToLive = 15 * 60)
     @Schema(description = "Colosseum Board")
-    @Document
+    @Builder
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    @Getter
     public static class Colosseum extends RedisBoard {
+        @Id
+        private String uuid;
+
+        @Reference @Searchable
+        private RedisUser redisUser;
+
+        private String memo;
+
+        @Indexed @Searchable
+        private MatchingCategory matchingCategory;
+
         private ColosseumMapCode mapCode;
         private Integer          headCount;
-
-        @Builder
-        public Colosseum(String uuid, RedisUser redisUser, String memo, MatchingCategory matchingCategory, ColosseumMapCode mapcode, Integer headCount){
-            super(uuid, redisUser, memo, matchingCategory);
-            this.mapCode = mapcode;
-            this.headCount = headCount;
-        }
     }
 }

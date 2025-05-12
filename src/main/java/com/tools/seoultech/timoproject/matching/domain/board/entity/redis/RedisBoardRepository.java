@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 
+@Repository
 public interface RedisBoardRepository extends RedisDocumentRepository<RedisBoard, String> {
     List<RedisBoard> findAllByMatchingCategory(MatchingCategory matchingCategory);
 }
