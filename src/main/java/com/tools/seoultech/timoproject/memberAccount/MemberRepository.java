@@ -1,14 +1,14 @@
 package com.tools.seoultech.timoproject.memberAccount;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MemberAccountRepository extends JpaRepository<MemberAccount, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByUsername(String username);
 
-    Optional<MemberAccount> findByEmail(String email);
+    Optional<Member> findByEmail(String email);
 
     boolean existsByRiotAccount_Puuid(String puuid);
 

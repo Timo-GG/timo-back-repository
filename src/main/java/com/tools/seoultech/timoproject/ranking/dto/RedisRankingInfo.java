@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Gender;
 import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
@@ -94,7 +94,7 @@ public class RedisRankingInfo implements Serializable {
         if (dto.department() != null) this.department = dto.department();
     }
 
-    public static RedisRankingInfo from(Long memberId, MemberAccount account, RiotRankingDto riotRankingDto) {
+    public static RedisRankingInfo from(Long memberId, Member account, RiotRankingDto riotRankingDto) {
         var riotAccount = account.getRiotAccount();
         var univInfo = account.getCertifiedUnivInfo();
         var soloRank = riotRankingDto.soloRankInfo();

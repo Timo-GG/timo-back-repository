@@ -1,8 +1,6 @@
 package com.tools.seoultech.timoproject.matching.service;
 
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoardRepository;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;

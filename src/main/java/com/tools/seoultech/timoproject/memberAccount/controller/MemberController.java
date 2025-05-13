@@ -4,9 +4,9 @@ import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.memberAccount.dto.AccountDto;
 import com.tools.seoultech.timoproject.memberAccount.dto.UpdateMemberInfoRequest;
-import com.tools.seoultech.timoproject.memberAccount.facade.MemberAccountFacade;
+import com.tools.seoultech.timoproject.memberAccount.facade.MemberFacade;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
-import com.tools.seoultech.timoproject.memberAccount.dto.MemberAccountDto;
+import com.tools.seoultech.timoproject.memberAccount.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,30 +19,30 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequestMapping("/api/v1/members")
 @Tag(name = "Member", description = "Member API")
-public class MemberAccountController {
+public class MemberController {
 
-    private final MemberAccountFacade memberAccountFacade;
+    private final MemberFacade memberFacade;
 
     @GetMapping("/me")
-    public ResponseEntity<APIDataResponse<MemberAccountDto>> getMember(@CurrentMemberId Long memberId) {
+    public ResponseEntity<APIDataResponse<MemberDto>> getMember(@CurrentMemberId Long memberId) {
 
-        MemberAccountDto memberInfo = memberAccountFacade.getMemberInfo(memberId);
+        MemberDto memberInfo = memberFacade.getMemberInfo(memberId);
 
         return ResponseEntity.ok(APIDataResponse.of(memberInfo));
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<APIDataResponse<MemberAccountDto>> findById(@PathVariable Long memberId) {
-        MemberAccountDto memberProfile = memberAccountFacade.getMemberProfile(memberId);
+    public ResponseEntity<APIDataResponse<MemberDto>> findById(@PathVariable Long memberId) {
+        MemberDto memberProfile = memberFacade.getMemberProfile(memberId);
         return ResponseEntity.ok(APIDataResponse.of(memberProfile));
     }
 
     @PutMapping("/me/info")
-    public ResponseEntity<APIDataResponse<MemberAccountDto>> updateAdditionalInfo(
+    public ResponseEntity<APIDataResponse<MemberDto>> updateAdditionalInfo(
             @CurrentMemberId Long memberId,
             @RequestBody UpdateMemberInfoRequest request
     ) {
-        MemberAccountDto updatedInfo = memberAccountFacade.updateAccountInfo(memberId, request);
+        MemberDto updatedInfo = memberFacade.updateAccountInfo(memberId, request);
 
         return ResponseEntity.ok(APIDataResponse.of(updatedInfo));
     }
@@ -54,7 +54,7 @@ public class MemberAccountController {
             @RequestBody AccountDto.Request request
 
     ) {
-        MemberAccountDto dto = memberAccountFacade.verifyPlayer(memberId, request);
+        MemberDto dto = memberFacade.verifyPlayer(memberId, request);
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }
 
@@ -63,7 +63,7 @@ public class MemberAccountController {
             @CurrentMemberId Long memberId,
             @RequestBody String username
     ) {
-        MemberAccountDto dto = memberAccountFacade.updateUsername(memberId, username);
+        MemberDto dto = memberFacade.updateUsername(memberId, username);
 
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }
@@ -72,7 +72,7 @@ public class MemberAccountController {
     public ResponseEntity<APIDataResponse<?>> resetRiotAccount(
             @CurrentMemberId Long memberId
     ) {
-        MemberAccountDto dto = memberAccountFacade.resetRiotAccount(memberId);
+        MemberDto dto = memberFacade.resetRiotAccount(memberId);
 
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }
@@ -82,7 +82,7 @@ public class MemberAccountController {
             @CurrentMemberId Long memberId,
             @RequestBody UnivRequestDTO univ
             ) {
-        MemberAccountDto dto = memberAccountFacade.updateUniv(memberId, univ);
+        MemberDto dto = memberFacade.updateUniv(memberId, univ);
 
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }

@@ -1,11 +1,11 @@
     package com.tools.seoultech.timoproject.memberAccount.dto;
 
     import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.CertifiedUnivInfo;
-    import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+    import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
     import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
     import com.tools.seoultech.timoproject.memberAccount.domain.entity.enumType.Role;
 
-    public record MemberAccountDto(
+    public record MemberDto(
             Long memberId,
             String email,
             String username,
@@ -13,8 +13,8 @@
             CertifiedUnivInfoDto certifiedUnivInfo,
             Role role
     ) {
-        public static MemberAccountDto from(MemberAccount entity) {
-            return new MemberAccountDto(
+        public static MemberDto from(Member entity) {
+            return new MemberDto(
                     entity.getMemberId(),
                     entity.getEmail(),
                     entity.getUsername(),

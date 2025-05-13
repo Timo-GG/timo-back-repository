@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.review;
-import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,13 +12,13 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final MemberAccountRepository memberAccountRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public ReviewResponseDto createReview(Long currentMemberId, ReviewRequestDto dto) {
-        MemberAccount reviewer = memberAccountRepository.findById(currentMemberId)
+        Member reviewer = memberRepository.findById(currentMemberId)
                 .orElseThrow(() -> new RuntimeException("Reviewer not found"));
-        MemberAccount reviewee = memberAccountRepository.findById(dto.revieweeId())
+        Member reviewee = memberRepository.findById(dto.revieweeId())
                 .orElseThrow(() -> new RuntimeException("Reviewee not found"));
 
         Review review = dto.toEntity(reviewer, reviewee);
@@ -29,7 +29,7 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public List<ReviewResponseDto> getReviewsByReviewee(Long revieweeId) {
-        MemberAccount reviewee = memberAccountRepository.findById(revieweeId)
+        Member reviewee = memberRepository.findById(revieweeId)
                 .orElseThrow(() -> new RuntimeException("Reviewee not found"));
 
         return reviewRepository.findByReviewee(reviewee).stream()

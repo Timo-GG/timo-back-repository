@@ -3,10 +3,10 @@
     import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
     import com.tools.seoultech.timoproject.global.constant.ErrorCode;
     import com.tools.seoultech.timoproject.global.exception.BusinessException;
+    import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
     import com.tools.seoultech.timoproject.memberAccount.dto.UpdateMemberInfoRequest;
-    import com.tools.seoultech.timoproject.memberAccount.service.MemberAccountService;
-    import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
-    import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+    import com.tools.seoultech.timoproject.memberAccount.service.MemberService;
+    import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
     import jakarta.persistence.EntityNotFoundException;
     import lombok.RequiredArgsConstructor;
     import org.springframework.stereotype.Service;
@@ -16,18 +16,18 @@
 
     @Service
     @RequiredArgsConstructor
-    public class MemberAccountServiceImpl implements MemberAccountService {
+    public class MemberServiceImpl implements MemberService {
 
-        private final MemberAccountRepository memberAccountRepository;
+        private final MemberRepository memberRepository;
 
         @Override
-        public MemberAccount getById(Long memberId) {
-            return memberAccountRepository.findById(memberId).
+        public Member getById(Long memberId) {
+            return memberRepository.findById(memberId).
                     orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + memberId));
         }
 
         public boolean checkUsername(String username) {
-            return memberAccountRepository.existsByUsername(username);
+            return memberRepository.existsByUsername(username);
         }
 
         @Override
@@ -43,8 +43,8 @@
 
         @Transactional
         @Override
-        public MemberAccount updateAccountInfo(Long memberId, UpdateMemberInfoRequest request) {
-            MemberAccount member = getById(memberId);
+        public Member updateAccountInfo(Long memberId, UpdateMemberInfoRequest request) {
+            Member member = getById(memberId);
 
             // 1) 닉네임 중복 체크
             if (checkUsername(request.username())) {
@@ -61,10 +61,10 @@
 
         @Override
         @Transactional
-        public MemberAccount updateRiotAccount(Long memberId, String puuid, String playerName, String playerTag, String profileIconUrl) {
-            MemberAccount member = getById(memberId);
+        public Member updateRiotAccount(Long memberId, String puuid, String playerName, String playerTag, String profileIconUrl) {
+            Member member = getById(memberId);
             // 중복된 소환사 puuid 존재 여부 체크
-            if (puuid != null && memberAccountRepository.existsByRiotAccount_PuuidAndMemberIdNot(puuid, memberId)) {
+            if (puuid != null && memberRepository.existsByRiotAccount_PuuidAndMemberIdNot(puuid, memberId)) {
                 throw new BusinessException(ErrorCode.ALREADY_USED_RIOT_ACCOUNT);
             }
             member.updateRiotAccount(puuid, playerName, playerTag, profileIconUrl);
@@ -74,8 +74,8 @@
 
         @Transactional
         @Override
-        public MemberAccount updateUsername(Long memberId, String username) {
-            MemberAccount member = getById(memberId);
+        public Member updateUsername(Long memberId, String username) {
+            Member member = getById(memberId);
             if(checkUsername(username)) {
                 throw new BusinessException(ErrorCode.ALREADY_USED_USERNAME);
             }
@@ -86,10 +86,10 @@
 
         @Transactional
         @Override
-        public MemberAccount updateUniv(Long memberId, UnivRequestDTO univ) {
-            MemberAccount member = getById(memberId);
+        public Member updateUniv(Long memberId, UnivRequestDTO univ) {
+            Member member = getById(memberId);
 
-            if (univ.univEmail() != null && memberAccountRepository.existsByCertifiedUnivInfo_UnivCertifiedEmail(univ.univEmail())) {
+            if (univ.univEmail() != null && memberRepository.existsByCertifiedUnivInfo_UnivCertifiedEmail(univ.univEmail())) {
                 throw new BusinessException(ErrorCode.ALREADY_USED_UNIV_ACCOUNT);
             }
 

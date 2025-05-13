@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.chat.domain;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class ChatRoomMember {
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
-    private MemberAccount member;
+    private Member member;
 
     private int unreadCount;
 
@@ -43,7 +43,7 @@ public class ChatRoomMember {
         this.lastReadMessageId = lastReadMessageId;
     }
 
-    public static ChatRoomMember createChatRoomMember(ChatRoom chatRoom, MemberAccount member) {
+    public static ChatRoomMember createChatRoomMember(ChatRoom chatRoom, Member member) {
         ChatRoomMember chatRoomMember = new ChatRoomMember();
         chatRoomMember.chatRoom = chatRoom;
         chatRoomMember.member = member;

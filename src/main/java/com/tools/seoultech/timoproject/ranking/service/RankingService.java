@@ -2,7 +2,7 @@ package com.tools.seoultech.timoproject.ranking.service;
 
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.BusinessException;
-import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
+import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
 import com.tools.seoultech.timoproject.ranking.RankingInfo;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class RankingService {
     private final RankingInfoRepository rankingInfoRepository;
-    private final MemberAccountRepository memberAccountRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public void updateRankingInfo(Long memberId, RankingUpdateRequestDto dto) {
         RankingInfo entity = rankingInfoRepository.findByMemberAccountMemberId(memberId)
                 .orElseGet(() -> {
                     RankingInfo newEntity = RankingInfo.builder()
-                            .memberAccount(memberAccountRepository.findById(memberId)
+                            .member(memberRepository.findById(memberId)
                                     .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND)))
                             .build();
                     return rankingInfoRepository.save(newEntity);
@@ -31,7 +31,7 @@ public class RankingService {
         entity.updateFrom(dto);
 
         if (dto.department() != null) {
-            entity.getMemberAccount()
+            entity.getMember()
                     .getCertifiedUnivInfo()
                     .updateDepartment(dto.department());
         }

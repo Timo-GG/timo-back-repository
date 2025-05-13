@@ -4,7 +4,7 @@ import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentAttitude;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentConversation;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentTalent;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,11 +24,11 @@ public class Review extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviewer_id")
-    private MemberAccount reviewer;
+    private Member reviewer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviewee_id")
-    private MemberAccount reviewee;
+    private Member reviewee;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -6,10 +6,10 @@ import com.tools.seoultech.timoproject.auth.dto.OAuthLoginParams;
 import com.tools.seoultech.timoproject.auth.jwt.JwtProvider;
 import com.tools.seoultech.timoproject.auth.jwt.TokenCollection;
 import com.tools.seoultech.timoproject.auth.jwt.TokenInfo;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.enumType.Role;
-import com.tools.seoultech.timoproject.memberAccount.service.MemberAccountService;
-import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.service.MemberService;
+import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OAuthLoginService {
 
-    private final MemberAccountRepository memberAccountRepository;
-    private final MemberAccountService memberAccountService;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final RequestOAuthInfoService requestOAuthInfoService;
     private final JwtProvider jwtProvider;
 
@@ -34,9 +34,9 @@ public class OAuthLoginService {
         }
 
         // 기존 회원이면 false, 신규 회원이면 true를 반환하기 위한 플래그
-        Optional<MemberAccount> optionalMember = memberAccountRepository.findByEmail(oAuthInfoResponse.getEmail());
+        Optional<Member> optionalMember = memberRepository.findByEmail(oAuthInfoResponse.getEmail());
         boolean isNewUser = optionalMember.isEmpty();
-        MemberAccount member = optionalMember.orElseGet(() -> createNewMember(oAuthInfoResponse));
+        Member member = optionalMember.orElseGet(() -> createNewMember(oAuthInfoResponse));
         log.info("isNewUser: " + isNewUser);
 
 
@@ -49,13 +49,13 @@ public class OAuthLoginService {
                 .build();
     }
 
-    private MemberAccount createNewMember(OAuthInfoResponse oAuthInfoResponse) {
-        MemberAccount member = MemberAccount.builder()
+    private Member createNewMember(OAuthInfoResponse oAuthInfoResponse) {
+        Member member = Member.builder()
                 .email(oAuthInfoResponse.getEmail())
-                .username(memberAccountService.randomCreateUsername())
+                .username(memberService.randomCreateUsername())
                 .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
                 .role(Role.MEMBER)
                 .build();
-        return memberAccountRepository.save(member);
+        return memberRepository.save(member);
     }
 }
