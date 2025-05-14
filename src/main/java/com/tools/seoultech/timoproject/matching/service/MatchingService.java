@@ -41,7 +41,7 @@ public class MatchingService {
 
         RedisUser redisRequestor = userService.saveColosseumUser(matchingDto.colosseumRequestorDto());
 
-        if(redisBoard.getMatchingCategory() != MatchingCategory.COLOSSEUM){
+        if(redisBoard.getMatchingCategory() != MatchingCategory.SCRIM){
             throw new GeneralException("Board와 User의 매칭 카테고리가 일치하지 않습니다.");
         }
         RedisMyPage redisMyPage =  myPageMapper.toRedisMyPage(redisBoard, redisRequestor);

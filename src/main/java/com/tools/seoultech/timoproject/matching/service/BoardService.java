@@ -77,7 +77,7 @@ public class BoardService {
      */
     public List<BoardDTO.ResponseColosseum> getAllColosseumBoards() {
         return redisBoardRepository
-                .findAllByMatchingCategory(MatchingCategory.COLOSSEUM)
+                .findAllByMatchingCategory(MatchingCategory.SCRIM)
                 .stream()
                 .map(b -> boardMapper.toResponseColosseum((RedisBoard.Colosseum) b))
                 .toList();
@@ -113,6 +113,6 @@ public class BoardService {
      */
     public void deleteAllColosseumBoards() {
         redisBoardRepository.deleteAll(redisBoardRepository
-                .findAllByMatchingCategory(MatchingCategory.COLOSSEUM));
+                .findAllByMatchingCategory(MatchingCategory.SCRIM));
     }
 }
