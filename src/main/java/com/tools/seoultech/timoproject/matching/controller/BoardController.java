@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.matching.controller;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
 import com.tools.seoultech.timoproject.matching.service.BoardService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.tools.seoultech.timoproject;
 
-import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Gender;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Gender;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.ranking.facade.RankingFacadeImpl;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
 import com.tools.seoultech.timoproject.riot.facade.RiotFacade;

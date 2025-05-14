@@ -1,9 +1,6 @@
 package com.tools.seoultech.timoproject.matching.service.mapper;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

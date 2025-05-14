@@ -1,8 +1,6 @@
 package com.tools.seoultech.timoproject.matching.service;
 
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserRepository;
 import com.tools.seoultech.timoproject.matching.service.mapper.UserMapper;
 import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
-package com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType;
+package com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType;
 
-import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayStyle;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayStyle;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

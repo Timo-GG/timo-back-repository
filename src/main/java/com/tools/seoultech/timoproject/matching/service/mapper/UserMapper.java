@@ -2,10 +2,8 @@ package com.tools.seoultech.timoproject.matching.service.mapper;
 
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUserRepository;
-import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -15,10 +13,10 @@ public interface UserMapper {
 
 
     @Mapping(target = "memberAccount", source = "requestDtoDuo.memberId", qualifiedByName = "findMemberAccount")
-    RedisUser.Duo toRedisDuo(UserDTO.RequestDuo requestDtoDuo, @Context MemberAccountRepository memberAccountRepository);
+    RedisUser.Duo toRedisDuo(UserDTO.RequestDuo requestDtoDuo, @Context MemberRepository memberRepository);
 
     @Mapping(target = "memberAccount", source = "requestDtoColosseum.memberId", qualifiedByName = "findMemberAccount")
-    RedisUser.Colosseum toRedisColosseum(UserDTO.RequestColosseum requestDtoColosseum, @Context MemberAccountRepository memberAccountRepository);
+    RedisUser.Colosseum toRedisColosseum(UserDTO.RequestColosseum requestDtoColosseum, @Context MemberRepository memberRepository);
 
     @Mapping(target = "userUUID", source = "uuid")
     UserDTO.ResponseDuo toResponseDuo(RedisUser.Duo redisDuo);
@@ -27,8 +25,8 @@ public interface UserMapper {
     UserDTO.ResponseColosseum toResponseColosseum(RedisUser.Colosseum redisColosseum);
 
     @Named(value = "findMemberAccount")
-    default MemberAccount findMemberAccount(Long memberId, @Context MemberAccountRepository memberAccountRepository){
-        return memberAccountRepository.findById(memberId)
+    default Member findMemberAccount(Long memberId, @Context MemberRepository memberRepository){
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new GeneralException("해당 memberId에 해당하는 사용자가 없습니다."));
     }
 }

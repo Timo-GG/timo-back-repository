@@ -1,6 +1,5 @@
 package com.tools.seoultech.timoproject.global.annotation.swagger;
 
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

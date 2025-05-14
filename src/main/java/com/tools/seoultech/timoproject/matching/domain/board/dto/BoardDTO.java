@@ -1,15 +1,17 @@
 package com.tools.seoultech.timoproject.matching.domain.board.dto;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.DuoInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
+import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -19,43 +21,48 @@ public abstract class BoardDTO {
 
     @Builder
     public record RequestSearch(
-            Long memberAccountId,
+            Long memberId,
             MatchingCategory matchingCategory,
             PlayPosition position
     ) implements Request {}
 
     @Builder
     public record RequestDuo(
-            UserDTO.RequestDuo requestUserDto,
+        // NOTE: UserDTO 필드 : RedisUser
+            Long memberId,
+            UserInfo userInfo,
+            DuoInfo duoInfo,
+        // NOTE: 나머지 DuoBoard 필드
             String memo,
             DuoMapCode mapCode
     ) implements Request {}
 
     @Builder
     public record RequestColosseum(
-        UserDTO.RequestColosseum requestUserDto,
-        String memo,
-        ColosseumMapCode mapCode,
-        Integer headCount
+        // NOTE: UserDTO 필드 : RedisUser
+            Long memberId,
+            List<RiotAccount> partyMemberRiotAccountList,
+        // NOTE: 나머지 ColosseumBoard 필드
+            String memo,
+            ColosseumMapCode mapCode,
+            Integer headCount
     )implements Request{}
 
     @Builder
     public record ResponseDuo(
             UUID boardUUID,
-            MatchingCategory matchingCategory,
-            UserDTO.ResponseDuo responseUserDto,
             String memo,
-            DuoMapCode mapCode
+            DuoMapCode mapCode,
+            UserDTO.ResponseDuo responseUserDto
     ) implements Response {}
 
     @Builder
     public record ResponseColosseum(
             UUID boardUUID,
-            MatchingCategory matchingCategory,
-            UserDTO.ResponseColosseum responseUserDto,
             String memo,
             ColosseumMapCode mapCode,
-            Integer headCount
+            Integer headCount,
+            UserDTO.ResponseColosseum responseUserDto
     ) implements Response {}
 
     // 인터페이스.

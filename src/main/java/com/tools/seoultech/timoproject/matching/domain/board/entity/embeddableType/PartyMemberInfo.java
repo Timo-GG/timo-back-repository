@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.matching.domain.user.entity.embeddableType;
+package com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType;
 
 import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
 import jakarta.persistence.Embeddable;
