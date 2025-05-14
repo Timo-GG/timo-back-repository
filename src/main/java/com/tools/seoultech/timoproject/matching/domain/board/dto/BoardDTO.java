@@ -1,9 +1,9 @@
 package com.tools.seoultech.timoproject.matching.domain.board.dto;
 
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.DuoInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
@@ -28,41 +28,40 @@ public abstract class BoardDTO {
 
     @Builder
     public record RequestDuo(
-        // NOTE: UserDTO 필드 : RedisUser
             Long memberId,
-            UserInfo userInfo,
-            DuoInfo duoInfo,
-        // NOTE: 나머지 DuoBoard 필드
+            DuoMapCode mapCode,
             String memo,
-            DuoMapCode mapCode
+            UserInfo userInfo,
+            DuoInfo duoInfo
     ) implements Request {}
 
     @Builder
     public record RequestColosseum(
-        // NOTE: UserDTO 필드 : RedisUser
             Long memberId,
-            List<RiotAccount> partyMemberRiotAccountList,
-        // NOTE: 나머지 ColosseumBoard 필드
-            String memo,
             ColosseumMapCode mapCode,
-            Integer headCount
+            String memo,
+            Integer headCount,
+            List<RiotAccount> partyMemberRiotAccountList
     )implements Request{}
 
     @Builder
     public record ResponseDuo(
             UUID boardUUID,
-            String memo,
             DuoMapCode mapCode,
-            UserDTO.ResponseDuo responseUserDto
-    ) implements Response {}
+            String memo,
+            UserInfo userInfo,
+            DuoInfo duoInfo,
+            CompactPlayerHistory compactPlayerHistory
+            ) implements Response {}
 
     @Builder
     public record ResponseColosseum(
             UUID boardUUID,
-            String memo,
             ColosseumMapCode mapCode,
+            String memo,
             Integer headCount,
-            UserDTO.ResponseColosseum responseUserDto
+            List<RiotAccount> partyInfo,
+            CompactPlayerHistory compactPlayerHistory
     ) implements Response {}
 
     // 인터페이스.
