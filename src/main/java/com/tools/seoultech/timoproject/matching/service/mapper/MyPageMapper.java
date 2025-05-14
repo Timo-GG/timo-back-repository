@@ -3,7 +3,6 @@ package com.tools.seoultech.timoproject.matching.service.mapper;
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
