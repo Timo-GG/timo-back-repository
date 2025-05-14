@@ -14,17 +14,15 @@ import java.util.UUID;
 
 public class MatchingDTO {
     // NOTE: 시스템 매칭 로직 DTO.
-    @Getter
     public record RequestDuo(
-            UUID myPagedUUID,
+            UUID boardUUID,
             Long requestorId,
             UserInfo userInfo,
             DuoInfo duoInfo
     ){}
 
-    @Getter
-    public record RequestColosseum(
-            UUID myPageUUID,
+    public record RequestScrim(
+            UUID boardUUID,
             Long requestorId,
             List<RiotAccount> partyInfo
     ){}
@@ -37,7 +35,7 @@ public class MatchingDTO {
     ){}
 
     @Builder
-    public record ResponseColosseum(
+    public record ResponseScrim(
             UUID myPageUUID,
             WrappedScrimData acceptor,
             WrappedScrimData requestor

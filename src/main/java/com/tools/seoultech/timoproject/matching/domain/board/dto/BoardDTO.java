@@ -36,12 +36,12 @@ public abstract class BoardDTO {
     ) implements Request {}
 
     @Builder
-    public record RequestColosseum(
+    public record RequestScrim(
             Long memberId,
             ColosseumMapCode mapCode,
             String memo,
             Integer headCount,
-            List<RiotAccount> partyMemberRiotAccountList
+            List<RiotAccount> partyInfo
     )implements Request{}
 
     @Builder
@@ -55,7 +55,7 @@ public abstract class BoardDTO {
             ) implements Response {}
 
     @Builder
-    public record ResponseColosseum(
+    public record ResponseScrim(
             UUID boardUUID,
             ColosseumMapCode mapCode,
             String memo,

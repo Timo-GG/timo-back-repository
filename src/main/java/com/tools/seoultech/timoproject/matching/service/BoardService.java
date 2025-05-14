@@ -32,12 +32,12 @@ public class BoardService {
     /**
      * Colosseum 게시판에 게시글을 저장
      */
-    public RedisBoard.Colosseum saveColosseumBoard(BoardDTO.RequestColosseum requestColosseum) {
+    public RedisBoard.Colosseum saveColosseumBoard(BoardDTO.RequestScrim requestScrim) {
         // 사용자 정보 저장 및 UUID 추출
-        RedisUser.Colosseum savedUser = userService.saveColosseumUser(requestColosseum.requestUserDto());
+        RedisUser.Colosseum savedUser = userService.saveColosseumUser(requestScrim.requestUserDto());
 
         // 게시글 DTO → RedisBoard 엔티티 변환
-        RedisBoard.Colosseum redisBoard = boardMapper.toRedisColosseum(requestColosseum, savedUser);
+        RedisBoard.Colosseum redisBoard = boardMapper.toRedisColosseum(requestScrim, savedUser);
         return redisBoardRepository.save(redisBoard);
     }
 
@@ -54,7 +54,7 @@ public class BoardService {
     /**
      * Redis에서 Colosseum 게시판 게시글 조회
      */
-    public BoardDTO.ResponseColosseum getColosseumBoard(UUID boardUUID) throws Exception {
+    public BoardDTO.ResponseScrim getScrimBoard(UUID boardUUID) throws Exception {
         RedisBoard.Colosseum redisBoard = (RedisBoard.Colosseum) redisBoardRepository
                 .findById(boardUUID)
                 .orElseThrow(() -> new Exception("Board not found: " + boardUUID));
@@ -75,7 +75,7 @@ public class BoardService {
     /**
      * 모든 Colosseum 게시글 조회
      */
-    public List<BoardDTO.ResponseColosseum> getAllColosseumBoards() {
+    public List<BoardDTO.ResponseScrim> getAllColosseumBoards() {
         return redisBoardRepository
                 .findAllByMatchingCategory(MatchingCategory.SCRIM)
                 .stream()

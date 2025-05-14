@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.matching.domain.board.entity.repository.projections;
+package com.tools.seoultech.timoproject.matching.domain.board.repository.projections;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.*;
@@ -7,6 +7,8 @@ import java.util.UUID;
 
 public interface DuoBoardOnly {
     UUID getBoardUUID();
+    Long getMemberId();
+
     DuoMapCode getDuoMapCode();
     String getMapCode();
     CompactPlayerHistory getCompactPlayerHistory();

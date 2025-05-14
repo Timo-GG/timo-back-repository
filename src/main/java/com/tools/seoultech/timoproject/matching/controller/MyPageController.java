@@ -61,7 +61,7 @@ public class MyPageController {
 
     @PostMapping("/myPage/colosseum")
     @RedisOperation
-    public ResponseEntity<APIDataResponse<RedisMyPage>> createColosseumMyPage(@RequestBody MatchingDTO.RequestColosseum matchingColosseum) throws Exception{
+    public ResponseEntity<APIDataResponse<RedisMyPage>> createColosseumMyPage(@RequestBody MatchingDTO.RequestScrim matchingColosseum) throws Exception{
         System.err.println("MyPage Controller @Post");
         RedisMyPage testDto = matchingService.saveColosseumMatchingToMyPage(matchingColosseum);
         return ResponseEntity

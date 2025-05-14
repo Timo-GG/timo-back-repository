@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
                                 @Content(
                                         mediaType = "application/json",
                                         schema = @Schema(
-                                                oneOf = {BoardDTO.ResponseDuo.class, BoardDTO.ResponseColosseum.class}, // 반환되는 타입을 RedisMyPage로 설정
+                                                oneOf = {BoardDTO.ResponseDuo.class, BoardDTO.ResponseScrim.class}, // 반환되는 타입을 RedisMyPage로 설정
                                                 discriminatorProperty = "matchingCategory" // JsonTypeInfo 없어서 작동 X,matchingCategory로 구분
                                         )
                                 ),

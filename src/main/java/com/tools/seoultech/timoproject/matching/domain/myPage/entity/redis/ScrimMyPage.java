@@ -1,6 +1,5 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis;
 
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import lombok.AllArgsConstructor;

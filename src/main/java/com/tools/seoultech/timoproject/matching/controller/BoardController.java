@@ -34,8 +34,8 @@ public class BoardController {
      * Colosseum 게시판에 게시글을 추가
      */
     @PostMapping("/colosseum")
-    public ResponseEntity<RedisBoard.Colosseum> createColosseumBoard(@RequestBody BoardDTO.RequestColosseum requestColosseum) {
-        RedisBoard.Colosseum savedBoard = boardService.saveColosseumBoard(requestColosseum);
+    public ResponseEntity<RedisBoard.Colosseum> createColosseumBoard(@RequestBody BoardDTO.RequestScrim requestScrim) {
+        RedisBoard.Colosseum savedBoard = boardService.saveColosseumBoard(requestScrim);
         return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
     }
 
@@ -52,8 +52,8 @@ public class BoardController {
      * 모든 Colosseum 게시글 조회
      */
     @GetMapping("/colosseum")
-    public ResponseEntity<List<BoardDTO.ResponseColosseum>> getAllColosseumBoards() {
-        List<BoardDTO.ResponseColosseum> boards = boardService.getAllColosseumBoards();
+    public ResponseEntity<List<BoardDTO.ResponseScrim>> getAllColosseumBoards() {
+        List<BoardDTO.ResponseScrim> boards = boardService.getAllColosseumBoards();
         return new ResponseEntity<>(boards, HttpStatus.OK);
     }
 
@@ -74,9 +74,9 @@ public class BoardController {
      * 특정 UUID의 Colosseum 게시글 조회
      */
     @GetMapping("/colosseum/{boardUUID}")
-    public ResponseEntity<BoardDTO.ResponseColosseum> getColosseumBoard(@PathVariable UUID boardUUID) {
+    public ResponseEntity<BoardDTO.ResponseScrim> getColosseumBoard(@PathVariable UUID boardUUID) {
         try {
-            BoardDTO.ResponseColosseum board = boardService.getColosseumBoard(boardUUID);
+            BoardDTO.ResponseScrim board = boardService.getScrimBoard(boardUUID);
             return new ResponseEntity<>(board, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

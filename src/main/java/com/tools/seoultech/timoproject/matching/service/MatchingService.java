@@ -35,7 +35,7 @@ public class MatchingService {
         return redisMyPageRepository.save(redisMyPage); // FIXME: Response 대체.
     }
     @Transactional
-    public RedisMyPage saveColosseumMatchingToMyPage(MatchingDTO.RequestColosseum matchingDto) {
+    public RedisMyPage saveColosseumMatchingToMyPage(MatchingDTO.RequestScrim matchingDto) {
         RedisBoard redisBoard = redisBoardRepository.findById(matchingDto.boardUUID())
                 .orElseThrow(() -> new GeneralException("Board UUID에 해당하는 Redis 엔티티가 존재하지 않습니다."));
 

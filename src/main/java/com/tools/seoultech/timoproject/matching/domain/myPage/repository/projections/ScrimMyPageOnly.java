@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.matching.domain.myPage.entity.repository.projections;
+package com.tools.seoultech.timoproject.matching.domain.myPage.repository.projections;
 
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;

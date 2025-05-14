@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.matching.domain.board.entity.repository;
+package com.tools.seoultech.timoproject.matching.domain.board.repository;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.DuoBoard;
 import org.springframework.data.jpa.repository.JpaRepository;

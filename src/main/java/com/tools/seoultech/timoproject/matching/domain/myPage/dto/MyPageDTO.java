@@ -11,7 +11,6 @@ import java.util.UUID;
 
 public abstract class MyPageDTO {
     // Note: 조회용
-    @Getter
     public record RequestSearch(
             UUID myPageUUID,
             MatchingCategory matchingCategory,
@@ -24,7 +23,6 @@ public abstract class MyPageDTO {
             Integer sizeOfDuo,
             Integer sizeOfScrim,
             List<MatchingDTO.ResponseDuo> duoList,
-            List<MatchingDTO.ResponseColosseum> scrimList
+            List<MatchingDTO.ResponseScrim> scrimList
     ){}
-
 }
