@@ -65,16 +65,11 @@ public class RankingRedisService {
 		log.info("유저 정보 업데이트 완료: memberId={}", memberId);
 	}
 
-	public List<RedisRankingInfo> getTopRankingsByUniversity(String university, int limit) {
-		return getTopRankings(buildUniversityKey(university), limit);
-	}
+	public List<RedisRankingInfo> getTopRankings(String key, int offset, int limit) {
+		long start = offset;
+		long end = offset + limit - 1;
 
-	public List<RedisRankingInfo> getTopRankings(int limit) {
-		return getTopRankings(RANKING_KEY, limit);
-	}
-
-	private List<RedisRankingInfo> getTopRankings(String key, int limit) {
-		Set<Object> topMembers = redisTemplate.opsForZSet().reverseRange(key, 0, limit - 1);
+		Set<Object> topMembers = redisTemplate.opsForZSet().reverseRange(key, start, end);
 
 		if (topMembers == null || topMembers.isEmpty()) {
 			return Collections.emptyList();
@@ -85,7 +80,16 @@ public class RankingRedisService {
 			rankingInfoRedisRepository.findById(memberId.toString())
 					.ifPresent(result::add);
 		}
+
 		return result;
+	}
+
+	public List<RedisRankingInfo> getTopRankings(int offset, int limit) {
+		return getTopRankings(RANKING_KEY, offset, limit);
+	}
+
+	public List<RedisRankingInfo> getTopRankingsByUniversity(String university, int offset, int limit) {
+		return getTopRankings(buildUniversityKey(university), offset, limit);
 	}
 
 	public RedisRankingInfo getMyRankingInfo(Long memberId) {
@@ -127,5 +131,14 @@ public class RankingRedisService {
 			log.warn("대학교 키 인코딩 실패, 원본 사용: {}", university, e);
 			return "lol:ranking:univ:" + university.trim();
 		}
+	}
+
+	public long getTotalRankingCount() {
+		return Optional.ofNullable(redisTemplate.opsForZSet().size(RANKING_KEY)).orElse(0L);
+	}
+
+	public long getTotalRankingCountByUniversity(String university) {
+		String key = buildUniversityKey(university);
+		return Optional.ofNullable(redisTemplate.opsForZSet().size(key)).orElse(0L);
 	}
 }

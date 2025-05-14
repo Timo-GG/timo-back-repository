@@ -10,7 +10,9 @@ public interface RankingFacade {
     void updateRankingInfo(Long memberId, RankingUpdateRequestDto rankingInfo);
     void flushAllRedisRankings();
     void deleteRanking(Long memberId);
-    List<RedisRankingInfo> getTopRankings(int limit);
-    List<RedisRankingInfo> getTopRankingsByUniversity(String university, int limit);
+    List<RedisRankingInfo> getTopRankings(int offset, int limit);
+    List<RedisRankingInfo> getTopRankingsByUniversity(String university, int offset, int limit);
+    long getTotalRankingCount();
+    long getTotalRankingCountByUniversity(String university);
     RedisRankingInfo getMyRankingInfo(Long memberId);
 }
