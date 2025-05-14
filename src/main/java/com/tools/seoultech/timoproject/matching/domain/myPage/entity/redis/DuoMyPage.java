@@ -24,16 +24,16 @@ public class DuoMyPage {
     @Id private final UUID myPageUUID;
 
     /** Acceptor Field */
-    private UserInfo acceptor_UserInfo;
-    private DuoInfo acceptor_DuoInfo;
-    private CompactPlayerHistory acceptor_CompactPlayerHistory;
+    private UserInfo acceptorUserInfo;
+    private DuoInfo acceptorDuoInfo;
+    private CompactPlayerHistory acceptorCompactPlayerHistory;
 
     private List<String> most3Champ;
     private List<MatchSummaryDTO> last10Match;
 
     /** Requestor Feild */
-    private UserInfo requestor_UserInfo;
-    private DuoInfo requestor_DuoInfo;
+    private UserInfo requestorUserInfo;
+    private DuoInfo requestorDuoInfo;
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final MatchingCategory matchingCategory;
@@ -44,3 +44,7 @@ public class DuoMyPage {
     private final UUID boardUUID;
 }
 
+interface getData {
+    UUID getMyPageUUID();
+
+}

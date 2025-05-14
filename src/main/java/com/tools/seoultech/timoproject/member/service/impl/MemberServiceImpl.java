@@ -1,12 +1,12 @@
-    package com.tools.seoultech.timoproject.memberAccount.service.impl;
+    package com.tools.seoultech.timoproject.member.service.impl;
 
     import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
     import com.tools.seoultech.timoproject.global.constant.ErrorCode;
     import com.tools.seoultech.timoproject.global.exception.BusinessException;
-    import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
-    import com.tools.seoultech.timoproject.memberAccount.dto.UpdateMemberInfoRequest;
-    import com.tools.seoultech.timoproject.memberAccount.service.MemberService;
-    import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
+    import com.tools.seoultech.timoproject.member.domain.entity.Member;
+    import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
+    import com.tools.seoultech.timoproject.member.service.MemberService;
+    import com.tools.seoultech.timoproject.member.MemberRepository;
     import jakarta.persistence.EntityNotFoundException;
     import lombok.RequiredArgsConstructor;
     import org.springframework.stereotype.Service;

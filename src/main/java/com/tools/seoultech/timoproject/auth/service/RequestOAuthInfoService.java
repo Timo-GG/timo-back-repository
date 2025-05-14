@@ -3,7 +3,7 @@ package com.tools.seoultech.timoproject.auth.service;
 import com.tools.seoultech.timoproject.auth.client.OAuthApiClient;
 import com.tools.seoultech.timoproject.auth.dto.OAuthInfoResponse;
 import com.tools.seoultech.timoproject.auth.dto.OAuthLoginParams;
-import com.tools.seoultech.timoproject.memberAccount.domain.OAuthProvider;
+import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

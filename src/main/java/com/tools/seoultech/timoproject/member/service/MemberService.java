@@ -1,9 +1,9 @@
-package com.tools.seoultech.timoproject.memberAccount.service;
+package com.tools.seoultech.timoproject.member.service;
 
 
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
-import com.tools.seoultech.timoproject.memberAccount.dto.UpdateMemberInfoRequest;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 
 public interface MemberService {
 

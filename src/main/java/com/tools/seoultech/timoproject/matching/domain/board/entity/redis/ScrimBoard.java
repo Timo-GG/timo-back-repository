@@ -4,15 +4,11 @@ package com.tools.seoultech.timoproject.matching.domain.board.entity.redis;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
-import com.tools.seoultech.timoproject.riot.dto.MatchSummaryDTO;
-import com.tools.seoultech.timoproject.riot.dto.RankInfoDto;
-import lombok.AccessLevel;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Reference;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 

@@ -2,7 +2,7 @@ package com.tools.seoultech.timoproject.ranking.service;
 
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.BusinessException;
-import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
+import com.tools.seoultech.timoproject.member.MemberRepository;
 import com.tools.seoultech.timoproject.ranking.RankingInfo;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
 import lombok.RequiredArgsConstructor;

@@ -4,7 +4,7 @@ import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentAttitude;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentConversation;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentTalent;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

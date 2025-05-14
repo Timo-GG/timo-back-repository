@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.memberAccount.controller;
+package com.tools.seoultech.timoproject.member.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

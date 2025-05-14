@@ -1,12 +1,12 @@
-package com.tools.seoultech.timoproject.memberAccount.controller;
+package com.tools.seoultech.timoproject.member.controller;
 
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
-import com.tools.seoultech.timoproject.memberAccount.dto.AccountDto;
-import com.tools.seoultech.timoproject.memberAccount.dto.UpdateMemberInfoRequest;
-import com.tools.seoultech.timoproject.memberAccount.facade.MemberFacade;
+import com.tools.seoultech.timoproject.member.dto.AccountDto;
+import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
+import com.tools.seoultech.timoproject.member.facade.MemberFacade;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
-import com.tools.seoultech.timoproject.memberAccount.dto.MemberDto;
+import com.tools.seoultech.timoproject.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

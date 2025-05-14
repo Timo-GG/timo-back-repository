@@ -2,8 +2,8 @@ package com.tools.seoultech.timoproject.ranking.service;
 
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.BusinessException;
-import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.MemberRepository;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.ranking.RankingInfoRedisRepository;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
 import com.tools.seoultech.timoproject.ranking.dto.RedisRankingInfo;

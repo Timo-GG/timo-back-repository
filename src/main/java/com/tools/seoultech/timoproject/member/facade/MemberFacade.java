@@ -1,9 +1,9 @@
-package com.tools.seoultech.timoproject.memberAccount.facade;
+package com.tools.seoultech.timoproject.member.facade;
 
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
-import com.tools.seoultech.timoproject.memberAccount.dto.AccountDto;
-import com.tools.seoultech.timoproject.memberAccount.dto.UpdateMemberInfoRequest;
-import com.tools.seoultech.timoproject.memberAccount.dto.MemberDto;
+import com.tools.seoultech.timoproject.member.dto.AccountDto;
+import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
+import com.tools.seoultech.timoproject.member.dto.MemberDto;
 
 public interface MemberFacade {
 

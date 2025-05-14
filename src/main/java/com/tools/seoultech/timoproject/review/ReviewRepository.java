@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.review;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

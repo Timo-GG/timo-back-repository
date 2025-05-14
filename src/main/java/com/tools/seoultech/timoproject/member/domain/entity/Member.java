@@ -1,9 +1,9 @@
-package com.tools.seoultech.timoproject.memberAccount.domain.entity;
+package com.tools.seoultech.timoproject.member.domain.entity;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.OAuthProvider;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.enumType.Role;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.CertifiedUnivInfo;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
+import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
+import com.tools.seoultech.timoproject.member.domain.entity.enumType.Role;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.CertifiedUnivInfo;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import com.tools.seoultech.timoproject.ranking.RankingInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -42,7 +42,7 @@ public class Member {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @OneToOne(mappedBy = "memberAccount", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private RankingInfo rankingInfo;
 
     public void updateUsername(String username) {

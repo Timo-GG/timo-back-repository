@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Gender;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;

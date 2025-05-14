@@ -7,7 +7,7 @@ import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.DuoInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -54,7 +54,7 @@ public class SwaggerConfig {
         String[] paths = {"/api/v1/**"};
         String[] packagesToScan = {
                 "com.tools.seoultech.timoproject.riot",
-                "com.tools.seoultech.timoproject.memberAccount",
+                "com.tools.seoultech.timoproject.member",
                 "com.tools.seoultech.timoproject.matching.controller",
                 "com.tools.seoultech.timoproject.ranking",
                 "com.tools.seoultech.timoproject.auth",

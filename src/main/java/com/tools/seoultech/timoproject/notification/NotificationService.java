@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import com.tools.seoultech.timoproject.memberAccount.service.MemberService;
+import com.tools.seoultech.timoproject.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 

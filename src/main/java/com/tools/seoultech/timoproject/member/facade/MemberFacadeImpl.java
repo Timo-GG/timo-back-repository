@@ -1,12 +1,12 @@
-package com.tools.seoultech.timoproject.memberAccount.facade;
+package com.tools.seoultech.timoproject.member.facade;
 
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
-import com.tools.seoultech.timoproject.memberAccount.dto.AccountDto;
-import com.tools.seoultech.timoproject.memberAccount.dto.UpdateMemberInfoRequest;
-import com.tools.seoultech.timoproject.memberAccount.service.MemberService;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.dto.AccountDto;
+import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
+import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
-import com.tools.seoultech.timoproject.memberAccount.dto.MemberDto;
+import com.tools.seoultech.timoproject.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

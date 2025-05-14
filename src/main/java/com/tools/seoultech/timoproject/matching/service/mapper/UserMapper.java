@@ -2,8 +2,8 @@ package com.tools.seoultech.timoproject.matching.service.mapper;
 
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
-import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.MemberRepository;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -12,10 +12,10 @@ public interface UserMapper {
     UserMapper Instance = Mappers.getMapper(UserMapper.class);
 
 
-    @Mapping(target = "memberAccount", source = "requestDtoDuo.memberId", qualifiedByName = "findMemberAccount")
+    @Mapping(target = "member", source = "requestDtoDuo.memberId", qualifiedByName = "findMemberAccount")
     RedisUser.Duo toRedisDuo(UserDTO.RequestDuo requestDtoDuo, @Context MemberRepository memberRepository);
 
-    @Mapping(target = "memberAccount", source = "requestDtoColosseum.memberId", qualifiedByName = "findMemberAccount")
+    @Mapping(target = "member", source = "requestDtoColosseum.memberId", qualifiedByName = "findMemberAccount")
     RedisUser.Colosseum toRedisColosseum(UserDTO.RequestColosseum requestDtoColosseum, @Context MemberRepository memberRepository);
 
     @Mapping(target = "userUUID", source = "uuid")

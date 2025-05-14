@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.memberAccount.dto;
+package com.tools.seoultech.timoproject.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,9 +1,9 @@
-    package com.tools.seoultech.timoproject.memberAccount.dto;
+    package com.tools.seoultech.timoproject.member.dto;
 
-    import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.CertifiedUnivInfo;
-    import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
-    import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
-    import com.tools.seoultech.timoproject.memberAccount.domain.entity.enumType.Role;
+    import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.CertifiedUnivInfo;
+    import com.tools.seoultech.timoproject.member.domain.entity.Member;
+    import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
+    import com.tools.seoultech.timoproject.member.domain.entity.enumType.Role;
 
     public record MemberDto(
             Long memberId,

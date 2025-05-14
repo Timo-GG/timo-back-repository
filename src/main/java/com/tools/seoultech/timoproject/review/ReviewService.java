@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.review;
-import com.tools.seoultech.timoproject.memberAccount.MemberRepository;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.MemberRepository;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
