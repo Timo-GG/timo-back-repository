@@ -4,8 +4,6 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableTy
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.DuoInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.riot.dto.MatchSummaryDTO;
-import com.tools.seoultech.timoproject.riot.dto.RankInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +11,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
-import java.util.List;
 import java.util.UUID;
 
 @RedisHash(value = "DuoMyPage", timeToLive = 15 * 60)
@@ -28,12 +25,10 @@ public class DuoMyPage {
     private DuoInfo acceptorDuoInfo;
     private CompactPlayerHistory acceptorCompactPlayerHistory;
 
-    private List<String> most3Champ;
-    private List<MatchSummaryDTO> last10Match;
-
     /** Requestor Feild */
     private UserInfo requestorUserInfo;
     private DuoInfo requestorDuoInfo;
+    private CompactPlayerHistory requestorCompactPlayerHistory;
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final MatchingCategory matchingCategory;
@@ -42,9 +37,4 @@ public class DuoMyPage {
 
     /** Redis 인스턴스 참조용 필드 */
     private final UUID boardUUID;
-}
-
-interface getData {
-    UUID getMyPageUUID();
-
 }

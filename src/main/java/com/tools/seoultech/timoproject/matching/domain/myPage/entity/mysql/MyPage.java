@@ -25,15 +25,4 @@ public class MyPage extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     MatchingStatus status;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private BaseBoard board;
-
-    @Transient
-    public BaseUser getAcceptor() {
-        return board.getUser();
-    }
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private BaseUser requestor;
 }
