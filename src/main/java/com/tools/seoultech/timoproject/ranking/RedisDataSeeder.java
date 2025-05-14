@@ -28,13 +28,14 @@ public class RedisDataSeeder {
      */
     public void seedAll() {
         List<Record> accounts = List.of(
-                new Record("BubdLM2BnNUArdnJgV7necWTPcEwNzOuRvUIR8_hf1so6fqanFExU5uVX5dnzCZD0dY3u82Bb6XDzw", "빌런노"),
-                new Record("KRck107g8bjdNl5Gijw2g-uY9AV1m2trhaSjl5OIMPeqQY-4FxhYQknrCkDul8MN21_aY1ew7TaDZQ", "WXD"),
-                new Record("HEhaF1ymbhZtaETj4xY5hXNT6hMu1RvwICvdey9o08Kjvmuyt0eYH5XwFMMSZhF6u54GZ5FJOdqP2g", "매력적인 닭"),
-                new Record("m3o0FUiBjjMmqX7-bMZFRzGewooBHhN6aj333bEGkXMuCyssOAvR56x07JyORW8Sv-8tq-M4vT9Mww", "도구야정신좀차려"),
-                new Record("7B9KnS5HSZOYoLN67yeVnnB65lgfCWe5DoTWMYMbWhtAsmX-sUu4pDYo-Yv-D_skyInq9WjTQQcyIg", "귀 염"),
-                new Record("eFLOP2cvyxtg9Ig3kF-0tlu8Ijo5HobweVSmZPWFrm_2GBFj72Rs5C19Qbz6H_mA1RouMlAsWLCnBA", "으댜다"),
-                new Record("0xCXf-g6dYIBAtfV_eJtfZSqX_gQtUmd5AxSAoohvaAXOP_jEELCBkwC3RpoB2tGNN4iKa8RLeH_g", "Cuzz")
+                new Record("_PKwQ67bodvzelczCj5fuTf2Z9kuTcAfbv4HMkqrkPZGds5byukttzJFh_j_q2ixAnNE1_76R_lwAA", "Grizzly"),
+                new Record("Pk7D_JYdzK75BDx-Z4v38LxzoE9ZabqEu2I0nUlcQ-hwZO6NLVni1h_xYPZiiOYs8xVESXHMFDWhUw", "젠레스존제로우"),
+                new Record("qMVH5avv7uIks_HsABEXNcu19y5PTU6wUZw4lNceovcgu5OoR3MHgffp5dz6HKzJNiRZaznHQ_SMbg", "화이팅가보자"),
+                new Record("RnNIWfIB7GzlUz0Ce3AfgId6KnfLngVoGFO3XanbjVdAAN9I734yX3M1GjU2K9YYO-Wy3lHs0cG21A", "상욱Ryu"),
+                new Record("VgmEzR-sBudWE0n5WFVkbWjNQ-LaguyVFG1nqUAQq1sgp-zZ5_kVueYCKIQE88Rc9wpKATVyotnlkQ", "gaubeo202"),
+                new Record("ek6sEt_WkYH_b8dmGIQ0BJ8bqFQLqSNY5VS45KUpX9It2lqNgVgy47AT1hZ1MPrg0iWqQij4oEQK8g", "델리델리델리빵"),
+                new Record("kj6WEamVjBIUvNQ9bDYntsIGWDZmVwO6pzWnuQ-6ooKggrESnctOHJDkK9JC8LYn7FAJ0J0BeXGDMg", "RlwjD"),
+                new Record("2dktmBwMUaHn7bQR6JsHbv6pk51eTPve50ngq_y-_JlWpX_-xkS9UohgQsEGi4MouEgNlEp-pJMZnQ", "라쿤99")
         );
 
         String[] universities = {
@@ -42,9 +43,9 @@ public class RedisDataSeeder {
                 "연세대학교",
                 "고려대학교",
                 "한양대학교",
-                "중앙대학교",
+                "서울과학기술대학교",
                 "동국대학교",
-                "홍익대학교"
+                "서울과학기술대학교",
         };
 
         for (int i = 0; i < accounts.size(); i++) {
@@ -77,5 +78,6 @@ public class RedisDataSeeder {
         log.info("✅ Redis seeding complete: {} accounts processed.", accounts.size());
     }
 
-    private record Record(String puuid, String gameName) {}
+    private record Record(String puuid, String gameName) {
+    }
 }

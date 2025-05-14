@@ -14,6 +14,14 @@ public interface UserMapper {
      */
 
     // 삭제: @Mapping(target = "uuid", ignore = true)
+    @Mapping(source = "riotAccount", target = "riotAccount")
+    @Mapping(source = "compactPlayerHistory", target = "compactPlayerHistory")
+    @Mapping(source = "memberId", target = "memberId")
+    @Mapping(source = "certifiedUnivInfo", target = "certifiedUnivInfo")
+    @Mapping(source = "gender", target = "gender")
+    @Mapping(source = "mbti", target = "mbti")
+    @Mapping(source = "userInfo", target = "userInfo")
+    @Mapping(source = "duoInfo", target = "duoInfo")
     RedisUser.Duo toRedisDuo(UserDTO.RequestDuo requestDtoDuo);
 
     // 삭제: @Mapping(target = "uuid", ignore = true)

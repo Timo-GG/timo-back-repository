@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/ranking")
@@ -37,20 +39,35 @@ public class RankingController {
         return ResponseEntity.ok(APIDataResponse.of(myRankingInfo));
     }
 
-    @Operation(summary = "전체 상위 랭킹 조회", description = "전체 사용자 중 상위 랭킹 목록을 조회합니다. limit 파라미터로 개수를 제한할 수 있습니다.")
     @GetMapping("/top")
-    public ResponseEntity<?> getTopRankingList(@RequestParam(defaultValue = "10") int limit) {
-        return ResponseEntity.ok(APIDataResponse.of(rankingFacade.getTopRankings(limit)));
+    public ResponseEntity<APIDataResponse<Map<String, Object>>> getTopRankingList(
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit) {
+
+        List<RedisRankingInfo> list = rankingFacade.getTopRankings(offset, limit);
+        long totalCount = rankingFacade.getTotalRankingCount();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", list);
+        result.put("totalCount", totalCount);
+
+        return ResponseEntity.ok(APIDataResponse.of(result));
     }
 
-    @Operation(summary = "대학교별 상위 랭킹 조회", description = "특정 대학교의 상위 랭킹 목록을 조회합니다.")
     @GetMapping("/top/univ")
-    public ResponseEntity<APIDataResponse<List<RedisRankingInfo>>> getTopByUniversity(
+    public ResponseEntity<APIDataResponse<Map<String, Object>>> getTopByUniversity(
             @RequestParam String university,
-            @RequestParam(defaultValue = "10") int limit
-    ) {
-        List<RedisRankingInfo> list = rankingFacade.getTopRankingsByUniversity(university, limit);
-        return ResponseEntity.ok(APIDataResponse.of(list));
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit) {
+
+        List<RedisRankingInfo> list = rankingFacade.getTopRankingsByUniversity(university, offset, limit);
+        long totalCount = rankingFacade.getTotalRankingCountByUniversity(university);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", list);
+        result.put("totalCount", totalCount);
+
+        return ResponseEntity.ok(APIDataResponse.of(result));
     }
 
     @Operation(summary = "랭킹 정보 업데이트", description = "사용자의 랭킹 정보를 업데이트합니다.")
