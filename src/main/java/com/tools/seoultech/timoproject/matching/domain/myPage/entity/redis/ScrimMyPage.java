@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis;
 
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @RedisHash(value = "ScrimMyPage", timeToLive = 15 * 60)
 @Getter
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ScrimMyPage {
     @Id
     private final UUID myPageUUID;
@@ -33,5 +34,14 @@ public class ScrimMyPage {
 
     /** Redis 인스턴스 참조용 필드 */
     private final UUID boardUUID;
+
+    public static ScrimMyPage of( List<RiotAccount> acceptorPartyInfo, List<RiotAccount> requestorPartyInfo,
+                                  Long acceptorId, Long requestorId, UUID boardUUID){
+
+        return new ScrimMyPage(UUID.randomUUID(),
+                               acceptorPartyInfo, requestorPartyInfo,
+                               MatchingCategory.SCRIM ,acceptorId, requestorId, boardUUID
+        );
+    }
 }
 

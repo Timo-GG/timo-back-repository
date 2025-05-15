@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableTy
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @RedisHash(value = "ScrimBoard", timeToLive = 15 * 60)
 @Getter @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScrimBoard {
     @Id
     private final UUID boardUUID;
@@ -32,4 +33,10 @@ public class ScrimBoard {
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
     @Indexed private String tier;
+
+    public static ScrimBoard of(ColosseumMapCode mapCode, String memo, Integer headCount, List<RiotAccount> partyInfo, CompactPlayerHistory compactPlayerHistory, Long memberId){
+        return new ScrimBoard(UUID.randomUUID(), mapCode, memo, headCount,
+                partyInfo, compactPlayerHistory, memberId,
+                MatchingCategory.SCRIM, compactPlayerHistory.getRankInfo().getTier());
+    }
 }

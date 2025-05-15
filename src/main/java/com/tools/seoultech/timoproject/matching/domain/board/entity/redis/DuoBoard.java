@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @RedisHash(value = "DuoBoard", timeToLive = 15 * 60)
 @Getter @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class DuoBoard {
     @Id private final UUID boardUUID;
 
@@ -29,8 +29,8 @@ public class DuoBoard {
     /** UserInfo */
     @Indexed private PlayPosition myPosition;
     @Indexed private VoiceChat myVoice;
-    private PlayStyle myStyle;
     private PlayCondition myStatus;
+    private PlayStyle myStyle;
 
     /** DuoInfo */
     private PlayPosition opponentPosition;
@@ -40,4 +40,13 @@ public class DuoBoard {
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
     @Indexed private String tier;
+
+    public static DuoBoard of(DuoMapCode mapCode, String memo, CompactPlayerHistory compactPlayerHistory, UserInfo userInfo, DuoInfo duoInfo, Long memberId
+    ){
+        return new DuoBoard(UUID.randomUUID(), mapCode, memo, compactPlayerHistory,
+                userInfo.getMyPosition(), userInfo.getMyVoice(), userInfo.getMyStatus(), userInfo.getMyStyle(),
+                duoInfo.getOpponentPosition(), duoInfo.getOpponentStyle(),
+                memberId, MatchingCategory.DUO, compactPlayerHistory.getRankInfo().getTier()
+        );
+    }
 }

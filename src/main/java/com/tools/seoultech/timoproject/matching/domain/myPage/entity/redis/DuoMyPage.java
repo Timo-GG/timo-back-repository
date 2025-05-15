@@ -4,6 +4,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableTy
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.DuoInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @RedisHash(value = "DuoMyPage", timeToLive = 15 * 60)
 @Getter
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class DuoMyPage {
     @Id private final UUID myPageUUID;
 
@@ -25,7 +26,7 @@ public class DuoMyPage {
     private DuoInfo acceptorDuoInfo;
     private CompactPlayerHistory acceptorCompactPlayerHistory;
 
-    /** Requestor Feild */
+    /** Requestor Field */
     private UserInfo requestorUserInfo;
     private DuoInfo requestorDuoInfo;
     private CompactPlayerHistory requestorCompactPlayerHistory;
@@ -37,4 +38,16 @@ public class DuoMyPage {
 
     /** Redis 인스턴스 참조용 필드 */
     private final UUID boardUUID;
+
+
+    public static DuoMyPage of(UserInfo acceptorUserInfo, DuoInfo acceptorDuoInfo,
+                               UserInfo requestorUserInfo, DuoInfo requestorDuoInfo,
+                               CompactPlayerHistory acceptorCompactPlayerHistory, CompactPlayerHistory requestorCompactPlayerHistory,
+                               Long acceptorId, Long requestorId, UUID boardUUID) {
+
+        return new DuoMyPage( UUID.randomUUID(), acceptorUserInfo, acceptorDuoInfo, acceptorCompactPlayerHistory,
+                              requestorUserInfo, requestorDuoInfo, requestorCompactPlayerHistory,
+                              MatchingCategory.DUO, acceptorId, requestorId, boardUUID
+        );
+    }
 }
