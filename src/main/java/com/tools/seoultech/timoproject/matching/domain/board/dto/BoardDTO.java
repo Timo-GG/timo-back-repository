@@ -1,11 +1,9 @@
 package com.tools.seoultech.timoproject.matching.domain.board.dto;
 
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.*;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.DuoInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
@@ -41,27 +39,27 @@ public abstract class BoardDTO {
             ColosseumMapCode mapCode,
             String memo,
             Integer headCount,
-            List<RiotAccount> partyInfo
+            List<PartyMemberInfo> partyInfo
     )implements Request{}
 
     @Builder
     public record ResponseDuo(
             UUID boardUUID,
+            CertifiedMemberInfo memberInfo,
             DuoMapCode mapCode,
             String memo,
             UserInfo userInfo,
-            DuoInfo duoInfo,
-            CompactPlayerHistory compactPlayerHistory
+            DuoInfo duoInfo
             ) implements Response {}
 
     @Builder
     public record ResponseScrim(
             UUID boardUUID,
+            CertifiedMemberInfo memberInfo,
             ColosseumMapCode mapCode,
             String memo,
             Integer headCount,
-            List<RiotAccount> partyInfo,
-            CompactPlayerHistory compactPlayerHistory
+            List<PartyMemberInfo> partyInfo
     ) implements Response {}
 
     // 인터페이스.

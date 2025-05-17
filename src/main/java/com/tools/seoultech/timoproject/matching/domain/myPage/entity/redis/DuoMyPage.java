@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis;
 
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.DuoInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import lombok.AccessLevel;
@@ -22,14 +21,12 @@ public class DuoMyPage {
     @Id private final UUID myPageUUID;
 
     /** Acceptor Field */
+    private CertifiedMemberInfo acceptorMemberInfo;
     private UserInfo acceptorUserInfo;
-    private DuoInfo acceptorDuoInfo;
-    private CompactPlayerHistory acceptorCompactPlayerHistory;
 
     /** Requestor Field */
+    private CertifiedMemberInfo requestorMemberInfo;
     private UserInfo requestorUserInfo;
-    private DuoInfo requestorDuoInfo;
-    private CompactPlayerHistory requestorCompactPlayerHistory;
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final MatchingCategory matchingCategory;
@@ -40,13 +37,12 @@ public class DuoMyPage {
     private final UUID boardUUID;
 
 
-    public static DuoMyPage of(UserInfo acceptorUserInfo, DuoInfo acceptorDuoInfo,
-                               UserInfo requestorUserInfo, DuoInfo requestorDuoInfo,
-                               CompactPlayerHistory acceptorCompactPlayerHistory, CompactPlayerHistory requestorCompactPlayerHistory,
+    public static DuoMyPage of(UserInfo acceptorUserInfo, CertifiedMemberInfo acceptorMemberInfo,
+                               UserInfo requestorUserInfo, CertifiedMemberInfo requestorMemberInfo,
                                Long acceptorId, Long requestorId, UUID boardUUID) {
 
-        return new DuoMyPage( UUID.randomUUID(), acceptorUserInfo, acceptorDuoInfo, acceptorCompactPlayerHistory,
-                              requestorUserInfo, requestorDuoInfo, requestorCompactPlayerHistory,
+        return new DuoMyPage( UUID.randomUUID(), acceptorMemberInfo, acceptorUserInfo,
+                              requestorMemberInfo, requestorUserInfo,
                               MatchingCategory.DUO, acceptorId, requestorId, boardUUID
         );
     }

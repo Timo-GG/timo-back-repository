@@ -1,12 +1,12 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.dto;
 
 
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.DuoInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
-import lombok.Getter;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,14 +17,13 @@ public class MatchingDTO {
     public record RequestDuo(
             UUID boardUUID,
             Long requestorId,
-            UserInfo userInfo,
-            DuoInfo duoInfo
+            UserInfo userInfo
     ){}
 
     public record RequestScrim(
             UUID boardUUID,
             Long requestorId,
-            List<RiotAccount> partyInfo
+            List<PartyMemberInfo> partyInfo
     ){}
 
     @Builder
@@ -43,15 +42,14 @@ public class MatchingDTO {
 
     @Builder
     public record WrappedDuoData(
-    // TODO: 유저의 데이터 정보도 넘겨야하나? memberAccount나 RiotAccount나 memberId. 가지고 있는 데이터인지 모르겠음.
-            UserInfo userInfo,
-            DuoInfo duoInfo,
-            CompactPlayerHistory compactPlayerHistory
+            CertifiedMemberInfo memberInfo,
+            UserInfo userInfo
     ){}
 
     @Builder
     public record  WrappedScrimData(
-            List<RiotAccount> partyInfo
+            CertifiedMemberInfo memberInfo,
+            List<PartyMemberInfo> partyInfo
     ){}
 
 }

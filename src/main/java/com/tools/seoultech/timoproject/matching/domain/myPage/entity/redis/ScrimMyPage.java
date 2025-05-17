@@ -1,7 +1,8 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis;
 
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,10 +23,12 @@ public class ScrimMyPage {
     private final UUID myPageUUID;
 
     /** Acceptor Field */
-    private List<RiotAccount> acceptorPartyInfo;
+    private CertifiedMemberInfo acceptorCertifiedMemberInfo;
+    private List<PartyMemberInfo> acceptorPartyInfo;
 
     /** Requestor Field */
-    private List<RiotAccount> requestorPartyInfo;
+    private CertifiedMemberInfo requestorCertifiedMemberInfo;
+    private List<PartyMemberInfo> requestorPartyInfo;
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final MatchingCategory matchingCategory;
@@ -35,11 +38,13 @@ public class ScrimMyPage {
     /** Redis 인스턴스 참조용 필드 */
     private final UUID boardUUID;
 
-    public static ScrimMyPage of( List<RiotAccount> acceptorPartyInfo, List<RiotAccount> requestorPartyInfo,
+    public static ScrimMyPage of( CertifiedMemberInfo acceptorCertifiedMemberInfo, List<PartyMemberInfo> acceptorPartyInfo,
+                                   CertifiedMemberInfo requestorCertifiedMemberInfo, List<PartyMemberInfo> requestorPartyInfo,
                                   Long acceptorId, Long requestorId, UUID boardUUID){
 
         return new ScrimMyPage(UUID.randomUUID(),
-                               acceptorPartyInfo, requestorPartyInfo,
+                               acceptorCertifiedMemberInfo, acceptorPartyInfo,
+                               requestorCertifiedMemberInfo, requestorPartyInfo,
                                MatchingCategory.SCRIM ,acceptorId, requestorId, boardUUID
         );
     }

@@ -1,7 +1,9 @@
 package com.tools.seoultech.timoproject.matching.domain.board.entity.redis;
 
 
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
@@ -26,17 +28,18 @@ public class ScrimBoard {
     @Indexed private ColosseumMapCode mapCode;
     private String memo;
     private Integer headCount;
-    private List<RiotAccount> partyInfo;
-    private CompactPlayerHistory compactPlayerHistory;
+    private CertifiedMemberInfo memberInfo;
+    private List<PartyMemberInfo> partyInfo;
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
     @Indexed private String tier;
 
-    public static ScrimBoard of(ColosseumMapCode mapCode, String memo, Integer headCount, List<RiotAccount> partyInfo, CompactPlayerHistory compactPlayerHistory, Long memberId){
+    public static ScrimBoard of(ColosseumMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<PartyMemberInfo> partyInfo, Long memberId
+    ){
         return new ScrimBoard(UUID.randomUUID(), mapCode, memo, headCount,
-                partyInfo, compactPlayerHistory, memberId,
-                MatchingCategory.SCRIM, compactPlayerHistory.getRankInfo().getTier());
+                memberInfo, partyInfo, memberId,
+                MatchingCategory.SCRIM, memberInfo.getRankInfo().getTier());
     }
 }
