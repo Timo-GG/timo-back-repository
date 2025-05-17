@@ -5,7 +5,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.*;
 
 import java.util.UUID;
 
-public interface DuoBoardOnly {
+public interface DuoBoardOnly extends BoardOnly{
     UUID getBoardUUID();
     DuoMapCode getMapCode();
     String getMemo();

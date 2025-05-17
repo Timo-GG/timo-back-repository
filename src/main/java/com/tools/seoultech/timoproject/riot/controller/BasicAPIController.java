@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.riot.controller;
 
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;
 import com.tools.seoultech.timoproject.riot.dto.*;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 

@@ -2,11 +2,9 @@ package com.tools.seoultech.timoproject.matching.domain.board.entity.redis;
 
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
-import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +23,7 @@ public class ScrimBoard {
     @Id
     private final UUID boardUUID;
 
-    @Indexed private ColosseumMapCode mapCode;
+    @Indexed private ScrimMapCode mapCode;
     private String memo;
     private Integer headCount;
     private CertifiedMemberInfo memberInfo;
@@ -36,7 +34,7 @@ public class ScrimBoard {
     @Indexed private final MatchingCategory matchingCategory;
     @Indexed private String tier;
 
-    public static ScrimBoard of(ColosseumMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<PartyMemberInfo> partyInfo, Long memberId
+    public static ScrimBoard of(ScrimMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<PartyMemberInfo> partyInfo, Long memberId
     ){
         return new ScrimBoard(UUID.randomUUID(), mapCode, memo, headCount,
                 memberInfo, partyInfo, memberId,

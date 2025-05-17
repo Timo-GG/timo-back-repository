@@ -19,7 +19,7 @@ public class RankingService {
 
     @Transactional
     public void updateRankingInfo(Long memberId, RankingUpdateRequestDto dto) {
-        RankingInfo entity = rankingInfoRepository.findByMemberAccountMemberId(memberId)
+        RankingInfo entity = rankingInfoRepository.findByMemberMemberId(memberId)
                 .orElseGet(() -> {
                     RankingInfo newEntity = RankingInfo.builder()
                             .member(memberRepository.findById(memberId)

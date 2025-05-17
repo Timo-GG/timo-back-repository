@@ -52,7 +52,7 @@ public class NotificationService {
 
 	public List<Notification> getUnreadNotifications(Long memberId) {
 		Member member = memberService.getById(memberId);
-		return notificationRepository.findByMemberAccountAndIsReadFalse(member);
+		return notificationRepository.findByMemberAndIsReadFalse(member);
 	}
 
 	public void markAsRead(Long notificationId) {

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface RankingInfoRepository extends JpaRepository<RankingInfo, Long> {
-    Optional<RankingInfo> findByMemberAccountMemberId(Long memberId);
+    Optional<RankingInfo> findByMemberMemberId(Long memberId);
 
-    boolean existsByMemberAccountMemberId(Long memberId);
+    boolean existsByMemberMemberId(Long memberId);
 }

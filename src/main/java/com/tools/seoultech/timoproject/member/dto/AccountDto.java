@@ -13,7 +13,7 @@ public class AccountDto {
     public static class Request{
         @Schema(description = "롤 닉네임", example = "짱아깨비")
         private final String gameName;
-        @Schema(description = "태그라인", example = "k r    ")
+        @Schema(description = "태그라인", example = "k r")
         private final String tagLine;
 
         @JsonCreator

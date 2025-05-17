@@ -48,7 +48,7 @@ public interface MyPageMapper {
 
     @Mapping(target = "acceptor", expression = "java(getWrappedScrimData(proj, true))")
     @Mapping(target = "requestor", expression = "java(getWrappedScrimData(proj, false))")
-    MatchingDTO.ResponseScrim toScrimDto(ScrimMyPage proj);
+    MatchingDTO.ResponseScrim toScrimDto(ScrimMyPageOnly proj);
 
     /** 조회용 */
     MyPageDTO.ResponseMyPage toFilteredDtoList( Integer sizeOfDuo,
@@ -83,7 +83,9 @@ public interface MyPageMapper {
                     .build();
         } else {
             return MatchingDTO.WrappedScrimData.builder()
-                    .partyInfo(proj.getRequestorPartyInfo()).build();
+                    .memberInfo(proj.getRequestorCertifiedMemberInfo())
+                    .partyInfo(proj.getRequestorPartyInfo())
+                    .build();
         }
     }
 }
