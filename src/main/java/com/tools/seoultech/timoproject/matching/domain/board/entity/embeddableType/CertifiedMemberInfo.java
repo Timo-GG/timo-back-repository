@@ -2,12 +2,10 @@ package com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableT
 
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import com.tools.seoultech.timoproject.riot.dto.RankInfoDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+
 
 @Getter
 public class CertifiedMemberInfo extends CompactMemberInfo{

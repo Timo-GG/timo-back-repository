@@ -1,11 +1,8 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.dto;
 
-
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.DuoInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
-import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
 
 import java.util.List;

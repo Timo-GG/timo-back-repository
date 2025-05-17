@@ -30,16 +30,12 @@ public class BoardService {
 
     /** 게시판에 게시글을 저장 */
     public DuoBoard saveDuoBoard(BoardDTO.RequestDuo dto) {
-        // 게시글 DTO → RedisBoard 엔티티 변환
         DuoBoard saved = duoBoardRepository.save(boardMapper.toDuoRedis(dto, memberService, bas));
-//        return boardMapper.toDuoDto(saved);
         return saved;
     }
 
     public ScrimBoard saveScrimBoard(BoardDTO.RequestScrim requestScrim) {
-        // 게시글 DTO → RedisBoard 엔티티 변환
         ScrimBoard saved = scrimBoardRepository.save(boardMapper.toScrimRedis(requestScrim, memberService, bas));
-//        return boardMapper.toScrimDto(saved);
         return saved;
     }
 

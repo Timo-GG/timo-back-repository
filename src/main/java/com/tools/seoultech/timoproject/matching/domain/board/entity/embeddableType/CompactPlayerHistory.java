@@ -15,10 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CompactPlayerHistory {
-    /*
-     * 해딩 필드 타입들은 RSO 정보 받아와야알 수 있음.
-     **/
-
     private RankInfoDto rankInfo;
     private List<String> most3Champ;
     private List<MatchSummaryDTO> last10Match;

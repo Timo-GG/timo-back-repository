@@ -1,7 +1,7 @@
 package com.tools.seoultech.timoproject.matching.domain.board.entity.redis;
 
+
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.DuoInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.*;
@@ -37,6 +37,7 @@ public class DuoBoard {
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
     @Indexed private String tier;
+
 
     public static DuoBoard of(DuoMapCode mapCode, String memo, CertifiedMemberInfo memberInfo, UserInfo userInfo, DuoInfo duoInfo, Long memberId
     ){

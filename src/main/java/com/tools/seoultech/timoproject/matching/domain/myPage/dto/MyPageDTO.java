@@ -2,9 +2,7 @@ package com.tools.seoultech.timoproject.matching.domain.myPage.dto;
 
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
-
 import lombok.Builder;
-import lombok.Getter;
 
 import java.util.List;
 import java.util.UUID;

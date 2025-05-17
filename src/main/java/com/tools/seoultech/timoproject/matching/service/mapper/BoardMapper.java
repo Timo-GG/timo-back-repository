@@ -3,7 +3,6 @@ package com.tools.seoultech.timoproject.matching.service.mapper;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.*;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.DuoBoard;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.ScrimBoard;
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.DuoBoardOnly;
@@ -51,14 +50,15 @@ public interface BoardMapper {
                 .mapCode(dto.mapCode()).memo(dto.memo()).headCount(dto.headCount())
                 .memberInfo(entity.getMemberInfo()).partyInfo(dto.partyInfo())
                 .memberId(entity.getMemberId()).matchingCategory(MatchingCategory.SCRIM).tier(entity.getTier()).build();
-
     }
+
 
     /** Projection → DTO */
     @Mapping(target = "userInfo", expression = "java(toUserInfo(proj))")
     @Mapping(target = "duoInfo", expression = "java(toDuoInfo(proj))")
     BoardDTO.ResponseDuo toDuoDto(DuoBoardOnly proj);
     BoardDTO.ResponseScrim toScrimDto(ScrimBoardOnly proj);
+
 
     /** Redis → DTO */
     @Mapping(target = "userInfo", expression = "java(toUserInfo(entity))")

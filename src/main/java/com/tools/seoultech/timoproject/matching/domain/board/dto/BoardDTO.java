@@ -14,8 +14,6 @@ import java.util.UUID;
 
 @Getter
 public abstract class BoardDTO {
-    // TODO: CompactRiotHistory 필드 추가.
-
     public record RequestSearch(
             Long memberId,
             MatchingCategory matchingCategory,
@@ -63,7 +61,7 @@ public abstract class BoardDTO {
             String memo,
             UserInfo userInfo,
             DuoInfo duoInfo
-            ) implements Response {}
+    ) implements Response {}
 
     @Builder
     public record ResponseScrim(

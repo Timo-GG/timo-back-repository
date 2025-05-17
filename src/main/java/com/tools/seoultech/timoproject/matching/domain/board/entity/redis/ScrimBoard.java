@@ -34,6 +34,7 @@ public class ScrimBoard {
     @Indexed private final MatchingCategory matchingCategory;
     @Indexed private String tier;
 
+
     public static ScrimBoard of(ScrimMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<PartyMemberInfo> partyInfo, Long memberId
     ){
         return new ScrimBoard(UUID.randomUUID(), mapCode, memo, headCount,

@@ -50,6 +50,7 @@ public interface MyPageMapper {
     @Mapping(target = "requestor", expression = "java(getWrappedScrimData(proj, false))")
     MatchingDTO.ResponseScrim toScrimDto(ScrimMyPageOnly proj);
 
+
     /** 조회용 */
     MyPageDTO.ResponseMyPage toFilteredDtoList( Integer sizeOfDuo,
                                                 Integer sizeOfScrim,
