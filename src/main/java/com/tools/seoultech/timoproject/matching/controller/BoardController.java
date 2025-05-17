@@ -1,7 +1,12 @@
 package com.tools.seoultech.timoproject.matching.controller;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.DuoBoard;
+import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.DuoBoardOnly;
+import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.ScrimBoardOnly;
 import com.tools.seoultech.timoproject.matching.service.BoardService;
+import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
+import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,110 +20,67 @@ import java.util.UUID;
 @RequestMapping("/api/v1/matching")
 @RequiredArgsConstructor
 @Tag(name = "Matching", description = "Matching API")
-public class BoardController {
-
+public class BoardController{
     private final BoardService boardService;
+    private final BoardMapper boardMapper;
 
-    /**
-     * Duo 게시판에 게시글을 추가
-     */
+    /** 게시글 생성 */
     @PostMapping("/duo")
-    public ResponseEntity<RedisBoard.Duo> createDuoBoard(@RequestBody BoardDTO.RequestDuo requestDuo) {
-        System.err.println("Board Controller @Post");
+    public ResponseEntity<APIDataResponse<BoardDTO.ResponseDuo>> createDuoBoard(@RequestBody BoardDTO.RequestDuo dto) {
         // TODO: memberAccount에 riotAccount 등록 유뮤 확인하는 로직 추가 필요.
-        RedisBoard.Duo savedBoard = boardService.saveDuoBoard(requestDuo);
-        return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
+        BoardDTO.ResponseDuo response = boardService.saveDuoBoard(dto);
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.CREATED);
     }
 
-    /**
-     * Colosseum 게시판에 게시글을 추가
-     */
     @PostMapping("/colosseum")
-    public ResponseEntity<RedisBoard.Colosseum> createColosseumBoard(@RequestBody BoardDTO.RequestScrim requestScrim) {
-        RedisBoard.Colosseum savedBoard = boardService.saveColosseumBoard(requestScrim);
-        return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
+    public ResponseEntity<APIDataResponse<BoardDTO.ResponseScrim>> createColosseumBoard(@RequestBody BoardDTO.RequestScrim requestScrim) {
+        BoardDTO.ResponseScrim response = boardService.saveColosseumBoard(requestScrim);
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.CREATED);
     }
 
-    /**
-     * 모든 Duo 게시글 조회
-     */
+    /** 모든 게시글 조회 */
     @GetMapping("/duo")
-    public ResponseEntity<List<BoardDTO.ResponseDuo>> getAllDuoBoards() {
-        List<BoardDTO.ResponseDuo> boards = boardService.getAllDuoBoards();
-        return new ResponseEntity<>(boards, HttpStatus.OK);
+    public ResponseEntity<APIDataResponse<List<DuoBoardOnly>>> getAllDuoBoards() {
+        List<DuoBoardOnly> response = boardService.getAllDuoBoards();
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
-    /**
-     * 모든 Colosseum 게시글 조회
-     */
     @GetMapping("/colosseum")
-    public ResponseEntity<List<BoardDTO.ResponseScrim>> getAllColosseumBoards() {
-        List<BoardDTO.ResponseScrim> boards = boardService.getAllColosseumBoards();
-        return new ResponseEntity<>(boards, HttpStatus.OK);
+    public ResponseEntity<APIDataResponse<List<ScrimBoardOnly>>> getAllColosseumBoards() {
+        List<ScrimBoardOnly> response = boardService.getAllColosseumBoards();
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
-    /**
-     * 특정 UUID의 Duo 게시글 조회
-     */
+    /** 특정 UUID 게시글 조회 */
     @GetMapping("/duo/{boardUUID}")
-    public ResponseEntity<BoardDTO.ResponseDuo> getDuoBoard(@PathVariable UUID boardUUID) {
-        try {
-            BoardDTO.ResponseDuo board = boardService.getDuoBoard(boardUUID);
-            return new ResponseEntity<>(board, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<APIDataResponse<DuoBoardOnly>> getDuoBoard(@PathVariable UUID boardUUID) throws Exception {
+        DuoBoardOnly response = boardService.getDuoBoard(boardUUID);
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
-    /**
-     * 특정 UUID의 Colosseum 게시글 조회
-     */
     @GetMapping("/colosseum/{boardUUID}")
-    public ResponseEntity<BoardDTO.ResponseScrim> getColosseumBoard(@PathVariable UUID boardUUID) {
-        try {
-            BoardDTO.ResponseScrim board = boardService.getScrimBoard(boardUUID);
-            return new ResponseEntity<>(board, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<APIDataResponse<ScrimBoardOnly>> getColosseumBoard(@PathVariable UUID boardUUID) throws Exception {
+        ScrimBoardOnly response = boardService.getScrimBoard(boardUUID);
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
-    /**
-     * 특정 UUID의 게시글 삭제
-     */
+    /** 특정 UUID의 게시글 삭제 */
     @DeleteMapping("/{boardUUID}")
-    public ResponseEntity<Void> deleteBoard(@PathVariable UUID boardUUID) {
-        try {
-            boardService.deleteBoardByUUID(boardUUID);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Void> deleteBoard(@PathVariable UUID boardUUID) throws Exception {
+        boardService.deleteDuoBoardById(boardUUID);
+        boardService.deleteScrimBoardById(boardUUID);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    /**
-     * 모든 게시글 삭제
-     */
-    @DeleteMapping("/all")
-    public ResponseEntity<Void> deleteAllBoards() {
-        boardService.deleteAllBoards();
-        return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Duo 게시글 전체 삭제
-     */
-    @DeleteMapping("/duo")
-    public ResponseEntity<Void> deleteAllDuoBoards() {
+    /** 모든 게시글 삭제 */
+    @DeleteMapping("/all/duo")
+    public ResponseEntity<Void> deleteAllDuoBoards() throws Exception{
         boardService.deleteAllDuoBoards();
         return ResponseEntity.noContent().build();
     }
 
-    /**ㅣ
-     * Colosseum 게시글 전체 삭제
-     */
-    @DeleteMapping("/colosseum")
-    public ResponseEntity<Void> deleteAllColosseumBoards() {
+    @DeleteMapping("/all/scrim")
+    public ResponseEntity<Void> deleteAllScrimBoards() {
         boardService.deleteAllColosseumBoards();
         return ResponseEntity.noContent().build();
     }
