@@ -1,11 +1,8 @@
 package com.tools.seoultech.timoproject.matching.controller;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.DuoBoard;
-import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.DuoBoardOnly;
-import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.ScrimBoardOnly;
-import com.tools.seoultech.timoproject.matching.service.BoardService;
-import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.service.facade.BoardFacade;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,67 +18,78 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Tag(name = "Matching", description = "Matching API")
 public class BoardController{
-    private final BoardService boardService;
-    private final BoardMapper boardMapper;
+    private final BoardFacade boardFacade;
 
-    /** 게시글 생성 */
+    /** [Create] 게시글 생성 */
     @PostMapping("/duo")
-    public ResponseEntity<APIDataResponse<BoardDTO.ResponseDuo>> createDuoBoard(@RequestBody BoardDTO.RequestDuo dto) {
+    public ResponseEntity<APIDataResponse<BoardDTO.Response>> createDuoBoard(@RequestBody BoardDTO.RequestDuo dto) {
         // TODO: memberAccount에 riotAccount 등록 유뮤 확인하는 로직 추가 필요.
-        BoardDTO.ResponseDuo response = boardService.saveDuoBoard(dto);
+        var response = boardFacade.create(dto);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.CREATED);
     }
 
-    @PostMapping("/colosseum")
-    public ResponseEntity<APIDataResponse<BoardDTO.ResponseScrim>> createColosseumBoard(@RequestBody BoardDTO.RequestScrim requestScrim) {
-        BoardDTO.ResponseScrim response = boardService.saveColosseumBoard(requestScrim);
+    @PostMapping("/scrim")
+    public ResponseEntity<APIDataResponse<BoardDTO.Response>> createScrimBoard(@RequestBody BoardDTO.RequestScrim dto) {
+        var response = boardFacade.create(dto);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.CREATED);
     }
 
-    /** 모든 게시글 조회 */
+    /** [Read] 모든 게시글 조회 */
     @GetMapping("/duo")
-    public ResponseEntity<APIDataResponse<List<DuoBoardOnly>>> getAllDuoBoards() {
-        List<DuoBoardOnly> response = boardService.getAllDuoBoards();
+    public ResponseEntity<APIDataResponse<List<BoardDTO.Response>>> getAllDuoBoards() throws Exception {
+        var response = boardFacade.readAll(MatchingCategory.DUO);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
-    @GetMapping("/colosseum")
-    public ResponseEntity<APIDataResponse<List<ScrimBoardOnly>>> getAllColosseumBoards() {
-        List<ScrimBoardOnly> response = boardService.getAllColosseumBoards();
+    @GetMapping("/scrim")
+    public ResponseEntity<APIDataResponse<List<BoardDTO.Response>>> getAllScrimBoards() throws Exception {
+        var response = boardFacade.readAll(MatchingCategory.SCRIM);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
-    /** 특정 UUID 게시글 조회 */
+    /** [Read] 게시글 UUID 조회 */
     @GetMapping("/duo/{boardUUID}")
-    public ResponseEntity<APIDataResponse<DuoBoardOnly>> getDuoBoard(@PathVariable UUID boardUUID) throws Exception {
-        DuoBoardOnly response = boardService.getDuoBoard(boardUUID);
+    public ResponseEntity<APIDataResponse<BoardDTO.Response>> getDuoBoard(@PathVariable UUID boardUUID) throws Exception {
+        var response = boardFacade.read(boardUUID);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
-    @GetMapping("/colosseum/{boardUUID}")
-    public ResponseEntity<APIDataResponse<ScrimBoardOnly>> getColosseumBoard(@PathVariable UUID boardUUID) throws Exception {
-        ScrimBoardOnly response = boardService.getScrimBoard(boardUUID);
+    @GetMapping("/scrim/{boardUUID}")
+    public ResponseEntity<APIDataResponse<BoardDTO.Response>> getScrimBoard(@PathVariable UUID boardUUID) throws Exception {
+        var response = boardFacade.read(boardUUID);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
-    /** 특정 UUID의 게시글 삭제 */
+    /** [Update] 게시글 정보 수정 */
+    @PutMapping("/duo")
+    public ResponseEntity<APIDataResponse<BoardDTO.Response>> updateDuoBoard(@RequestBody BoardDTO.RequestUpdateDuo dto) throws Exception {
+        var response = boardFacade.update(dto);
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
+    }
+
+    @PutMapping("/scrim")
+    public ResponseEntity<APIDataResponse<BoardDTO.Response>> updateDuoBoard(@RequestBody BoardDTO.RequestUpdateScrim dto) throws Exception {
+        var response = boardFacade.update(dto);
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
+    }
+
+    /**  [Delete] 게시글 UUID 삭제 */
     @DeleteMapping("/{boardUUID}")
     public ResponseEntity<Void> deleteBoard(@PathVariable UUID boardUUID) throws Exception {
-        boardService.deleteDuoBoardById(boardUUID);
-        boardService.deleteScrimBoardById(boardUUID);
+        boardFacade.delete(boardUUID);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    /** 모든 게시글 삭제 */
-    @DeleteMapping("/all/duo")
+    /** [Delete] 모든 게시글 삭제 */
+    @DeleteMapping("/duo")
     public ResponseEntity<Void> deleteAllDuoBoards() throws Exception{
-        boardService.deleteAllDuoBoards();
+        boardFacade.deleteAll(MatchingCategory.DUO);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/all/scrim")
+    @DeleteMapping("/scrim")
     public ResponseEntity<Void> deleteAllScrimBoards() {
-        boardService.deleteAllColosseumBoards();
+        boardFacade.deleteAll(MatchingCategory.SCRIM);
         return ResponseEntity.noContent().build();
     }
 }

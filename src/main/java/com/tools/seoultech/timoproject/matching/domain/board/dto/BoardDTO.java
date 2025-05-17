@@ -1,11 +1,10 @@
 package com.tools.seoultech.timoproject.matching.domain.board.dto;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.*;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ColosseumMapCode;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
-import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,14 +16,12 @@ import java.util.UUID;
 public abstract class BoardDTO {
     // TODO: CompactRiotHistory 필드 추가.
 
-    @Builder
     public record RequestSearch(
             Long memberId,
             MatchingCategory matchingCategory,
             PlayPosition position
     ) implements Request {}
 
-    @Builder
     public record RequestDuo(
             Long memberId,
             DuoMapCode mapCode,
@@ -33,14 +30,30 @@ public abstract class BoardDTO {
             DuoInfo duoInfo
     ) implements Request {}
 
-    @Builder
     public record RequestScrim(
             Long memberId,
-            ColosseumMapCode mapCode,
+            ScrimMapCode mapCode,
             String memo,
             Integer headCount,
             List<PartyMemberInfo> partyInfo
     )implements Request{}
+
+
+    public record RequestUpdateDuo(
+        UUID boardUUID,
+        DuoMapCode mapCode,
+        String memo,
+        UserInfo userInfo,
+        DuoInfo duoInfo
+    ) implements Request {}
+
+    public record RequestUpdateScrim(
+        UUID boardUUID,
+        ScrimMapCode mapCode,
+        String memo,
+        Integer headCount,
+        List<PartyMemberInfo> partyInfo
+    ) implements Request {}
 
     @Builder
     public record ResponseDuo(
@@ -56,7 +69,7 @@ public abstract class BoardDTO {
     public record ResponseScrim(
             UUID boardUUID,
             CertifiedMemberInfo memberInfo,
-            ColosseumMapCode mapCode,
+            ScrimMapCode mapCode,
             String memo,
             Integer headCount,
             List<PartyMemberInfo> partyInfo

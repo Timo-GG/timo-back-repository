@@ -11,11 +11,16 @@ import lombok.experimental.SuperBuilder;
 import java.util.List;
 
 @Getter
-public class PartyMemberInfo extends CompactMemberInfo {
+//public class PartyMemberInfo extends CompactMemberInfo {
+@AllArgsConstructor
+public class PartyMemberInfo {
+    private String puuid;
+    private String gameName;
+    private String tagLine;
     private PlayPosition myPosition;
 
-    public PartyMemberInfo(PlayPosition myPosition, RiotAccount riotAccount, RankInfoDto rankInfo, List<String> most3Champ) {
-        super(riotAccount, rankInfo, most3Champ);
-        this.myPosition = myPosition;
-    }
+//    public PartyMemberInfo(PlayPosition myPosition, RiotAccount riotAccount, RankInfoDto rankInfo, List<String> most3Champ) {
+//        super(riotAccount, rankInfo, most3Champ);
+//        this.myPosition = myPosition;
+//    }
 }
