@@ -1,23 +1,21 @@
 package com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType;
 
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
+import com.tools.seoultech.timoproject.riot.dto.RankInfoDto;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@Embeddable
+import java.util.List;
+
 @Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor
-public class PartyMemberInfo {
-    @Embedded
-    private RiotAccount riotAccount;
+public class PartyMemberInfo extends CompactMemberInfo {
+    private PlayPosition myPosition;
 
-    @Embedded
-    private UserInfo userInfo;
-
-    // #TODO: Compact Riot 전적 조회
-    @Embedded
-    private CompactPlayerHistory compactPlayerHistory;
+    public PartyMemberInfo(PlayPosition myPosition, RiotAccount riotAccount, RankInfoDto rankInfo, List<String> most3Champ) {
+        super(riotAccount, rankInfo, most3Champ);
+        this.myPosition = myPosition;
+    }
 }

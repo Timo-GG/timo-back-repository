@@ -1,17 +1,15 @@
 package com.tools.seoultech.timoproject.matching.domain.board.repository.projections;
 
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactPlayerHistory;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.*;
 
 import java.util.UUID;
 
 public interface DuoBoardOnly {
     UUID getBoardUUID();
-    Long getMemberId();
-
-    DuoMapCode getDuoMapCode();
-    String getMapCode();
-    CompactPlayerHistory getCompactPlayerHistory();
+    DuoMapCode getMapCode();
+    String getMemo();
+    CertifiedMemberInfo getMemberInfo();
 
     PlayPosition getMyPosition();
     VoiceChat getMyVoice();
@@ -20,4 +18,6 @@ public interface DuoBoardOnly {
 
     PlayPosition getOpponentPosition();
     PlayStyle getOpponentStyle();
+
+    Long getMemberId();
 }
