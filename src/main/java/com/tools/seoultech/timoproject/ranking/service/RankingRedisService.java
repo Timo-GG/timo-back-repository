@@ -141,4 +141,22 @@ public class RankingRedisService {
 		String key = buildUniversityKey(university);
 		return Optional.ofNullable(redisTemplate.opsForZSet().size(key)).orElse(0L);
 	}
+
+	public int getRankingPosition(String name, String tag) {
+		// 공백 제거 및 대소문자 무시 처리
+		String normalizedName = name.trim();
+		String normalizedTag = tag.trim();
+
+		// Redis에서 전부 가져와서 소환사 정보 매칭
+		List<RedisRankingInfo> allRankings = getTopRankings(0, Integer.MAX_VALUE);
+		for (int i = 0; i < allRankings.size(); i++) {
+			RedisRankingInfo info = allRankings.get(i);
+			if (info.getGameName().equalsIgnoreCase(normalizedName) &&
+					info.getTagLine().replace(" ", "").equalsIgnoreCase(normalizedTag.replace(" ", ""))) {
+				return i + 1; // 순위는 1부터 시작
+			}
+		}
+
+		throw new BusinessException(ErrorCode.REDIS_RANKING_NOT_FOUND);
+	}
 }

@@ -73,4 +73,9 @@ public class RankingFacadeImpl implements RankingFacade {
     public long getTotalRankingCountByUniversity(String university) {
         return rankingRedisService.getTotalRankingCountByUniversity(university);
     }
+
+    @Override
+    public int getRankingPosition(String name, String tag) {
+        return rankingRedisService.getRankingPosition(name, tag);
+    }
 }

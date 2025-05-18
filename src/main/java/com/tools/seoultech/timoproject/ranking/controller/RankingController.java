@@ -107,4 +107,13 @@ public class RankingController {
         rankingFacade.deleteRanking(memberId);
         return ResponseEntity.ok(APIDataResponse.of("ok"));
     }
+
+    @Operation(summary = "소환사 순위 조회", description = "소환사명과 태그로 전체 순위(1부터 시작)를 조회합니다.")
+    @GetMapping("/position")
+    public ResponseEntity<APIDataResponse<Integer>> getRankingPosition(
+            @RequestParam String name,
+            @RequestParam String tag) {
+        int rank = rankingFacade.getRankingPosition(name, tag); // 1부터 시작
+        return ResponseEntity.ok(APIDataResponse.of(rank));
+    }
 }
