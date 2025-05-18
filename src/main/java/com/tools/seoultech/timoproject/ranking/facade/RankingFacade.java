@@ -15,4 +15,6 @@ public interface RankingFacade {
     long getTotalRankingCount();
     long getTotalRankingCountByUniversity(String university);
     RedisRankingInfo getMyRankingInfo(Long memberId);
+    int getRankingPosition(String name, String tag);
+
 }
