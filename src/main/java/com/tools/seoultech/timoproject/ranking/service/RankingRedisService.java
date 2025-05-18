@@ -2,8 +2,8 @@ package com.tools.seoultech.timoproject.ranking.service;
 
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.BusinessException;
-import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.member.MemberRepository;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.ranking.RankingInfoRedisRepository;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
 import com.tools.seoultech.timoproject.ranking.dto.RedisRankingInfo;
@@ -26,14 +26,14 @@ import java.util.*;
 public class RankingRedisService {
 	private static final String RANKING_KEY = "lol:ranking";
 
-	private final MemberAccountRepository memberAccountRepository;
+	private final MemberRepository memberRepository;
 	private final RankingInfoRedisRepository rankingInfoRedisRepository;
 
 	@Qualifier("rankingRedisTemplate")
 	private final RedisTemplate<String, Object> redisTemplate;
 
 	public void createInitialRanking(Long memberId, RiotRankingDto riotRankingDto) {
-		MemberAccount account = memberAccountRepository.findById(memberId)
+		Member account = memberRepository.findById(memberId)
 				.orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
 		RedisRankingInfo rankingInfo = RedisRankingInfo.from(memberId, account, riotRankingDto);

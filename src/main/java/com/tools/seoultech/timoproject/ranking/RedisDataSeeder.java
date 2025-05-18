@@ -1,11 +1,11 @@
 package com.tools.seoultech.timoproject.ranking;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.OAuthProvider;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.enumType.Role;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.CertifiedUnivInfo;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
-import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
+import com.tools.seoultech.timoproject.member.MemberRepository;
+import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.domain.entity.enumType.Role;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.CertifiedUnivInfo;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import com.tools.seoultech.timoproject.ranking.facade.RankingFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 public class RedisDataSeeder {
 
-    private final MemberAccountRepository memberAccountRepository;
+    private final MemberRepository memberRepository;
     private final RankingFacade rankingFacade;
 
     /**
@@ -50,7 +50,7 @@ public class RedisDataSeeder {
 
         for (int i = 0; i < accounts.size(); i++) {
             String username = "user" + (i + 1);
-            if (memberAccountRepository.existsByUsername(username)) {
+            if (memberRepository.existsByUsername(username)) {
                 log.info("Skip seeding for {}: already exists", username);
                 continue;
             }
@@ -61,7 +61,7 @@ public class RedisDataSeeder {
             String university = universities[i % universities.length];
             String univEmail = "test" + i + "@" + university.replace(" ", "").toLowerCase() + ".ac.kr";
 
-            MemberAccount account = MemberAccount.builder()
+            Member account = Member.builder()
                     .email(username + i + "@example.com")
                     .username(username)
                     .riotAccount(new RiotAccount(r.puuid(), r.gameName(), "KR1", "iconUrl"))
@@ -70,7 +70,7 @@ public class RedisDataSeeder {
                     .role(Role.MEMBER)
                     .build();
 
-            account = memberAccountRepository.save(account);
+            account = memberRepository.save(account);
             rankingFacade.createRanking(account.getMemberId(), r.puuid());
             log.info("Seeded and ranked {} at {}", username, university);
         }

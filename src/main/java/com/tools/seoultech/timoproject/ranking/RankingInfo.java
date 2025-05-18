@@ -1,9 +1,9 @@
 package com.tools.seoultech.timoproject.ranking;
 
 
-import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.Gender;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.enumType.PlayPosition;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Gender;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.ranking.dto.RankingUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ public class RankingInfo {
 
     @OneToOne
     @JoinColumn(name = "member_id")
-    private MemberAccount memberAccount;
+    private Member member;
 
     public void updateFrom(RankingUpdateRequestDto dto) {
         if (dto.mbti() != null) this.mbti = dto.mbti();

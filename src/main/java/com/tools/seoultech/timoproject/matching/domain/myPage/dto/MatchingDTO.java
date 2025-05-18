@@ -1,21 +1,52 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.dto;
 
-import com.tools.seoultech.timoproject.matching.domain.user.dto.UserDTO;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import lombok.Builder;
-import lombok.Getter;
 
+import java.util.List;
 import java.util.UUID;
 
-@Getter
-public abstract class MatchingDTO {
-    // NOTE: 듀오, 내전 보드판 보고서 신청했을 때의 매칭 DTO.
-    @Builder
+
+public class MatchingDTO {
+    // NOTE: 시스템 매칭 로직 DTO.
     public record RequestDuo(
             UUID boardUUID,
-            UserDTO.RequestDuo duoRequestorDto
+            Long requestorId,
+            UserInfo userInfo
     ){}
-    public record RequestColosseum(
+
+    public record RequestScrim(
             UUID boardUUID,
-            UserDTO.RequestColosseum colosseumRequestorDto
+            Long requestorId,
+            List<PartyMemberInfo> partyInfo
     ){}
+
+    @Builder
+    public record ResponseDuo(
+            UUID myPageUUID,
+            WrappedDuoData acceptor,
+            WrappedDuoData requestor
+    ){}
+
+    @Builder
+    public record ResponseScrim(
+            UUID myPageUUID,
+            WrappedScrimData acceptor,
+            WrappedScrimData requestor
+    ){}
+
+    @Builder
+    public record WrappedDuoData(
+            CertifiedMemberInfo memberInfo,
+            UserInfo userInfo
+    ){}
+
+    @Builder
+    public record  WrappedScrimData(
+            CertifiedMemberInfo memberInfo,
+            List<PartyMemberInfo> partyInfo
+    ){}
+
 }

@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.notification;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,7 +32,7 @@ public class Notification {
 	private boolean isRead;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	private MemberAccount memberAccount;
+	private Member member;
 
 	public void markAsRead() {
 		this.isRead = true;

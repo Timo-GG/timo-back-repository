@@ -1,7 +1,7 @@
 package com.tools.seoultech.timoproject.ranking.dto;
 
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.embeddableType.RiotAccount;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 
 public record RankingCreateRequestDto(
     RiotAccount riotAccount,

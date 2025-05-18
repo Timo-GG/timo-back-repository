@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
-import com.tools.seoultech.timoproject.memberAccount.service.MemberAccountService;
+import com.tools.seoultech.timoproject.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class NotificationService {
 
 	private final NotificationRepository notificationRepository;
-	private final MemberAccountService memberAccountService;
+	private final MemberService memberService;
 
 	private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
@@ -27,10 +27,10 @@ public class NotificationService {
 	}
 
 	public void sendNotification(Long memberId, NotificationRequest request) {
-		MemberAccount memberAccount = memberAccountService.getById(memberId);
+		Member member = memberService.getById(memberId);
 
 		Notification notification = Notification.builder()
-			.memberAccount(memberAccount)
+			.member(member)
 			.type(request.type())
 			.redirectUrl(request.redirectUrl())
 			.isRead(false)
@@ -51,8 +51,8 @@ public class NotificationService {
 	}
 
 	public List<Notification> getUnreadNotifications(Long memberId) {
-		MemberAccount memberAccount = memberAccountService.getById(memberId);
-		return notificationRepository.findByMemberAccountAndIsReadFalse(memberAccount);
+		Member member = memberService.getById(memberId);
+		return notificationRepository.findByMemberAndIsReadFalse(member);
 	}
 
 	public void markAsRead(Long notificationId) {
