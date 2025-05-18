@@ -1,20 +1,20 @@
 package com.tools.seoultech.timoproject.global.config;
 
-import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.RedisBoard;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@EnableRedisRepositories
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
@@ -45,35 +45,6 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         return redisTemplate;
-    }
-
-    /** 게시판 관련 RedisTemplate 설정 */
-    @Bean(name = "boardRedisTemplate")
-    public RedisTemplate<String, RedisBoard> boardRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, RedisBoard> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        return template;
-    }
-
-    /** 사용자 관련 RedisTemplate 설정 */
-    @Bean(name = "userRedisTemplate")
-    public RedisTemplate<String, RedisUser> userRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, RedisUser> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        return template;
-    }
-    /** 마이페이지 관련 RedisTemplate 설정 */
-    @Bean(name = "myPageRedisTemplate")
-    public RedisTemplate<String, RedisMyPage> myPageRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, RedisMyPage> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        return template;
     }
 
     /** ZSetOperations Bean 추가 */

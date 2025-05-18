@@ -3,7 +3,7 @@ package com.tools.seoultech.timoproject.riot.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
-import com.tools.seoultech.timoproject.memberAccount.dto.AccountDto;
+import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.dto.*;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
 import jakarta.annotation.PostConstruct;

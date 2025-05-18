@@ -1,7 +1,7 @@
 package com.tools.seoultech.timoproject.auth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,9 +13,9 @@ import java.util.Collection;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomUserDetails implements UserDetails {
 
-    private final MemberAccount member;
+    private final Member member;
 
-    public static CustomUserDetails from (MemberAccount member) {
+    public static CustomUserDetails from (Member member) {
         return new CustomUserDetails(member);
     }
 

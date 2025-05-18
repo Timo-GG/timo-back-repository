@@ -11,8 +11,8 @@ import com.tools.seoultech.timoproject.chat.repository.ChatRoomRepository;
 import com.tools.seoultech.timoproject.chat.repository.MessageRepository;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.BusinessException;
-import com.tools.seoultech.timoproject.memberAccount.MemberAccountRepository;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.member.MemberRepository;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -46,7 +46,7 @@ public class ChatService implements DisposableBean {
 
     // 채팅방 메타데이터를 저장할 캐시: roomId -> ChatRoomMetadata
     private static final Map<Long, ChatRoomMetadata> chatRoomMetadataMap = new ConcurrentHashMap<>();
-    private final MemberAccountRepository memberAccountRepository;
+    private final MemberRepository memberRepository;
 
 
     // ====================================
@@ -306,7 +306,7 @@ public class ChatService implements DisposableBean {
             return;
         }
 
-        MemberAccount member = memberAccountRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(memberId).orElseThrow();
         ChatRoomMember newMember = ChatRoomMember.createChatRoomMember(chatRoom, member);
         chatRoomMemberRepository.save(newMember);
     }
@@ -346,9 +346,9 @@ public class ChatService implements DisposableBean {
         chatRoomRepository.save(chatRoom);
 
         // 채팅방 멤버 추가
-        MemberAccount user1 = memberAccountRepository.findById(member1Id)
+        Member user1 = memberRepository.findById(member1Id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원: " + member1Id));
-        MemberAccount user2 = memberAccountRepository.findById(member2Id)
+        Member user2 = memberRepository.findById(member2Id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원: " + member2Id));
 
         ChatRoomMember chatRoomMember1 = ChatRoomMember.createChatRoomMember(chatRoom, user1);
@@ -394,8 +394,8 @@ public class ChatService implements DisposableBean {
         ChatRoom room = ChatRoom.createChatRoom(myId, opponentId);
         chatRoomRepository.save(room);
 
-        MemberAccount me = memberAccountRepository.findById(myId).orElseThrow();
-        MemberAccount opponent = memberAccountRepository.findById(opponentId).orElseThrow();
+        Member me = memberRepository.findById(myId).orElseThrow();
+        Member opponent = memberRepository.findById(opponentId).orElseThrow();
 
         chatRoomMemberRepository.save(ChatRoomMember.createChatRoomMember(room, me));
         chatRoomMemberRepository.save(ChatRoomMember.createChatRoomMember(room, opponent));

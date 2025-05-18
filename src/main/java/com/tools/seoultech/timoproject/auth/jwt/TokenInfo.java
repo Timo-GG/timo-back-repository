@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.auth.jwt;
 
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class TokenInfo {
 
     private Map<String, Object> payload;
 
-    public static TokenInfo from(MemberAccount member) {
+    public static TokenInfo from(Member member) {
         Map<String, Object> accessTokenPayload = new HashMap<>();
         accessTokenPayload.put("memberId", member.getMemberId());
         return new TokenInfo(accessTokenPayload);

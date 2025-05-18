@@ -2,16 +2,13 @@ package com.tools.seoultech.timoproject.matching.domain.myPage.dto;
 
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisMyPage;
-import com.tools.seoultech.timoproject.matching.domain.user.entity.redis.RedisUser;
 import lombok.Builder;
 
+import java.util.List;
 import java.util.UUID;
 
-// Note: dto별로 존재하는 Request, Response를 어노테이션으로 메타데이터를 만들면 어떨까?
 public abstract class MyPageDTO {
-    // Note: 1. 검색용
-    @Builder
+    // Note: 조회용
     public record RequestSearch(
             UUID myPageUUID,
             MatchingCategory matchingCategory,
@@ -19,12 +16,11 @@ public abstract class MyPageDTO {
             MatchingStatus status
     ){}
 
-    // Note: 2. 검색 결과 Response
+    @Builder
     public record ResponseMyPage(
-            UUID myPageUUID,
-            MatchingCategory matchingCategory,
-            Long requestorMemberId,
-            Long acceptorMemberId,
-            MatchingStatus status
+            Integer sizeOfDuo,
+            Integer sizeOfScrim,
+            List<MatchingDTO.ResponseDuo> duoList,
+            List<MatchingDTO.ResponseScrim> scrimList
     ){}
 }

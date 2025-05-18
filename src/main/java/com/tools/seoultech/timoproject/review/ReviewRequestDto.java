@@ -3,7 +3,7 @@ package com.tools.seoultech.timoproject.review;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentAttitude;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentConversation;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentTalent;
-import com.tools.seoultech.timoproject.memberAccount.domain.entity.MemberAccount;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 
 public record ReviewRequestDto(
         Long revieweeId,
@@ -13,7 +13,7 @@ public record ReviewRequestDto(
         Integer evaluationScore,
         String memo
 ) {
-    public Review toEntity(MemberAccount reviewer, MemberAccount reviewee) {
+    public Review toEntity(Member reviewer, Member reviewee) {
         return Review.builder()
                 .reviewer(reviewer)
                 .reviewee(reviewee)
