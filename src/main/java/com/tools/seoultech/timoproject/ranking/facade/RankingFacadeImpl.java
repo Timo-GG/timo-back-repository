@@ -50,17 +50,32 @@ public class RankingFacadeImpl implements RankingFacade {
     }
 
     @Override
-    public List<RedisRankingInfo> getTopRankings(int limit) {
-        return rankingRedisService.getTopRankings(limit);
+    public List<RedisRankingInfo> getTopRankings(int offset, int limit) {
+        return rankingRedisService.getTopRankings(offset, limit);
     }
 
     @Override
-    public List<RedisRankingInfo> getTopRankingsByUniversity(String university, int limit) {
-        return rankingRedisService.getTopRankingsByUniversity(university, limit);
+    public List<RedisRankingInfo> getTopRankingsByUniversity(String university, int offset, int limit) {
+        return rankingRedisService.getTopRankingsByUniversity(university, offset, limit);
     }
 
     @Override
     public RedisRankingInfo getMyRankingInfo(Long memberId) {
         return rankingRedisService.getMyRankingInfo(memberId);
+    }
+
+    @Override
+    public long getTotalRankingCount() {
+        return rankingRedisService.getTotalRankingCount();
+    }
+
+    @Override
+    public long getTotalRankingCountByUniversity(String university) {
+        return rankingRedisService.getTotalRankingCountByUniversity(university);
+    }
+
+    @Override
+    public int getRankingPosition(String name, String tag) {
+        return rankingRedisService.getRankingPosition(name, tag);
     }
 }
