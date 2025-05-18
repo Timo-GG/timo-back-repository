@@ -9,8 +9,10 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CompactMemberInfo {
     private RiotAccount riotAccount;
     private RankInfoDto rankInfo;
+
     private List<String> most3Champ;
 }
