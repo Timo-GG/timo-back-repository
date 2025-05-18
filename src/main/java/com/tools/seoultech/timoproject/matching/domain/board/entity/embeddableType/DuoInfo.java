@@ -2,13 +2,12 @@ package com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableT
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayStyle;
-import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Embeddable
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
