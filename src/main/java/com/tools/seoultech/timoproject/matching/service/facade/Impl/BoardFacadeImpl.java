@@ -1,4 +1,4 @@
-package com.tools.seoultech.timoproject.matching.service.facade;
+package com.tools.seoultech.timoproject.matching.service.facade.Impl;
 
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
@@ -9,6 +9,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.repository.projecti
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.ScrimBoardOnly;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.service.BoardService;
+import com.tools.seoultech.timoproject.matching.service.facade.BoardFacade;
 import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class BoardFacadeImpl implements BoardFacade{
+public class BoardFacadeImpl implements BoardFacade {
     private final BoardService boardService;
     private final BoardMapper boardMapper;
 
