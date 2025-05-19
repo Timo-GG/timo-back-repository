@@ -11,7 +11,6 @@ import lombok.*;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "matching_category")
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class MyPage extends BaseEntity {
     @Id
@@ -34,4 +33,11 @@ public abstract class MyPage extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requestor_id")
     private Member requestor;
+
+    protected MyPage(MatchingCategory matchingCategory, MatchingStatus status, Member acceptor, Member requestor){
+        this.matchingCategory = matchingCategory;
+        this.status = status;
+        this.acceptor = acceptor;
+        this.requestor = requestor;
+    }
 }

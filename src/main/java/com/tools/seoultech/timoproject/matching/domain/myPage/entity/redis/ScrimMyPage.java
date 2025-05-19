@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,9 @@ public class ScrimMyPage {
     @Id
     private final UUID myPageUUID;
 
+    Integer headCount;
+    ScrimMapCode mapCode;
+
     /** Acceptor Field */
     private CertifiedMemberInfo acceptorCertifiedMemberInfo;
     private List<PartyMemberInfo> acceptorPartyInfo;
@@ -38,11 +42,12 @@ public class ScrimMyPage {
     /** Redis 인스턴스 참조용 필드 */
     private final UUID boardUUID;
 
-    public static ScrimMyPage of( CertifiedMemberInfo acceptorCertifiedMemberInfo, List<PartyMemberInfo> acceptorPartyInfo,
-                                   CertifiedMemberInfo requestorCertifiedMemberInfo, List<PartyMemberInfo> requestorPartyInfo,
+    public static ScrimMyPage of( Integer headCount, ScrimMapCode mapCode,
+                                  CertifiedMemberInfo acceptorCertifiedMemberInfo, List<PartyMemberInfo> acceptorPartyInfo,
+                                  CertifiedMemberInfo requestorCertifiedMemberInfo, List<PartyMemberInfo> requestorPartyInfo,
                                   Long acceptorId, Long requestorId, UUID boardUUID){
 
-        return new ScrimMyPage(UUID.randomUUID(),
+        return new ScrimMyPage(UUID.randomUUID(), headCount, mapCode,
                                acceptorCertifiedMemberInfo, acceptorPartyInfo,
                                requestorCertifiedMemberInfo, requestorPartyInfo,
                                MatchingCategory.SCRIM ,acceptorId, requestorId, boardUUID

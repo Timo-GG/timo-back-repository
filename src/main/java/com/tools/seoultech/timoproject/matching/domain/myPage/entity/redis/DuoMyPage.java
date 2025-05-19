@@ -2,7 +2,9 @@ package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +21,8 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class DuoMyPage {
     @Id private final UUID myPageUUID;
+
+    DuoMapCode mapCode;
 
     /** Acceptor Field */
     private CertifiedMemberInfo acceptorMemberInfo;
@@ -37,11 +41,12 @@ public class DuoMyPage {
     private final UUID boardUUID;
 
 
-    public static DuoMyPage of(UserInfo acceptorUserInfo, CertifiedMemberInfo acceptorMemberInfo,
+    public static DuoMyPage of(DuoMapCode mapCode,
+                               UserInfo acceptorUserInfo, CertifiedMemberInfo acceptorMemberInfo,
                                UserInfo requestorUserInfo, CertifiedMemberInfo requestorMemberInfo,
                                Long acceptorId, Long requestorId, UUID boardUUID) {
 
-        return new DuoMyPage( UUID.randomUUID(), acceptorMemberInfo, acceptorUserInfo,
+        return new DuoMyPage( UUID.randomUUID(), mapCode, acceptorMemberInfo, acceptorUserInfo,
                               requestorMemberInfo, requestorUserInfo,
                               MatchingCategory.DUO, acceptorId, requestorId, boardUUID
         );
