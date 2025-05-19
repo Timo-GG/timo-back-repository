@@ -1,15 +1,21 @@
 package com.tools.seoultech.timoproject.matching.service.mapper;
 
 
+import com.tools.seoultech.timoproject.global.exception.GeneralException;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.DuoBoardOnly;
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.ScrimBoardOnly;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.DuoPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.MyPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.ScrimPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.DuoMyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.ScrimMyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.DuoMyPageOnly;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.ScrimMyPageOnly;
 import com.tools.seoultech.timoproject.matching.service.BoardService;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
 import org.mapstruct.*;
@@ -23,11 +29,12 @@ public interface MyPageMapper {
     MyPageMapper Instance = Mappers.getMapper(MyPageMapper.class);
 
 
-    /** DTO → Redis */
+    /** Mathing DTO → Redis */
     default DuoMyPage toDuoRedis(MatchingDTO.RequestDuo dto, @Context BoardService boardService, @Context BasicAPIService bas, @Context MemberService memberService) throws Exception{
         DuoBoardOnly proj = boardService.getDuoBoard(dto.boardUUID());
 
-        return DuoMyPage.of(BoardMapper.Instance.toUserInfo(proj), proj.getMemberInfo(),
+        return DuoMyPage.of(proj.getMapCode(),
+                BoardMapper.Instance.toUserInfo(proj), proj.getMemberInfo(),
                 dto.userInfo(), BoardMapper.Instance.getCertifiedMemberInfo(dto.requestorId(), memberService, bas),
                 proj.getMemberId(), dto.requestorId(), dto.boardUUID());
     }
@@ -35,7 +42,8 @@ public interface MyPageMapper {
     default ScrimMyPage toScrimMyPage(MatchingDTO.RequestScrim dto, @Context BoardService boardService, @Context BasicAPIService bas, @Context MemberService memberService) throws Exception{
         ScrimBoardOnly proj = boardService.getScrimBoard(dto.boardUUID());
 
-        return ScrimMyPage.of(proj.getMemberInfo(), proj.getPartyInfo(),
+        return ScrimMyPage.of(proj.getHeadCount(), proj.getMapCode(),
+                proj.getMemberInfo(), proj.getPartyInfo(),
                 BoardMapper.Instance.getCertifiedMemberInfo(dto.requestorId(), memberService, bas) , dto.partyInfo(),
                 dto.requestorId(), dto.requestorId(), dto.boardUUID());
     }
@@ -44,19 +52,51 @@ public interface MyPageMapper {
     /** Projection → DTO */
     @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(proj, true))")
     @Mapping(target = "requestor", expression = "java(getWrappedDuoData(proj, false))")
+    @Mapping(target = "matchingStatus", constant="WAITING")
     MatchingDTO.ResponseDuo toDuoDto(DuoMyPageOnly proj);
 
     @Mapping(target = "acceptor", expression = "java(getWrappedScrimData(proj, true))")
     @Mapping(target = "requestor", expression = "java(getWrappedScrimData(proj, false))")
+    @Mapping(target = "matchingStatus", constant="WAITING")
     MatchingDTO.ResponseScrim toScrimDto(ScrimMyPageOnly proj);
 
+    /** Projection → MySQL */
+    @Mapping(target = "acceptor", expression = "java(getMember(proj.getAcceptorId(), memberService))")
+    @Mapping(target = "requestor", expression = "java(getMember(proj.getRequestorId(), memberService))")
+    @Mapping(target = "matchingStatus", constant = "CONNECTED")
+    DuoPage toDuoEntity(DuoMyPageOnly proj, @Context MemberService memberService);
 
-    /** 조회용 */
-    MyPageDTO.ResponseMyPage toFilteredDtoList( Integer sizeOfDuo,
-                                                Integer sizeOfScrim,
-                                                List<MatchingDTO.ResponseDuo> duoList,
-                                                List<MatchingDTO.ResponseScrim> scrimList
-    );
+    @Mapping(target = "acceptor", expression = "java(getMember(proj.getAcceptorId(), memberService))")
+    @Mapping(target = "requestor", expression = "java(getMember(proj.getRequestorId(), memberService))")
+    @Mapping(target = "matchingStatus", constant = "CONNECTED")
+    ScrimPage toScrimEntity(ScrimMyPageOnly proj, @Context MemberService memberService);
+
+    /** MySQL → DTO */
+    default MyPageDTO.Response toFilteredDtoList(MyPage entity, Boolean isAcceptorIsMe){
+        if(entity instanceof DuoPage duoPage){
+            var acceptorInfo = MatchingDTO.WrappedDuoData.builder().memberInfo(duoPage.getAcceptorMemberInfo()).userInfo(duoPage.getRequestorUserInfo()).build();
+            var requestorInfo = MatchingDTO.WrappedDuoData.builder().memberInfo(duoPage.getRequestorMemberInfo()).userInfo(duoPage.getRequestorUserInfo()).build();
+            return MyPageDTO.ResponseDuoPage.builder()
+                    .mypageId(duoPage.getId())
+                    .mapCode(duoPage.getMapCode())
+                    .matchingCategory(duoPage.getMatchingCategory())
+                    .matchingStatus(duoPage.getStatus())
+                    .myInfo(isAcceptorIsMe ? acceptorInfo:requestorInfo)
+                    .opponentInfo(isAcceptorIsMe ? requestorInfo:acceptorInfo)
+                    .build();
+        } else if (entity instanceof ScrimPage scrimPage){
+            var acceptorInfo = MatchingDTO.WrappedScrimData.builder().memberInfo(scrimPage.getAcceptorMemberInfo()).partyInfo(scrimPage.getAcceptorPartyInfo()).build();
+            var requestorInfo = MatchingDTO.WrappedScrimData.builder().memberInfo(scrimPage.getRequestorMemberInfo()).partyInfo(scrimPage.getRequestorPartyInfo()).build();
+            return MyPageDTO.ResponseScrimPage.builder()
+                    .mypageId(scrimPage.getId())
+                    .mapCode(scrimPage.getMapCode())
+                    .matchingCategory(scrimPage.getMatchingCategory())
+                    .matchingStatus(scrimPage.getStatus())
+                    .myInfo(isAcceptorIsMe ? acceptorInfo:requestorInfo)
+                    .opponentInfo(isAcceptorIsMe ? requestorInfo:acceptorInfo)
+                    .build();
+        } else throw new GeneralException("bool fucked");
+    }
 
 
     /** 유틸리티 */
@@ -88,5 +128,10 @@ public interface MyPageMapper {
                     .partyInfo(proj.getRequestorPartyInfo())
                     .build();
         }
+    }
+
+    @Named("getMember")
+    default Member getMember(Long memberId, MemberService memberService){
+        return memberService.getById(memberId);
     }
 }

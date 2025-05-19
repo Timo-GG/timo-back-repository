@@ -1,5 +1,7 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.dto;
 
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
 import lombok.Builder;
@@ -14,13 +16,35 @@ public abstract class MyPageDTO {
             MatchingCategory matchingCategory,
             Boolean isRequestor,
             MatchingStatus status
-    ){}
+    ) implements Request{}
 
     @Builder
     public record ResponseMyPage(
-            Integer sizeOfDuo,
-            Integer sizeOfScrim,
-            List<MatchingDTO.ResponseDuo> duoList,
-            List<MatchingDTO.ResponseScrim> scrimList
-    ){}
+            Integer size,
+            List<MatchingDTO.Response> dtoList
+    ) implements Response{}
+
+    @Builder
+    public record ResponseDuoPage(
+            Long mypageId,
+            DuoMapCode mapCode,
+            MatchingCategory matchingCategory,
+            MatchingStatus matchingStatus,
+            MatchingDTO.WrappedDuoData myInfo,
+            MatchingDTO.WrappedDuoData opponentInfo
+    ) implements Response{}
+
+    @Builder
+    public record ResponseScrimPage(
+            Long mypageId,
+            ScrimMapCode mapCode,
+            MatchingCategory matchingCategory,
+            MatchingStatus matchingStatus,
+            MatchingDTO.WrappedScrimData myInfo,
+            MatchingDTO.WrappedScrimData opponentInfo
+    ) implements Response{}
+
+    public interface Request extends BaseMyPageDtoInterface{}
+    public interface Response extends BaseMyPageDtoInterface{}
+    interface BaseMyPageDtoInterface{}
 }
