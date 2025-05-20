@@ -19,7 +19,6 @@ public class MatchingService {
 
     /** Matching 수락 시  */
     public DuoPage doDuoAcceptEvent(UUID myPageUUID) throws Exception {
-//        UUID boardUUID = boardService.getDuoBoard(myPageUUID).getBoardUUID();
         UUID boardUUID = myPageService.readDuoMyPage(myPageUUID).getBoardUUID();
     // 1. MySQL 엔티티로 전환.
         // TODO: 채팅룸 연결.
