@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.matching.service.facade.Impl;
 
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
+import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.DuoMyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.ScrimMyPage;
@@ -74,5 +75,15 @@ public class MyPageFacadeImpl implements MyPageFacade {
         } else if(matchingCategory == MatchingCategory.SCRIM){
             myPageService.deleteAllScrimMyPage();
         }
+    }
+
+    @Override
+    public MyPageDTO.Response readMyPage(Long mypageId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<MyPageDTO.ResponseMyPage> readMyPageByMemberId(Long MemberId) throws Exception {
+        return List.of();
     }
 }

@@ -24,7 +24,7 @@ public abstract class MyPage extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private MatchingStatus status;
+    private MatchingStatus matchingStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "acceptor_id")
@@ -36,7 +36,7 @@ public abstract class MyPage extends BaseEntity {
 
     protected MyPage(MatchingCategory matchingCategory, MatchingStatus status, Member acceptor, Member requestor){
         this.matchingCategory = matchingCategory;
-        this.status = status;
+        this.matchingStatus = status;
         this.acceptor = acceptor;
         this.requestor = requestor;
     }

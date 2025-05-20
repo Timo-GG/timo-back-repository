@@ -20,6 +20,11 @@ import java.util.UUID;
 public class MyPageController {
     private final MyPageFacade myPageFacade;
 
+    /**
+     * Redis 마이페이지
+     * */
+
+    /** READ */
     @GetMapping("/mypage/duo")
     public ResponseEntity<APIDataResponse<List<MatchingDTO.Response>>> readDuoBoard() throws Exception{
         var dtoList = myPageFacade.readAllMyPage(MatchingCategory.DUO);
@@ -44,7 +49,7 @@ public class MyPageController {
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }
 
-
+    /** Update */
     @PostMapping("/mypage/duo")
     public ResponseEntity<APIDataResponse<MatchingDTO.Response>> createDuoBoard(@RequestBody MatchingDTO.RequestDuo requestDto) throws Exception{
         var dto = myPageFacade.createMyPage(requestDto);
@@ -57,6 +62,8 @@ public class MyPageController {
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }
 
+    /** Delete */
+    // delete All
     @DeleteMapping("/mypage/duo")
     public ResponseEntity<Void> deleteAllDuoBoard() throws Exception{
         myPageFacade.deleteAllMyPage(MatchingCategory.DUO);
@@ -69,6 +76,7 @@ public class MyPageController {
         return ResponseEntity.noContent().build();
     }
 
+    // delete by uuid
     @DeleteMapping("/mypage/duo/{boardUUID}")
     public ResponseEntity<Void> deleteDuoBoard(@PathVariable UUID boardUUID) throws Exception{
         myPageFacade.deleteMyPage(boardUUID);
@@ -80,4 +88,11 @@ public class MyPageController {
         myPageFacade.deleteMyPage(boardUUID);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * MySQL 마이페이지
+     * */
+
+
+
 }

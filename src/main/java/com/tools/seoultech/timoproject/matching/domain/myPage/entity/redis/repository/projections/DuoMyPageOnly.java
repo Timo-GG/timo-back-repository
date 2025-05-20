@@ -11,7 +11,7 @@ public interface DuoMyPageOnly extends MyPageOnly{
 
     DuoMapCode getMapCode();
     CertifiedMemberInfo getAcceptorCertifiedMemberInfo();
-    CertifiedMemberInfo getRequesterCertifiedMemberInfo();
+    CertifiedMemberInfo getRequestorCertifiedMemberInfo();
     UserInfo getAcceptorUserInfo();
     UserInfo getRequestorUserInfo();
 

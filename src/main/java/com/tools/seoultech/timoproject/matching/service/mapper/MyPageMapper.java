@@ -54,7 +54,7 @@ public interface MyPageMapper {
 
     /** Projection → DTO */
     @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(proj.getAcceptorUserInfo(), proj.getAcceptorCertifiedMemberInfo()))")
-    @Mapping(target = "requestor", expression = "java(getWrappedDuoData(proj.getRequestorUserInfo(), proj.getRequesterCertifiedMemberInfo()))")
+    @Mapping(target = "requestor", expression = "java(getWrappedDuoData(proj.getRequestorUserInfo(), proj.getRequestorCertifiedMemberInfo()))")
     @Mapping(target = "matchingStatus", constant="WAITING")
     MatchingDTO.ResponseDuo toDuoDto(DuoMyPageOnly proj);
 
@@ -66,11 +66,15 @@ public interface MyPageMapper {
     /** Projection → MySQL */
     @Mapping(target = "acceptor", expression = "java(getMember(proj.getAcceptorId(), memberService))")
     @Mapping(target = "requestor", expression = "java(getMember(proj.getRequestorId(), memberService))")
+    @Mapping(target = "acceptorMemberInfo", expression = "java(proj.getAcceptorCertifiedMemberInfo())")
+    @Mapping(target = "requestorMemberInfo", expression = "java(proj.getRequestorCertifiedMemberInfo())")
     @Mapping(target = "matchingStatus", constant = "CONNECTED")
     DuoPage toDuoEntity(DuoMyPageOnly proj, @Context MemberService memberService);
 
     @Mapping(target = "acceptor", expression = "java(getMember(proj.getAcceptorId(), memberService))")
     @Mapping(target = "requestor", expression = "java(getMember(proj.getRequestorId(), memberService))")
+    @Mapping(target = "acceptorMemberInfo", expression = "java(proj.getAcceptorCertifiedMemberInfo())")
+    @Mapping(target = "requestorMemberInfo", expression = "java(proj.getRequestorCertifiedMemberInfo())")
     @Mapping(target = "matchingStatus", constant = "CONNECTED")
     ScrimPage toScrimEntity(ScrimMyPageOnly proj, @Context MemberService memberService);
 
@@ -87,7 +91,6 @@ public interface MyPageMapper {
 
     /** MySQL → DTO */
 //    MyPageDTO.Response toDuoDto();
-
     default MyPageDTO.Response toFilteredDtoList(MyPage entity, Boolean isAcceptorIsMe){
         if(entity instanceof DuoPage duoPage){
             var acceptorInfo = MatchingDTO.WrappedDuoData.builder().memberInfo(duoPage.getAcceptorMemberInfo()).userInfo(duoPage.getRequestorUserInfo()).build();
@@ -96,9 +99,9 @@ public interface MyPageMapper {
                     .mypageId(duoPage.getId())
                     .mapCode(duoPage.getMapCode())
                     .matchingCategory(duoPage.getMatchingCategory())
-                    .matchingStatus(duoPage.getStatus())
-                    .myInfo(isAcceptorIsMe ? acceptorInfo:requestorInfo)
-                    .opponentInfo(isAcceptorIsMe ? requestorInfo:acceptorInfo)
+                    .matchingStatus(duoPage.getMatchingStatus())
+                    .acceptor(isAcceptorIsMe ? acceptorInfo:requestorInfo)
+                    .requestor(isAcceptorIsMe ? requestorInfo:acceptorInfo)
                     .build();
         } else if (entity instanceof ScrimPage scrimPage){
             var acceptorInfo = MatchingDTO.WrappedScrimData.builder().memberInfo(scrimPage.getAcceptorMemberInfo()).partyInfo(scrimPage.getAcceptorPartyInfo()).build();
@@ -107,28 +110,25 @@ public interface MyPageMapper {
                     .mypageId(scrimPage.getId())
                     .mapCode(scrimPage.getMapCode())
                     .matchingCategory(scrimPage.getMatchingCategory())
-                    .matchingStatus(scrimPage.getStatus())
-                    .myInfo(isAcceptorIsMe ? acceptorInfo:requestorInfo)
-                    .opponentInfo(isAcceptorIsMe ? requestorInfo:acceptorInfo)
+                    .matchingStatus(scrimPage.getMatchingStatus())
+                    .acceptor(isAcceptorIsMe ? acceptorInfo:requestorInfo)
+                    .requestor(isAcceptorIsMe ? requestorInfo:acceptorInfo)
                     .build();
         } else throw new GeneralException("bool fucked");
     }
 
+    @Mapping(target = "mypageId", source = "entity.id")
+    @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(entity.getAcceptorUserInfo(), entity.getAcceptorMemberInfo()))")
+    @Mapping(target = "requestor", expression = "java(getWrappedDuoData(entity.getRequestorUserInfo(), entity.getRequestorMemberInfo()))")
+    MyPageDTO.ResponseDuoPage toDuoDto(DuoPage entity);
+
+    @Mapping(target = "mypageId", source = "entity.id")
+    @Mapping(target = "acceptor", expression = "java(getWrappedScrimData(entity.getAcceptorMemberInfo(), entity.getAcceptorPartyInfo()))")
+    @Mapping(target = "requestor", expression = "java(getWrappedScrimData(entity.getRequestorMemberInfo(), entity.getRequestorPartyInfo()))")
+    MyPageDTO.ResponseScrimPage toScrimDto(ScrimPage entity);
+
 
     /** 유틸리티 */
-//    default MatchingDTO.WrappedDuoData getWrappedDuoData(DuoMyPageOnly proj, Boolean isAcceptor){
-//        if(isAcceptor){
-//            return MatchingDTO.WrappedDuoData.builder()
-//                    .userInfo(proj.getAcceptorUserInfo())
-//                    .memberInfo(proj.getAcceptorCertifiedMemberInfo())
-//                    .build();
-//        } else {
-//            return MatchingDTO.WrappedDuoData.builder()
-//                    .userInfo(proj.getRequestorUserInfo())
-//                    .memberInfo(proj.getRequesterCertifiedMemberInfo())
-//                    .build();
-//        }
-//    }
     @Named("getWrappedDuoData")
     default MatchingDTO.WrappedDuoData getWrappedDuoData(UserInfo userInfo, CompactMemberInfo memberInfo){
         return MatchingDTO.WrappedDuoData.builder().userInfo(userInfo).memberInfo(memberInfo).build();
@@ -138,20 +138,6 @@ public interface MyPageMapper {
     default MatchingDTO.WrappedScrimData getWrappedScrimData(CompactMemberInfo memberInfo, List<PartyMemberInfo> partyInfo){
         return MatchingDTO.WrappedScrimData.builder().memberInfo(memberInfo).partyInfo(partyInfo).build();
     }
-
-//    default MatchingDTO.WrappedScrimData getWrappedScrimData(ScrimMyPageOnly proj, Boolean isAcceptor){
-//        if(isAcceptor) {
-//            return MatchingDTO.WrappedScrimData.builder()
-//                    .memberInfo(proj.getAcceptorCertifiedMemberInfo())
-//                    .partyInfo(proj.getAcceptorPartyInfo())
-//                    .build();
-//        } else {
-//            return MatchingDTO.WrappedScrimData.builder()
-//                    .memberInfo(proj.getRequestorCertifiedMemberInfo())
-//                    .partyInfo(proj.getRequestorPartyInfo())
-//                    .build();
-//        }
-//    }
 
     @Named("getMember")
     default Member getMember(Long memberId, MemberService memberService){

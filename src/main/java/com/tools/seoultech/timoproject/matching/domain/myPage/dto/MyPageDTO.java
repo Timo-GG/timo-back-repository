@@ -27,21 +27,23 @@ public abstract class MyPageDTO {
     @Builder
     public record ResponseDuoPage(
             Long mypageId,
+            Boolean isAcceptor,
             DuoMapCode mapCode,
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
-            MatchingDTO.WrappedDuoData myInfo,
-            MatchingDTO.WrappedDuoData opponentInfo
+            MatchingDTO.WrappedDuoData acceptor,
+            MatchingDTO.WrappedDuoData requestor
     ) implements Response{}
 
     @Builder
     public record ResponseScrimPage(
             Long mypageId,
+            Boolean isAcceptor,
             ScrimMapCode mapCode,
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
-            MatchingDTO.WrappedScrimData myInfo,
-            MatchingDTO.WrappedScrimData opponentInfo
+            MatchingDTO.WrappedScrimData acceptor,
+            MatchingDTO.WrappedScrimData requestor
     ) implements Response{}
 
     public interface Request extends BaseMyPageDtoInterface{}

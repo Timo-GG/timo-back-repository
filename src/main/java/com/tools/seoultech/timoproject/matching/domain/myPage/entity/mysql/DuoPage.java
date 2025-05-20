@@ -13,6 +13,7 @@ import lombok.*;
 
 @Entity
 @Getter
+@ToString
 @DiscriminatorValue("DUO")
 @Builder(toBuilder = true, builderMethodName = "updateBuilder")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
