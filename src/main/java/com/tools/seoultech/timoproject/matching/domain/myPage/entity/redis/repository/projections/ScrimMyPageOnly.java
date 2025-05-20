@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public interface ScrimMyPageOnly {
+public interface ScrimMyPageOnly extends MyPageOnly{
     UUID getMyPageUUID();
 
     Integer getHeadCount();

@@ -25,11 +25,11 @@ public class DuoMyPage {
     DuoMapCode mapCode;
 
     /** Acceptor Field */
-    private CertifiedMemberInfo acceptorMemberInfo;
+    private CertifiedMemberInfo acceptorCertifiedMemberInfo;
     private UserInfo acceptorUserInfo;
 
     /** Requestor Field */
-    private CertifiedMemberInfo requestorMemberInfo;
+    private CertifiedMemberInfo requestorCertifiedMemberInfo;
     private UserInfo requestorUserInfo;
 
     /** 검색용 내부 인덱스 필드 */

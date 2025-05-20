@@ -3,6 +3,9 @@ package com.tools.seoultech.timoproject.matching.service.mapper;
 
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.DuoBoardOnly;
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.ScrimBoardOnly;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
@@ -50,13 +53,13 @@ public interface MyPageMapper {
 
 
     /** Projection → DTO */
-    @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(proj, true))")
-    @Mapping(target = "requestor", expression = "java(getWrappedDuoData(proj, false))")
+    @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(proj.getAcceptorUserInfo(), proj.getAcceptorCertifiedMemberInfo()))")
+    @Mapping(target = "requestor", expression = "java(getWrappedDuoData(proj.getRequestorUserInfo(), proj.getRequesterCertifiedMemberInfo()))")
     @Mapping(target = "matchingStatus", constant="WAITING")
     MatchingDTO.ResponseDuo toDuoDto(DuoMyPageOnly proj);
 
-    @Mapping(target = "acceptor", expression = "java(getWrappedScrimData(proj, true))")
-    @Mapping(target = "requestor", expression = "java(getWrappedScrimData(proj, false))")
+    @Mapping(target = "acceptor", expression = "java(getWrappedScrimData(proj.getAcceptorCertifiedMemberInfo(), proj.getAcceptorPartyInfo()))")
+    @Mapping(target = "requestor", expression = "java(getWrappedScrimData(proj.getRequestorCertifiedMemberInfo(), proj.getRequestorPartyInfo()))")
     @Mapping(target = "matchingStatus", constant="WAITING")
     MatchingDTO.ResponseScrim toScrimDto(ScrimMyPageOnly proj);
 
@@ -71,7 +74,20 @@ public interface MyPageMapper {
     @Mapping(target = "matchingStatus", constant = "CONNECTED")
     ScrimPage toScrimEntity(ScrimMyPageOnly proj, @Context MemberService memberService);
 
+    /** Redis → DTO */
+    @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(entity.getAcceptorUserInfo(), entity.getAcceptorCertifiedMemberInfo()))")
+    @Mapping(target = "requestor", expression = "java(getWrappedDuoData(entity.getRequestorUserInfo(), entity.getRequestorCertifiedMemberInfo()))")
+    @Mapping(target = "matchingStatus", constant = "WAITING")
+    MatchingDTO.ResponseDuo toDuoDto(DuoMyPage entity);
+
+    @Mapping(target = "acceptor", expression = "java(getWrappedScrimData(entity.getAcceptorCertifiedMemberInfo(), entity.getAcceptorPartyInfo()))")
+    @Mapping(target = "requestor", expression = "java(getWrappedScrimData(entity.getRequestorCertifiedMemberInfo(), entity.getRequestorPartyInfo()))")
+    @Mapping(target = "matchingStatus", constant = "WAITING")
+    MatchingDTO.ResponseScrim toScrimDto(ScrimMyPage entity);
+
     /** MySQL → DTO */
+//    MyPageDTO.Response toDuoDto();
+
     default MyPageDTO.Response toFilteredDtoList(MyPage entity, Boolean isAcceptorIsMe){
         if(entity instanceof DuoPage duoPage){
             var acceptorInfo = MatchingDTO.WrappedDuoData.builder().memberInfo(duoPage.getAcceptorMemberInfo()).userInfo(duoPage.getRequestorUserInfo()).build();
@@ -100,35 +116,42 @@ public interface MyPageMapper {
 
 
     /** 유틸리티 */
+//    default MatchingDTO.WrappedDuoData getWrappedDuoData(DuoMyPageOnly proj, Boolean isAcceptor){
+//        if(isAcceptor){
+//            return MatchingDTO.WrappedDuoData.builder()
+//                    .userInfo(proj.getAcceptorUserInfo())
+//                    .memberInfo(proj.getAcceptorCertifiedMemberInfo())
+//                    .build();
+//        } else {
+//            return MatchingDTO.WrappedDuoData.builder()
+//                    .userInfo(proj.getRequestorUserInfo())
+//                    .memberInfo(proj.getRequesterCertifiedMemberInfo())
+//                    .build();
+//        }
+//    }
     @Named("getWrappedDuoData")
-    default MatchingDTO.WrappedDuoData getWrappedDuoData(DuoMyPageOnly proj, Boolean isAcceptor){
-        if(isAcceptor){
-            return MatchingDTO.WrappedDuoData.builder()
-                    .userInfo(proj.getAcceptorUserInfo())
-                    .memberInfo(proj.getAcceptorCertifiedMemberInfo())
-                    .build();
-        } else {
-            return MatchingDTO.WrappedDuoData.builder()
-                    .userInfo(proj.getRequestorUserInfo())
-                    .memberInfo(proj.getRequesterCertifiedMemberInfo())
-                    .build();
-        }
+    default MatchingDTO.WrappedDuoData getWrappedDuoData(UserInfo userInfo, CompactMemberInfo memberInfo){
+        return MatchingDTO.WrappedDuoData.builder().userInfo(userInfo).memberInfo(memberInfo).build();
     }
 
     @Named("getWrappedScrimData")
-    default MatchingDTO.WrappedScrimData getWrappedScrimData(ScrimMyPageOnly proj, Boolean isAcceptor){
-        if(isAcceptor) {
-            return MatchingDTO.WrappedScrimData.builder()
-                    .memberInfo(proj.getAcceptorCertifiedMemberInfo())
-                    .partyInfo(proj.getAcceptorPartyInfo())
-                    .build();
-        } else {
-            return MatchingDTO.WrappedScrimData.builder()
-                    .memberInfo(proj.getRequestorCertifiedMemberInfo())
-                    .partyInfo(proj.getRequestorPartyInfo())
-                    .build();
-        }
+    default MatchingDTO.WrappedScrimData getWrappedScrimData(CompactMemberInfo memberInfo, List<PartyMemberInfo> partyInfo){
+        return MatchingDTO.WrappedScrimData.builder().memberInfo(memberInfo).partyInfo(partyInfo).build();
     }
+
+//    default MatchingDTO.WrappedScrimData getWrappedScrimData(ScrimMyPageOnly proj, Boolean isAcceptor){
+//        if(isAcceptor) {
+//            return MatchingDTO.WrappedScrimData.builder()
+//                    .memberInfo(proj.getAcceptorCertifiedMemberInfo())
+//                    .partyInfo(proj.getAcceptorPartyInfo())
+//                    .build();
+//        } else {
+//            return MatchingDTO.WrappedScrimData.builder()
+//                    .memberInfo(proj.getRequestorCertifiedMemberInfo())
+//                    .partyInfo(proj.getRequestorPartyInfo())
+//                    .build();
+//        }
+//    }
 
     @Named("getMember")
     default Member getMember(Long memberId, MemberService memberService){

@@ -6,11 +6,10 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Duo
 
 import java.util.UUID;
 
-public interface DuoMyPageOnly {
+public interface DuoMyPageOnly extends MyPageOnly{
     UUID getMyPageUUID();
 
     DuoMapCode getMapCode();
-
     CertifiedMemberInfo getAcceptorCertifiedMemberInfo();
     CertifiedMemberInfo getRequesterCertifiedMemberInfo();
     UserInfo getAcceptorUserInfo();
