@@ -12,6 +12,7 @@ import java.util.UUID;
 @Repository
 public interface ScrimMyPageRepository extends CrudRepository<ScrimMyPage, UUID> {
     Optional<ScrimMyPageOnly> findByMyPageUUID(UUID myPageUUID);
+    List<ScrimMyPageOnly> findAllBy();
     List<ScrimMyPageOnly> findByAcceptorIdOrRequestorId(Long acceptorId, Long requestorId);
     List<ScrimMyPageOnly> findByAccecptorId(Long acceptorId);
     List<ScrimMyPageOnly> findByRequestorId(Long requestorId);

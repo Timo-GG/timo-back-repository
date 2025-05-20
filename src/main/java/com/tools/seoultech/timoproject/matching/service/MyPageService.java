@@ -1,8 +1,10 @@
 package com.tools.seoultech.timoproject.matching.service;
 
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
+import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.BoardOnly;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.DuoPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.MyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.ScrimPage;
@@ -12,6 +14,7 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.Scrim
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.DuoMyPageRepository;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.ScrimMyPageRepository;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.DuoMyPageOnly;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.MyPageOnly;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.ScrimMyPageOnly;
 import com.tools.seoultech.timoproject.matching.service.facade.Impl.BoardFacadeImpl;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
@@ -78,6 +81,23 @@ public class MyPageService {
         return proj;
     }
 
+    public MyPageOnly getBoard(UUID boardUUID) throws Exception {
+        MyPageOnly proj = duoMyPageRepository.findByMyPageUUID(boardUUID)
+                .map(p -> (MyPageOnly) p)
+                .or(() -> scrimMyPageRepository.findByMyPageUUID(boardUUID)
+                        .map(p -> (MyPageOnly) p))
+                .orElseThrow(() -> new Exception("Board not found: " + boardUUID));
+        return proj;
+    }
+
+    public List<DuoMyPageOnly> getAllDuoMyPage() throws Exception {
+        return duoMyPageRepository.findAllBy();
+    }
+
+    public List<ScrimMyPageOnly> getAllScrimMyPage() throws Exception {
+        return scrimMyPageRepository.findAllBy();
+    }
+
     // MySQL 엔티티 조회
     public DuoPage readDuoMyPage(Long mypageId) throws Exception {
         DuoPage entity = (DuoPage) pageRepository.findById(mypageId)
@@ -122,6 +142,14 @@ public class MyPageService {
 
     public void deleteScrimMyPage(UUID BoardUUID) {
         scrimMyPageRepository.deleteById(BoardUUID);
+    }
+
+    public void deleteAllDuoMyPage() {
+        duoMyPageRepository.deleteAll();
+    }
+
+    public void deleteAllScrimMyPage() {
+        scrimMyPageRepository.deleteAll();
     }
 
     // MySQL 엔티티 삭제
