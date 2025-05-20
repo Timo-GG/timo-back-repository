@@ -1,10 +1,12 @@
 package com.tools.seoultech.timoproject.riot.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.*;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RankInfoDto {
     private String tier;   // GOLD, PLATINUM, MASTER 등
     private String rank;   // I, II, III, IV (단 마스터 이상은 없음)
