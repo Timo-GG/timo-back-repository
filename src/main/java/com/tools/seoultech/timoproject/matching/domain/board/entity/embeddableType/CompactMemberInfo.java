@@ -13,6 +13,5 @@ import java.util.List;
 public class CompactMemberInfo {
     private RiotAccount riotAccount;
     private RankInfoDto rankInfo;
-
     private List<String> most3Champ;
 }

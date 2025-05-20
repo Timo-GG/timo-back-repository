@@ -52,7 +52,6 @@ public interface BoardMapper {
                 .memberId(entity.getMemberId()).matchingCategory(MatchingCategory.SCRIM).tier(entity.getTier()).build();
     }
 
-
     /** Projection → DTO */
     @Mapping(target = "userInfo", expression = "java(toUserInfo(proj))")
     @Mapping(target = "duoInfo", expression = "java(toDuoInfo(proj))")

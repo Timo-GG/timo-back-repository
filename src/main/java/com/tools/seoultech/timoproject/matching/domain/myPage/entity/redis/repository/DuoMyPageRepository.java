@@ -12,6 +12,7 @@ import java.util.UUID;
 @Repository
 public interface DuoMyPageRepository extends CrudRepository<DuoMyPage, UUID> {
     Optional<DuoMyPageOnly> findByMyPageUUID(UUID myPageUUID);
+    List<DuoMyPageOnly> findAllBy();
     List<DuoMyPageOnly> findByAcceptorIdOrRequestorId(Long acceptorId, Long requestorId);
     List<DuoMyPageOnly> findByAccecptorId(Long acceptorId);
     List<DuoMyPageOnly> findByRequestorId(Long requestorId);
