@@ -3,6 +3,7 @@ package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repo
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +14,7 @@ public interface ScrimMyPageOnly extends MyPageOnly{
 
     Integer getHeadCount();
     ScrimMapCode getMapCode();
+    MatchingCategory getMatchingCategory();
 
     CertifiedMemberInfo getAcceptorCertifiedMemberInfo();
     CertifiedMemberInfo getRequestorCertifiedMemberInfo();
@@ -21,4 +23,5 @@ public interface ScrimMyPageOnly extends MyPageOnly{
 
     Long getAcceptorId();
     Long getRequestorId();
+    UUID getBoardUUID();
 }

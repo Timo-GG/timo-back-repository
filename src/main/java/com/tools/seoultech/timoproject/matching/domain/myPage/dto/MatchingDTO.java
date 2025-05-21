@@ -6,6 +6,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableTy
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
 import lombok.Builder;
 
@@ -31,6 +32,7 @@ public class MatchingDTO {
     public record ResponseDuo(
             UUID myPageUUID,
             DuoMapCode mapCode,
+            MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
             WrappedDuoData acceptor,
             WrappedDuoData requestor
@@ -41,6 +43,7 @@ public class MatchingDTO {
             UUID myPageUUID,
             Integer headCount,
             ScrimMapCode mapCode,
+            MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
             WrappedScrimData acceptor,
             WrappedScrimData requestor

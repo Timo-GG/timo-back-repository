@@ -21,7 +21,8 @@ public abstract class MyPageDTO {
     @Builder
     public record ResponseMyPage(
             Integer size,
-            List<MatchingDTO.Response> dtoList
+            String filteredBy,
+            List<MyPageDTO.Response> dtoList
     ) implements Response{}
 
     @Builder
@@ -30,8 +31,8 @@ public abstract class MyPageDTO {
             DuoMapCode mapCode,
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
-            MatchingDTO.WrappedDuoData myInfo,
-            MatchingDTO.WrappedDuoData opponentInfo
+            MatchingDTO.WrappedDuoData acceptor,
+            MatchingDTO.WrappedDuoData requestor
     ) implements Response{}
 
     @Builder
@@ -40,8 +41,8 @@ public abstract class MyPageDTO {
             ScrimMapCode mapCode,
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
-            MatchingDTO.WrappedScrimData myInfo,
-            MatchingDTO.WrappedScrimData opponentInfo
+            MatchingDTO.WrappedScrimData acceptor,
+            MatchingDTO.WrappedScrimData requestor
     ) implements Response{}
 
     public interface Request extends BaseMyPageDtoInterface{}

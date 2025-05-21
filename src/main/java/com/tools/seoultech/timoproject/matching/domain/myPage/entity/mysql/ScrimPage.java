@@ -6,7 +6,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Scr
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
 import com.tools.seoultech.timoproject.matching.service.converter.CompactMemberInfoConverter;
-import com.tools.seoultech.timoproject.matching.service.converter.ListCompactMemberInfoConverter;
+import com.tools.seoultech.timoproject.matching.service.converter.ListPartyMemberInfoConverter;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,11 +23,11 @@ public class ScrimPage extends MyPage {
     private Integer headCount;
     private ScrimMapCode mapCode;
 
-    @Convert(converter = ListCompactMemberInfoConverter.class)
+    @Convert(converter = ListPartyMemberInfoConverter.class)
     @Column(columnDefinition = "JSON")
     private List<PartyMemberInfo> acceptorPartyInfo;
 
-    @Convert(converter = ListCompactMemberInfoConverter.class)
+    @Convert(converter = ListPartyMemberInfoConverter.class)
     @Column(columnDefinition = "JSON")
     private List<PartyMemberInfo> requestorPartyInfo;
 
@@ -45,7 +45,7 @@ public class ScrimPage extends MyPage {
                      List<PartyMemberInfo> acceptorPartyInfo, List<PartyMemberInfo> requestorPartyInfo,
                      CompactMemberInfo acceptorMemberInfo, CompactMemberInfo requestorMemberInfo){
 
-        super(MatchingCategory.DUO, matchingStatus, acceptor, requestor);
+        super(MatchingCategory.SCRIM, matchingStatus, acceptor, requestor);
         this.headCount = headCount;
         this.mapCode = mapCode;
         this.acceptorPartyInfo = acceptorPartyInfo;
