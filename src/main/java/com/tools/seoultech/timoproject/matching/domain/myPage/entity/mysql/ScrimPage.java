@@ -45,7 +45,7 @@ public class ScrimPage extends MyPage {
                      List<PartyMemberInfo> acceptorPartyInfo, List<PartyMemberInfo> requestorPartyInfo,
                      CompactMemberInfo acceptorMemberInfo, CompactMemberInfo requestorMemberInfo){
 
-        super(MatchingCategory.DUO, matchingStatus, acceptor, requestor);
+        super(MatchingCategory.SCRIM, matchingStatus, acceptor, requestor);
         this.headCount = headCount;
         this.mapCode = mapCode;
         this.acceptorPartyInfo = acceptorPartyInfo;

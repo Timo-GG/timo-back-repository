@@ -91,7 +91,7 @@ public interface MyPageMapper {
 
     /** MySQL → DTO */
 //    MyPageDTO.Response toDuoDto();
-    default MyPageDTO.Response toFilteredDtoList(MyPage entity, Boolean isAcceptorIsMe){
+    default MyPageDTO.Response toFilteredDtoList(MyPage entity){
         if(entity instanceof DuoPage duoPage){
             var acceptorInfo = MatchingDTO.WrappedDuoData.builder().memberInfo(duoPage.getAcceptorMemberInfo()).userInfo(duoPage.getRequestorUserInfo()).build();
             var requestorInfo = MatchingDTO.WrappedDuoData.builder().memberInfo(duoPage.getRequestorMemberInfo()).userInfo(duoPage.getRequestorUserInfo()).build();
@@ -100,8 +100,8 @@ public interface MyPageMapper {
                     .mapCode(duoPage.getMapCode())
                     .matchingCategory(duoPage.getMatchingCategory())
                     .matchingStatus(duoPage.getMatchingStatus())
-                    .acceptor(isAcceptorIsMe ? acceptorInfo:requestorInfo)
-                    .requestor(isAcceptorIsMe ? requestorInfo:acceptorInfo)
+                    .acceptor(acceptorInfo)
+                    .requestor(requestorInfo)
                     .build();
         } else if (entity instanceof ScrimPage scrimPage){
             var acceptorInfo = MatchingDTO.WrappedScrimData.builder().memberInfo(scrimPage.getAcceptorMemberInfo()).partyInfo(scrimPage.getAcceptorPartyInfo()).build();
@@ -111,10 +111,16 @@ public interface MyPageMapper {
                     .mapCode(scrimPage.getMapCode())
                     .matchingCategory(scrimPage.getMatchingCategory())
                     .matchingStatus(scrimPage.getMatchingStatus())
-                    .acceptor(isAcceptorIsMe ? acceptorInfo:requestorInfo)
-                    .requestor(isAcceptorIsMe ? requestorInfo:acceptorInfo)
+                    .acceptor(acceptorInfo)
+                    .requestor(requestorInfo)
                     .build();
         } else throw new GeneralException("bool fucked");
+    }
+    default MyPageDTO.ResponseMyPage tofilteredWrappeddtoList(List<MyPageDTO.Response> filteredDtoList, String format){
+        return MyPageDTO.ResponseMyPage.builder()
+                .size(filteredDtoList.size())
+                .filteredBy(format)
+                .dtoList(filteredDtoList).build();
     }
 
     @Mapping(target = "mypageId", source = "entity.id")

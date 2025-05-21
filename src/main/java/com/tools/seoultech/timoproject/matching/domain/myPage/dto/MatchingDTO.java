@@ -43,6 +43,7 @@ public class MatchingDTO {
             UUID myPageUUID,
             Integer headCount,
             ScrimMapCode mapCode,
+            MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
             WrappedScrimData acceptor,
             WrappedScrimData requestor

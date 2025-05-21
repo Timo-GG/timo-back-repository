@@ -21,13 +21,13 @@ public abstract class MyPageDTO {
     @Builder
     public record ResponseMyPage(
             Integer size,
-            List<MatchingDTO.Response> dtoList
+            String filteredBy,
+            List<MyPageDTO.Response> dtoList
     ) implements Response{}
 
     @Builder
     public record ResponseDuoPage(
             Long mypageId,
-            Boolean isAcceptor,
             DuoMapCode mapCode,
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
@@ -38,7 +38,6 @@ public abstract class MyPageDTO {
     @Builder
     public record ResponseScrimPage(
             Long mypageId,
-            Boolean isAcceptor,
             ScrimMapCode mapCode,
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,

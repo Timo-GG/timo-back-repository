@@ -28,10 +28,9 @@ public class MatchingFacadeImpl implements MatchingFacade {
     public MyPageDTO.Response doAcceptEvent(UUID myPageUUID) throws Exception {
             MatchingDTO.Response dto = myPageFacade.readMyPage(myPageUUID);
             if(dto instanceof MatchingDTO.ResponseDuo duoDto ){
-                System.err.println("MatchingDTO.Response in doAcceptEvent Facade: " + duoDto.acceptor().memberInfo());
                 DuoPage entity = matchingService.doDuoAcceptEvent(myPageUUID);
-                System.err.println("MatchingDTO.entity in doAcceptEvent Facade: " + entity.getAcceptorMemberInfo());
                 return myPageMapper.toDuoDto(entity);
+
             } else if (dto instanceof MatchingDTO.ResponseScrim scrimDto ){
                 ScrimPage entity = matchingService.doScrimAcceptEvent(myPageUUID);
                 return myPageMapper.toScrimDto(entity);

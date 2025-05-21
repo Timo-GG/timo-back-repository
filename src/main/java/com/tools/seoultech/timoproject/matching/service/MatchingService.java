@@ -31,7 +31,7 @@ public class MatchingService {
     }
 
     public ScrimPage doScrimAcceptEvent(UUID myPageUUID) throws Exception {
-        UUID boardUUID = boardService.getDuoBoard(myPageUUID).getBoardUUID();
+        UUID boardUUID = myPageService.readScrimMyPage(myPageUUID).getBoardUUID();
     // 1. MySQL 엔티티로 전환.
         // TODO: 채팅룸 연결.
         ScrimPage entity = myPageService.createScrimPage(myPageUUID);
