@@ -7,7 +7,7 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.Ma
 
 import java.util.UUID;
 
-public interface DuoMyPageOnly extends MyPageOnly{
+public interface RedisDuoPageOnly extends PageOnly {
     UUID getMyPageUUID();
 
     DuoMapCode getMapCode();

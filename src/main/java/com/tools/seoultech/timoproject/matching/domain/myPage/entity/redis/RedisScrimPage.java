@@ -19,7 +19,7 @@ import java.util.UUID;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ScrimMyPage {
+public class RedisScrimPage {
     @Id
     private final UUID myPageUUID;
 
@@ -42,12 +42,12 @@ public class ScrimMyPage {
     /** Redis 인스턴스 참조용 필드 */
     private final UUID boardUUID;
 
-    public static ScrimMyPage of( Integer headCount, ScrimMapCode mapCode,
-                                  CertifiedMemberInfo acceptorCertifiedMemberInfo, List<PartyMemberInfo> acceptorPartyInfo,
-                                  CertifiedMemberInfo requestorCertifiedMemberInfo, List<PartyMemberInfo> requestorPartyInfo,
-                                  Long acceptorId, Long requestorId, UUID boardUUID){
+    public static RedisScrimPage of(Integer headCount, ScrimMapCode mapCode,
+                                    CertifiedMemberInfo acceptorCertifiedMemberInfo, List<PartyMemberInfo> acceptorPartyInfo,
+                                    CertifiedMemberInfo requestorCertifiedMemberInfo, List<PartyMemberInfo> requestorPartyInfo,
+                                    Long acceptorId, Long requestorId, UUID boardUUID){
 
-        return new ScrimMyPage(UUID.randomUUID(), headCount, mapCode,
+        return new RedisScrimPage(UUID.randomUUID(), headCount, mapCode,
                                acceptorCertifiedMemberInfo, acceptorPartyInfo,
                                requestorCertifiedMemberInfo, requestorPartyInfo,
                                MatchingCategory.SCRIM ,acceptorId, requestorId, boardUUID

@@ -7,11 +7,11 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.Ma
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.DuoPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.MyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.ScrimPage;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.DuoMyPage;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.ScrimMyPage;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.DuoMyPageOnly;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.MyPageOnly;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.ScrimMyPageOnly;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisDuoPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisScrimPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisDuoPageOnly;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.PageOnly;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisScrimPageOnly;
 import com.tools.seoultech.timoproject.matching.service.MyPageService;
 import com.tools.seoultech.timoproject.matching.service.facade.MyPageFacade;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
@@ -32,10 +32,10 @@ public class MyPageFacadeImpl implements MyPageFacade {
     @Override
     public MatchingDTO.Response createMyPage(MatchingDTO.Request dto) throws Exception {
         if(dto instanceof MatchingDTO.RequestDuo duoDto) {
-            DuoMyPage entity = myPageService.createDuoMyPage(duoDto);
+            RedisDuoPage entity = myPageService.createDuoMyPage(duoDto);
             return myPageMapper.toDuoDto(entity);
         } else if(dto instanceof MatchingDTO.RequestScrim scrimDto) {
-            ScrimMyPage entity = myPageService.createScrimMyPage(scrimDto);
+            RedisScrimPage entity = myPageService.createScrimMyPage(scrimDto);
             return myPageMapper.toScrimDto(entity);
         }
         throw new GeneralException("마이페이지 요청 dto 데이터 형식이 맞지 않습니다.");
@@ -43,11 +43,11 @@ public class MyPageFacadeImpl implements MyPageFacade {
 
     @Override
     public MatchingDTO.Response readMyPage(UUID myPageUUID) throws Exception {
-        MyPageOnly proj = myPageService.getMyPage(myPageUUID);
-        if(proj instanceof DuoMyPageOnly){
-            return myPageMapper.toDuoDto((DuoMyPageOnly) proj);
-        } else if (proj instanceof ScrimMyPageOnly){
-            return myPageMapper.toScrimDto((ScrimMyPageOnly) proj);
+        PageOnly proj = myPageService.getMyPage(myPageUUID);
+        if(proj instanceof RedisDuoPageOnly){
+            return myPageMapper.toDuoDto((RedisDuoPageOnly) proj);
+        } else if (proj instanceof RedisScrimPageOnly){
+            return myPageMapper.toScrimDto((RedisScrimPageOnly) proj);
         }
         throw new GeneralException("해당 UUID는 Duo, Scrim 레디스 저장소에 없습니다.");
     }
@@ -111,10 +111,10 @@ public class MyPageFacadeImpl implements MyPageFacade {
 
     @Override
     public MyPage createPage(UUID mypageUUID) throws Exception {
-        MyPageOnly proj = myPageService.getMyPage(mypageUUID);
-        if(proj instanceof DuoMyPageOnly) {
+        PageOnly proj = myPageService.getMyPage(mypageUUID);
+        if(proj instanceof RedisDuoPageOnly) {
             return myPageService.createDuoPage(mypageUUID);
-        } else if(proj instanceof ScrimMyPageOnly) {
+        } else if(proj instanceof RedisScrimPageOnly) {
             return myPageService.createScrimPage(mypageUUID);
         }
         throw new GeneralException("Test 실패");

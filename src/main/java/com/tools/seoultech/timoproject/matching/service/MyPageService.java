@@ -6,13 +6,13 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.DuoPa
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.MyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.ScrimPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.repository.PageRepository;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.DuoMyPage;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.ScrimMyPage;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.DuoMyPageRepository;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.ScrimMyPageRepository;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.DuoMyPageOnly;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.MyPageOnly;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.ScrimMyPageOnly;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisDuoPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisScrimPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.RedisDuoPageRepository;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.RedisScrimPageRepository;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisDuoPageOnly;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.PageOnly;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisScrimPageOnly;
 import com.tools.seoultech.timoproject.matching.service.facade.Impl.BoardFacadeImpl;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
 import com.tools.seoultech.timoproject.member.service.MemberService;
@@ -32,8 +32,8 @@ public class MyPageService {
     private final BasicAPIService bas;
     private final MemberService memberService;
 
-    private final DuoMyPageRepository duoMyPageRepository;
-    private final ScrimMyPageRepository scrimMyPageRepository;
+    private final RedisDuoPageRepository redisDuoPageRepository;
+    private final RedisScrimPageRepository redisScrimPageRepository;
     private final PageRepository pageRepository;
 
     private final MyPageMapper myPageMapper;
@@ -46,59 +46,59 @@ public class MyPageService {
      *          [Delete] : UUID, MatchingCategory별 삭제.
      */
     // Note: MyPage 엔티티 생성
-    public DuoMyPage createDuoMyPage(MatchingDTO.RequestDuo dto) throws Exception {
-        return duoMyPageRepository.save(myPageMapper.toDuoRedis(dto, boardService, bas, memberService));
+    public RedisDuoPage createDuoMyPage(MatchingDTO.RequestDuo dto) throws Exception {
+        return redisDuoPageRepository.save(myPageMapper.toDuoRedis(dto, boardService, bas, memberService));
     }
 
-    public ScrimMyPage createScrimMyPage(MatchingDTO.RequestScrim dto) throws Exception {
-        return scrimMyPageRepository.save(myPageMapper.toScrimMyPage(dto, boardService, bas, memberService));
+    public RedisScrimPage createScrimMyPage(MatchingDTO.RequestScrim dto) throws Exception {
+        return redisScrimPageRepository.save(myPageMapper.toScrimMyPage(dto, boardService, bas, memberService));
     }
 
     // Note: MyPage UUID 조회
-    public DuoMyPageOnly readDuoMyPage(UUID myPageUUID) throws Exception {
-        DuoMyPageOnly proj = duoMyPageRepository.findByMyPageUUID(myPageUUID)
+    public RedisDuoPageOnly readDuoMyPage(UUID myPageUUID) throws Exception {
+        RedisDuoPageOnly proj = redisDuoPageRepository.findByMyPageUUID(myPageUUID)
                 .orElseThrow(() -> new GeneralException("해당 UUID의 MyPage가 레디스 저장소에 없습니다."));
         return proj;
     }
 
-    public ScrimMyPageOnly readScrimMyPage(UUID myPageUUID) throws Exception {
-        ScrimMyPageOnly proj = scrimMyPageRepository.findByMyPageUUID(myPageUUID)
+    public RedisScrimPageOnly readScrimMyPage(UUID myPageUUID) throws Exception {
+        RedisScrimPageOnly proj = redisScrimPageRepository.findByMyPageUUID(myPageUUID)
                 .orElseThrow(() -> new GeneralException("해당 UUID의 MyPage가 레디스 저장소에 없습니다."));
         return proj;
     }
 
-    public MyPageOnly getMyPage(UUID myPageUUID) throws Exception {
-        MyPageOnly proj = duoMyPageRepository.findByMyPageUUID(myPageUUID)
-                .map(p -> (MyPageOnly) p)
-                .or(() -> scrimMyPageRepository.findByMyPageUUID(myPageUUID)
-                        .map(p -> (MyPageOnly) p))
+    public PageOnly getMyPage(UUID myPageUUID) throws Exception {
+        PageOnly proj = redisDuoPageRepository.findByMyPageUUID(myPageUUID)
+                .map(p -> (PageOnly) p)
+                .or(() -> redisScrimPageRepository.findByMyPageUUID(myPageUUID)
+                        .map(p -> (PageOnly) p))
                 .orElseThrow(() -> new Exception("Board not found: " + myPageUUID));
         return proj;
     }
 
-    public List<DuoMyPageOnly> getAllDuoMyPage() throws Exception {
-        return duoMyPageRepository.findAllBy();
+    public List<RedisDuoPageOnly> getAllDuoMyPage() throws Exception {
+        return redisDuoPageRepository.findAllBy();
     }
 
-    public List<ScrimMyPageOnly> getAllScrimMyPage() throws Exception {
-        return scrimMyPageRepository.findAllBy();
+    public List<RedisScrimPageOnly> getAllScrimMyPage() throws Exception {
+        return redisScrimPageRepository.findAllBy();
     }
 
     /** MyPage UUID 삭제 */
     public void deleteDuoMyPage(UUID BoardUUID) {
-        duoMyPageRepository.deleteById(BoardUUID);
+        redisDuoPageRepository.deleteById(BoardUUID);
     }
 
     public void deleteScrimMyPage(UUID BoardUUID) {
-        scrimMyPageRepository.deleteById(BoardUUID);
+        redisScrimPageRepository.deleteById(BoardUUID);
     }
 
     public void deleteAllDuoMyPage() {
-        duoMyPageRepository.deleteAll();
+        redisDuoPageRepository.deleteAll();
     }
 
     public void deleteAllScrimMyPage() {
-        scrimMyPageRepository.deleteAll();
+        redisScrimPageRepository.deleteAll();
     }
 
 
@@ -112,14 +112,14 @@ public class MyPageService {
      */
     // Note: MySQL 엔티티 생성.
     public DuoPage createDuoPage(UUID myPageUUID) throws Exception{
-        DuoMyPageOnly proj = duoMyPageRepository.findByMyPageUUID(myPageUUID)
+        RedisDuoPageOnly proj = redisDuoPageRepository.findByMyPageUUID(myPageUUID)
                 .orElseThrow(() -> new GeneralException("해당 myPageUUId는 없습니다."));
 
         return pageRepository.save(myPageMapper.toDuoEntity(proj, memberService));
     }
 
     public ScrimPage createScrimPage(UUID myPageUUID){
-        ScrimMyPageOnly proj = scrimMyPageRepository.findByMyPageUUID(myPageUUID)
+        RedisScrimPageOnly proj = redisScrimPageRepository.findByMyPageUUID(myPageUUID)
                 .orElseThrow(() -> new GeneralException("해당 myPageUUId는 없습니다."));
         return pageRepository.save(myPageMapper.toScrimEntity(proj, memberService));
     }

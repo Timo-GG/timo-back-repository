@@ -1,4 +1,4 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections;
 
-public interface MyPageOnly {
+public interface PageOnly {
 }

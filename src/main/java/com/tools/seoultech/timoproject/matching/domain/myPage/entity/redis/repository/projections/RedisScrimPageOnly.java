@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public interface ScrimMyPageOnly extends MyPageOnly{
+public interface RedisScrimPageOnly extends PageOnly {
     UUID getMyPageUUID();
 
     Integer getHeadCount();

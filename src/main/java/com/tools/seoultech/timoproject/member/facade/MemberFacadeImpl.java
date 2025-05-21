@@ -18,6 +18,8 @@ public class MemberFacadeImpl implements MemberFacade {
 
     private final MemberService memberService;
     private final BasicAPIService riotService;
+
+
     @Override
     public MemberDto getMemberInfo(Long memberId) {
         Member member = memberService.getById(memberId);
