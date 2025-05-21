@@ -100,14 +100,13 @@ public class MyPageFacadeImpl implements MyPageFacade {
 
     @Override
     public List<MyPageDTO.ResponseMyPage> readMyPageByMemberId(Long memberId) throws Exception {
-        var responseDtoList = myPageService.readPageSortingByIsReceived(memberId).entrySet().stream()
+        return myPageService.readPageSortingByIsReceived(memberId).entrySet().stream()
                 .map(entry -> {
                     List<MyPageDTO.Response> filteredDtoList = entry.getValue().stream()
                         .map(myPageMapper::toFilteredDtoList).toList();
-                    return myPageMapper.tofilteredWrappeddtoList(filteredDtoList, "{}:{}");
+                    return myPageMapper.tofilteredWrappeddtoList(filteredDtoList, String.valueOf(entry.getKey()));
                 })
                 .toList();
-        return responseDtoList;
     }
 
     @Override

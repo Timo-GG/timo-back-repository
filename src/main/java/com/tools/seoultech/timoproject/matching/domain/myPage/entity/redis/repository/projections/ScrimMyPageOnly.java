@@ -14,6 +14,7 @@ public interface ScrimMyPageOnly extends MyPageOnly{
 
     Integer getHeadCount();
     ScrimMapCode getMapCode();
+    MatchingCategory getMatchingCategory();
 
     CertifiedMemberInfo getAcceptorCertifiedMemberInfo();
     CertifiedMemberInfo getRequestorCertifiedMemberInfo();
