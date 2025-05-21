@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 @Builder
 @ToString
 @RequiredArgsConstructor
-public class Detail_MatchInfoDTO {
+public class DetailMatchInfoDTO {
     private final String myName;
     private final String myTag;
     private final String icon;
@@ -51,7 +51,7 @@ public class Detail_MatchInfoDTO {
     private final String minionskilledPerMin;
     private final List<List<String>> participants; // TODO: puuid to riotIdGameName
 
-    public static Detail_MatchInfoDTO of(MatchInfoDTO matchInfoDTO, String puuid, String runeJson){
+    public static DetailMatchInfoDTO of(MatchInfoDTO matchInfoDTO, String puuid, String runeJson){
         MatchInfoDTO.UserInfo myInfo = matchInfoDTO.getMyInfo(puuid);
         DocumentContext node = JsonPath.parse(runeJson);
         String jsonPath1 = String.format("$[*].slots[0]..runes[?(@.id==%d)]['icon']", myInfo.getRunes().get(0));
@@ -117,7 +117,7 @@ public class Detail_MatchInfoDTO {
                             user.getRiotIdGameName(),
                             String.format("https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/%s_0.jpg", user.getChampionName()));})
                 .collect(Collectors.toList());
-        Detail_MatchInfoDTO var =  Detail_MatchInfoDTO.builder()
+        DetailMatchInfoDTO var =  DetailMatchInfoDTO.builder()
                 .myName(myInfo.getRiotIdGameName())
                 .myTag(myInfo.getRiotIdTagLine())
                 .icon(iconURL)
