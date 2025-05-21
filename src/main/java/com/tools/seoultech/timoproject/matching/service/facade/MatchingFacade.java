@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.matching.service.facade;
 
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.MyPage;
 
 import java.util.UUID;
 

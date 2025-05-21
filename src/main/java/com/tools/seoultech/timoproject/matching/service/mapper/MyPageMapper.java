@@ -2,7 +2,6 @@ package com.tools.seoultech.timoproject.matching.service.mapper;
 
 
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
@@ -13,10 +12,10 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.DuoPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.MyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.ScrimPage;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.DuoMyPage;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.ScrimMyPage;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.DuoMyPageOnly;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.ScrimMyPageOnly;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisDuoPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.RedisScrimPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisDuoPageOnly;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisScrimPageOnly;
 import com.tools.seoultech.timoproject.matching.service.BoardService;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.service.MemberService;
@@ -33,19 +32,19 @@ public interface MyPageMapper {
 
 
     /** Mathing DTO → Redis */
-    default DuoMyPage toDuoRedis(MatchingDTO.RequestDuo dto, @Context BoardService boardService, @Context BasicAPIService bas, @Context MemberService memberService) throws Exception{
+    default RedisDuoPage toDuoRedis(MatchingDTO.RequestDuo dto, @Context BoardService boardService, @Context BasicAPIService bas, @Context MemberService memberService) throws Exception{
         DuoBoardOnly proj = boardService.getDuoBoard(dto.boardUUID());
 
-        return DuoMyPage.of(proj.getMapCode(),
+        return RedisDuoPage.of(proj.getMapCode(),
                 BoardMapper.Instance.toUserInfo(proj), proj.getMemberInfo(),
                 dto.userInfo(), BoardMapper.Instance.getCertifiedMemberInfo(dto.requestorId(), memberService, bas),
                 proj.getMemberId(), dto.requestorId(), dto.boardUUID());
     }
 
-    default ScrimMyPage toScrimMyPage(MatchingDTO.RequestScrim dto, @Context BoardService boardService, @Context BasicAPIService bas, @Context MemberService memberService) throws Exception{
+    default RedisScrimPage toScrimMyPage(MatchingDTO.RequestScrim dto, @Context BoardService boardService, @Context BasicAPIService bas, @Context MemberService memberService) throws Exception{
         ScrimBoardOnly proj = boardService.getScrimBoard(dto.boardUUID());
 
-        return ScrimMyPage.of(proj.getHeadCount(), proj.getMapCode(),
+        return RedisScrimPage.of(proj.getHeadCount(), proj.getMapCode(),
                 proj.getMemberInfo(), proj.getPartyInfo(),
                 BoardMapper.Instance.getCertifiedMemberInfo(dto.requestorId(), memberService, bas) , dto.partyInfo(),
                 dto.requestorId(), dto.requestorId(), dto.boardUUID());
@@ -56,12 +55,12 @@ public interface MyPageMapper {
     @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(proj.getAcceptorUserInfo(), proj.getAcceptorCertifiedMemberInfo()))")
     @Mapping(target = "requestor", expression = "java(getWrappedDuoData(proj.getRequestorUserInfo(), proj.getRequestorCertifiedMemberInfo()))")
     @Mapping(target = "matchingStatus", constant="WAITING")
-    MatchingDTO.ResponseDuo toDuoDto(DuoMyPageOnly proj);
+    MatchingDTO.ResponseDuo toDuoDto(RedisDuoPageOnly proj);
 
     @Mapping(target = "acceptor", expression = "java(getWrappedScrimData(proj.getAcceptorCertifiedMemberInfo(), proj.getAcceptorPartyInfo()))")
     @Mapping(target = "requestor", expression = "java(getWrappedScrimData(proj.getRequestorCertifiedMemberInfo(), proj.getRequestorPartyInfo()))")
     @Mapping(target = "matchingStatus", constant="WAITING")
-    MatchingDTO.ResponseScrim toScrimDto(ScrimMyPageOnly proj);
+    MatchingDTO.ResponseScrim toScrimDto(RedisScrimPageOnly proj);
 
     /** Projection → MySQL */
     @Mapping(target = "acceptor", expression = "java(getMember(proj.getAcceptorId(), memberService))")
@@ -69,25 +68,25 @@ public interface MyPageMapper {
     @Mapping(target = "acceptorMemberInfo", expression = "java(proj.getAcceptorCertifiedMemberInfo())")
     @Mapping(target = "requestorMemberInfo", expression = "java(proj.getRequestorCertifiedMemberInfo())")
     @Mapping(target = "matchingStatus", constant = "CONNECTED")
-    DuoPage toDuoEntity(DuoMyPageOnly proj, @Context MemberService memberService);
+    DuoPage toDuoEntity(RedisDuoPageOnly proj, @Context MemberService memberService);
 
     @Mapping(target = "acceptor", expression = "java(getMember(proj.getAcceptorId(), memberService))")
     @Mapping(target = "requestor", expression = "java(getMember(proj.getRequestorId(), memberService))")
     @Mapping(target = "acceptorMemberInfo", expression = "java(proj.getAcceptorCertifiedMemberInfo())")
     @Mapping(target = "requestorMemberInfo", expression = "java(proj.getRequestorCertifiedMemberInfo())")
     @Mapping(target = "matchingStatus", constant = "CONNECTED")
-    ScrimPage toScrimEntity(ScrimMyPageOnly proj, @Context MemberService memberService);
+    ScrimPage toScrimEntity(RedisScrimPageOnly proj, @Context MemberService memberService);
 
     /** Redis → DTO */
     @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(entity.getAcceptorUserInfo(), entity.getAcceptorCertifiedMemberInfo()))")
     @Mapping(target = "requestor", expression = "java(getWrappedDuoData(entity.getRequestorUserInfo(), entity.getRequestorCertifiedMemberInfo()))")
     @Mapping(target = "matchingStatus", constant = "WAITING")
-    MatchingDTO.ResponseDuo toDuoDto(DuoMyPage entity);
+    MatchingDTO.ResponseDuo toDuoDto(RedisDuoPage entity);
 
     @Mapping(target = "acceptor", expression = "java(getWrappedScrimData(entity.getAcceptorCertifiedMemberInfo(), entity.getAcceptorPartyInfo()))")
     @Mapping(target = "requestor", expression = "java(getWrappedScrimData(entity.getRequestorCertifiedMemberInfo(), entity.getRequestorPartyInfo()))")
     @Mapping(target = "matchingStatus", constant = "WAITING")
-    MatchingDTO.ResponseScrim toScrimDto(ScrimMyPage entity);
+    MatchingDTO.ResponseScrim toScrimDto(RedisScrimPage entity);
 
     /** MySQL → DTO */
 //    MyPageDTO.Response toDuoDto();
