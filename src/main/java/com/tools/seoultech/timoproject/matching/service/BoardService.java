@@ -10,7 +10,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.repository.projecti
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.ScrimBoardOnly;
 import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
 import com.tools.seoultech.timoproject.member.service.MemberService;
-import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BoardService {
     private final MemberService memberService;
-    private final BasicAPIService bas;
+    private final RiotAPIService bas;
 
     private final DuoBoardRepository duoBoardRepository;
     private final ScrimBoardRepository scrimBoardRepository;

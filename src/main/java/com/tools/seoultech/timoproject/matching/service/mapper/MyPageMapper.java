@@ -19,20 +19,20 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repos
 import com.tools.seoultech.timoproject.matching.service.BoardService;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.service.MemberService;
-import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        uses = {BasicAPIService.class, MemberService.class, BoardService.class})
+        uses = {RiotAPIService.class, MemberService.class, BoardService.class})
 public interface MyPageMapper {
     MyPageMapper Instance = Mappers.getMapper(MyPageMapper.class);
 
 
     /** Mathing DTO → Redis */
-    default RedisDuoPage toDuoRedis(MatchingDTO.RequestDuo dto, @Context BoardService boardService, @Context BasicAPIService bas, @Context MemberService memberService) throws Exception{
+    default RedisDuoPage toDuoRedis(MatchingDTO.RequestDuo dto, @Context BoardService boardService, @Context RiotAPIService bas, @Context MemberService memberService) throws Exception{
         DuoBoardOnly proj = boardService.getDuoBoard(dto.boardUUID());
 
         return RedisDuoPage.of(proj.getMapCode(),
@@ -41,7 +41,7 @@ public interface MyPageMapper {
                 proj.getMemberId(), dto.requestorId(), dto.boardUUID());
     }
 
-    default RedisScrimPage toScrimMyPage(MatchingDTO.RequestScrim dto, @Context BoardService boardService, @Context BasicAPIService bas, @Context MemberService memberService) throws Exception{
+    default RedisScrimPage toScrimMyPage(MatchingDTO.RequestScrim dto, @Context BoardService boardService, @Context RiotAPIService bas, @Context MemberService memberService) throws Exception{
         ScrimBoardOnly proj = boardService.getScrimBoard(dto.boardUUID());
 
         return RedisScrimPage.of(proj.getHeadCount(), proj.getMapCode(),

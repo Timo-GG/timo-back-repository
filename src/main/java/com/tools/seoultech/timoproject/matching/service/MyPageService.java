@@ -16,7 +16,7 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repos
 import com.tools.seoultech.timoproject.matching.service.facade.Impl.BoardFacadeImpl;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
 import com.tools.seoultech.timoproject.member.service.MemberService;
-import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ import java.util.UUID;
 public class MyPageService {
     private final BoardFacadeImpl board;
     private final BoardService boardService;
-    private final BasicAPIService bas;
+    private final RiotAPIService bas;
     private final MemberService memberService;
 
     private final RedisDuoPageRepository redisDuoPageRepository;
