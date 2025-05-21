@@ -11,9 +11,10 @@ import java.util.List;
 
 @Repository
 public interface PageRepository extends JpaRepository<MyPage, Long> {
-    @Query(value = "SELECT * FROM mypage WHERE acceptor_id = :acceptorId", nativeQuery = true)
+    @Query("SELECT m FROM MyPage m WHERE m.acceptor.memberId = :acceptorId")
     List<MyPage> findAllByAcceptorId(@Param("acceptorId") Long acceptorId);
 
-    @Query(value = "SELECT * FROM mypage WHERE requestor_id = :requestorId", nativeQuery = true)
+
+    @Query("SELECT m FROM MyPage m WHERE m.requestor.memberId = :requestorId")
     List<MyPage> findAllByRequestorId(@Param("requestorId") Long requestorId);
 }
