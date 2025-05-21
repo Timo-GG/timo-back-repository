@@ -2,7 +2,9 @@ package com.tools.seoultech.timoproject.matching.controller;
 
 
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
+import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.MyPage;
 import com.tools.seoultech.timoproject.matching.service.facade.MyPageFacade;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -92,7 +94,34 @@ public class MyPageController {
     /**
      * MySQL 마이페이지
      * */
+    @GetMapping("/db")
+    public ResponseEntity<APIDataResponse<List<MyPageDTO.Response>>> readAllMyPage() throws Exception{
+        var entityList = myPageFacade.readAllPage();
+        return ResponseEntity.ok(APIDataResponse.of(entityList));
+    }
 
+    @GetMapping("/db/{mypageId}")
+    public ResponseEntity<APIDataResponse<MyPageDTO.Response>> readPage(@PathVariable Long mypageId) throws Exception{
+        var myPage = myPageFacade.readMyPage(mypageId);
+        return ResponseEntity.ok(APIDataResponse.of(myPage));
+    }
 
+    @PostMapping("/db/{mypageUUID}")
+    public ResponseEntity<APIDataResponse<MyPage>> createPage(@PathVariable UUID mypageUUID) throws Exception {
+        var entity = myPageFacade.createPage(mypageUUID);
+        return ResponseEntity.ok(APIDataResponse.of(entity));
+    }
+
+    @DeleteMapping("/db")
+    public ResponseEntity<Void> deleteAllPage() throws Exception {
+        myPageFacade.deleteAllPage();
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/db/{mypageId}")
+    public ResponseEntity<Void> deletePage(@PathVariable Long mypageId) throws Exception {
+        myPageFacade.delete(mypageId);
+        return ResponseEntity.noContent().build();
+    }
 
 }

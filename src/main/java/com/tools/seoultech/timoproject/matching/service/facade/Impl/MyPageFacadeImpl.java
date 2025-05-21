@@ -4,6 +4,9 @@ import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.DuoPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.MyPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.ScrimPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.DuoMyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.ScrimMyPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.DuoMyPageOnly;
@@ -40,7 +43,7 @@ public class MyPageFacadeImpl implements MyPageFacade {
 
     @Override
     public MatchingDTO.Response readMyPage(UUID myPageUUID) throws Exception {
-        MyPageOnly proj = myPageService.getBoard(myPageUUID);
+        MyPageOnly proj = myPageService.getMyPage(myPageUUID);
         if(proj instanceof DuoMyPageOnly){
             return myPageMapper.toDuoDto((DuoMyPageOnly) proj);
         } else if (proj instanceof ScrimMyPageOnly){
@@ -77,13 +80,61 @@ public class MyPageFacadeImpl implements MyPageFacade {
         }
     }
 
+    /**
+     * MyPage CRUD 서비스 in MySQL
+     * @apiNote : [create] : <strong>백엔드 내부 테스트용.</strong> MySQL 마이페이지 생성. <br>
+     *            [read] : 없음. <br>
+     *            [delete] : deleteAll
+     */
+    // Note: 평가하기 마이페이지 조회용
     @Override
     public MyPageDTO.Response readMyPage(Long mypageId) throws Exception {
-        return null;
+        MyPage entity = myPageService.readPage(mypageId);
+        if(entity.getMatchingCategory() == MatchingCategory.DUO){
+            return myPageMapper.toDuoDto((DuoPage) entity);
+        } else if(entity.getMatchingCategory() == MatchingCategory.SCRIM){
+            return myPageMapper.toScrimDto((ScrimPage) entity);
+        }
+        else throw new GeneralException("Facade: mypageId로 엔티티 조회 실패.");
     }
 
     @Override
-    public List<MyPageDTO.ResponseMyPage> readMyPageByMemberId(Long MemberId) throws Exception {
-        return List.of();
+    public List<MyPageDTO.ResponseMyPage> readMyPageByMemberId(Long memberId) throws Exception {
+        var responseDtoList = myPageService.readPageSortingByIsReceived(memberId).entrySet().stream()
+                .map(entry -> {
+                    List<MyPageDTO.Response> filteredDtoList = entry.getValue().stream()
+                        .map(myPageMapper::toFilteredDtoList).toList();
+                    return myPageMapper.tofilteredWrappeddtoList(filteredDtoList, "{}:{}");
+                })
+                .toList();
+        return responseDtoList;
+    }
+
+    @Override
+    public MyPage createPage(UUID mypageUUID) throws Exception {
+        MyPageOnly proj = myPageService.getMyPage(mypageUUID);
+        if(proj instanceof DuoMyPageOnly) {
+            return myPageService.createDuoPage(mypageUUID);
+        } else if(proj instanceof ScrimMyPageOnly) {
+            return myPageService.createScrimPage(mypageUUID);
+        }
+        throw new GeneralException("Test 실패");
+    }
+
+    // Note: 백엔드 내부 테스트용
+    @Override
+    public void deleteAllPage() throws Exception {
+        myPageService.deleteAllDuoMyPage();
+        myPageService.deleteAllScrimMyPage();
+    }
+    @Override
+    public List<MyPageDTO.Response> readAllPage() throws Exception {
+        List<MyPage> entityList = myPageService.readAllPage();
+        return entityList.stream().map(myPageMapper::toFilteredDtoList).toList();
+    }
+
+    @Override
+    public void delete(Long mypageId) {
+        myPageService.deletePage(mypageId);
     }
 }
