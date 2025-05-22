@@ -4,7 +4,7 @@ package com.tools.seoultech.timoproject.service;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
-import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("[Riot API] 테스트")
 @SpringBootTest
-class BasicAPIServiceTest {
-    @Autowired private BasicAPIService bas;
+class RiotAPIServiceTest {
+    @Autowired private RiotAPIService bas;
 
     @DisplayName("puuid 검색 - 공백 유저 데이터 요청")
     @Test

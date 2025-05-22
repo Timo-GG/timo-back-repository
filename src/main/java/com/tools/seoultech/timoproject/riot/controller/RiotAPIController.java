@@ -5,7 +5,7 @@ import com.tools.seoultech.timoproject.riot.dto.*;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
-import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,8 @@ import java.util.List;
 @RequestMapping("/api/v1/riot")
 @Validated
 @Tag(name = "RiotAPI", description = "Riot API")
-public class BasicAPIController {
-    private final BasicAPIService bas;
+public class RiotAPIController {
+    private final RiotAPIService bas;
 
     @GetMapping("/Account")
     public ResponseEntity<APIDataResponse<AccountDto.Response>> requestAccount(
@@ -59,17 +59,17 @@ public class BasicAPIController {
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(dto_List));
     }
     @GetMapping("/MatchV5/matches/전적검색")
-    public ResponseEntity<APIDataResponse<List<Detail_MatchInfoDTO>>> requestMatchInfo(
+    public ResponseEntity<APIDataResponse<List<DetailMatchInfoDTO>>> requestMatchInfo(
             @Valid AccountDto.Request dto) throws Exception{
         String puuid = bas.findUserAccount(dto).getPuuid();
         List<String> matchList = bas.requestMatchList(puuid);
-        List<Detail_MatchInfoDTO> dto_List = Collections.synchronizedList(new ArrayList<>());
+        List<DetailMatchInfoDTO> dto_List = Collections.synchronizedList(new ArrayList<>());
 
         String subString = bas.requestRuneData();
         matchList.stream().parallel()
                 .forEachOrdered( matchId -> {
                        try{
-                           Detail_MatchInfoDTO dto_detail = bas.requestMatchInfo(matchId, puuid, subString);
+                           DetailMatchInfoDTO dto_detail = bas.requestMatchInfo(matchId, puuid, subString);
                            dto_List.add(dto_detail);
                        } catch(Exception e){ throw new RiotAPIException("Detail_matchInfo(matchId)중 오류 발생.");}
                 });

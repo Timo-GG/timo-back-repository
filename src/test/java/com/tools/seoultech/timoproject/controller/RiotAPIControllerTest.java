@@ -5,8 +5,8 @@ import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.error.APIExceptionHandler;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
-import com.tools.seoultech.timoproject.riot.controller.BasicAPIController;
-import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.riot.controller.RiotAPIController;
+import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +26,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @DisplayName("[API Controller]")
-@WebMvcTest(BasicAPIController.class)
-@ContextConfiguration(classes = {BasicAPIController.class, APIExceptionHandler.class})
+@WebMvcTest(RiotAPIController.class)
+@ContextConfiguration(classes = {RiotAPIController.class, APIExceptionHandler.class})
 @Import(TestSecurityConfig.class)
-class BasicAPIControllerTest {
+class RiotAPIControllerTest {
     @Autowired MockMvc mvc;
 //    @Autowired private final ObjectMapper objectMapper;
 
-    @MockBean private BasicAPIService bas;
+    @MockBean private RiotAPIService bas;
 
 //    @Autowired
 //    public BasicAPIControllerTest(

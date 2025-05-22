@@ -12,7 +12,7 @@ import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.dto.RankInfoDto;
-import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -25,11 +25,11 @@ public interface BoardMapper {
 
 
     /** DTO → Redis */
-    default DuoBoard toDuoRedis(BoardDTO.RequestDuo dto, @Context MemberService memberService, @Context BasicAPIService bas){
+    default DuoBoard toDuoRedis(BoardDTO.RequestDuo dto, @Context MemberService memberService, @Context RiotAPIService bas){
         return DuoBoard.of(dto.mapCode(), dto.memo(), getCertifiedMemberInfo(dto.memberId(), memberService, bas), dto.userInfo(), dto.duoInfo(), dto.memberId());
     }
 
-    default ScrimBoard toScrimRedis(BoardDTO.RequestScrim dto, @Context MemberService memberService, @Context BasicAPIService bas){
+    default ScrimBoard toScrimRedis(BoardDTO.RequestScrim dto, @Context MemberService memberService, @Context RiotAPIService bas){
         return ScrimBoard.of(dto.mapCode(), dto.memo(), dto.headCount(), getCertifiedMemberInfo(dto.memberId(), memberService, bas), dto.partyInfo(), dto.memberId());
     }
 
@@ -67,7 +67,7 @@ public interface BoardMapper {
 
 
     /** 유틸리티 */
-    default CertifiedMemberInfo getCertifiedMemberInfo(Long memberId, @Context MemberService memberService, @Context BasicAPIService bas){
+    default CertifiedMemberInfo getCertifiedMemberInfo(Long memberId, @Context MemberService memberService, @Context RiotAPIService bas){
         Member member = memberService.getById(memberId);
         RiotAccount riotAccount = member.getRiotAccount();
         RankInfoDto rankInfo = bas.getSoloRankInfoByPuuid(riotAccount.getPuuid());

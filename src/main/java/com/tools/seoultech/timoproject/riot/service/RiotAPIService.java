@@ -33,7 +33,7 @@ import java.util.Map;
 @Validated
 @Slf4j
 @RequiredArgsConstructor
-public class BasicAPIService {
+public class RiotAPIService {
     private static final String BASE_API_URL = "https://asia.api.riotgames.com";
     private static final String KR_API_URL = "https://kr.api.riotgames.com";
     private static final String DDRAGON_URL = "https://ddragon.leagueoflegends.com";
@@ -46,7 +46,6 @@ public class BasicAPIService {
 
     @Value("${api_key}")
     private String api_key;
-
     private String ddragonVersion;
 
     @PostConstruct
@@ -152,11 +151,11 @@ public class BasicAPIService {
         }
     }
 
-    public Detail_MatchInfoDTO requestMatchInfo(String matchid, String my_puuid, String requestRuneDataString) {
+    public DetailMatchInfoDTO requestMatchInfo(String matchid, String my_puuid, String requestRuneDataString) {
         try {
             MatchInfoDTO matchInfoDTO = requestMatchInfoRaw(matchid);
             log.info("상세 매치 정보 변환 시작: {}", matchid);
-            return Detail_MatchInfoDTO.of(matchInfoDTO, my_puuid, requestRuneDataString);
+            return DetailMatchInfoDTO.of(matchInfoDTO, my_puuid, requestRuneDataString);
         } catch (Exception e) {
             log.error("상세 매치 정보 변환 중 예외 발생", e);
             throw new RiotAPIException("상세 매치 정보 변환 실패", ErrorCode.API_ACCESS_ERROR);
@@ -260,7 +259,7 @@ public class BasicAPIService {
 
             for (String matchId : matchIds) {
                 try {
-                    Detail_MatchInfoDTO detail = requestMatchInfo(matchId, puuid, runeData);
+                    DetailMatchInfoDTO detail = requestMatchInfo(matchId, puuid, runeData);
 
                     MatchSummaryDTO summary = MatchSummaryDTO.builder()
                             .gameDuration(detail.getTime())
