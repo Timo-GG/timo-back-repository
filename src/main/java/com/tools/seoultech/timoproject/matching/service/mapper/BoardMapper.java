@@ -9,8 +9,10 @@ import com.tools.seoultech.timoproject.matching.domain.board.repository.projecti
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.ScrimBoardOnly;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.CertifiedUnivInfo;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import com.tools.seoultech.timoproject.member.service.MemberService;
+import com.tools.seoultech.timoproject.ranking.RankingInfo;
 import com.tools.seoultech.timoproject.riot.dto.RankInfoDto;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import org.mapstruct.*;
@@ -70,9 +72,12 @@ public interface BoardMapper {
     default CertifiedMemberInfo getCertifiedMemberInfo(Long memberId, @Context MemberService memberService, @Context RiotAPIService bas){
         Member member = memberService.getById(memberId);
         RiotAccount riotAccount = member.getRiotAccount();
-        RankInfoDto rankInfo = bas.getSoloRankInfoByPuuid(riotAccount.getPuuid());
+        RankInfoDto rankInfoDto = bas.getSoloRankInfoByPuuid(riotAccount.getPuuid());
         List<String> most3Champ = bas.getMost3ChampionNames(riotAccount.getPuuid());
-        return new CertifiedMemberInfo(member.getCertifiedUnivInfo().getUnivName(), riotAccount, rankInfo, most3Champ);
+        CertifiedUnivInfo univInfo = member.getCertifiedUnivInfo();
+        RankingInfo rankInfo = member.getRankingInfo();
+        return new CertifiedMemberInfo(univInfo.getUnivName(), univInfo.getDepartment(), rankInfo.getGender(), rankInfo.getMbti(),
+                riotAccount, rankInfoDto, most3Champ);
     }
 
     @Named("toUserInfo")
