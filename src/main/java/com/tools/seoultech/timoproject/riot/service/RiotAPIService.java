@@ -1,9 +1,10 @@
 package com.tools.seoultech.timoproject.riot.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
+import com.tools.seoultech.timoproject.riot.DataDragonClient;
+import com.tools.seoultech.timoproject.riot.RiotAsiaApiClient;
+import com.tools.seoultech.timoproject.riot.RiotKrApiClient;
 import com.tools.seoultech.timoproject.riot.dto.*;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
 import jakarta.annotation.PostConstruct;
@@ -15,18 +16,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import org.springframework.web.client.RestClientResponseException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -34,15 +32,14 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class RiotAPIService {
-    private static final String BASE_API_URL = "https://asia.api.riotgames.com";
-    private static final String KR_API_URL = "https://kr.api.riotgames.com";
     private static final String DDRAGON_URL = "https://ddragon.leagueoflegends.com";
     private static final String QUEUE_TYPE_SOLO = "RANKED_SOLO_5x5";
-    private static final String DDRAGON_VERSIONS_URL = DDRAGON_URL + "/api/versions.json";
 
-    private final HttpClient httpClient = HttpClient.newHttpClient();
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final RiotAsiaApiClient asiaApiClient;
+    private final RiotKrApiClient krApiClient;
+    private final DataDragonClient dataDragonClient;
     private final ChampionCacheService championCacheService;
+    private final ExecutorService matchInfoExecutor;
 
     @Value("${api_key}")
     private String api_key;
@@ -51,33 +48,24 @@ public class RiotAPIService {
     @PostConstruct
     private void fetchLatestDdragonVersion() {
         try {
-            HttpRequest req = HttpRequest.newBuilder()
-                    .uri(URI.create(DDRAGON_VERSIONS_URL))
-                    .GET()
-                    .build();
-            HttpResponse<String> resp = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
-            if (resp.statusCode() == HttpStatus.OK.value()) {
-                List<String> versions = mapper.readValue(resp.body(), new TypeReference<List<String>>() {});
-                if (!versions.isEmpty()) {
-                    ddragonVersion = versions.get(0);
-                    log.info("DataDragon 최신 버전: {}", ddragonVersion);
-                    return;
-                }
+            List<String> versions = dataDragonClient.getVersions();
+            if (!versions.isEmpty()) {
+                ddragonVersion = versions.get(0);
+                log.info("DataDragon 최신 버전: {}", ddragonVersion);
+                return;
             }
-            log.warn("DataDragon 버전 리스트 응답 이상: status={}", resp.statusCode());
+            log.warn("DataDragon 버전 리스트가 비어있음");
         } catch (Exception e) {
             log.error("DataDragon 버전 조회 실패", e);
         }
-        // 실패 시 fallback
         ddragonVersion = "14.23.1";
         log.info("DataDragon 버전 fallback: {}", ddragonVersion);
     }
 
-    // URL 인코딩 메서드
     private String encodeUrlParameter(String param) {
         try {
             return java.net.URLEncoder.encode(param, StandardCharsets.UTF_8.toString())
-                    .replace("+", "%20"); // 공백을 %20으로 변환
+                    .replace("+", "%20");
         } catch (Exception e) {
             log.error("URL 인코딩 실패: {}", param, e);
             throw new RuntimeException("URL 인코딩 실패: " + param, e);
@@ -87,74 +75,32 @@ public class RiotAPIService {
     @Transactional
     public AccountDto.Response findUserAccount(@Valid AccountDto.Request dto) {
         try {
-            String encodedGameName = encodeUrlParameter(dto.getGameName());
-            String encodedTagLine = encodeUrlParameter(dto.getTagLine());
+            String gameName = dto.getGameName();
+            String tagLine = dto.getTagLine();
 
-            String url = BASE_API_URL + "/riot/account/v1/accounts/by-riot-id/"
-                    + encodedGameName + "/" + encodedTagLine;
-
-            log.info("API URL: {}", url);
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("X-Riot-Token", api_key)
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            riotAPI_validation(response);
-            return mapper.readValue(response.body(), AccountDto.Response.class);
-        } catch (IOException | InterruptedException e) {
+            AccountDto.Response response = asiaApiClient.getAccountByRiotId(gameName, tagLine, api_key);
+            log.info("계정 정보 조회 성공: {}", dto.getGameName());
+            return response;
+        } catch (Exception e) {
             log.error("라이엇 API 호출 중 예외 발생", e);
-            throw new RiotAPIException("라이엇 계정 조회 실패", ErrorCode.API_ACCESS_ERROR);
-        }
-    }
-
-    private void riotAPI_validation(HttpResponse<String> response) {
-        log.debug("Response Status Code: {}", response.statusCode());
-        log.debug("Response Body: {}", response.body());
-
-        if (response.statusCode() == HttpStatus.NOT_FOUND.value()) {
-            log.info("riot API 예외 처리 - 사용자를 찾을 수 없습니다.");
-            throw new RiotAPIException("계정 정보 API 호출 실패 - 사용자 정보가 없습니다.", ErrorCode.API_ACCESS_ERROR);
-        }
-        if (response.statusCode() == HttpStatus.UNAUTHORIZED.value()) {
-            log.info("riot API 예외 처리 - API_KEY가 유효하지 않습니다.");
-            throw new RiotAPIException("유효하지 않은 API_KEY", ErrorCode.API_ACCESS_ERROR);
-        }
-        if (response.statusCode() != HttpStatus.OK.value()) {
-            log.error("Riot API 응답 오류 - 상태 코드: {}", response.statusCode());
-            throw new RiotAPIException("Riot API 응답 오류", ErrorCode.API_ACCESS_ERROR);
+            throw handleApiError(e);
         }
     }
 
     public MatchInfoDTO requestMatchInfoRaw(String matchid) {
         try {
             String encodedMatchId = encodeUrlParameter(matchid);
-            String url = BASE_API_URL + "/lol/match/v5/matches/" + encodedMatchId;
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("X-Riot-Token", api_key)
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            riotAPI_validation(response);
-
-            log.info("매치 정보 API 응답 받음: {}", matchid);
-            return MatchInfoDTO.of(response.body());
-        } catch (IOException | InterruptedException e) {
+            String response = asiaApiClient.getMatchInfo(encodedMatchId, api_key);
+            return MatchInfoDTO.of(response);
+        } catch (Exception e) {
             log.error("매치 정보 조회 중 예외 발생", e);
-            throw new RiotAPIException("매치 정보 조회 실패", ErrorCode.API_ACCESS_ERROR);
+            throw handleApiError(e);
         }
     }
 
     public DetailMatchInfoDTO requestMatchInfo(String matchid, String my_puuid, String requestRuneDataString) {
         try {
             MatchInfoDTO matchInfoDTO = requestMatchInfoRaw(matchid);
-            log.info("상세 매치 정보 변환 시작: {}", matchid);
             return DetailMatchInfoDTO.of(matchInfoDTO, my_puuid, requestRuneDataString);
         } catch (Exception e) {
             log.error("상세 매치 정보 변환 중 예외 발생", e);
@@ -164,23 +110,10 @@ public class RiotAPIService {
 
     public String requestRuneData() {
         try {
-            String url = DDRAGON_URL + "/cdn/14.23.1/data/en_US/runesReforged.json";
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() != HttpStatus.OK.value()) {
-                log.error("룬 데이터 API 응답 오류 - 상태 코드: {}", response.statusCode());
-                throw new RiotAPIException("룬 데이터 API 응답 오류", ErrorCode.API_ACCESS_ERROR);
-            }
-
+            String response = dataDragonClient.getRuneData(ddragonVersion);
             log.info("룬 데이터 API 응답 받음");
-            return response.body();
-        } catch (IOException | InterruptedException e) {
+            return response;
+        } catch (Exception e) {
             log.error("룬 데이터 조회 중 예외 발생", e);
             throw new RiotAPIException("룬 데이터 조회 실패", ErrorCode.API_ACCESS_ERROR);
         }
@@ -189,45 +122,18 @@ public class RiotAPIService {
     public List<String> requestMatchList(String puuid) {
         try {
             String encodedPuuid = encodeUrlParameter(puuid);
-            String baseUrl = BASE_API_URL + "/lol/match/v5/matches/by-puuid/" + encodedPuuid + "/ids";
-
-            URI uri = UriComponentsBuilder.fromUriString(baseUrl)
-                    .queryParam("start", 0)
-                    .queryParam("count", 20)
-                    .build()
-                    .toUri();
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("X-Riot-Token", api_key)
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            riotAPI_validation(response);
-
-            log.info("매치 목록 API 응답 받음: {}", puuid);
-            return mapper.readValue(response.body(), List.class);
-        } catch (IOException | InterruptedException e) {
+            List<String> matchIds = asiaApiClient.getMatchList(encodedPuuid, 0, 10, api_key);
+            log.info("매치 목록 조회 성공: {} 개", matchIds.size());
+            return matchIds;
+        } catch (Exception e) {
             log.error("매치 목록 조회 중 예외 발생", e);
-            throw new RiotAPIException("매치 목록 조회 실패", ErrorCode.API_ACCESS_ERROR);
+            throw handleApiError(e);
         }
     }
 
     public List<String> getMost3ChampionNames(String puuid) {
         try {
-            String url = KR_API_URL + "/lol/champion-mastery/v4/champion-masteries/by-puuid/" + puuid;
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("X-Riot-Token", api_key)
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            riotAPI_validation(response);
-
-            List<Map<String, Object>> masteryList = mapper.readValue(response.body(), List.class);
+            List<Map<String, Object>> masteryList = krApiClient.getChampionMasteries(puuid, api_key);
             Map<Integer, String> champMap = championCacheService.getChampionIdToNameMap();
 
             log.info("챔피언 숙련도 API 응답 받음: {}", puuid);
@@ -239,12 +145,13 @@ public class RiotAPIService {
                         return champMap.getOrDefault(champId, "Unknown");
                     })
                     .toList();
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             log.warn("챔피언 숙련도 조회 실패, 빈 리스트 반환", e);
             return Collections.emptyList();
         }
     }
 
+    // ⭐ 핵심: 병렬 처리로 성능 개선된 매치 요약
     @Transactional
     public List<MatchSummaryDTO> getRecentMatchSummaries(String puuid) {
         try {
@@ -254,39 +161,55 @@ public class RiotAPIService {
                 return Collections.emptyList();
             }
 
-            List<MatchSummaryDTO> summaries = new ArrayList<>();
             String runeData = requestRuneData();
 
-            for (String matchId : matchIds) {
-                try {
-                    DetailMatchInfoDTO detail = requestMatchInfo(matchId, puuid, runeData);
+            // CompletableFuture를 사용한 동시성 처리
+            List<CompletableFuture<MatchSummaryDTO>> futures = matchIds.stream()
+                    .map(matchId -> CompletableFuture.supplyAsync(() -> {
+                        try {
+                            DetailMatchInfoDTO detail = requestMatchInfo(matchId, puuid, runeData);
+                            return MatchSummaryDTO.builder()
+                                    .gameDuration(detail.getTime())
+                                    .playedAt(detail.getLastGameEnd())
+                                    .gameMode(detail.getMode())
+                                    .championName(detail.getMyName())
+                                    .championIconUrl(detail.getIcon())
+                                    .championLevel(detail.getChampionLevel() != null ? detail.getChampionLevel() : 0)
+                                    .kills(detail.getKills())
+                                    .deaths(detail.getDeaths())
+                                    .assists(detail.getAssists())
+                                    .isWin(detail.getWin())
+                                    .minionsPerMinute(detail.getMinionskilledPerMin())
+                                    .runes(List.of(detail.getRune3(), detail.getRune4()))
+                                    .summonerSpells(List.of(detail.getSummoner1Id(), detail.getSummoner2Id()))
+                                    .items(detail.getItems())
+                                    .build();
+                        } catch (Exception e) {
+                            log.error("매치 요약 정보 생성 중 오류 발생: {}", matchId, e);
+                            return null;
+                        }
+                    }, matchInfoExecutor))
+                    .toList();
 
-                    MatchSummaryDTO summary = MatchSummaryDTO.builder()
-                            .gameDuration(detail.getTime())
-                            .playedAt(detail.getLastGameEnd())
-                            .gameMode(detail.getMode())
-                            .championName(detail.getMyName())
-                            .championIconUrl(detail.getIcon())
-                            .championLevel(detail.getChampionLevel() != null ? detail.getChampionLevel() : 0)
-                            .kills(detail.getKills())
-                            .deaths(detail.getDeaths())
-                            .assists(detail.getAssists())
-                            .isWin(detail.getWin())
-                            .minionsPerMinute(detail.getMinionskilledPerMin())
-                            .runes(List.of(detail.getRune3(), detail.getRune4()))
-                            .summonerSpells(List.of(detail.getSummoner1Id(), detail.getSummoner2Id()))
-                            .items(detail.getItems())
-                            .build();
+            // 모든 CompletableFuture 완료 대기
+            CompletableFuture<Void> allOf = CompletableFuture.allOf(
+                    futures.toArray(new CompletableFuture[0])
+            );
 
-                    summaries.add(summary);
-                } catch (Exception e) {
-                    log.error("매치 요약 정보 생성 중 오류 발생: {}", matchId, e);
-                    // 개별 매치 오류는 무시하고 계속 진행
-                }
-            }
+            // 결과 수집 (30초 타임아웃)
+            List<MatchSummaryDTO> summaries = allOf.thenApply(v ->
+                    futures.stream()
+                            .map(CompletableFuture::join)
+                            .filter(Objects::nonNull)
+                            .toList()
+            ).get(30, TimeUnit.SECONDS);
 
-            log.info("최근 매치 요약 정보 생성 완료: {} 개 매치", summaries.size());
+            log.info("매치 요약 정보 생성 완료: {} 개", summaries.size());
             return summaries;
+
+        } catch (TimeoutException e) {
+            log.error("매치 요약 정보 생성 타임아웃", e);
+            throw new RiotAPIException("매치 정보 조회 시간 초과", ErrorCode.API_ACCESS_ERROR);
         } catch (Exception e) {
             log.error("최근 매치 요약 정보 생성 중 예외 발생", e);
             throw new RiotAPIException("최근 매치 요약 정보 생성 실패", ErrorCode.API_ACCESS_ERROR);
@@ -301,27 +224,45 @@ public class RiotAPIService {
                 return WinLossSummaryDto.builder().wins(0).losses(0).build();
             }
 
-            int wins = 0;
-            int losses = 0;
+            // CompletableFuture를 사용한 동시성 처리
+            List<CompletableFuture<Boolean>> futures = matchIds.stream()
+                    .map(matchId -> CompletableFuture.supplyAsync(() -> {
+                        try {
+                            MatchInfoDTO matchInfoDTO = requestMatchInfoRaw(matchId);
+                            return matchInfoDTO.getMyInfo(puuid).getWin();
+                        } catch (Exception e) {
+                            log.warn("매치 승패 확인 실패: {}", matchId, e);
+                            return null;
+                        }
+                    }, matchInfoExecutor))
+                    .toList();
 
-            for (String matchId : matchIds) {
-                try {
-                    MatchInfoDTO matchInfoDTO = requestMatchInfoRaw(matchId);
+            // 모든 작업 완료 대기 및 결과 수집
+            List<Boolean> results = CompletableFuture.allOf(
+                    futures.toArray(new CompletableFuture[0])
+            ).thenApply(v ->
+                    futures.stream()
+                            .map(CompletableFuture::join)
+                            .filter(Objects::nonNull)
+                            .toList()
+            ).get(20, TimeUnit.SECONDS);
 
-                    boolean didWin = matchInfoDTO.getMyInfo(puuid).getWin();
-                    if (didWin) wins++;
-                    else losses++;
+            // 승패 카운트
+            Map<Boolean, Long> winLossCount = results.stream()
+                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-                } catch (Exception e) {
-                    log.warn("매치 승패 확인 실패: {}", matchId, e);
-                }
-            }
+            int wins = winLossCount.getOrDefault(true, 0L).intValue();
+            int losses = winLossCount.getOrDefault(false, 0L).intValue();
 
+            log.info("승패 요약 조회 완료 - 승: {}, 패: {}", wins, losses);
             return WinLossSummaryDto.builder()
                     .wins(wins)
                     .losses(losses)
                     .build();
 
+        } catch (TimeoutException e) {
+            log.error("승패 요약 조회 타임아웃", e);
+            throw new RiotAPIException("승패 정보 조회 시간 초과", ErrorCode.API_ACCESS_ERROR);
         } catch (Exception e) {
             log.error("최근 승/패 요약 조회 실패", e);
             throw new RiotAPIException("최근 승패 정보 조회 실패", ErrorCode.API_ACCESS_ERROR);
@@ -330,47 +271,27 @@ public class RiotAPIService {
 
     public RankInfoDto getSoloRankInfoByPuuid(String puuid) {
         try {
-            URI uri = URI.create(KR_API_URL + "/lol/league/v4/entries/by-puuid/" + puuid);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("X-Riot-Token", api_key)
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            riotAPI_validation(response);
-            log.info("랭크 정보 API 응답 받음: {}", puuid);
-
-            List<Map<String, Object>> rankList = mapper.readValue(response.body(), new TypeReference<>() {
-            });
+            List<Map<String, Object>> rankList = krApiClient.getRankInfo(puuid, api_key);
             return findSoloRankInfo(rankList, QUEUE_TYPE_SOLO);
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             log.error("랭크 정보 조회 중 예외 발생", e);
-            throw new RiotAPIException("랭크 정보 조회 실패", ErrorCode.API_ACCESS_ERROR);
+            throw handleApiError(e);
         }
     }
 
     public String getProfileIconUrlByPuuid(String puuid) {
         try {
-            String url = KR_API_URL + "/lol/summoner/v4/summoners/by-puuid/" + puuid;
-            HttpRequest req = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("X-Riot-Token", api_key)
-                    .GET()
-                    .build();
-            HttpResponse<String> resp = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
-            riotAPI_validation(resp);
+            Map<String, Object> data = krApiClient.getSummonerInfo(puuid, api_key);
+            Integer iconId = (Integer) data.get("profileIconId");
 
-            Map<String,Object> data = mapper.readValue(resp.body(), new TypeReference<>() {});
-            Integer iconId = (Integer)data.get("profileIconId");
             if (iconId == null) {
                 log.warn("profileIconId 누락: {}", puuid);
                 return null;
             }
-            // 캐싱된 최신 버전 사용
+
             return DDRAGON_URL + "/cdn/" + ddragonVersion + "/img/profileicon/" + iconId + ".png";
 
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             log.error("프로필 이미지 URL 생성 실패", e);
             throw new RiotAPIException("프로필 이미지 조회 실패", ErrorCode.API_ACCESS_ERROR);
         }
@@ -402,5 +323,26 @@ public class RiotAPIService {
                 .wins(0)
                 .losses(0)
                 .build();
+    }
+
+    private RiotAPIException handleApiError(Exception e) {
+        // RestClient의 모든 HTTP 예외는 RestClientResponseException의 하위 클래스
+        if (e instanceof RestClientResponseException restError) {
+            HttpStatus status = (HttpStatus) restError.getStatusCode();
+            String responseBody = restError.getResponseBodyAsString();
+
+            log.error("RestClient 응답 오류 - 상태: {}, 응답: {}", status, responseBody);
+
+            return switch (status) {
+                case NOT_FOUND -> new RiotAPIException("사용자 정보가 없습니다.", ErrorCode.API_ACCESS_ERROR);
+                case UNAUTHORIZED -> new RiotAPIException("유효하지 않은 API_KEY", ErrorCode.API_ACCESS_ERROR);
+                case FORBIDDEN -> new RiotAPIException("API 접근 권한이 없습니다.", ErrorCode.API_ACCESS_ERROR);
+                case TOO_MANY_REQUESTS -> new RiotAPIException("API 요청 한도를 초과했습니다.", ErrorCode.API_ACCESS_ERROR);
+                default -> new RiotAPIException("Riot API 응답 오류: " + status, ErrorCode.API_ACCESS_ERROR);
+            };
+        }
+
+        log.error("예상치 못한 API 오류", e);
+        return new RiotAPIException("API 호출 실패", ErrorCode.API_ACCESS_ERROR);
     }
 }
