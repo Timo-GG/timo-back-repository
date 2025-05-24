@@ -79,7 +79,6 @@ public class DetailMatchInfoDTO {
 
 
         Double csString = 60 * myInfo.getTotalMinionsKilled().doubleValue() / matchInfoDTO.getGameDuration();
-        System.out.println(csString);
         String csPerMin = String.format("%.1fCS / 분", csString);
 
         int totalKillSum=0;
