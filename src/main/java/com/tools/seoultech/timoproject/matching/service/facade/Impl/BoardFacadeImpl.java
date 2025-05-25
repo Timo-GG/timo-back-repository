@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -53,10 +54,14 @@ public class BoardFacadeImpl implements BoardFacade {
         List<BoardDTO.Response> dtoList = new ArrayList<>();
         if(matchingCategory == MatchingCategory.DUO){
             dtoList = boardService.getAllDuoBoards().stream()
-                    .map(proj -> (BoardDTO.Response) boardMapper.toDuoDto(proj)).collect(Collectors.toList());
+                    .map(proj -> (BoardDTO.Response) boardMapper.toDuoDto(proj))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
         } else {
             dtoList = boardService.getAllScrimBoards().stream()
-                    .map(proj -> (BoardDTO.Response) boardMapper.toScrimDto(proj)).collect(Collectors.toList());
+                    .map(proj -> (BoardDTO.Response) boardMapper.toScrimDto(proj))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
         }
         return dtoList;
     }
