@@ -20,6 +20,7 @@ import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -74,6 +75,22 @@ public class MyPageService {
                         .map(p -> (PageOnly) p))
                 .orElseThrow(() -> new Exception("Board not found: " + myPageUUID));
         return proj;
+    }
+
+    // TODO : requestorId로 모든 페이지 조회하기 -> 임시 코드
+    public List<PageOnly> getAllMyPageByAcceptorRaw(Long acceptorId) {
+        List<PageOnly> result = new ArrayList<>();
+        result.addAll(redisDuoPageRepository.findAllByAcceptorId(acceptorId));
+        result.addAll(redisScrimPageRepository.findByAcceptorId(acceptorId));
+        return result;
+    }
+
+    // TODO : acceptorId로 모든 페이지 조회하기 -> 임시 코드
+    public List<PageOnly> getAllMyPageByRequestorRaw(Long requestorId) {
+        List<PageOnly> result = new ArrayList<>();
+        result.addAll(redisDuoPageRepository.findAllByRequestorId(requestorId));
+        result.addAll(redisScrimPageRepository.findByRequestorId(requestorId));
+        return result;
     }
 
     public List<RedisDuoPageOnly> getAllDuoMyPage() throws Exception {

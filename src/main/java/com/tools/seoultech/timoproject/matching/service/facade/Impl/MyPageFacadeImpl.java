@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -57,12 +58,52 @@ public class MyPageFacadeImpl implements MyPageFacade {
         List<MatchingDTO.Response> dtoList = new ArrayList<>();
         if(matchingCategory == MatchingCategory.DUO){
             dtoList = myPageService.getAllDuoMyPage().stream()
-                    .map(proj -> (MatchingDTO.Response) myPageMapper.toDuoDto(proj)).toList();
+                    .map(proj -> (MatchingDTO.Response) myPageMapper.toDuoDto(proj))
+                    .filter(Objects::nonNull)
+                    .toList();
         } else if(matchingCategory == MatchingCategory.SCRIM){
             dtoList = myPageService.getAllScrimMyPage().stream()
                     .map(proj -> (MatchingDTO.Response) myPageMapper.toScrimDto(proj)).toList();
         }
         return dtoList;
+    }
+
+    /**
+     * requestorId로 모든 MyPage 조회하기 -> 임시코드
+     */
+    @Override
+    public List<MatchingDTO.Response> readAllMyRequestor(Long requestorId) throws Exception {
+        List<MatchingDTO.Response> dtoList = new ArrayList<>();
+        dtoList = myPageService.getAllMyPageByRequestorRaw(requestorId).stream()
+                .map(this::mapPageOnlyToDto)
+                .filter(Objects::nonNull)
+                .toList();
+        return dtoList;
+    }
+
+    /**
+     * acceptorId로 모든 MyPage 조회하기 -> 임시코드
+     */
+    @Override
+    public List<MatchingDTO.Response> readAllMyAcceptor(Long acceptorId) throws Exception {
+        List<MatchingDTO.Response> dtoList = new ArrayList<>();
+        dtoList = myPageService.getAllMyPageByAcceptorRaw(acceptorId).stream()
+                .map(this::mapPageOnlyToDto)
+                .filter(Objects::nonNull)
+                .toList();
+        return dtoList;
+    }
+
+    /**
+     * MatchingCategory에 따라 DTO 변환 - 임시 코드
+     */
+    private MatchingDTO.Response mapPageOnlyToDto(PageOnly page) {
+        if (page instanceof RedisDuoPageOnly duo) {
+            return myPageMapper.toDuoDto(duo);
+        } else if (page instanceof RedisScrimPageOnly scrim) {
+            return myPageMapper.toScrimDto(scrim);
+        }
+        throw new GeneralException("지원하지 않는 페이지 타입입니다.");
     }
 
     @Override

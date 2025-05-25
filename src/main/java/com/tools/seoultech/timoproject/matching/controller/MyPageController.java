@@ -1,7 +1,5 @@
 package com.tools.seoultech.timoproject.matching.controller;
 
-
-import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
@@ -21,6 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Tag(name = "Matching", description = "Matching API")
 public class MyPageController {
+
     private final MyPageFacade myPageFacade;
 
     /**
@@ -31,6 +30,18 @@ public class MyPageController {
     @GetMapping("/mypage/duo")
     public ResponseEntity<APIDataResponse<List<MatchingDTO.Response>>> readDuoBoard() throws Exception{
         var dtoList = myPageFacade.readAllMyPage(MatchingCategory.DUO);
+        return ResponseEntity.ok(APIDataResponse.of(dtoList));
+    }
+
+    @GetMapping("/mypage/acceptor/{acceptorId}")
+    public ResponseEntity<APIDataResponse<List<MatchingDTO.Response>>> readAllAcceptorPage(@PathVariable Long acceptorId) throws Exception{
+        var dtoList = myPageFacade.readAllMyAcceptor(acceptorId);
+        return ResponseEntity.ok(APIDataResponse.of(dtoList));
+    }
+
+    @GetMapping("/mypage/requestor/{requestorId}")
+    public ResponseEntity<APIDataResponse<List<MatchingDTO.Response>>> readAllRequestorPage(@PathVariable Long requestorId) throws Exception {
+        var dtoList = myPageFacade.readAllMyRequestor(requestorId);
         return ResponseEntity.ok(APIDataResponse.of(dtoList));
     }
 

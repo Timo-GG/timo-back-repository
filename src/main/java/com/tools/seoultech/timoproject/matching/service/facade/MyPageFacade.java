@@ -13,6 +13,10 @@ public interface MyPageFacade {
     MatchingDTO.Response createMyPage(MatchingDTO.Request dto) throws Exception;
     MatchingDTO.Response readMyPage(UUID myPageUUID) throws Exception;
     List<MatchingDTO.Response> readAllMyPage(MatchingCategory matchingCategory) throws Exception;
+
+    List<MatchingDTO.Response> readAllMyRequestor(Long requestorId) throws Exception;
+    List<MatchingDTO.Response> readAllMyAcceptor(Long acceptorId) throws Exception;
+
     void deleteMyPage(UUID myPageUUID) throws Exception;
     void deleteAllMyPage(MatchingCategory matchingCategory) throws Exception;
 
