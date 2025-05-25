@@ -14,6 +14,6 @@ public interface RedisScrimPageRepository extends CrudRepository<RedisScrimPage,
     Optional<RedisScrimPageOnly> findByMyPageUUID(UUID myPageUUID);
     List<RedisScrimPageOnly> findAllBy();
     List<RedisScrimPageOnly> findByAcceptorIdOrRequestorId(Long acceptorId, Long requestorId);
-    List<RedisScrimPageOnly> findByAccecptorId(Long acceptorId);
+    List<RedisScrimPageOnly> findByAcceptorId(Long acceptorId);
     List<RedisScrimPageOnly> findByRequestorId(Long requestorId);
 }
