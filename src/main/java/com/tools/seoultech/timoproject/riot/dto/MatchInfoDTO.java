@@ -98,7 +98,6 @@ public class MatchInfoDTO {
                         this.deaths = deaths;
                         this.assists = assists;
                         this.championLevel = championLevel;
-                        System.out.println("championLevel2" + championLevel);
 
                         if (pentaKills > 0)
                                 this.multiKill = "펜타킬";
@@ -146,7 +145,6 @@ public class MatchInfoDTO {
                                                 "'item0', 'item1', 'item2', 'item3', 'item4', 'item5', 'item6', " +
                                                 "'doubleKills', 'tripleKills','quadraKills', 'pentaKills','perks', 'gameEndedInEarlySurrender','teamId', 'win']",
                                 typeRef);
-                System.out.println("champion Level" + userInfos.get(0).getChampionLevel());
                 MatchInfoDTO testDTO = new MatchInfoDTO(
                                 node.read("$.metadata.participants"),
                                 node.read("$.info.queueId"),

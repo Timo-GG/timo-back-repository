@@ -1,9 +1,15 @@
 package com.tools.seoultech.timoproject.matching.service;
 
 
+import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.DuoPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.ScrimPage;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisDuoPageOnly;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
+import com.tools.seoultech.timoproject.notification.NotificationRequest;
+import com.tools.seoultech.timoproject.notification.NotificationService;
+import com.tools.seoultech.timoproject.notification.NotificationType;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,44 +17,49 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MatchingService {
     private final MyPageService myPageService;
     private final BoardService boardService;
-
     private final MyPageMapper myPageMapper;
 
-    /** Matching 수락 시  */
+    /** Duo 매칭 수락 - 핵심 로직만 */
     public DuoPage doDuoAcceptEvent(UUID myPageUUID) throws Exception {
-        UUID boardUUID = myPageService.readDuoMyPage(myPageUUID).getBoardUUID();
-    // 1. MySQL 엔티티로 전환.
-        // TODO: 채팅룸 연결.
+        // 1. MySQL 엔티티로 전환
         DuoPage entity = myPageService.createDuoPage(myPageUUID);
-    // 2. Redis 엔티티 삭제.
+
+        // 2. Redis 엔티티 삭제
         myPageService.deleteDuoMyPage(myPageUUID);
-    // 3. DuoBoard 엔티티 삭제.
+
+        // 3. DuoBoard 엔티티 삭제
+        UUID boardUUID = myPageService.readDuoMyPage(myPageUUID).getBoardUUID();
         boardService.deleteDuoBoardById(boardUUID);
+
         return entity;
     }
 
+    /** Scrim 매칭 수락 - 핵심 로직만 */
     public ScrimPage doScrimAcceptEvent(UUID myPageUUID) throws Exception {
-        UUID boardUUID = myPageService.readScrimMyPage(myPageUUID).getBoardUUID();
-    // 1. MySQL 엔티티로 전환.
-        // TODO: 채팅룸 연결.
+        // 1. MySQL 엔티티로 전환
         ScrimPage entity = myPageService.createScrimPage(myPageUUID);
-    // 2. Redis MyPage 엔티티 삭제.
+
+        // 2. Redis MyPage 엔티티 삭제
         myPageService.deleteScrimMyPage(myPageUUID);
-    // 3. ScrimBoard 엔티티 삭제.
+
+        // 3. ScrimBoard 엔티티 삭제
+        UUID boardUUID = myPageService.readScrimMyPage(myPageUUID).getBoardUUID();
         boardService.deleteScrimBoardById(boardUUID);
+
         return entity;
     }
 
-    /** Matching 거절 시 */
+    /** Duo 매칭 거절 */
     public void doDuoRejectEvent(UUID myPageUUID) throws Exception {
-    // 1. DuoBoard 삭제 없이 Redis MyPage 엔티티만 삭제.
         myPageService.deleteDuoMyPage(myPageUUID);
     }
+
+    /** Scrim 매칭 거절 */
     public void doScrimRejectEvent(UUID myPageUUID) throws Exception {
-    // 1. ScrimBoard 삭제 없이 Redis MyPage 엔티티만 삭제.
         myPageService.deleteScrimMyPage(myPageUUID);
     }
 }

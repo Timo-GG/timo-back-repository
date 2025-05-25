@@ -4,7 +4,6 @@ import com.tools.seoultech.timoproject.chat.domain.ChatRoom;
 import com.tools.seoultech.timoproject.chat.domain.ChatRoomMember;
 import com.tools.seoultech.timoproject.chat.domain.Message;
 import com.tools.seoultech.timoproject.chat.dto.ChatMessageDTO;
-import com.tools.seoultech.timoproject.chat.dto.ChatRoomMetadata;
 import com.tools.seoultech.timoproject.chat.dto.ChatRoomResponse;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomMemberRepository;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomRepository;
@@ -15,43 +14,30 @@ import com.tools.seoultech.timoproject.member.MemberRepository;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ChatService implements DisposableBean {
+public class ChatService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final MessageRepository messageRepository;
     private final ChatRoomMemberRepository chatRoomMemberRepository;
-
-    private static final int MAX_QUEUE_SIZE = 300;   // 큐 최대 크기 (예: 100)
-    private static final int FLUSH_SIZE = 100;        // 한 번에 DB에 기록할 개수 (예: 30)
-
-    // 메시지 본문을 저장할 캐시: roomId -> Queue<Message>
-    private static final Map<Long, Queue<Message>> messageMap = new ConcurrentHashMap<>();
-
-    // 채팅방 메타데이터를 저장할 캐시: roomId -> ChatRoomMetadata
-    private static final Map<Long, ChatRoomMetadata> chatRoomMetadataMap = new ConcurrentHashMap<>();
     private final MemberRepository memberRepository;
 
-
-    // ====================================
-    // (기존) 메시지 즉시 저장 로직
-    // ====================================
+    /**
+     * 메시지 저장
+     */
     @Transactional
     public ChatMessageDTO saveMessage(ChatMessageDTO chatMessageDTO) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatMessageDTO.roomId())
@@ -74,7 +60,7 @@ public class ChatService implements DisposableBean {
         chatRoom.updateLastMessage(message);
         chatRoomRepository.save(chatRoom);
 
-        log.info("메시지 저장(DB 즉시): content - {}, senderId - {}", message.getContent(), message.getSenderId());
+        log.info("메시지 저장 완료: content - {}, senderId - {}", message.getContent(), message.getSenderId());
 
         // 4) DTO 변환 후 반환
         return ChatMessageDTO.builder()
@@ -85,195 +71,28 @@ public class ChatService implements DisposableBean {
                 .build();
     }
 
-    // ====================================
-    // 1) 메시지 + 메타데이터 캐싱 로직
-    // ====================================
-    @Transactional
-    public void saveMessageWithCache(ChatMessageDTO dto) {
-        // 1) 채팅방 확인
-        ChatRoom chatRoom = chatRoomRepository.findById(dto.roomId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
-
-        // 2) 메시지 캐싱
-        Message message = Message.createMessage(chatRoom, dto.senderId(), dto.content());
-        messageMap.putIfAbsent(dto.roomId(), new LinkedList<>());
-        Queue<Message> queue = messageMap.get(dto.roomId());
-        queue.add(message);
-
-        if (queue.size() >= MAX_QUEUE_SIZE) {
-            flushMessageQueue(dto.roomId());  // ✅ 기존 `FLUSH_SIZE` 개수만큼이 아니라 전체 배치 저장
-        }
-
-        // ✅ 메타데이터 업데이트 최소화 (DB 접근 최소화)
-        chatRoomMetadataMap.putIfAbsent(dto.roomId(), new ChatRoomMetadata(dto.roomId(), dto.content(), LocalDateTime.now(), dto.senderId(), new HashMap<>()));
-        ChatRoomMetadata meta = chatRoomMetadataMap.get(dto.roomId());
-
-        for (ChatRoomMember crm : chatRoomMemberRepository.findByChatRoom(chatRoom)) {
-            if (!crm.getMember().getMemberId().equals(dto.senderId())) {
-                meta.incrementUnread(crm.getMember().getMemberId());
-            }
-        }
-    }
-
     /**
-     * roomId에 해당하는 메시지 큐에서 flushSize개를 DB에 기록
+     * 메시지 조회 (페이징)
      */
-    private void flushMessageQueue(Long roomId) {
-        Queue<Message> queue = messageMap.get(roomId);
-        if (queue == null || queue.isEmpty()) return;
-
-        List<Message> batchList = new ArrayList<>(queue);
-        messageRepository.saveAll(batchList);
-        queue.clear(); // ✅ DB에 저장한 후 캐시 비우기
-
-    }
-
-    /**
-     * flushQueue에 있는 메시지를 DB에 일괄 저장
-     */
-    private void commitMessageQueue(Queue<Message> flushQueue) {
-        int size = flushQueue.size();
-        if (size == 0) return;
-
-        List<Message> batchList = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            Message msg = flushQueue.poll();
-            if (msg != null) {
-                batchList.add(msg);
-            }
-        }
-        messageRepository.saveAll(batchList);
-        log.info("[commitMessageQueue] {}건의 메시지를 DB에 배치 저장 완료", size);
-    }
-
-    // ====================================
-    // 2) 메타데이터 배치 플러시
-    // ====================================
-    @Scheduled(fixedDelay = 30000) // 예: 30초마다
-    @Transactional
-    public void scheduledFlush() {
-        for (Long roomId : messageMap.keySet()) {
-            if (messageMap.get(roomId).size() >= FLUSH_SIZE) { // ✅ 충분히 쌓인 경우에만 Flush 실행
-                flushMessageQueue(roomId);
-            }
-        }
-    }
-
-    /**
-     * chatRoomMetadataMap에 누적된 메타데이터를 DB에 반영
-     */
-    private void flushChatRoomMetadata() {
-        for (Map.Entry<Long, ChatRoomMetadata> entry : chatRoomMetadataMap.entrySet()) {
-            ChatRoomMetadata meta = entry.getValue();
-            Long roomId = meta.getRoomId();
-
-            // (1) ChatRoom의 lastMessage 갱신
-            chatRoomRepository.findById(roomId).ifPresent(chatRoom -> {
-                chatRoom.updateLastMessage(
-                        Message.createMessage(chatRoom, meta.getLastMessageSenderId(), meta.getLastMessage())
-                );
-                chatRoomRepository.save(chatRoom);
-            });
-
-            // (2) unreadCount 배치 업데이트
-            List<ChatRoomMember> updateList = new ArrayList<>();
-            for (Map.Entry<Long, Integer> e : meta.getUnreadMap().entrySet()) {
-                chatRoomMemberRepository.findByChatRoomIdAndMember_MemberId(roomId, e.getKey())
-                        .ifPresent(crm -> {
-                            crm.increaseUnreadCount();
-                            updateList.add(crm);
-                        });
-            }
-            chatRoomMemberRepository.saveAll(updateList);
-        }
-        chatRoomMetadataMap.clear();
-        log.info("[flushChatRoomMetadata] 메타데이터 배치 저장 완료");
-    }
-
-
-    // ====================================
-    // 3) 종료 시 처리
-    // ====================================
-    @Override
-    public void destroy() throws Exception {
-        // 3-1) 남은 메시지 모두 flush
-        for (Long roomId : messageMap.keySet()) {
-            flushMessageQueue(roomId);
-        }
-        // 3-2) 메타데이터 flush
-        flushChatRoomMetadata();
-    }
-
-    // ====================================
-    // 5) 채팅방 메타데이터(마지막 메시지, unreadCount 등) 즉시 업데이트 예시
-    // ====================================
-    private void updateChatRoomMetaData(ChatRoom chatRoom, ChatMessageDTO dto) {
-        // unreadCount 업데이트
-        List<ChatRoomMember> members = chatRoomMemberRepository.findByChatRoom(chatRoom);
-        for (ChatRoomMember member : members) {
-            if (!member.getMember().getMemberId().equals(dto.senderId())) {
-                member.increaseUnreadCount();
-            }
-        }
-        chatRoomMemberRepository.saveAll(members);
-
-        // lastMessage 갱신
-        Message pseudoMessage = Message.createMessage(chatRoom, dto.senderId(), dto.content());
-        chatRoom.updateLastMessage(pseudoMessage);
-        chatRoomRepository.save(chatRoom);
-    }
-
-    // 이전 메시지 조회
     @Transactional(readOnly = true)
     public List<ChatMessageDTO> getMessages(Long roomId, int page, int size) {
-        // PageRequest로 페이징, 오래된 순 정렬
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "regDate")); // 최신순
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "regDate"));
         Page<Message> messagePage = messageRepository.findByChatRoom_Id(roomId, pageable);
 
-        // Message -> ChatMessageDTO 변환
         return messagePage.stream()
-                .map(m -> new ChatMessageDTO(
-                        m.getId(),
-                        m.getChatRoom().getId(),
-                        m.getSenderId(),
-                        m.getContent()
-                ))
+                .map(m -> ChatMessageDTO.builder()
+                        .messageId(m.getId())
+                        .roomId(m.getChatRoom().getId())
+                        .senderId(m.getSenderId())
+                        .content(m.getContent())
+                        .build())
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 안 읽은 메시지 개수 조회
+     */
     @Transactional(readOnly = true)
-    public List<ChatMessageDTO> getMessagesWithCache(Long roomId, int page, int size) {
-        // 캐시에 저장된 메시지 조회
-        Queue<Message> queue = messageMap.get(roomId);
-        if (queue == null || queue.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        // 페이징 처리
-        List<Message> messageList = new ArrayList<>(queue);
-        int totalMessages = messageList.size();
-        int start = Math.max(0, page * size); // ✅ 음수 방지
-
-        // ✅ start가 전체 메시지 개수를 초과하면 빈 리스트 반환
-        if (start >= totalMessages) {
-            return Collections.emptyList();
-        }
-
-        int end = Math.min(start + size, totalMessages); // ✅ end가 totalMessages를 초과하지 않도록 제한
-        List<Message> subList = messageList.subList(start, end);
-
-        // Message -> ChatMessageDTO 변환
-        return subList.stream()
-                .map(m -> new ChatMessageDTO(
-                        m.getId(),
-                        m.getChatRoom().getId(),
-                        m.getSenderId(),
-                        m.getContent()
-                ))
-                .collect(Collectors.toList());
-    }
-
-    // 안 읽은 메시지 개수 조회
     public int getUnreadCount(Long memberId, Long chatRoomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
@@ -284,7 +103,9 @@ public class ChatService implements DisposableBean {
         return chatRoomMember.getUnreadCount();
     }
 
-
+    /**
+     * 사용자의 채팅방 목록 조회
+     */
     @Transactional(readOnly = true)
     public List<ChatRoomResponse> getChatRoomsByMemberId(Long memberId) {
         List<ChatRoomMember> memberships = chatRoomMemberRepository.findByMember_MemberIdAndIsLeftFalse(memberId);
@@ -294,6 +115,9 @@ public class ChatService implements DisposableBean {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 채팅방 입장
+     */
     @Transactional
     public void joinRoom(Long memberId, Long roomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
@@ -302,15 +126,22 @@ public class ChatService implements DisposableBean {
         ChatRoomMember existing = chatRoomMemberRepository.findByChatRoomIdAndMember_MemberId(roomId, memberId)
                 .orElse(null);
         if (existing != null) {
-            log.info("🔁 이미 참여한 채팅방입니다. roomId={}, memberId={}", roomId, memberId);
+            log.info("이미 참여한 채팅방입니다. roomId={}, memberId={}", roomId, memberId);
             return;
         }
 
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원: " + memberId));
+
         ChatRoomMember newMember = ChatRoomMember.createChatRoomMember(chatRoom, member);
         chatRoomMemberRepository.save(newMember);
+
+        log.info("채팅방 입장 완료. roomId={}, memberId={}", roomId, memberId);
     }
 
+    /**
+     * 채팅방 나가기
+     */
     @Transactional
     public void leaveRoom(Long memberId, Long chatRoomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
@@ -323,14 +154,23 @@ public class ChatService implements DisposableBean {
         chatRoomMember.leave();
         chatRoomMemberRepository.save(chatRoomMember);
 
+        // 모든 멤버가 나갔는지 확인
         boolean allLeft = chatRoomMemberRepository.findByChatRoom(chatRoom).stream()
                 .allMatch(ChatRoomMember::isLeft);
+
         if (allLeft) {
             chatRoom.terminate();
             chatRoomRepository.save(chatRoom);
+            log.info("모든 멤버가 나가서 채팅방을 종료합니다. roomId={}", chatRoomId);
         }
+
+        log.info("채팅방 나가기 완료. roomId={}, memberId={}", chatRoomId, memberId);
     }
 
+    /**
+     * 활성 멤버 조회
+     */
+    @Transactional(readOnly = true)
     public List<ChatRoomMember> findActiveMembers(Long roomId) {
         return chatRoomMemberRepository.findByChatRoomId(roomId)
                 .stream()
@@ -338,9 +178,11 @@ public class ChatService implements DisposableBean {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 매칭을 위한 채팅방 생성
+     */
     @Transactional
-    public void createChatRoomForMatch(String matchId, Long member1Id, Long member2Id) {
-
+    public Long createChatRoomForMatch(String matchId, Long member1Id, Long member2Id) {
         // 채팅방 생성
         ChatRoom chatRoom = ChatRoom.createRoom(matchId);
         chatRoomRepository.save(chatRoom);
@@ -357,25 +199,38 @@ public class ChatService implements DisposableBean {
         chatRoomMemberRepository.save(chatRoomMember1);
         chatRoomMemberRepository.save(chatRoomMember2);
 
-        log.info("✅ 채팅방 생성 및 멤버 가입 완료. matchId={}", matchId);
+        log.info("채팅방 생성 완료. matchId={}, member1Id={}, member2Id={}", matchId, member1Id, member2Id);
+        return chatRoom.getId();
+
     }
 
+    /**
+     * 매칭 ID로 채팅방 조회
+     */
     @Transactional(readOnly = true)
     public ChatRoom findChatRoomByMatchId(String matchId) {
-        // ChatRoom 엔티티에 matchId 필드가 있다고 가정
-         return chatRoomRepository.findByMatchId(matchId).orElse(null);
+        return chatRoomRepository.findByMatchId(matchId).orElse(null);
     }
 
+    /**
+     * 채팅방 종료
+     */
     @Transactional
     public void terminateChat(String matchId) {
         ChatRoom chatRoom = chatRoomRepository.findByMatchId(matchId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_CHATROOM_EXCEPTION));
+
         if (!chatRoom.isTerminated()) {
             chatRoom.terminate();
+            chatRoomRepository.save(chatRoom);
+            log.info("채팅방 종료 완료. matchId={}", matchId);
         }
-        chatRoomRepository.save(chatRoom);
     }
 
+    /**
+     * 멤버의 활성 채팅방 ID 조회
+     */
+    @Transactional(readOnly = true)
     public Long findActiveChatRoomIdForMember(Long memberId) {
         return chatRoomMemberRepository.findFirstByMember_MemberIdAndIsLeftFalse(memberId)
                 .map(ChatRoomMember::getChatRoom)
@@ -384,6 +239,9 @@ public class ChatService implements DisposableBean {
                 .orElse(null);
     }
 
+    /**
+     * 채팅방 생성 또는 기존 채팅방 조회
+     */
     @Transactional
     public ChatRoomResponse createOrGetChatRoom(Long myId, Long opponentId) {
         Optional<ChatRoom> existing = chatRoomRepository.findRoomByMembers(myId, opponentId);
@@ -394,12 +252,15 @@ public class ChatService implements DisposableBean {
         ChatRoom room = ChatRoom.createChatRoom(myId, opponentId);
         chatRoomRepository.save(room);
 
-        Member me = memberRepository.findById(myId).orElseThrow();
-        Member opponent = memberRepository.findById(opponentId).orElseThrow();
+        Member me = memberRepository.findById(myId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원: " + myId));
+        Member opponent = memberRepository.findById(opponentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원: " + opponentId));
 
         chatRoomMemberRepository.save(ChatRoomMember.createChatRoomMember(room, me));
         chatRoomMemberRepository.save(ChatRoomMember.createChatRoomMember(room, opponent));
 
+        log.info("새 채팅방 생성 완료. myId={}, opponentId={}", myId, opponentId);
         return ChatRoomResponse.of(room);
     }
 }
