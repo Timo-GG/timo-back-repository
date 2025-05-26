@@ -45,14 +45,14 @@ public class MatchingFacadeImpl implements MatchingFacade {
             RedisDuoPageOnly duoPageData = myPageService.readDuoMyPage(myPageUUID);
             processMatchSuccess(duoPageData);
 
-            DuoPage entity = matchingService.doDuoAcceptEvent(myPageUUID);
+            DuoPage entity = matchingService.doDuoAcceptEvent(myPageUUID, duoPageData.getBoardUUID());
             return myPageMapper.toDuoDto(entity);
 
         } else if (dto instanceof MatchingDTO.ResponseScrim) {
             RedisScrimPageOnly scrimPageData = myPageService.readScrimMyPage(myPageUUID);
             processMatchSuccess(scrimPageData);
 
-            ScrimPage entity = matchingService.doScrimAcceptEvent(myPageUUID);
+            ScrimPage entity = matchingService.doScrimAcceptEvent(myPageUUID, scrimPageData.getBoardUUID());
             return myPageMapper.toScrimDto(entity);
         }
 

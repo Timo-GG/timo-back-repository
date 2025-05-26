@@ -24,30 +24,27 @@ public class MatchingService {
     private final MyPageMapper myPageMapper;
 
     /** Duo 매칭 수락 - 핵심 로직만 */
-    public DuoPage doDuoAcceptEvent(UUID myPageUUID) throws Exception {
+    public DuoPage doDuoAcceptEvent(UUID myPageUUID, UUID boardUUID) throws Exception {
         // 1. MySQL 엔티티로 전환
         DuoPage entity = myPageService.createDuoPage(myPageUUID);
 
         // 2. Redis 엔티티 삭제
         myPageService.deleteDuoMyPage(myPageUUID);
 
-        // 3. DuoBoard 엔티티 삭제
-        UUID boardUUID = myPageService.readDuoMyPage(myPageUUID).getBoardUUID();
+        // 3. DuoBoard 엔티티 삭제 (미리 받은 boardUUID 사용)
         boardService.deleteDuoBoardById(boardUUID);
 
         return entity;
     }
 
-    /** Scrim 매칭 수락 - 핵심 로직만 */
-    public ScrimPage doScrimAcceptEvent(UUID myPageUUID) throws Exception {
+    public ScrimPage doScrimAcceptEvent(UUID myPageUUID, UUID boardUUID) throws Exception {
         // 1. MySQL 엔티티로 전환
         ScrimPage entity = myPageService.createScrimPage(myPageUUID);
 
         // 2. Redis MyPage 엔티티 삭제
         myPageService.deleteScrimMyPage(myPageUUID);
 
-        // 3. ScrimBoard 엔티티 삭제
-        UUID boardUUID = myPageService.readScrimMyPage(myPageUUID).getBoardUUID();
+        // 3. ScrimBoard 엔티티 삭제 (미리 받은 boardUUID 사용)
         boardService.deleteScrimBoardById(boardUUID);
 
         return entity;
