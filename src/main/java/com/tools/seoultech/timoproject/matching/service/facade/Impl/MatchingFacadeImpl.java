@@ -34,7 +34,7 @@ public class MatchingFacadeImpl implements MatchingFacade {
     private final ChatService chatService;
     private final NotificationService notificationService;
 
-    private static final String CHAT_URL_PREFIX = "/mypage/chat/";
+    private static final String CHAT_URL_PREFIX = "/mypage?tab=chat";
     private static final String MYPAGE_URL = "/mypage";
 
     @Override
