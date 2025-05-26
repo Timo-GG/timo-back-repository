@@ -108,10 +108,19 @@ public class ChatService {
      */
     @Transactional(readOnly = true)
     public List<ChatRoomResponse> getChatRoomsByMemberId(Long memberId) {
-        List<ChatRoomMember> memberships = chatRoomMemberRepository.findByMember_MemberIdAndIsLeftFalse(memberId);
+        List<ChatRoomMember> memberships = chatRoomMemberRepository
+                .findByMember_MemberIdWithChatRoomAndMember(memberId);
 
         return memberships.stream()
-                .map(member -> ChatRoomResponse.of(member.getChatRoom()))
+                .map(currentMember -> {
+                    ChatRoom chatRoom = currentMember.getChatRoom();
+
+                    ChatRoomMember opponent = chatRoomMemberRepository
+                            .findByChatRoomIdAndMember_MemberIdNotWithMember(chatRoom.getId(), memberId)
+                            .orElse(null);
+
+                    return ChatRoomResponse.of(chatRoom, currentMember, opponent);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -246,7 +255,17 @@ public class ChatService {
     public ChatRoomResponse createOrGetChatRoom(Long myId, Long opponentId) {
         Optional<ChatRoom> existing = chatRoomRepository.findRoomByMembers(myId, opponentId);
         if (existing.isPresent()) {
-            return ChatRoomResponse.of(existing.get());
+            ChatRoom room = existing.get();
+
+            ChatRoomMember currentMember = chatRoomMemberRepository
+                    .findByChatRoomIdAndMember_MemberId(room.getId(), myId)
+                    .orElseThrow(() -> new IllegalArgumentException("채팅방 멤버 정보를 찾을 수 없습니다"));
+
+            ChatRoomMember opponent = chatRoomMemberRepository
+                    .findByChatRoomIdAndMember_MemberIdNotWithMember(room.getId(), myId)
+                    .orElse(null);
+
+            return ChatRoomResponse.of(room, currentMember, opponent);
         }
 
         ChatRoom room = ChatRoom.createChatRoom(myId, opponentId);
@@ -257,10 +276,12 @@ public class ChatService {
         Member opponent = memberRepository.findById(opponentId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원: " + opponentId));
 
-        chatRoomMemberRepository.save(ChatRoomMember.createChatRoomMember(room, me));
-        chatRoomMemberRepository.save(ChatRoomMember.createChatRoomMember(room, opponent));
+        ChatRoomMember myMembership = chatRoomMemberRepository.save(ChatRoomMember.createChatRoomMember(room, me));
+        ChatRoomMember opponentMembership = chatRoomMemberRepository.save(ChatRoomMember.createChatRoomMember(room, opponent));
 
         log.info("새 채팅방 생성 완료. myId={}, opponentId={}", myId, opponentId);
-        return ChatRoomResponse.of(room);
+
+        // ✅ 3개 파라미터 메서드 사용
+        return ChatRoomResponse.of(room, myMembership, opponentMembership);
     }
 }
