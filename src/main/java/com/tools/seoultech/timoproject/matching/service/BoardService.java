@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -81,11 +83,17 @@ public class BoardService {
 
     /** 모든 게시글 조회 */
     public List<DuoBoardOnly> getAllDuoBoards() {
-        return duoBoardRepository.findAllBy();
+        return duoBoardRepository.findAllBy()
+                .stream()
+                .filter(Objects::nonNull) // TTL 만료로 null된 것들 제거
+                .collect(Collectors.toList());
     }
 
     public List<ScrimBoardOnly> getAllScrimBoards() {
-        return scrimBoardRepository.findAllBy();
+        return scrimBoardRepository.findAllBy()
+                .stream()
+                .filter(Objects::nonNull) // TTL 만료로 null된 것들 제거
+                .collect(Collectors.toList());
     }
 
 
