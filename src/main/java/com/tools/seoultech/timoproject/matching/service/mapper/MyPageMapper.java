@@ -92,8 +92,24 @@ public interface MyPageMapper {
 //    MyPageDTO.Response toDuoDto();
     default MyPageDTO.Response toFilteredDtoList(MyPage entity){
         if(entity instanceof DuoPage duoPage){
-            var acceptorInfo = MatchingDTO.WrappedDuoData.builder().memberInfo(duoPage.getAcceptorMemberInfo()).userInfo(duoPage.getRequestorUserInfo()).build();
-            var requestorInfo = MatchingDTO.WrappedDuoData.builder().memberInfo(duoPage.getRequestorMemberInfo()).userInfo(duoPage.getRequestorUserInfo()).build();
+            var acceptorInfo = MyPageDTO.MyPageWrappedDuoData.builder()
+                    .memberInfo(duoPage.getAcceptorMemberInfo())
+                    .userInfo(duoPage.getAcceptorUserInfo()) // 수정: getRequestorUserInfo() → getAcceptorUserInfo()
+                    .univName(duoPage.getAcceptor().getCertifiedUnivInfo() != null ?
+                            duoPage.getAcceptor().getCertifiedUnivInfo().getUnivName() : "미인증")
+                    .department(duoPage.getAcceptor().getCertifiedUnivInfo() != null ?
+                            duoPage.getAcceptor().getCertifiedUnivInfo().getDepartment() : "미설정")
+                    .build();
+
+            var requestorInfo = MyPageDTO.MyPageWrappedDuoData.builder()
+                    .memberInfo(duoPage.getRequestorMemberInfo())
+                    .userInfo(duoPage.getRequestorUserInfo())
+                    .univName(duoPage.getRequestor().getCertifiedUnivInfo() != null ?
+                            duoPage.getRequestor().getCertifiedUnivInfo().getUnivName() : "미인증")
+                    .department(duoPage.getRequestor().getCertifiedUnivInfo() != null ?
+                            duoPage.getRequestor().getCertifiedUnivInfo().getDepartment() : "미설정")
+                    .build();
+
             return MyPageDTO.ResponseDuoPage.builder()
                     .mypageId(duoPage.getId())
                     .mapCode(duoPage.getMapCode())
@@ -101,10 +117,28 @@ public interface MyPageMapper {
                     .matchingStatus(duoPage.getMatchingStatus())
                     .acceptor(acceptorInfo)
                     .requestor(requestorInfo)
+                    .roomId(null) // roomId 추가
                     .build();
+
         } else if (entity instanceof ScrimPage scrimPage){
-            var acceptorInfo = MatchingDTO.WrappedScrimData.builder().memberInfo(scrimPage.getAcceptorMemberInfo()).partyInfo(scrimPage.getAcceptorPartyInfo()).build();
-            var requestorInfo = MatchingDTO.WrappedScrimData.builder().memberInfo(scrimPage.getRequestorMemberInfo()).partyInfo(scrimPage.getRequestorPartyInfo()).build();
+            var acceptorInfo = MyPageDTO.MyPageWrappedScrimData.builder()
+                    .memberInfo(scrimPage.getAcceptorMemberInfo())
+                    .partyInfo(scrimPage.getAcceptorPartyInfo())
+                    .univName(scrimPage.getAcceptor().getCertifiedUnivInfo() != null ?
+                            scrimPage.getAcceptor().getCertifiedUnivInfo().getUnivName() : "미인증")
+                    .department(scrimPage.getAcceptor().getCertifiedUnivInfo() != null ?
+                            scrimPage.getAcceptor().getCertifiedUnivInfo().getDepartment() : "미설정")
+                    .build();
+
+            var requestorInfo = MyPageDTO.MyPageWrappedScrimData.builder()
+                    .memberInfo(scrimPage.getRequestorMemberInfo())
+                    .partyInfo(scrimPage.getRequestorPartyInfo())
+                    .univName(scrimPage.getRequestor().getCertifiedUnivInfo() != null ?
+                            scrimPage.getRequestor().getCertifiedUnivInfo().getUnivName() : "미인증")
+                    .department(scrimPage.getRequestor().getCertifiedUnivInfo() != null ?
+                            scrimPage.getRequestor().getCertifiedUnivInfo().getDepartment() : "미설정")
+                    .build();
+
             return MyPageDTO.ResponseScrimPage.builder()
                     .mypageId(scrimPage.getId())
                     .mapCode(scrimPage.getMapCode())
@@ -112,7 +146,9 @@ public interface MyPageMapper {
                     .matchingStatus(scrimPage.getMatchingStatus())
                     .acceptor(acceptorInfo)
                     .requestor(requestorInfo)
+                    .roomId(null) // roomId 추가
                     .build();
+
         } else throw new GeneralException("bool fucked");
     }
     default MyPageDTO.ResponseMyPage tofilteredWrappeddtoList(List<MyPageDTO.Response> filteredDtoList, String format){
@@ -123,15 +159,29 @@ public interface MyPageMapper {
     }
 
     @Mapping(target = "mypageId", source = "entity.id")
-    @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(entity.getAcceptorUserInfo(), entity.getAcceptorMemberInfo()))")
-    @Mapping(target = "requestor", expression = "java(getWrappedDuoData(entity.getRequestorUserInfo(), entity.getRequestorMemberInfo()))")
-    MyPageDTO.ResponseDuoPage toDuoDto(DuoPage entity);
+    @Mapping(target = "roomId", source = "roomId")
+    @Mapping(target = "acceptor", expression = "java(getMyPageWrappedDuoDataWithUniv(entity.getAcceptorUserInfo(), entity.getAcceptorMemberInfo(), entity.getAcceptor()))")
+    @Mapping(target = "requestor", expression = "java(getMyPageWrappedDuoDataWithUniv(entity.getRequestorUserInfo(), entity.getRequestorMemberInfo(), entity.getRequestor()))")
+    MyPageDTO.ResponseDuoPage toDuoDto(DuoPage entity, Long roomId);
 
     @Mapping(target = "mypageId", source = "entity.id")
-    @Mapping(target = "acceptor", expression = "java(getWrappedScrimData(entity.getAcceptorMemberInfo(), entity.getAcceptorPartyInfo()))")
-    @Mapping(target = "requestor", expression = "java(getWrappedScrimData(entity.getRequestorMemberInfo(), entity.getRequestorPartyInfo()))")
-    MyPageDTO.ResponseScrimPage toScrimDto(ScrimPage entity);
+    @Mapping(target = "roomId", ignore = true)
+    @Mapping(target = "acceptor", expression = "java(getMyPageWrappedDuoDataWithUniv(entity.getAcceptorUserInfo(), entity.getAcceptorMemberInfo(), entity.getAcceptor()))")
+    @Mapping(target = "requestor", expression = "java(getMyPageWrappedDuoDataWithUniv(entity.getRequestorUserInfo(), entity.getRequestorMemberInfo(), entity.getRequestor()))")
+    MyPageDTO.ResponseDuoPage toDuoDto(DuoPage entity);
 
+
+    @Mapping(target = "mypageId", source = "entity.id")
+    @Mapping(target = "roomId", source = "roomId")
+    @Mapping(target = "acceptor", expression = "java(getMyPageWrappedScrimDataWithUniv(entity.getAcceptorMemberInfo(), entity.getAcceptorPartyInfo(), entity.getAcceptor()))")
+    @Mapping(target = "requestor", expression = "java(getMyPageWrappedScrimDataWithUniv(entity.getRequestorMemberInfo(), entity.getRequestorPartyInfo(), entity.getRequestor()))")
+    MyPageDTO.ResponseScrimPage toScrimDto(ScrimPage entity, Long roomId);
+
+    @Mapping(target = "mypageId", source = "entity.id")
+    @Mapping(target = "roomId", ignore = true)
+    @Mapping(target = "acceptor", expression = "java(getMyPageWrappedScrimDataWithUniv(entity.getAcceptorMemberInfo(), entity.getAcceptorPartyInfo(), entity.getAcceptor()))")
+    @Mapping(target = "requestor", expression = "java(getMyPageWrappedScrimDataWithUniv(entity.getRequestorMemberInfo(), entity.getRequestorPartyInfo(), entity.getRequestor()))")
+    MyPageDTO.ResponseScrimPage toScrimDto(ScrimPage entity);
 
     /** 유틸리티 */
     @Named("getWrappedDuoData")
@@ -142,6 +192,32 @@ public interface MyPageMapper {
     @Named("getWrappedScrimData")
     default MatchingDTO.WrappedScrimData getWrappedScrimData(CompactMemberInfo memberInfo, List<PartyMemberInfo> partyInfo){
         return MatchingDTO.WrappedScrimData.builder().memberInfo(memberInfo).partyInfo(partyInfo).build();
+    }
+
+    @Named("getMyPageWrappedDuoDataWithUniv")
+    default MyPageDTO.MyPageWrappedDuoData getMyPageWrappedDuoDataWithUniv(
+            UserInfo userInfo,
+            CompactMemberInfo memberInfo,
+            Member member) {
+        return MyPageDTO.MyPageWrappedDuoData.builder()
+                .userInfo(userInfo)
+                .memberInfo(memberInfo)
+                .univName(member.getCertifiedUnivInfo() != null ? member.getCertifiedUnivInfo().getUnivName() : "미인증")
+                .department(member.getCertifiedUnivInfo() != null ? member.getCertifiedUnivInfo().getDepartment() : "미설정")
+                .build();
+    }
+
+    @Named("getMyPageWrappedScrimDataWithUniv")
+    default MyPageDTO.MyPageWrappedScrimData getMyPageWrappedScrimDataWithUniv(
+            CompactMemberInfo memberInfo,
+            List<PartyMemberInfo> partyInfo,
+            Member member) {
+        return MyPageDTO.MyPageWrappedScrimData.builder()
+                .memberInfo(memberInfo)
+                .partyInfo(partyInfo)
+                .univName(member.getCertifiedUnivInfo() != null ? member.getCertifiedUnivInfo().getUnivName() : "미인증")
+                .department(member.getCertifiedUnivInfo() != null ? member.getCertifiedUnivInfo().getDepartment() : "미설정")
+                .build();
     }
 
     @Named("getMember")
