@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.riot.service;
 
+import com.tools.seoultech.timoproject.global.annotation.PerformanceTimer;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.DataDragonClient;
@@ -153,6 +154,7 @@ public class RiotAPIService {
 
     // ⭐ 핵심: 병렬 처리로 성능 개선된 매치 요약
     @Transactional
+    @PerformanceTimer
     public List<MatchSummaryDTO> getRecentMatchSummaries(String puuid) {
         try {
             List<String> matchIds = requestMatchList(puuid).stream().limit(10).toList();
