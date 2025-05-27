@@ -34,7 +34,7 @@ public class MatchingFacadeImpl implements MatchingFacade {
     private final ChatService chatService;
     private final NotificationService notificationService;
 
-    private static final String CHAT_URL_PREFIX = "/mypage?tab=chat";
+    private static final String CHAT_URL_PREFIX = "/chat?tab=chat";
     private static final String MYPAGE_URL = "/mypage";
 
     @Override
@@ -43,17 +43,18 @@ public class MatchingFacadeImpl implements MatchingFacade {
 
         if(dto instanceof MatchingDTO.ResponseDuo) {
             RedisDuoPageOnly duoPageData = myPageService.readDuoMyPage(myPageUUID);
-            processMatchSuccess(duoPageData);
+            Long roomId = processMatchSuccess(duoPageData);
+
 
             DuoPage entity = matchingService.doDuoAcceptEvent(myPageUUID, duoPageData.getBoardUUID());
-            return myPageMapper.toDuoDto(entity);
+            return myPageMapper.toDuoDto(entity, roomId);
 
         } else if (dto instanceof MatchingDTO.ResponseScrim) {
             RedisScrimPageOnly scrimPageData = myPageService.readScrimMyPage(myPageUUID);
-            processMatchSuccess(scrimPageData);
+            Long roomId = processMatchSuccess(scrimPageData);
 
             ScrimPage entity = matchingService.doScrimAcceptEvent(myPageUUID, scrimPageData.getBoardUUID());
-            return myPageMapper.toScrimDto(entity);
+            return myPageMapper.toScrimDto(entity, roomId);
         }
 
         throw new GeneralException("Matching 로직 내부에서 실패했습니다.");
@@ -83,8 +84,8 @@ public class MatchingFacadeImpl implements MatchingFacade {
     /**
      * 매칭 성공 후처리 - DuoPage용
      */
-    private void processMatchSuccess(RedisDuoPageOnly duoPageData) {
-        processMatchSuccessCommon(
+    private Long processMatchSuccess(RedisDuoPageOnly duoPageData) {
+        return processMatchSuccessCommon(
                 duoPageData.getBoardUUID(),
                 duoPageData.getAcceptorId(),
                 duoPageData.getRequestorId(),
@@ -96,8 +97,8 @@ public class MatchingFacadeImpl implements MatchingFacade {
     /**
      * 매칭 성공 후처리 - ScrimPage용
      */
-    private void processMatchSuccess(RedisScrimPageOnly scrimPageData) {
-        processMatchSuccessCommon(
+    private Long processMatchSuccess(RedisScrimPageOnly scrimPageData) {
+        return processMatchSuccessCommon(
                 scrimPageData.getBoardUUID(),
                 scrimPageData.getAcceptorId(),
                 scrimPageData.getRequestorId(),
@@ -131,7 +132,7 @@ public class MatchingFacadeImpl implements MatchingFacade {
     /**
      * 매칭 성공 공통 처리 로직
      */
-    private void processMatchSuccessCommon(UUID boardUUID, Long acceptorId, Long requestorId,
+    private Long processMatchSuccessCommon(UUID boardUUID, Long acceptorId, Long requestorId,
                                            NotificationType notificationType, String matchType) {
         try {
             // 채팅방 생성
@@ -146,6 +147,8 @@ public class MatchingFacadeImpl implements MatchingFacade {
             notificationService.sendNotification(requestorId, request);
 
             log.info("매칭 성공 후처리 완료. type={}, chatRoomId={}", matchType, chatRoomId);
+
+            return chatRoomId;  // chatRoomId 반환
 
         } catch (Exception e) {
             log.error("매칭 성공 후처리 실패. matchType={}", matchType, e);
