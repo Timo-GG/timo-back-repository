@@ -31,8 +31,6 @@ public class MatchingService {
         // 2. Redis 엔티티 삭제
         myPageService.deleteDuoMyPage(myPageUUID);
 
-        // 3. DuoBoard 엔티티 삭제 (미리 받은 boardUUID 사용)
-        boardService.deleteDuoBoardById(boardUUID);
 
         return entity;
     }
@@ -44,8 +42,6 @@ public class MatchingService {
         // 2. Redis MyPage 엔티티 삭제
         myPageService.deleteScrimMyPage(myPageUUID);
 
-        // 3. ScrimBoard 엔티티 삭제 (미리 받은 boardUUID 사용)
-        boardService.deleteScrimBoardById(boardUUID);
 
         return entity;
     }
