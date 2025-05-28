@@ -29,9 +29,12 @@ public class NotificationService {
 	public void sendNotification(Long memberId, NotificationRequest request) {
 		Member member = memberService.getById(memberId);
 
+		String formattedMessage = request.getFormattedMessage();
+
 		Notification notification = Notification.builder()
 			.member(member)
 			.type(request.type())
+			.message(formattedMessage)
 			.redirectUrl(request.redirectUrl())
 			.isRead(false)
 			.build();

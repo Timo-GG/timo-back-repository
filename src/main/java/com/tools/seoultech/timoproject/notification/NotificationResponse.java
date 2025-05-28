@@ -11,7 +11,7 @@ public record NotificationResponse(
 		return new NotificationResponse(
 			notification.getId(),
 			notification.getType(),
-			notification.getType().getDefaultMessage(),
+			notification.getMessage(),
 			notification.getRedirectUrl(),
 			notification.isRead()
 		);

@@ -62,7 +62,7 @@ public class ChatController {
 
     @PostMapping("/test")
     public APIDataResponse<?> test() {
-        chatService.createChatRoomForMatch("test", 1L, 11L);
+        chatService.createChatRoomForMatch("test", 1L, 2L);
         return APIDataResponse.of("멤버 1, 멤버 2, 채팅방 이름 : test 생성");
     }
 

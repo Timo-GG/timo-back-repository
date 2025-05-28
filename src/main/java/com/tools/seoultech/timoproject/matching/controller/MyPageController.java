@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.matching.controller;
 
+import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
@@ -118,8 +119,8 @@ public class MyPageController {
         return ResponseEntity.ok(APIDataResponse.of(myPage));
     }
 
-    @GetMapping("/db/review/{memberId}")
-    public ResponseEntity<APIDataResponse<List<MyPageDTO.ResponseMyPage>>> readMyPage(@PathVariable Long memberId) throws Exception{
+    @GetMapping("/review")
+    public ResponseEntity<APIDataResponse<List<MyPageDTO.ResponseMyPage>>> readMyPage(@CurrentMemberId Long memberId) throws Exception{
         var dtoList = myPageFacade.readMyPageByMemberId(memberId);
         System.err.println("CurrentMemberId: " + memberId);
         return ResponseEntity.ok(APIDataResponse.of(dtoList));

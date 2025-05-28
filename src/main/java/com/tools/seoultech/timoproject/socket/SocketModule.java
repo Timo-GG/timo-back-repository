@@ -17,6 +17,7 @@ public class SocketModule {
 
     private final SocketIOServer socketIOServer;
     private final JwtResolver jwtResolver;
+    private final WebSocketAddMappingSupporter mappingSupporter; // ✅ 추가
 
     private int onlineCount = 0;
 
@@ -54,6 +55,9 @@ public class SocketModule {
                     client.set("memberId", null);
                 }
         );
+
+        mappingSupporter.addListeners(socketIOServer);
+        log.info("🔗 Socket mapping annotations registered");
 
         // 5) 서버 시작
         socketIOServer.start();
