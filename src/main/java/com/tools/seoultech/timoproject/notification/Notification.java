@@ -29,6 +29,8 @@ public class Notification {
 
 	private String redirectUrl;
 
+	private String message;
+
 	private boolean isRead;
 
 	@ManyToOne(fetch = FetchType.LAZY)
