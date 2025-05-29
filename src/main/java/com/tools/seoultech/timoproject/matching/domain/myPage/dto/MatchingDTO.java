@@ -10,6 +10,7 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.Ma
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +36,8 @@ public class MatchingDTO {
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
             WrappedDuoData acceptor,
-            WrappedDuoData requestor
+            WrappedDuoData requestor,
+            LocalDateTime updatedAt
     ) implements Response{}
 
     @Builder
@@ -46,7 +48,8 @@ public class MatchingDTO {
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
             WrappedScrimData acceptor,
-            WrappedScrimData requestor
+            WrappedScrimData requestor,
+            LocalDateTime updatedAt
     ) implements Response{}
 
     @Builder
