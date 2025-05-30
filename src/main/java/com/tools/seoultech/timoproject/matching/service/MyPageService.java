@@ -167,7 +167,7 @@ public class MyPageService {
     // Sorting and Filtering
     // Note: 보낸 요청, 받은 요청 페이지 조회
     public List<MyPage> readPageReceived(Long memberId) throws Exception {
-        return pageRepository.findAllByAcceptorId(memberId);
+        return pageRepository.findAllReviewedByAcceptorId(memberId);
     }
 
     public List<MyPage> readPageSent(Long memberId) throws Exception {
@@ -175,7 +175,7 @@ public class MyPageService {
     }
 
     public Map<Boolean, List<MyPage>> readPageSortingByIsReceived(Long memberId) throws Exception {
-        List<MyPage> receivedEntity = pageRepository.findAllByAcceptorId(memberId);
+        List<MyPage> receivedEntity = pageRepository.findAllReviewedByAcceptorId(memberId);
         List<MyPage> sentEntity = pageRepository.findAllByRequestorId(memberId);
 
         Boolean isAcceptor = true;

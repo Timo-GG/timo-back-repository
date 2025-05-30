@@ -36,7 +36,9 @@ public abstract class MyPageDTO {
             MatchingStatus matchingStatus,
             MyPageWrappedDuoData acceptor,
             MyPageWrappedDuoData requestor,
-            Long roomId
+            Long roomId,
+            Long acceptorId,
+            Long requestorId
     ) implements Response{}
 
     @Builder
@@ -47,7 +49,9 @@ public abstract class MyPageDTO {
             MatchingStatus matchingStatus,
             MyPageWrappedScrimData acceptor,
             MyPageWrappedScrimData requestor,
-            Long roomId
+            Long roomId,
+            Long acceptorId,
+            Long requestorId
     ) implements Response{}
 
     @Builder
