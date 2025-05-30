@@ -19,4 +19,4 @@ public interface BoardFacade {
         boolean existsByMemberId(Long memberId);
         BoardDTO.Response refreshMyDuoBoard(Long memberId);
 
-}
+        void deleteByMemberId(Long memberId, MatchingCategory category) throws Exception;}

@@ -8,6 +8,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.repository.ScrimBoa
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.BoardOnly;
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.DuoBoardOnly;
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.ScrimBoardOnly;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
 import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
@@ -213,6 +214,20 @@ public class BoardService {
     /** UUID 게시글 삭제 */
     public void deleteDuoBoardById(UUID boardUUID) {
         duoBoardRepository.deleteById(boardUUID);
+    }
+
+    public void deleteByMemberId(Long memberId, MatchingCategory category) {
+        switch (category) {
+            case DUO:
+                // findByMemberId로 찾아서 delete 사용 (인덱스 자동 정리)
+                duoBoardRepository.findByMemberId(memberId)
+                        .ifPresent(duoBoardRepository::delete);
+                break;
+            case SCRIM:
+                scrimBoardRepository.findByMemberId(memberId)
+                        .ifPresent(scrimBoardRepository::delete);
+                break;
+        }
     }
 
     public void deleteScrimBoardById(UUID boardUUID) {

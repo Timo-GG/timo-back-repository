@@ -96,4 +96,9 @@ public class BoardFacadeImpl implements BoardFacade {
     public BoardDTO.Response refreshMyDuoBoard(Long memberId) {
         return boardMapper.toDuoDto(boardService.refreshMyDuoBoard(memberId));
     }
+
+    @Override
+    public void deleteByMemberId(Long memberId, MatchingCategory category) throws Exception {
+        boardService.deleteByMemberId(memberId, category);
+    }
 }

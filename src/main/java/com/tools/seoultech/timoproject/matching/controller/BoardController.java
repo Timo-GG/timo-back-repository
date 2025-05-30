@@ -111,4 +111,16 @@ public class BoardController{
         boardFacade.deleteAll(MatchingCategory.SCRIM);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/duo/my")
+    public ResponseEntity<Void> deleteMyDuoBoard(@CurrentMemberId Long memberId) throws Exception {
+        boardFacade.deleteByMemberId(memberId, MatchingCategory.DUO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/scrim/my")
+    public ResponseEntity<Void> deleteMyScrimBoard(@CurrentMemberId Long memberId) throws Exception {
+        boardFacade.deleteByMemberId(memberId, MatchingCategory.SCRIM);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
