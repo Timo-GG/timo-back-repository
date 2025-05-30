@@ -16,7 +16,7 @@ INSERT INTO member (
 VALUES
     (1, 'yorushika_fan', 'yorushika@seoultech.ac.kr',
      'yorushika@seoultech.ac.kr', '서울과학기술대학교', '컴퓨터공학과',
-     '_GcmJPP4mRKxDSka41Glg6cOJ6YEMP2TdJrb2Eq8QqvM4maTmz8fUyaVFOAchm2vOOXppAsrWxJ33A', '짱아깨비', 'k r',
+     '8EGZHOO06vP0fft1Yp4ECBml3x9_fkI7V6veALWs5GTeAdyNTbNSbtaqo-HsCSTvWjhkWfaVBhcBcw', '짱아깨비', 'k r',
      'KAKAO', 'MEMBER'),
 
     (2, 'tos_expert', 'tos@yonsei.ac.kr',
@@ -26,12 +26,12 @@ VALUES
 
     (3, 'carrot_meat', 'carrot@snu.ac.kr',
      'carrot@snu.ac.kr', '서울대학교', '컴퓨터공학부',
-     'Brmsl8R4XeVwEUEctGqdFs7iV_dHWuJ3r92ei5sRHz8E8dOmTfvrbREnuqPz4QzSPTglhgGU5dnjBg', '고기당근', 'KR1',
+     'H2qph9yZZEzSU7yP83gltR7naLJla-wS2ZCCElDWmqVKfNHx804xxh2uyMtvXB6Q5uL9KRP1-ZQLPg', '고기당근', 'KR1',
      'NAVER', 'MEMBER'),
 
     (4, 'jjang_gaebi', 'jjang@korea.ac.kr',
      'jjang@korea.ac.kr', '고려대학교', '기계공학과',
-     'H2qph9yZZEzSU7yP83gltR7naLJla-wS2ZCCElDWmqVKfNHx804xxh2uyMtvXB6Q5uL9KRP1-ZQLPg', '짱아깨비', 'k r',
+     '_GcmJPP4mRKxDSka41Glg6cOJ6YEMP2TdJrb2Eq8QqvM4maTmz8fUyaVFOAchm2vOOXppAsrWxJ33A', 'YORUSHlKA', 'KR1',
      'KAKAO', 'MEMBER'),
 
     (5, 'wooggie_user', 'wooggie@kaist.ac.kr',
@@ -74,9 +74,9 @@ VALUES
     (3, 'DUO', 'DUO', 'COMPLETED', 5, 6),
     (4, 'DUO', 'DUO', 'DISCONNECTED', 7, 8),
 
-    (5, 'SCRIM', 'ACCEPTED', 1, 4, 'SCRIM', NOW(), NOW()),  -- 팀장: user1 vs user4
-    (6, 'SCRIM', 'COMPLETED', 2, 7, 'SCRIM', NOW(), NOW()), -- 팀장: user2 vs user7
-    (7, 'SCRIM', 'PENDING', 3, 8, 'SCRIM', NOW(), NOW());   -- 팀장: user3 vs user8
+    (5, 'SCRIM', 'SCRIM', 'WAITING', 4, 1),
+    (6, 'SCRIM', 'SCRIM', 'WAITING', 1, 2),
+    (7, 'SCRIM', 'SCRIM', 'WAITING', 8, 3);
 
 
 -- duo_page 테이블에 더미 데이터 삽입 (map_code를 문자열로 수정)
@@ -111,21 +111,21 @@ VALUES
 
 INSERT INTO scrim_page (mypage_id, head_count, map_code, acceptor_party_info, requestor_party_info, acceptor_member_info, requestor_member_info) VALUES
 -- 내전 1: user1팀 vs user4팀 (3vs3)
-(5, 3, 'SUMMONERS_RIFT',
+(5, 3, 'RIFT',
  '[{"discordUsername": "user1#1234", "gameUsername": "GameUser1", "mainPosition": "TOP", "subPosition": "JUNGLE", "championName": "GAREN"}, {"discordUsername": "user2#5678", "gameUsername": "GameUser2", "mainPosition": "JUNGLE", "subPosition": "MID", "championName": "GRAVES"}, {"discordUsername": "user5#7890", "gameUsername": "GameUser5", "mainPosition": "MID", "subPosition": "ADC", "championName": "AZIR"}]',
  '[{"discordUsername": "user4#3456", "gameUsername": "GameUser4", "mainPosition": "TOP", "subPosition": "JUNGLE", "championName": "DARIUS"}, {"discordUsername": "user6#2468", "gameUsername": "GameUser6", "mainPosition": "JUNGLE", "subPosition": "MID", "championName": "LEE_SIN"}, {"discordUsername": "user8#8642", "gameUsername": "GameUser8", "mainPosition": "MID", "subPosition": "ADC", "championName": "YASUO"}]',
  '{"discordUsername": "user1#1234", "gameUsername": "GameUser1", "tier": "GOLD"}',
  '{"discordUsername": "user4#3456", "gameUsername": "GameUser4", "tier": "MASTER"}'
 ),
 -- 내전 2: user2팀 vs user7팀 (3vs3)
-(6, 3, 'SUMMONERS_RIFT',
+(6, 3, 'RIFT',
  '[{"discordUsername": "user2#5678", "gameUsername": "GameUser2", "mainPosition": "ADC", "subPosition": "SUPPORT", "championName": "JINX"}, {"discordUsername": "user3#9012", "gameUsername": "GameUser3", "mainPosition": "SUPPORT", "subPosition": "TOP", "championName": "THRESH"}, {"discordUsername": "user5#7890", "gameUsername": "GameUser5", "mainPosition": "TOP", "subPosition": "JUNGLE", "championName": "FIORA"}]',
  '[{"discordUsername": "user7#1357", "gameUsername": "GameUser7", "mainPosition": "ADC", "subPosition": "MID", "championName": "VAYNE"}, {"discordUsername": "user1#1234", "gameUsername": "GameUser1", "mainPosition": "SUPPORT", "subPosition": "ADC", "championName": "LEONA"}, {"discordUsername": "user6#2468", "gameUsername": "GameUser6", "mainPosition": "MID", "subPosition": "TOP", "championName": "ZED"}]',
  '{"discordUsername": "user2#5678", "gameUsername": "GameUser2", "tier": "PLATINUM"}',
  '{"discordUsername": "user7#1357", "gameUsername": "GameUser7", "tier": "SILVER"}'
 ),
 -- 내전 3: user3팀 vs user8팀 (3vs3)
-(7, 3, 'SUMMONERS_RIFT',
+(7, 3, 'RIFT',
  '[{"discordUsername": "user3#9012", "gameUsername": "GameUser3", "mainPosition": "MID", "subPosition": "TOP", "championName": "AZIR"}, {"discordUsername": "user4#3456", "gameUsername": "GameUser4", "mainPosition": "JUNGLE", "subPosition": "ADC", "championName": "GRAVES"}, {"discordUsername": "user1#1234", "gameUsername": "GameUser1", "mainPosition": "TOP", "subPosition": "JUNGLE", "championName": "GAREN"}]',
  '[{"discordUsername": "user8#8642", "gameUsername": "GameUser8", "mainPosition": "SUPPORT", "subPosition": "MID", "championName": "NAUTILUS"}, {"discordUsername": "user5#7890", "gameUsername": "GameUser5", "mainPosition": "ADC", "subPosition": "SUPPORT", "championName": "JINX"}, {"discordUsername": "user7#1357", "gameUsername": "GameUser7", "mainPosition": "TOP", "subPosition": "JUNGLE", "championName": "DARIUS"}]',
  '{"discordUsername": "user3#9012", "gameUsername": "GameUser3", "tier": "DIAMOND"}',
