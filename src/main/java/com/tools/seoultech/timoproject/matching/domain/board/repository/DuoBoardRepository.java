@@ -13,4 +13,6 @@ import java.util.UUID;
 public interface DuoBoardRepository extends CrudRepository<DuoBoard, UUID> {
     Optional<DuoBoardOnly> findByBoardUUID(UUID id);
     List<DuoBoardOnly> findAllBy();
+    boolean existsByMemberId(Long memberId);
+    Optional<DuoBoard> findByMemberId(Long memberId);
 }
