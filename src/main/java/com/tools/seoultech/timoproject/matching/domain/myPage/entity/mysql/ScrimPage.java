@@ -21,6 +21,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ScrimPage extends MyPage {
     private Integer headCount;
+
+    @Enumerated(EnumType.STRING)
     private ScrimMapCode mapCode;
 
     @Convert(converter = ListPartyMemberInfoConverter.class)
