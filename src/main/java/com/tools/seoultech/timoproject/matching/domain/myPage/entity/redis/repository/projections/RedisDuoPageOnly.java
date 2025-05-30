@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableTy
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public interface RedisDuoPageOnly extends PageOnly {
@@ -17,6 +18,8 @@ public interface RedisDuoPageOnly extends PageOnly {
     CertifiedMemberInfo getRequestorCertifiedMemberInfo();
     UserInfo getAcceptorUserInfo();
     UserInfo getRequestorUserInfo();
+
+    LocalDateTime getUpdatedAt();
 
     Long getAcceptorId();
     Long getRequestorId();

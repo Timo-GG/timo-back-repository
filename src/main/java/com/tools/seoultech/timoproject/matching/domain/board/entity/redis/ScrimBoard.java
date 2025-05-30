@@ -13,6 +13,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +30,8 @@ public class ScrimBoard {
     private CertifiedMemberInfo memberInfo;
     private List<PartyMemberInfo> partyInfo;
 
+    private final LocalDateTime updatedAt;
+
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
@@ -37,8 +40,9 @@ public class ScrimBoard {
 
     public static ScrimBoard of(ScrimMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<PartyMemberInfo> partyInfo, Long memberId
     ){
+        LocalDateTime now = LocalDateTime.now();
         return new ScrimBoard(UUID.randomUUID(), mapCode, memo, headCount,
-                memberInfo, partyInfo, memberId,
+                memberInfo, partyInfo, now, memberId,
                 MatchingCategory.SCRIM, memberInfo.getRankInfo().getTier());
     }
 }

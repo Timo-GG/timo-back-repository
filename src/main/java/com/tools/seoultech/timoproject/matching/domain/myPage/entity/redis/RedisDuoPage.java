@@ -12,6 +12,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RedisHash(value = "DuoMyPage", timeToLive = 15 * 60)
@@ -31,6 +32,8 @@ public class RedisDuoPage {
     private CertifiedMemberInfo requestorCertifiedMemberInfo;
     private UserInfo requestorUserInfo;
 
+    private LocalDateTime updatedAt;
+
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final MatchingCategory matchingCategory;
     @Indexed private final Long acceptorId;
@@ -44,10 +47,11 @@ public class RedisDuoPage {
                                   UserInfo acceptorUserInfo, CertifiedMemberInfo acceptorMemberInfo,
                                   UserInfo requestorUserInfo, CertifiedMemberInfo requestorMemberInfo,
                                   Long acceptorId, Long requestorId, UUID boardUUID) {
+        LocalDateTime now = LocalDateTime.now();
 
         return new RedisDuoPage( UUID.randomUUID(), mapCode, acceptorMemberInfo, acceptorUserInfo,
                               requestorMemberInfo, requestorUserInfo,
-                              MatchingCategory.DUO, acceptorId, requestorId, boardUUID
+                              now, MatchingCategory.DUO, acceptorId, requestorId, boardUUID
         );
     }
 }

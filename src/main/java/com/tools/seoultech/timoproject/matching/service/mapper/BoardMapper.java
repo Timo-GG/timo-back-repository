@@ -57,6 +57,7 @@ public interface BoardMapper {
     /** Projection → DTO */
     @Mapping(target = "userInfo", expression = "java(toUserInfo(proj))")
     @Mapping(target = "duoInfo", expression = "java(toDuoInfo(proj))")
+    @Mapping(target = "updatedAt", source = "updatedAt")
     BoardDTO.ResponseDuo toDuoDto(DuoBoardOnly proj);
     BoardDTO.ResponseScrim toScrimDto(ScrimBoardOnly proj);
 
@@ -64,6 +65,7 @@ public interface BoardMapper {
     /** Redis → DTO */
     @Mapping(target = "userInfo", expression = "java(toUserInfo(entity))")
     @Mapping(target = "duoInfo", expression = "java(toDuoInfo(entity))")
+    @Mapping(target = "updatedAt", source = "updatedAt")
     BoardDTO.ResponseDuo toDuoDto(DuoBoard entity);
     BoardDTO.ResponseScrim toScrimDto(ScrimBoard entity);
 

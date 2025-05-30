@@ -12,6 +12,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +35,8 @@ public class RedisScrimPage {
     private CertifiedMemberInfo requestorCertifiedMemberInfo;
     private List<PartyMemberInfo> requestorPartyInfo;
 
+    private LocalDateTime updatedAt;
+
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final MatchingCategory matchingCategory;
     @Indexed private final Long acceptorId;
@@ -46,11 +49,12 @@ public class RedisScrimPage {
                                     CertifiedMemberInfo acceptorCertifiedMemberInfo, List<PartyMemberInfo> acceptorPartyInfo,
                                     CertifiedMemberInfo requestorCertifiedMemberInfo, List<PartyMemberInfo> requestorPartyInfo,
                                     Long acceptorId, Long requestorId, UUID boardUUID){
+        LocalDateTime now = LocalDateTime.now();
 
         return new RedisScrimPage(UUID.randomUUID(), headCount, mapCode,
                                acceptorCertifiedMemberInfo, acceptorPartyInfo,
                                requestorCertifiedMemberInfo, requestorPartyInfo,
-                               MatchingCategory.SCRIM ,acceptorId, requestorId, boardUUID
+                               now, MatchingCategory.SCRIM ,acceptorId, requestorId, boardUUID
         );
     }
 }

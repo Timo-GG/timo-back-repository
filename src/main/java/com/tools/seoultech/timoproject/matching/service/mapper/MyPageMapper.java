@@ -55,11 +55,13 @@ public interface MyPageMapper {
     @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(proj.getAcceptorUserInfo(), proj.getAcceptorCertifiedMemberInfo()))")
     @Mapping(target = "requestor", expression = "java(getWrappedDuoData(proj.getRequestorUserInfo(), proj.getRequestorCertifiedMemberInfo()))")
     @Mapping(target = "matchingStatus", constant="WAITING")
+    @Mapping(target = "updatedAt", source = "updatedAt")
     MatchingDTO.ResponseDuo toDuoDto(RedisDuoPageOnly proj);
 
     @Mapping(target = "acceptor", expression = "java(getWrappedScrimData(proj.getAcceptorCertifiedMemberInfo(), proj.getAcceptorPartyInfo()))")
     @Mapping(target = "requestor", expression = "java(getWrappedScrimData(proj.getRequestorCertifiedMemberInfo(), proj.getRequestorPartyInfo()))")
     @Mapping(target = "matchingStatus", constant="WAITING")
+    @Mapping(target = "updatedAt", source = "updatedAt")
     MatchingDTO.ResponseScrim toScrimDto(RedisScrimPageOnly proj);
 
     /** Projection → MySQL */

@@ -11,6 +11,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RedisHash(value = "DuoBoard", timeToLive = 15 * 60)
@@ -33,6 +34,8 @@ public class DuoBoard {
     private PlayPosition opponentPosition;
     private PlayStyle opponentStyle;
 
+    private LocalDateTime updatedAt;
+
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
@@ -41,10 +44,11 @@ public class DuoBoard {
 
     public static DuoBoard of(DuoMapCode mapCode, String memo, CertifiedMemberInfo memberInfo, UserInfo userInfo, DuoInfo duoInfo, Long memberId
     ){
+        LocalDateTime now = LocalDateTime.now();
         return new DuoBoard(UUID.randomUUID(), mapCode, memo, memberInfo,
                 userInfo.getMyPosition(), userInfo.getMyVoice(), userInfo.getMyStyle(), userInfo.getMyStatus(),
                 duoInfo.getOpponentPosition(), duoInfo.getOpponentStyle(),
-                memberId, MatchingCategory.DUO, memberInfo.getRankInfo().getTier()
+                now, memberId, MatchingCategory.DUO, memberInfo.getRankInfo().getTier()
         );
     }
 }

@@ -8,6 +8,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Pla
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,7 +61,8 @@ public abstract class BoardDTO {
             DuoMapCode mapCode,
             String memo,
             UserInfo userInfo,
-            DuoInfo duoInfo
+            DuoInfo duoInfo,
+            LocalDateTime updatedAt
     ) implements Response {}
 
     @Builder
