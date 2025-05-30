@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.repository;
 
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.MyPage;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,10 +12,11 @@ import java.util.List;
 
 @Repository
 public interface PageRepository extends JpaRepository<MyPage, Long> {
+    @EntityGraph(attributePaths = {"acceptor", "requestor"})
     @Query("SELECT m FROM MyPage m WHERE m.acceptor.memberId = :acceptorId")
     List<MyPage> findAllByAcceptorId(@Param("acceptorId") Long acceptorId);
 
-
+    @EntityGraph(attributePaths = {"acceptor", "requestor"})
     @Query("SELECT m FROM MyPage m WHERE m.requestor.memberId = :requestorId")
     List<MyPage> findAllByRequestorId(@Param("requestorId") Long requestorId);
 }

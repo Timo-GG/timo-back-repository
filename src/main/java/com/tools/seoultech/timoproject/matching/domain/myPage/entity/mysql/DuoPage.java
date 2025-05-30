@@ -19,6 +19,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DuoPage extends MyPage {
+    @Enumerated(EnumType.STRING)
     private DuoMapCode mapCode;
 
     @Convert(converter = UserInfoConverter.class)
