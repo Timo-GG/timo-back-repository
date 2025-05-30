@@ -20,13 +20,15 @@ public class MatchingDTO {
     public record RequestDuo(
             UUID boardUUID,
             Long requestorId,
-            UserInfo userInfo
+            UserInfo userInfo,
+            String requestorMemo
     ) implements Request{}
 
     public record RequestScrim(
             UUID boardUUID,
             Long requestorId,
-            List<PartyMemberInfo> partyInfo
+            List<PartyMemberInfo> partyInfo,
+            String requestorMemo
     ) implements Request{}
 
     @Builder
@@ -35,6 +37,8 @@ public class MatchingDTO {
             DuoMapCode mapCode,
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
+            String acceptorMemo,
+            String requestorMemo,
             WrappedDuoData acceptor,
             WrappedDuoData requestor,
             LocalDateTime updatedAt
@@ -47,6 +51,8 @@ public class MatchingDTO {
             ScrimMapCode mapCode,
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
+            String acceptorMemo,
+            String requestorMemo,
             WrappedScrimData acceptor,
             WrappedScrimData requestor,
             LocalDateTime updatedAt

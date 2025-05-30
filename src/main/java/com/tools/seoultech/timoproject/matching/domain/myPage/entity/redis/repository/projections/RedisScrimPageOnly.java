@@ -22,6 +22,8 @@ public interface RedisScrimPageOnly extends PageOnly {
     CertifiedMemberInfo getRequestorCertifiedMemberInfo();
     List<PartyMemberInfo> getAcceptorPartyInfo();
     List<PartyMemberInfo> getRequestorPartyInfo();
+    String getAcceptorMemo();
+    String getRequestorMemo();
 
     LocalDateTime getUpdatedAt();
 

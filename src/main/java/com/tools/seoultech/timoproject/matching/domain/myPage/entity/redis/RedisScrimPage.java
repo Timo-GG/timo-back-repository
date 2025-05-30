@@ -30,10 +30,12 @@ public class RedisScrimPage {
     /** Acceptor Field */
     private CertifiedMemberInfo acceptorCertifiedMemberInfo;
     private List<PartyMemberInfo> acceptorPartyInfo;
+    private String acceptorMemo;
 
     /** Requestor Field */
     private CertifiedMemberInfo requestorCertifiedMemberInfo;
     private List<PartyMemberInfo> requestorPartyInfo;
+    private String requestorMemo;
 
     private LocalDateTime updatedAt;
 
@@ -45,15 +47,15 @@ public class RedisScrimPage {
     /** Redis 인스턴스 참조용 필드 */
     private final UUID boardUUID;
 
-    public static RedisScrimPage of(Integer headCount, ScrimMapCode mapCode,
+    public static RedisScrimPage of(Integer headCount, ScrimMapCode mapCode, String acceptorMemo, String requestorMemo,
                                     CertifiedMemberInfo acceptorCertifiedMemberInfo, List<PartyMemberInfo> acceptorPartyInfo,
                                     CertifiedMemberInfo requestorCertifiedMemberInfo, List<PartyMemberInfo> requestorPartyInfo,
                                     Long acceptorId, Long requestorId, UUID boardUUID){
         LocalDateTime now = LocalDateTime.now();
 
         return new RedisScrimPage(UUID.randomUUID(), headCount, mapCode,
-                               acceptorCertifiedMemberInfo, acceptorPartyInfo,
-                               requestorCertifiedMemberInfo, requestorPartyInfo,
+                               acceptorCertifiedMemberInfo, acceptorPartyInfo,acceptorMemo,
+                               requestorCertifiedMemberInfo, requestorPartyInfo, requestorMemo,
                                now, MatchingCategory.SCRIM ,acceptorId, requestorId, boardUUID
         );
     }

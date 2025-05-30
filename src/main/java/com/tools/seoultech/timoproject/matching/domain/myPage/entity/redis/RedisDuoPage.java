@@ -27,10 +27,12 @@ public class RedisDuoPage {
     /** Acceptor Field */
     private CertifiedMemberInfo acceptorCertifiedMemberInfo;
     private UserInfo acceptorUserInfo;
+    private String acceptorMemo;
 
     /** Requestor Field */
     private CertifiedMemberInfo requestorCertifiedMemberInfo;
     private UserInfo requestorUserInfo;
+    private String requestorMemo;
 
     private LocalDateTime updatedAt;
 
@@ -43,15 +45,16 @@ public class RedisDuoPage {
     private final UUID boardUUID;
 
 
-    public static RedisDuoPage of(DuoMapCode mapCode,
+    public static RedisDuoPage of(DuoMapCode mapCode, String acceptorMemo, String requestorMemo,
                                   UserInfo acceptorUserInfo, CertifiedMemberInfo acceptorMemberInfo,
                                   UserInfo requestorUserInfo, CertifiedMemberInfo requestorMemberInfo,
                                   Long acceptorId, Long requestorId, UUID boardUUID) {
         LocalDateTime now = LocalDateTime.now();
 
-        return new RedisDuoPage( UUID.randomUUID(), mapCode, acceptorMemberInfo, acceptorUserInfo,
-                              requestorMemberInfo, requestorUserInfo,
-                              now, MatchingCategory.DUO, acceptorId, requestorId, boardUUID
+        return new RedisDuoPage( UUID.randomUUID(), mapCode,
+                                 acceptorMemberInfo, acceptorUserInfo, acceptorMemo,
+                                 requestorMemberInfo, requestorUserInfo, requestorMemo,
+                                 now, MatchingCategory.DUO, acceptorId, requestorId, boardUUID
         );
     }
 }

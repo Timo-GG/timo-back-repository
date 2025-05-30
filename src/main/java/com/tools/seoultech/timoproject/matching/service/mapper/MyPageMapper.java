@@ -26,7 +26,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        uses = {RiotAPIService.class, MemberService.class, BoardService.class})
+        uses = {MemberService.class, BoardService.class})
 public interface MyPageMapper {
     MyPageMapper Instance = Mappers.getMapper(MyPageMapper.class);
 
@@ -35,7 +35,7 @@ public interface MyPageMapper {
     default RedisDuoPage toDuoRedis(MatchingDTO.RequestDuo dto, @Context BoardService boardService, @Context RiotAPIService bas, @Context MemberService memberService) throws Exception{
         DuoBoardOnly proj = boardService.getDuoBoard(dto.boardUUID());
 
-        return RedisDuoPage.of(proj.getMapCode(),
+        return RedisDuoPage.of(proj.getMapCode(), proj.getMemo(), dto.requestorMemo(),
                 BoardMapper.Instance.toUserInfo(proj), proj.getMemberInfo(),
                 dto.userInfo(), BoardMapper.Instance.getCertifiedMemberInfo(dto.requestorId(), memberService, bas),
                 proj.getMemberId(), dto.requestorId(), dto.boardUUID());
@@ -44,7 +44,7 @@ public interface MyPageMapper {
     default RedisScrimPage toScrimMyPage(MatchingDTO.RequestScrim dto, @Context BoardService boardService, @Context RiotAPIService bas, @Context MemberService memberService) throws Exception{
         ScrimBoardOnly proj = boardService.getScrimBoard(dto.boardUUID());
 
-        return RedisScrimPage.of(proj.getHeadCount(), proj.getMapCode(),
+        return RedisScrimPage.of(proj.getHeadCount(), proj.getMapCode(), proj.getMemo(), dto.requestorMemo(),
                 proj.getMemberInfo(), proj.getPartyInfo(),
                 BoardMapper.Instance.getCertifiedMemberInfo(dto.requestorId(), memberService, bas) , dto.partyInfo(),
                 dto.requestorId(), dto.requestorId(), dto.boardUUID());
@@ -52,6 +52,7 @@ public interface MyPageMapper {
 
 
     /** Projection → DTO */
+    // TODO: getWrappedDuoData, getWrappedScrimData memo, opponent_memo
     @Mapping(target = "acceptor", expression = "java(getWrappedDuoData(proj.getAcceptorUserInfo(), proj.getAcceptorCertifiedMemberInfo()))")
     @Mapping(target = "requestor", expression = "java(getWrappedDuoData(proj.getRequestorUserInfo(), proj.getRequestorCertifiedMemberInfo()))")
     @Mapping(target = "matchingStatus", constant="WAITING")

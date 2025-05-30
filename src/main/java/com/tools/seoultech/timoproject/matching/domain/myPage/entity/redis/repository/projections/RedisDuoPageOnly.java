@@ -18,6 +18,8 @@ public interface RedisDuoPageOnly extends PageOnly {
     CertifiedMemberInfo getRequestorCertifiedMemberInfo();
     UserInfo getAcceptorUserInfo();
     UserInfo getRequestorUserInfo();
+    String getAcceptorMemo();
+    String getRequestorMemo();
 
     LocalDateTime getUpdatedAt();
 
