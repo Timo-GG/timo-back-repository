@@ -3,6 +3,7 @@ package com.tools.seoultech.timoproject.matching.service.mapper;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.*;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Gender;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.DuoBoard;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.ScrimBoard;
 import com.tools.seoultech.timoproject.matching.domain.board.repository.projections.DuoBoardOnly;
@@ -78,7 +79,12 @@ public interface BoardMapper {
         List<String> most3Champ = bas.getMost3ChampionNames(riotAccount.getPuuid());
         CertifiedUnivInfo univInfo = member.getCertifiedUnivInfo();
         RankingInfo rankInfo = member.getRankingInfo();
-        return new CertifiedMemberInfo(univInfo.getUnivName(), univInfo.getDepartment(), rankInfo.getGender(), rankInfo.getMbti(),
+
+        // null 체크 후 안전하게 전달
+        Gender gender = rankInfo != null ? rankInfo.getGender() : null;
+        String mbti = rankInfo != null ? rankInfo.getMbti() : null;
+
+        return new CertifiedMemberInfo(univInfo.getUnivName(), univInfo.getDepartment(), gender, mbti,
                 riotAccount, rankInfoDto, most3Champ);
     }
 
