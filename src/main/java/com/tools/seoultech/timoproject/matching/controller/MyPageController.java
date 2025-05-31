@@ -119,7 +119,7 @@ public class MyPageController {
         return ResponseEntity.ok(APIDataResponse.of(myPage));
     }
 
-    @GetMapping("/review")
+    @GetMapping("/db/review")
     public ResponseEntity<APIDataResponse<List<MyPageDTO.ResponseMyPage>>> readMyPage(@CurrentMemberId Long memberId) throws Exception{
         var dtoList = myPageFacade.readMyPageByMemberId(memberId);
         System.err.println("CurrentMemberId: " + memberId);

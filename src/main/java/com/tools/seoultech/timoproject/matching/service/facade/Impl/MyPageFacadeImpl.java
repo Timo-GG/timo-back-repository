@@ -139,6 +139,8 @@ public class MyPageFacadeImpl implements MyPageFacade {
         else throw new GeneralException("Facade: mypageId로 엔티티 조회 실패.");
     }
 
+
+
     @Override
     public List<MyPageDTO.ResponseMyPage> readMyPageByMemberId(Long memberId) throws Exception {
         return myPageService.readPageSortingByIsReceived(memberId).entrySet().stream()

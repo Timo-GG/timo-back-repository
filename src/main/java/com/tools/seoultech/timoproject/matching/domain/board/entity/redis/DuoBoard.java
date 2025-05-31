@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RedisHash(value = "DuoBoard", timeToLive = 15 * 60)
-@Getter @Builder
+@Getter @Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class DuoBoard {
     @Id private final UUID boardUUID;

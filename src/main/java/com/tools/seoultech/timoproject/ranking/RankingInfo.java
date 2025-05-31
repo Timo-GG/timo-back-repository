@@ -22,13 +22,15 @@ public class RankingInfo {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long rankId;
 
-    private String mbti;
+    @Column(name = "mbti")
+    private String mbti = "UNKNOWN";
 
     @Enumerated(value = EnumType.STRING)
-    private PlayPosition position;
+    private PlayPosition position = PlayPosition.NOTHING;
 
-    @Enumerated(value = EnumType.STRING)
-    private Gender gender;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private Gender gender = Gender.SECRET;
 
     private String memo;
 

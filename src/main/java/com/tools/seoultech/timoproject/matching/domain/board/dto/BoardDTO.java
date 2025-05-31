@@ -75,6 +75,20 @@ public abstract class BoardDTO {
             List<PartyMemberInfo> partyInfo
     ) implements Response {}
 
+    @Getter
+    @Builder
+    public static class PageResponse {
+        private List<Response> content;
+        private int page;
+        private int size;
+        private long totalElements;
+        private int totalPages;
+        private boolean first;
+        private boolean last;
+        private boolean hasNext;
+        private boolean hasPrevious;
+    }
+
     // 인터페이스.
     public interface Request extends BaseInterface {}
     public interface Response extends BaseInterface {}

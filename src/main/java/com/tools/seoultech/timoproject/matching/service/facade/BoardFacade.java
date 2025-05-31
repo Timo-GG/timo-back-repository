@@ -10,9 +10,13 @@ public interface BoardFacade {
         BoardDTO.Response create(BoardDTO.Request dto);
 
         BoardDTO.Response read(UUID boardUUID) throws Exception;
-        List<BoardDTO.Response> readAll(MatchingCategory matchingCategory) throws Exception;
+        BoardDTO.PageResponse readAllWithPaging(MatchingCategory matchingCategory, int page, int size);
 
         BoardDTO.Response update(BoardDTO.Request dto) throws Exception;
         void delete(UUID boardUUID);
         void deleteAll(MatchingCategory matchingCategory);
-}
+
+        boolean existsByMemberId(Long memberId);
+        BoardDTO.Response refreshMyDuoBoard(Long memberId);
+
+        void deleteByMemberId(Long memberId, MatchingCategory category) throws Exception;}

@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.global.config;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +8,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisKeyValueAdapter;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
@@ -14,6 +17,9 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@EnableRedisRepositories(
+        enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP
+)
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
@@ -26,6 +32,20 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(redisHost, redisPort);
+    }
+
+    @PostConstruct
+    public void configureRedis() {
+        try {
+            RedisTemplate<String, Object> template = redisTemplate();
+            template.execute((RedisCallback<Object>) connection -> {
+                connection.execute("CONFIG", "SET".getBytes(), "notify-keyspace-events".getBytes(), "Ex".getBytes());
+                return null;
+            });
+        } catch (Exception e) {
+            // Redis 설정 실패 시 로그만 출력
+            System.out.println("Redis keyspace events 설정 실패: " + e.getMessage());
+        }
     }
 
     /** Spring <-> Redis 간에 전송 형태 설정 : Sorted-Set 및 Hash 데이터 처리를 위한 RedisTemplate 설정 */

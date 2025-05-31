@@ -120,7 +120,8 @@ public interface MyPageMapper {
                     .matchingStatus(duoPage.getMatchingStatus())
                     .acceptor(acceptorInfo)
                     .requestor(requestorInfo)
-                    .roomId(null) // roomId 추가
+                    .acceptorId(duoPage.getAcceptor().getMemberId())
+                    .requestorId(duoPage.getRequestor().getMemberId())
                     .build();
 
         } else if (entity instanceof ScrimPage scrimPage){
@@ -149,7 +150,8 @@ public interface MyPageMapper {
                     .matchingStatus(scrimPage.getMatchingStatus())
                     .acceptor(acceptorInfo)
                     .requestor(requestorInfo)
-                    .roomId(null) // roomId 추가
+                    .acceptorId(scrimPage.getAcceptor().getMemberId())
+                    .requestorId(scrimPage.getRequestor().getMemberId())
                     .build();
 
         } else throw new GeneralException("bool fucked");
@@ -165,12 +167,16 @@ public interface MyPageMapper {
     @Mapping(target = "roomId", source = "roomId")
     @Mapping(target = "acceptor", expression = "java(getMyPageWrappedDuoDataWithUniv(entity.getAcceptorUserInfo(), entity.getAcceptorMemberInfo(), entity.getAcceptor()))")
     @Mapping(target = "requestor", expression = "java(getMyPageWrappedDuoDataWithUniv(entity.getRequestorUserInfo(), entity.getRequestorMemberInfo(), entity.getRequestor()))")
+    @Mapping(target = "acceptorId", expression = "java(entity.getAcceptor().getMemberId())")
+    @Mapping(target = "requestorId", expression = "java(entity.getRequestor().getMemberId())")
     MyPageDTO.ResponseDuoPage toDuoDto(DuoPage entity, Long roomId);
 
     @Mapping(target = "mypageId", source = "entity.id")
     @Mapping(target = "roomId", ignore = true)
     @Mapping(target = "acceptor", expression = "java(getMyPageWrappedDuoDataWithUniv(entity.getAcceptorUserInfo(), entity.getAcceptorMemberInfo(), entity.getAcceptor()))")
     @Mapping(target = "requestor", expression = "java(getMyPageWrappedDuoDataWithUniv(entity.getRequestorUserInfo(), entity.getRequestorMemberInfo(), entity.getRequestor()))")
+    @Mapping(target = "acceptorId", expression = "java(entity.getAcceptor().getMemberId())")
+    @Mapping(target = "requestorId", expression = "java(entity.getRequestor().getMemberId())")
     MyPageDTO.ResponseDuoPage toDuoDto(DuoPage entity);
 
 
@@ -178,12 +184,16 @@ public interface MyPageMapper {
     @Mapping(target = "roomId", source = "roomId")
     @Mapping(target = "acceptor", expression = "java(getMyPageWrappedScrimDataWithUniv(entity.getAcceptorMemberInfo(), entity.getAcceptorPartyInfo(), entity.getAcceptor()))")
     @Mapping(target = "requestor", expression = "java(getMyPageWrappedScrimDataWithUniv(entity.getRequestorMemberInfo(), entity.getRequestorPartyInfo(), entity.getRequestor()))")
+    @Mapping(target = "acceptorId", expression = "java(entity.getAcceptor().getMemberId())")
+    @Mapping(target = "requestorId", expression = "java(entity.getRequestor().getMemberId())")
     MyPageDTO.ResponseScrimPage toScrimDto(ScrimPage entity, Long roomId);
 
     @Mapping(target = "mypageId", source = "entity.id")
     @Mapping(target = "roomId", ignore = true)
     @Mapping(target = "acceptor", expression = "java(getMyPageWrappedScrimDataWithUniv(entity.getAcceptorMemberInfo(), entity.getAcceptorPartyInfo(), entity.getAcceptor()))")
     @Mapping(target = "requestor", expression = "java(getMyPageWrappedScrimDataWithUniv(entity.getRequestorMemberInfo(), entity.getRequestorPartyInfo(), entity.getRequestor()))")
+    @Mapping(target = "acceptorId", expression = "java(entity.getAcceptor().getMemberId())")
+    @Mapping(target = "requestorId", expression = "java(entity.getRequestor().getMemberId())")
     MyPageDTO.ResponseScrimPage toScrimDto(ScrimPage entity);
 
     /** 유틸리티 */

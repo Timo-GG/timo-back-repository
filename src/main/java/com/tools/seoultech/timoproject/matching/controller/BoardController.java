@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.matching.controller;
 
+import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.service.facade.BoardFacade;
@@ -20,6 +21,18 @@ import java.util.UUID;
 public class BoardController{
     private final BoardFacade boardFacade;
 
+    @GetMapping("/duo/exists")
+    public ResponseEntity<APIDataResponse<Boolean>> checkMyDuoBoardExists(@CurrentMemberId Long memberId) {
+        boolean exists = boardFacade.existsByMemberId(memberId);
+        return ResponseEntity.ok(APIDataResponse.of(exists));
+    }
+
+    @PutMapping("/duo/refresh")
+    public ResponseEntity<APIDataResponse<BoardDTO.Response>> refreshMyDuoBoard(@CurrentMemberId Long memberId) throws Exception {
+        var response = boardFacade.refreshMyDuoBoard(memberId);
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
+    }
+
     /** [Create] 게시글 생성 */
     @PostMapping("/duo")
     public ResponseEntity<APIDataResponse<BoardDTO.Response>> createDuoBoard(@RequestBody BoardDTO.RequestDuo dto) {
@@ -36,14 +49,20 @@ public class BoardController{
 
     /** [Read] 모든 게시글 조회 */
     @GetMapping("/duo")
-    public ResponseEntity<APIDataResponse<List<BoardDTO.Response>>> getAllDuoBoards() throws Exception {
-        var response = boardFacade.readAll(MatchingCategory.DUO);
+    public ResponseEntity<APIDataResponse<BoardDTO.PageResponse>> getAllDuoBoards(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) throws Exception {
+        var response = boardFacade.readAllWithPaging(MatchingCategory.DUO, page, size);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
+
     @GetMapping("/scrim")
-    public ResponseEntity<APIDataResponse<List<BoardDTO.Response>>> getAllScrimBoards() throws Exception {
-        var response = boardFacade.readAll(MatchingCategory.SCRIM);
+    public ResponseEntity<APIDataResponse<BoardDTO.PageResponse>> getAllScrimBoards(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) throws Exception {
+        var response = boardFacade.readAllWithPaging(MatchingCategory.SCRIM, page, size);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
@@ -91,5 +110,17 @@ public class BoardController{
     public ResponseEntity<Void> deleteAllScrimBoards() {
         boardFacade.deleteAll(MatchingCategory.SCRIM);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/duo/my")
+    public ResponseEntity<Void> deleteMyDuoBoard(@CurrentMemberId Long memberId) throws Exception {
+        boardFacade.deleteByMemberId(memberId, MatchingCategory.DUO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/scrim/my")
+    public ResponseEntity<Void> deleteMyScrimBoard(@CurrentMemberId Long memberId) throws Exception {
+        boardFacade.deleteByMemberId(memberId, MatchingCategory.SCRIM);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

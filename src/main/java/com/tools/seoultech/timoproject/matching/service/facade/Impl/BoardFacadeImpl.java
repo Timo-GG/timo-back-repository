@@ -50,21 +50,14 @@ public class BoardFacadeImpl implements BoardFacade {
     }
 
     @Override
-    public List<BoardDTO.Response> readAll(MatchingCategory matchingCategory) {
-        List<BoardDTO.Response> dtoList = new ArrayList<>();
+    public BoardDTO.PageResponse readAllWithPaging(MatchingCategory matchingCategory, int page, int size) {
         if(matchingCategory == MatchingCategory.DUO){
-            dtoList = boardService.getAllDuoBoards().stream()
-                    .map(proj -> (BoardDTO.Response) boardMapper.toDuoDto(proj))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+            return boardService.getAllDuoBoardsWithPaging(page, size);
         } else {
-            dtoList = boardService.getAllScrimBoards().stream()
-                    .map(proj -> (BoardDTO.Response) boardMapper.toScrimDto(proj))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+            return boardService.getAllScrimBoardsWithPaging(page, size);
         }
-        return dtoList;
     }
+
 
     @Override
     public BoardDTO.Response update(BoardDTO.Request dto) throws Exception{
@@ -92,5 +85,20 @@ public class BoardFacadeImpl implements BoardFacade {
         } else {
             boardService.deleteAllScrimBoards();
         }
+    }
+
+    @Override
+    public boolean existsByMemberId(Long memberId) {
+        return boardService.existsByMemberId(memberId);
+    }
+
+    @Override
+    public BoardDTO.Response refreshMyDuoBoard(Long memberId) {
+        return boardMapper.toDuoDto(boardService.refreshMyDuoBoard(memberId));
+    }
+
+    @Override
+    public void deleteByMemberId(Long memberId, MatchingCategory category) throws Exception {
+        boardService.deleteByMemberId(memberId, category);
     }
 }
