@@ -1,11 +1,12 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql;
 
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
-import com.tools.seoultech.timoproject.matching.service.converter.CompactMemberInfoConverter;
-import com.tools.seoultech.timoproject.matching.service.converter.ListPartyMemberInfoConverter;
+import com.tools.seoultech.timoproject.matching.service.converter.CertifiedMemberInfoConverter;
+import com.tools.seoultech.timoproject.matching.service.converter.ListCompactMemberInfoConverter;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,28 +25,27 @@ public class ScrimPage extends MyPage {
     @Enumerated(EnumType.STRING)
     private ScrimMapCode mapCode;
 
-
-    @Convert(converter = ListPartyMemberInfoConverter.class)
+    @Convert(converter = ListCompactMemberInfoConverter.class)
     @Column(columnDefinition = "JSON")
-    private List<PartyMemberInfo> acceptorPartyInfo;
+    private List<CompactMemberInfo> acceptorPartyInfo;
 
-    @Convert(converter = ListPartyMemberInfoConverter.class)
+    @Convert(converter = ListCompactMemberInfoConverter.class)
     @Column(columnDefinition = "JSON")
-    private List<PartyMemberInfo> requestorPartyInfo;
+    private List<CompactMemberInfo> requestorPartyInfo;
 
-    @Convert(converter = CompactMemberInfoConverter.class)
+    @Convert(converter = CertifiedMemberInfoConverter.class)
     @Column(columnDefinition = "JSON")
-    private CompactMemberInfo acceptorMemberInfo;
+    private CertifiedMemberInfo acceptorMemberInfo;
 
-    @Convert(converter = CompactMemberInfoConverter.class)
+    @Convert(converter = CertifiedMemberInfoConverter.class)
     @Column(columnDefinition = "JSON")
-    private CompactMemberInfo requestorMemberInfo;
+    private CertifiedMemberInfo requestorMemberInfo;
 
     @Builder(builderMethodName = "createBuilder")
     public ScrimPage(MatchingStatus matchingStatus,
                      Member acceptor, Member requestor, Integer headCount, ScrimMapCode mapCode,
-                     List<PartyMemberInfo> acceptorPartyInfo, List<PartyMemberInfo> requestorPartyInfo,
-                     CompactMemberInfo acceptorMemberInfo, CompactMemberInfo requestorMemberInfo){
+                     List<CompactMemberInfo> acceptorPartyInfo, List<CompactMemberInfo> requestorPartyInfo,
+                     CertifiedMemberInfo acceptorMemberInfo, CertifiedMemberInfo requestorMemberInfo){
 
         super(MatchingCategory.SCRIM, matchingStatus, acceptor, requestor);
         this.headCount = headCount;

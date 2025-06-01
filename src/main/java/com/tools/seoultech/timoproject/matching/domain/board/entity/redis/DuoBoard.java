@@ -12,6 +12,7 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @RedisHash(value = "DuoBoard", timeToLive = 15 * 60)
@@ -22,10 +23,29 @@ public class DuoBoard {
 
     @Indexed DuoMapCode mapCode;
     private String memo;
-    private CertifiedMemberInfo memberInfo;
+
+    /** CertifiedMemberInfo */
+    // RiotAccount
+    private String puuid;
+    private String gameName;
+    private String tagLine;
+    private String profileUrl;
+
+    // RankInfoDto 일부
+    @Indexed private String tier;   // GOLD, PLATINUM, MASTER 등
+    private String rank;
+
+    // CompactMemberInfo 나머지 필드
+    private List<String> most3Champ;
+    private PlayPosition myPosition;
+
+    // CertifiedMemberInfo 필드
+    @Indexed private String univName;
+    private String department;
+    private Gender gender;
+    private String mbti;
 
     /** UserInfo */
-    @Indexed private PlayPosition myPosition;
     @Indexed private VoiceChat myVoice;
     private PlayStyle myStyle;
     private PlayCondition myStatus;
@@ -38,17 +58,22 @@ public class DuoBoard {
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
-    @Indexed private String tier;
 
     private LocalDateTime updatedAt;
 
     public static DuoBoard of(DuoMapCode mapCode, String memo, CertifiedMemberInfo memberInfo, UserInfo userInfo, DuoInfo duoInfo, Long memberId
     ){
         LocalDateTime now = LocalDateTime.now();
-        return new DuoBoard(UUID.randomUUID(), mapCode, memo, memberInfo,
-                userInfo.getMyPosition(), userInfo.getMyVoice(), userInfo.getMyStyle(), userInfo.getMyStatus(),
+        return new DuoBoard(UUID.randomUUID(), mapCode, memo,
+                // CertifiedMemberInfo
+                memberInfo.getPuuid(), memberInfo.getGameName(), memberInfo.getTagLine(), memberInfo.getProfileUrl(), memberInfo.getTier(), memberInfo.getRank(), memberInfo.getMost3Champ(), memberInfo.getMyPosition(),
+                memberInfo.getUnivName(), memberInfo.getDepartment(), memberInfo.getGender(), memberInfo.getMbti(),
+                // UserInfo
+                userInfo.getMyVoice(), userInfo.getMyStyle(), userInfo.getMyStatus(),
+                // duoInfo
                 duoInfo.getOpponentPosition(), duoInfo.getOpponentStyle(),
-                memberId, MatchingCategory.DUO, memberInfo.getTier(), now
+                // 나머지 필드
+                memberId, MatchingCategory.DUO, now
         );
     }
 }

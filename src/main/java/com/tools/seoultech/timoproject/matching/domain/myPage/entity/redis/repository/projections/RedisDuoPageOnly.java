@@ -12,14 +12,18 @@ public interface RedisDuoPageOnly extends PageOnly {
     UUID getMyPageUUID();
 
     DuoMapCode getMapCode();
+
     MatchingCategory getMatchingCategory();
 
     CertifiedMemberInfo getAcceptorCertifiedMemberInfo();
     CertifiedMemberInfo getRequestorCertifiedMemberInfo();
+
     UserInfo getAcceptorUserInfo();
     UserInfo getRequestorUserInfo();
+
     String getAcceptorMemo();
     String getRequestorMemo();
+
 
     LocalDateTime getUpdatedAt();
 

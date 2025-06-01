@@ -3,6 +3,8 @@ package com.tools.seoultech.timoproject.matching.domain.board.entity.redis;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Gender;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import lombok.AccessLevel;
@@ -28,21 +30,45 @@ public class ScrimBoard {
     private String memo;
     private Integer headCount;
 
-    private CertifiedMemberInfo memberInfo;
+    /** CertifiedMemberInfo */
+    // RiotAccount
+    private String puuid;
+    private String gameName;
+    private String tagLine;
+    private String profileUrl;
+
+    // RankInfoDto 일부
+    @Indexed private String tier;   // GOLD, PLATINUM, MASTER 등
+    private String rank;
+
+    // CompactMemberInfo 나머지 필드
+    private List<String> most3Champ;
+    private PlayPosition myPosition;
+
+    // CertifiedMemberInfo 나머지 필드
+    @Indexed private String univName;
+    private String department;
+    private Gender gender;
+    private String mbti;
+
+    /** PartyMemberInfo */
     private List<CompactMemberInfo> partyInfo;
 
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
-    @Indexed private String tier;
-    @Indexed private String univName;
 
     private final LocalDateTime updatedAt;
 
-    public static ScrimBoard of(ScrimMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<CompactMemberInfo> partyInfo, Long memberId, String tier){
+    public static ScrimBoard of(ScrimMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<CompactMemberInfo> partyInfo, Long memberId){
         LocalDateTime now = LocalDateTime.now();
         return new ScrimBoard(UUID.randomUUID(), mapCode, memo, headCount,
-                memberInfo, partyInfo, memberId,
+                // CompactMemberInfo
+                memberInfo.getPuuid(), memberInfo.getGameName(), memberInfo.getTagLine(), memberInfo.getProfileUrl(), memberInfo.getTier(), memberInfo.getRank(), memberInfo.getMost3Champ(), memberInfo.getMyPosition(),
+                // CertifiedMemberInfo 나머지 필드
+                memberInfo.getUnivName(), memberInfo.getDepartment(), memberInfo.getGender(), memberInfo.getMbti(),
+                // 나머지 필드
+                partyInfo, memberId, MatchingCategory.SCRIM, now);
     }
 }

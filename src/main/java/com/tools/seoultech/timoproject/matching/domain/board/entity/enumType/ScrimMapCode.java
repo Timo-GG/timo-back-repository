@@ -7,8 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ScrimMapCode {
     RIFT("Summoner's Rift", "소환사 협곡"),
-    ABYSS("Howling Abyss", "칼바람 나락"),
-    ;
+    ABYSS("Howling Abyss", "칼바람 나락");
 
     private final String name;
     private final String description;

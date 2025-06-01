@@ -25,6 +25,7 @@ public abstract class BoardDTO {
             Long memberId,
             DuoMapCode mapCode,
             String memo,
+            PlayPosition myPosition,  // Note: CertifiedMemberInfo에서 변경될 수 있는 필드 정보만 요청.
             UserInfo userInfo,
             DuoInfo duoInfo
     ) implements Request {}
@@ -34,7 +35,8 @@ public abstract class BoardDTO {
             ScrimMapCode mapCode,
             String memo,
             Integer headCount,
-            List<PartyMemberInfo> partyInfo
+            PlayPosition myPosition,    // Note: CertifiedMemberInfo에서 변경될 수 있는 필드 정보만 요청.
+            List<CompactMemberInfo> partyInfo
     )implements Request{}
 
 
@@ -42,6 +44,7 @@ public abstract class BoardDTO {
         UUID boardUUID,
         DuoMapCode mapCode,
         String memo,
+        PlayPosition myPosition,
         UserInfo userInfo,
         DuoInfo duoInfo
     ) implements Request {}
@@ -51,15 +54,16 @@ public abstract class BoardDTO {
         ScrimMapCode mapCode,
         String memo,
         Integer headCount,
-        List<PartyMemberInfo> partyInfo
+        PlayPosition myPosition,
+        List<CompactMemberInfo> partyInfo
     ) implements Request {}
 
     @Builder
     public record ResponseDuo(
             UUID boardUUID,
-            CertifiedMemberInfo memberInfo,
             DuoMapCode mapCode,
             String memo,
+            CertifiedMemberInfo memberInfo,
             UserInfo userInfo,
             DuoInfo duoInfo,
             LocalDateTime updatedAt
@@ -68,11 +72,11 @@ public abstract class BoardDTO {
     @Builder
     public record ResponseScrim(
             UUID boardUUID,
-            CertifiedMemberInfo memberInfo,
             ScrimMapCode mapCode,
             String memo,
             Integer headCount,
-            List<PartyMemberInfo> partyInfo,
+            CertifiedMemberInfo memberInfo,
+            List<CompactMemberInfo> partyInfo,
             LocalDateTime updatedAt
     ) implements Response {}
 

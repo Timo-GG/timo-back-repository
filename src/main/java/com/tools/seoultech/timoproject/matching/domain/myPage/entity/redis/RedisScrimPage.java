@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import lombok.AccessLevel;
@@ -28,12 +29,12 @@ public class RedisScrimPage {
 
     /** Acceptor Field */
     private CertifiedMemberInfo acceptorCertifiedMemberInfo;
-    private List<PartyMemberInfo> acceptorPartyInfo;
+    private List<CompactMemberInfo> acceptorPartyInfo;
     private String acceptorMemo;
 
     /** Requestor Field */
     private CertifiedMemberInfo requestorCertifiedMemberInfo;
-    private List<PartyMemberInfo> requestorPartyInfo;
+    private List<CompactMemberInfo> requestorPartyInfo;
     private String requestorMemo;
 
 
@@ -47,8 +48,8 @@ public class RedisScrimPage {
     private LocalDateTime updatedAt;
 
     public static RedisScrimPage of(Integer headCount, ScrimMapCode mapCode, String acceptorMemo, String requestorMemo,
-                                    CertifiedMemberInfo acceptorCertifiedMemberInfo, List<PartyMemberInfo> acceptorPartyInfo,
-                                    CertifiedMemberInfo requestorCertifiedMemberInfo, List<PartyMemberInfo> requestorPartyInfo,
+                                    CertifiedMemberInfo acceptorCertifiedMemberInfo, List<CompactMemberInfo> acceptorPartyInfo,
+                                    CertifiedMemberInfo requestorCertifiedMemberInfo, List<CompactMemberInfo> requestorPartyInfo,
                                     Long acceptorId, Long requestorId, UUID boardUUID){
         LocalDateTime now = LocalDateTime.now();
 

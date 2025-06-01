@@ -1,9 +1,11 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.dto;
 
 
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
@@ -19,6 +21,7 @@ public class MatchingDTO {
     public record RequestDuo(
             UUID boardUUID,
             Long requestorId,
+            PlayPosition playPosition,
             UserInfo userInfo,
             String requestorMemo
     ) implements Request{}
@@ -26,7 +29,8 @@ public class MatchingDTO {
     public record RequestScrim(
             UUID boardUUID,
             Long requestorId,
-            List<PartyMemberInfo> partyInfo,
+            PlayPosition playPosition,
+            List<CompactMemberInfo> partyInfo,
             String requestorMemo
     ) implements Request{}
 
@@ -36,8 +40,6 @@ public class MatchingDTO {
             DuoMapCode mapCode,
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
-            String acceptorMemo,
-            String requestorMemo,
             WrappedDuoData acceptor,
             WrappedDuoData requestor,
             LocalDateTime updatedAt
@@ -50,8 +52,6 @@ public class MatchingDTO {
             ScrimMapCode mapCode,
             MatchingCategory matchingCategory,
             MatchingStatus matchingStatus,
-            String acceptorMemo,
-            String requestorMemo,
             WrappedScrimData acceptor,
             WrappedScrimData requestor,
             LocalDateTime updatedAt
@@ -59,14 +59,16 @@ public class MatchingDTO {
 
     @Builder
     public record WrappedDuoData(
-            CompactMemberInfo memberInfo,
-            UserInfo userInfo
+            CertifiedMemberInfo memberInfo,
+            UserInfo userInfo,
+            String memo
     ) implements Response{}
 
     @Builder
     public record  WrappedScrimData(
-            CompactMemberInfo memberInfo,
-            List<PartyMemberInfo> partyInfo
+            CertifiedMemberInfo memberInfo,
+            List<CompactMemberInfo> partyInfo,
+            String memo
     ) implements Response{}
 
     public interface Request extends MatchingDtoInterface {}

@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 
@@ -18,8 +19,10 @@ public interface RedisScrimPageOnly extends PageOnly {
 
     CertifiedMemberInfo getAcceptorCertifiedMemberInfo();
     CertifiedMemberInfo getRequestorCertifiedMemberInfo();
-    List<PartyMemberInfo> getAcceptorPartyInfo();
-    List<PartyMemberInfo> getRequestorPartyInfo();
+
+    List<CompactMemberInfo> getAcceptorPartyInfo();
+    List<CompactMemberInfo> getRequestorPartyInfo();
+
     String getAcceptorMemo();
     String getRequestorMemo();
 
