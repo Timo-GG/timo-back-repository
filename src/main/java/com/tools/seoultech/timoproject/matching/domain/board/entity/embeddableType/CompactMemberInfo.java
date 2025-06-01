@@ -9,7 +9,6 @@ import lombok.*;
 import java.util.List;
 
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,6 +17,7 @@ public class CompactMemberInfo {
     private String puuid;
     private String gameName;
     private String tagLine;
+    private String profileUrl;
 
     /** RankInfoDto*/
     private String tier;   // GOLD, PLATINUM, MASTER 등

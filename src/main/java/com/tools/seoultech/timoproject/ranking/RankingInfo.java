@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.ranking;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Gender;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;

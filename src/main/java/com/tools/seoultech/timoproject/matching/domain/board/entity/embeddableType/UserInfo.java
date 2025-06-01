@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserInfo {
-    private PlayPosition myPosition;
     private PlayStyle myStyle;
     private PlayCondition myStatus;
     private VoiceChat myVoice;
