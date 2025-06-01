@@ -21,4 +21,10 @@ public final class RiotAccountUtil {
 
         return gameName + "#" + tagLine;
     }
+    public static String extractGameName(String gameName, String tagLine) {
+        if (gameName == null || tagLine == null) {
+            return "알 수 없는 사용자";  // null 대신 기본값 반환
+        }
+        return gameName + "#" + tagLine;
+    }
 }
