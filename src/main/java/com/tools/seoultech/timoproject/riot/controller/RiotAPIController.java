@@ -16,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -124,11 +122,11 @@ public class RiotAPIController {
         AccountDto.Response account = bas.findUserAccount(request);
         String puuid = account.getPuuid();
 
+        String avatarUrl = bas.getProfileIconUrlByPuuid(puuid);
         RankInfoDto rankInfo = bas.getSoloRankInfoByPuuid(puuid);
         List<String> most3Champion = bas.getMost3ChampionNames(puuid);
-        List<MatchSummaryDTO> recentMatch = bas.getRecentMatchSummaries(puuid);
 
-        CompactPlayerHistory response = new CompactPlayerHistory(rankInfo, most3Champion, recentMatch);
+        CompactPlayerHistory response = new CompactPlayerHistory(avatarUrl, rankInfo, most3Champion);
         return ResponseEntity.ok(APIDataResponse.of(response));
     }
 
