@@ -3,18 +3,19 @@ package com.tools.seoultech.timoproject.matching.service.converter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.io.IOException;
 import java.util.List;
 
 @Converter
-public class ListPartyMemberInfoConverter implements AttributeConverter<List<PartyMemberInfo>, String> {
+public class ListCompactMemberInfoConverter implements AttributeConverter<List<CompactMemberInfo>, String> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(List<PartyMemberInfo> attribute) {
+    public String convertToDatabaseColumn(List<CompactMemberInfo> attribute) {
         if (attribute == null) return null;
         try {
             return objectMapper.writeValueAsString(attribute);
@@ -24,10 +25,10 @@ public class ListPartyMemberInfoConverter implements AttributeConverter<List<Par
     }
 
     @Override
-    public List<PartyMemberInfo> convertToEntityAttribute(String dbData) {
+    public List<CompactMemberInfo> convertToEntityAttribute(String dbData) {
         if (dbData == null || dbData.isEmpty()) return null;
         try {
-            return objectMapper.readValue(dbData, new TypeReference<List<PartyMemberInfo>>() {});
+            return objectMapper.readValue(dbData, new TypeReference<List<CompactMemberInfo>>() {});
         } catch (IOException e) {
             throw new RuntimeException("JSON -> List<PartyMemberInfo> 변환 실패", e);
         }
