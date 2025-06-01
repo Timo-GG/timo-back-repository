@@ -4,7 +4,6 @@ import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.global.exception.GeneralException;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MatchingDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.dto.MyPageDTO;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.DuoPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.ScrimPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisDuoPageOnly;
@@ -14,6 +13,7 @@ import com.tools.seoultech.timoproject.matching.service.MyPageService;
 import com.tools.seoultech.timoproject.matching.service.facade.MatchingFacade;
 import com.tools.seoultech.timoproject.matching.service.facade.MyPageFacade;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import com.tools.seoultech.timoproject.notification.NotificationRequest;
 import com.tools.seoultech.timoproject.notification.NotificationService;
 import com.tools.seoultech.timoproject.notification.NotificationType;
@@ -39,7 +39,7 @@ public class MatchingFacadeImpl implements MatchingFacade {
     private static final String MYPAGE_URL = "/mypage";
 
     @Override
-    public MyPageDTO.Response doAcceptEvent(UUID myPageUUID) throws Exception {
+    public Long doAcceptEvent(UUID myPageUUID) throws Exception {
         MatchingDTO.Response dto = myPageFacade.readMyPage(myPageUUID);
 
         if(dto instanceof MatchingDTO.ResponseDuo) {
@@ -47,17 +47,17 @@ public class MatchingFacadeImpl implements MatchingFacade {
             Long roomId = processMatchSuccess(duoPageData);
 
             DuoPage entity = matchingService.doDuoAcceptEvent(myPageUUID, duoPageData.getBoardUUID());
-            return myPageMapper.toDuoDto(entity, roomId);
+            return roomId;
 
         } else if (dto instanceof MatchingDTO.ResponseScrim) {
             RedisScrimPageOnly scrimPageData = myPageService.readScrimMyPage(myPageUUID);
             Long roomId = processMatchSuccess(scrimPageData);
 
             ScrimPage entity = matchingService.doScrimAcceptEvent(myPageUUID, scrimPageData.getBoardUUID());
-            return myPageMapper.toScrimDto(entity, roomId);
+            return roomId;
         }
 
-        throw new GeneralException("Matching 로직 내부에서 실패했습니다.");
+        else throw new GeneralException("Matching 로직 내부에서 실패했습니다.");
     }
 
     @Override
@@ -85,8 +85,9 @@ public class MatchingFacadeImpl implements MatchingFacade {
      * 매칭 성공 후처리 - DuoPage용
      */
     private Long processMatchSuccess(RedisDuoPageOnly duoPageData) {
-        String acceptorName = RiotAccountUtil.extractGameName(
-                duoPageData.getAcceptorCertifiedMemberInfo().getRiotAccount());
+        String gameName = duoPageData.getAcceptorCertifiedMemberInfo().getGameName();
+        String tagLine = duoPageData.getAcceptorCertifiedMemberInfo().getTagLine();
+        String acceptorName = RiotAccountUtil.extractGameName(gameName, tagLine);
 
         return processMatchSuccessCommon(
                 duoPageData.getBoardUUID(),
@@ -102,8 +103,9 @@ public class MatchingFacadeImpl implements MatchingFacade {
      * 매칭 성공 후처리 - ScrimPage용
      */
     private Long processMatchSuccess(RedisScrimPageOnly scrimPageData) {
-        String acceptorName = RiotAccountUtil.extractGameName(
-                scrimPageData.getAcceptorCertifiedMemberInfo().getRiotAccount());
+        String gameName = scrimPageData.getAcceptorCertifiedMemberInfo().getGameName();
+        String tagLine = scrimPageData.getAcceptorCertifiedMemberInfo().getTagLine();
+        String acceptorName = RiotAccountUtil.extractGameName(gameName, tagLine);
 
         return processMatchSuccessCommon(
                 scrimPageData.getBoardUUID(),
@@ -119,8 +121,10 @@ public class MatchingFacadeImpl implements MatchingFacade {
      * 매칭 거절 후처리 - DuoPage용
      */
     private void processMatchReject(RedisDuoPageOnly duoPageData) {
-        String acceptorName = RiotAccountUtil.extractGameName(
-                duoPageData.getAcceptorCertifiedMemberInfo().getRiotAccount());
+        String gameName = duoPageData.getAcceptorCertifiedMemberInfo().getGameName();
+        String tagLine = duoPageData.getAcceptorCertifiedMemberInfo().getTagLine();
+
+        String acceptorName = RiotAccountUtil.extractGameName(gameName, tagLine);
 
         processMatchRejectCommon(
                 duoPageData.getRequestorId(),
@@ -134,8 +138,10 @@ public class MatchingFacadeImpl implements MatchingFacade {
      * 매칭 거절 후처리 - ScrimPage용
      */
     private void processMatchReject(RedisScrimPageOnly scrimPageData) {
-        String acceptorName = RiotAccountUtil.extractGameName(
-                scrimPageData.getAcceptorCertifiedMemberInfo().getRiotAccount());
+        String gameName = scrimPageData.getAcceptorCertifiedMemberInfo().getGameName();
+        String tagLine = scrimPageData.getAcceptorCertifiedMemberInfo().getTagLine();
+
+        String acceptorName = RiotAccountUtil.extractGameName(gameName, tagLine);
 
         processMatchRejectCommon(
                 scrimPageData.getRequestorId(),

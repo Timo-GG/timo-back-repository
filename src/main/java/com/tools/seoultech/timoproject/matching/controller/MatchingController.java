@@ -20,7 +20,7 @@ public class MatchingController {
     private final MatchingFacade matchingFacade;
 
     @GetMapping("/accept/{myPageUUID}")
-    public ResponseEntity<APIDataResponse<MyPageDTO.Response>> matchingEvent(@PathVariable UUID myPageUUID) throws Exception {
+    public ResponseEntity<APIDataResponse<Long>> matchingEvent(@PathVariable UUID myPageUUID) throws Exception {
         var dto = matchingFacade.doAcceptEvent(myPageUUID);
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }

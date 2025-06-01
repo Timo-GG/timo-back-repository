@@ -21,12 +21,12 @@ public interface MyPageFacade {
     void deleteAllMyPage(MatchingCategory matchingCategory) throws Exception;
 
     /** MySQL 평가하기 마이페이지 */
-    MyPageDTO.Response readMyPage(Long mypageId) throws Exception;
+    MyPageDTO.Response readMyPage(Long memberId, Long mypageId) throws Exception;
     List<MyPageDTO.ResponseMyPage> readMyPageByMemberId(Long memberId) throws Exception;
 
     /** 백엔드 내부 테스트용 MySQL CRUD */
     MyPage createPage(UUID mypageUUID) throws Exception;
-    List<MyPageDTO.Response> readAllPage() throws Exception;
+    List<MyPageDTO.Response> readAllPage(Long memberId) throws Exception;
     void deleteAllPage() throws Exception;
 
     void delete(Long mypageId);

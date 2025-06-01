@@ -13,7 +13,6 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repos
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisDuoPageOnly;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.PageOnly;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisScrimPageOnly;
-import com.tools.seoultech.timoproject.matching.service.facade.Impl.BoardFacadeImpl;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
 import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
@@ -28,7 +27,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class MyPageService {
-    private final BoardFacadeImpl board;
     private final BoardService boardService;
     private final RiotAPIService bas;
     private final MemberService memberService;
@@ -167,7 +165,7 @@ public class MyPageService {
     // Sorting and Filtering
     // Note: 보낸 요청, 받은 요청 페이지 조회
     public List<MyPage> readPageReceived(Long memberId) throws Exception {
-        return pageRepository.findAllReviewedByAcceptorId(memberId);
+        return pageRepository.findAllByAcceptorId(memberId);
     }
 
     public List<MyPage> readPageSent(Long memberId) throws Exception {
@@ -175,7 +173,7 @@ public class MyPageService {
     }
 
     public Map<Boolean, List<MyPage>> readPageSortingByIsReceived(Long memberId) throws Exception {
-        List<MyPage> receivedEntity = pageRepository.findAllReviewedByAcceptorId(memberId);
+        List<MyPage> receivedEntity = pageRepository.findAllByAcceptorId(memberId);
         List<MyPage> sentEntity = pageRepository.findAllByRequestorId(memberId);
 
         Boolean isReviewee = true; // false = Reviewer : 보낸 평가

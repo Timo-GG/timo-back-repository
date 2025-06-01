@@ -108,14 +108,14 @@ public class MyPageController {
      * MySQL 마이페이지
      * */
     @GetMapping("/db")
-    public ResponseEntity<APIDataResponse<List<MyPageDTO.Response>>> readAllMyPage() throws Exception{
-        var entityList = myPageFacade.readAllPage();
+    public ResponseEntity<APIDataResponse<List<MyPageDTO.Response>>> readAllMyPage(@CurrentMemberId Long memberId) throws Exception{
+        var entityList = myPageFacade.readAllPage(memberId);
         return ResponseEntity.ok(APIDataResponse.of(entityList));
     }
 
     @GetMapping("/db/{mypageId}")
-    public ResponseEntity<APIDataResponse<MyPageDTO.Response>> readPage(@PathVariable Long mypageId) throws Exception{
-        var myPage = myPageFacade.readMyPage(mypageId);
+    public ResponseEntity<APIDataResponse<MyPageDTO.Response>> readPage(@CurrentMemberId Long memberId, @PathVariable Long mypageId) throws Exception{
+        var myPage = myPageFacade.readMyPage(memberId, mypageId);
         return ResponseEntity.ok(APIDataResponse.of(myPage));
     }
 

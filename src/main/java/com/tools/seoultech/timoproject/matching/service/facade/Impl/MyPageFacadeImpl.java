@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import static java.util.stream.Collectors.toList;
+
 
 @Component
 @RequiredArgsConstructor
@@ -34,10 +36,10 @@ public class MyPageFacadeImpl implements MyPageFacade {
     public MatchingDTO.Response createMyPage(MatchingDTO.Request dto) throws Exception {
         if(dto instanceof MatchingDTO.RequestDuo duoDto) {
             RedisDuoPage entity = myPageService.createDuoMyPage(duoDto);
-            return myPageMapper.toDuoDto(entity);
+            return myPageMapper.toReviewDuoDto(entity);
         } else if(dto instanceof MatchingDTO.RequestScrim scrimDto) {
             RedisScrimPage entity = myPageService.createScrimMyPage(scrimDto);
-            return myPageMapper.toScrimDto(entity);
+            return myPageMapper.toReviewScrimDto(entity);
         }
         throw new GeneralException("마이페이지 요청 dto 데이터 형식이 맞지 않습니다.");
     }
@@ -46,9 +48,9 @@ public class MyPageFacadeImpl implements MyPageFacade {
     public MatchingDTO.Response readMyPage(UUID myPageUUID) throws Exception {
         PageOnly proj = myPageService.getMyPage(myPageUUID);
         if(proj instanceof RedisDuoPageOnly){
-            return myPageMapper.toDuoDto((RedisDuoPageOnly) proj);
+            return myPageMapper.toReviewDuoDto((RedisDuoPageOnly) proj);
         } else if (proj instanceof RedisScrimPageOnly){
-            return myPageMapper.toScrimDto((RedisScrimPageOnly) proj);
+            return myPageMapper.toReviewScrimDto((RedisScrimPageOnly) proj);
         }
         throw new GeneralException("해당 UUID는 Duo, Scrim 레디스 저장소에 없습니다.");
     }
@@ -58,12 +60,12 @@ public class MyPageFacadeImpl implements MyPageFacade {
         List<MatchingDTO.Response> dtoList = new ArrayList<>();
         if(matchingCategory == MatchingCategory.DUO){
             dtoList = myPageService.getAllDuoMyPage().stream()
-                    .map(proj -> (MatchingDTO.Response) myPageMapper.toDuoDto(proj))
+                    .map(proj -> (MatchingDTO.Response) myPageMapper.toReviewDuoDto(proj))
                     .filter(Objects::nonNull)
                     .toList();
         } else if(matchingCategory == MatchingCategory.SCRIM){
             dtoList = myPageService.getAllScrimMyPage().stream()
-                    .map(proj -> (MatchingDTO.Response) myPageMapper.toScrimDto(proj)).toList();
+                    .map(proj -> (MatchingDTO.Response) myPageMapper.toReviewScrimDto(proj)).toList();
         }
         return dtoList;
     }
@@ -99,9 +101,9 @@ public class MyPageFacadeImpl implements MyPageFacade {
      */
     private MatchingDTO.Response mapPageOnlyToDto(PageOnly page) {
         if (page instanceof RedisDuoPageOnly duo) {
-            return myPageMapper.toDuoDto(duo);
+            return myPageMapper.toReviewDuoDto(duo);
         } else if (page instanceof RedisScrimPageOnly scrim) {
-            return myPageMapper.toScrimDto(scrim);
+            return myPageMapper.toReviewScrimDto(scrim);
         }
         throw new GeneralException("지원하지 않는 페이지 타입입니다.");
     }
@@ -129,10 +131,12 @@ public class MyPageFacadeImpl implements MyPageFacade {
      */
     // Note: 평가하기 마이페이지 조회용
     @Override
-    public MyPageDTO.Response readMyPage(Long mypageId) throws Exception {
+    public MyPageDTO.Response readMyPage(Long memberId, Long mypageId) throws Exception {
         MyPage entity = myPageService.readPage(mypageId);
+
         if(entity.getMatchingCategory() == MatchingCategory.DUO){
             return myPageMapper.toDuoDto((DuoPage) entity);
+
         } else if(entity.getMatchingCategory() == MatchingCategory.SCRIM){
             return myPageMapper.toScrimDto((ScrimPage) entity);
         }
@@ -146,8 +150,13 @@ public class MyPageFacadeImpl implements MyPageFacade {
         return myPageService.readPageSortingByIsReceived(memberId).entrySet().stream()
                 .map(entry -> {
                     List<MyPageDTO.Response> filteredDtoList = entry.getValue().stream()
-                        .map(myPageMapper::toFilteredDtoList).toList();
-                    return myPageMapper.tofilteredWrappeddtoList(filteredDtoList, String.valueOf(entry.getKey()));
+                        .map(entity -> {
+                            MyPageDTO.Response dto = entity.getMatchingCategory() == MatchingCategory.DUO ?
+                                    myPageMapper.toReviewDuoDto((DuoPage) entity, entry.getKey()) :
+                                    myPageMapper.toReviewScrimDto((ScrimPage) entity, entry.getKey());
+                            return dto;
+                        }).toList();
+                    return myPageMapper.tofilteredWrappeddtoList(filteredDtoList, String.valueOf(entry.getKey()? "받은평가":"보낸평가"));
                 })
                 .toList();
     }
@@ -170,9 +179,14 @@ public class MyPageFacadeImpl implements MyPageFacade {
         myPageService.deleteAllScrimMyPage();
     }
     @Override
-    public List<MyPageDTO.Response> readAllPage() throws Exception {
+    public List<MyPageDTO.Response> readAllPage(Long memberId) throws Exception {
         List<MyPage> entityList = myPageService.readAllPage();
-        return entityList.stream().map(myPageMapper::toFilteredDtoList).toList();
+        return entityList.stream().map(entity ->
+                (entity.getMatchingCategory() == MatchingCategory.DUO) ?
+                        myPageMapper.toDuoDto((DuoPage) entity) :
+                        myPageMapper.toScrimDto((ScrimPage) entity)
+                )
+                .collect(toList());
     }
 
     @Override
