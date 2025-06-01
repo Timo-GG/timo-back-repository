@@ -43,8 +43,12 @@ public class BoardService {
         return saved;
     }
 
-    public boolean existsByMemberId(Long memberId) {
+    public boolean existsDuoByMemberId(Long memberId) {
         return duoBoardRepository.existsByMemberId(memberId);
+    }
+
+    public boolean existsScrimByMemberId(Long memberId) {
+        return scrimBoardRepository.existsByMemberId(memberId);
     }
 
     /** 게시글 수정 업데이트 */
@@ -253,5 +257,16 @@ public class BoardService {
                 .build();
 
         return duoBoardRepository.save(refreshedBoard);
+    }
+
+    public ScrimBoard refreshMyScrimBoard(Long memberId) {
+        ScrimBoard existingBoard = scrimBoardRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new RuntimeException("No ScrimBoard found for memberId : " + memberId));
+
+        ScrimBoard refreshedBoard = existingBoard.toBuilder()
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        return scrimBoardRepository.save(refreshedBoard);
     }
 }

@@ -3,7 +3,6 @@ package com.tools.seoultech.timoproject.matching.service.facade;
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface BoardFacade {
@@ -16,7 +15,12 @@ public interface BoardFacade {
         void delete(UUID boardUUID);
         void deleteAll(MatchingCategory matchingCategory);
 
-        boolean existsByMemberId(Long memberId);
-        BoardDTO.Response refreshMyDuoBoard(Long memberId);
+        boolean existsDuoByMemberId(Long memberId);
+        boolean existsScrimByMemberId(Long memberId);
 
-        void deleteByMemberId(Long memberId, MatchingCategory category) throws Exception;}
+        BoardDTO.Response refreshMyDuoBoard(Long memberId);
+        BoardDTO.Response refreshMyScrimBoard(Long memberId);
+
+        void deleteByMemberId(Long memberId, MatchingCategory category) throws Exception;
+
+}

@@ -14,11 +14,7 @@ import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -88,13 +84,23 @@ public class BoardFacadeImpl implements BoardFacade {
     }
 
     @Override
-    public boolean existsByMemberId(Long memberId) {
-        return boardService.existsByMemberId(memberId);
+    public boolean existsDuoByMemberId(Long memberId) {
+        return boardService.existsDuoByMemberId(memberId);
+    }
+
+    @Override
+    public boolean existsScrimByMemberId(Long memberId) {
+        return boardService.existsScrimByMemberId(memberId);
     }
 
     @Override
     public BoardDTO.Response refreshMyDuoBoard(Long memberId) {
         return boardMapper.toDuoDto(boardService.refreshMyDuoBoard(memberId));
+    }
+
+    @Override
+    public BoardDTO.Response refreshMyScrimBoard(Long memberId) {
+        return boardMapper.toScrimDto(boardService.refreshMyScrimBoard(memberId));
     }
 
     @Override

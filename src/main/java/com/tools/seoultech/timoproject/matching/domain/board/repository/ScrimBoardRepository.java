@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface ScrimBoardRepository extends CrudRepository<ScrimBoard, UUID> {
     Optional<ScrimBoardOnly> findByBoardUUID(UUID boardId);
     List<ScrimBoardOnly> findAllBy();
-
     Optional<ScrimBoard> findByMemberId(Long memberId);
+    boolean existsByMemberId(Long memberId);
 
 }
