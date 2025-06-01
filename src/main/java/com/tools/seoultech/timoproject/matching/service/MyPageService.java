@@ -178,8 +178,8 @@ public class MyPageService {
         List<MyPage> receivedEntity = pageRepository.findAllReviewedByAcceptorId(memberId);
         List<MyPage> sentEntity = pageRepository.findAllByRequestorId(memberId);
 
-        Boolean isAcceptor = true;
-        return Map.of(isAcceptor, receivedEntity, !isAcceptor, sentEntity);
+        Boolean isReviewee = true; // false = Reviewer : 보낸 평가
+        return Map.of(isReviewee, receivedEntity, !isReviewee, sentEntity);
     }
 
     // Note: MySQL 엔티티 삭제

@@ -2,7 +2,7 @@ package com.tools.seoultech.timoproject.matching.domain.board.entity.redis;
 
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import lombok.AccessLevel;
@@ -27,10 +27,10 @@ public class ScrimBoard {
     @Indexed private ScrimMapCode mapCode;
     private String memo;
     private Integer headCount;
-    private CertifiedMemberInfo memberInfo;
-    private List<PartyMemberInfo> partyInfo;
 
-    private final LocalDateTime updatedAt;
+    private CertifiedMemberInfo memberInfo;
+    private List<CompactMemberInfo> partyInfo;
+
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final Long memberId;
@@ -38,12 +38,11 @@ public class ScrimBoard {
     @Indexed private String tier;
     @Indexed private String univName;
 
+    private final LocalDateTime updatedAt;
 
-    public static ScrimBoard of(ScrimMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<PartyMemberInfo> partyInfo, Long memberId
-    ){
+    public static ScrimBoard of(ScrimMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<CompactMemberInfo> partyInfo, Long memberId, String tier){
         LocalDateTime now = LocalDateTime.now();
         return new ScrimBoard(UUID.randomUUID(), mapCode, memo, headCount,
-                memberInfo, partyInfo, now, memberId,
-                MatchingCategory.SCRIM, memberInfo.getRankInfo().getTier(), memberInfo.getUnivName());
+                memberInfo, partyInfo, memberId,
     }
 }

@@ -2,7 +2,6 @@ package com.tools.seoultech.timoproject.matching.domain.myPage.dto;
 
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;

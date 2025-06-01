@@ -34,13 +34,13 @@ public class DuoBoard {
     private PlayPosition opponentPosition;
     private PlayStyle opponentStyle;
 
-    private LocalDateTime updatedAt;
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
     @Indexed private String tier;
 
+    private LocalDateTime updatedAt;
 
     public static DuoBoard of(DuoMapCode mapCode, String memo, CertifiedMemberInfo memberInfo, UserInfo userInfo, DuoInfo duoInfo, Long memberId
     ){
@@ -48,7 +48,7 @@ public class DuoBoard {
         return new DuoBoard(UUID.randomUUID(), mapCode, memo, memberInfo,
                 userInfo.getMyPosition(), userInfo.getMyVoice(), userInfo.getMyStyle(), userInfo.getMyStatus(),
                 duoInfo.getOpponentPosition(), duoInfo.getOpponentStyle(),
-                now, memberId, MatchingCategory.DUO, memberInfo.getRankInfo().getTier()
+                memberId, MatchingCategory.DUO, memberInfo.getTier(), now
         );
     }
 }

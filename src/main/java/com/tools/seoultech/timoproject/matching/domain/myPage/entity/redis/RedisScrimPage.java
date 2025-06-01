@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import lombok.AccessLevel;
@@ -37,7 +36,6 @@ public class RedisScrimPage {
     private List<PartyMemberInfo> requestorPartyInfo;
     private String requestorMemo;
 
-    private LocalDateTime updatedAt;
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final MatchingCategory matchingCategory;
@@ -46,6 +44,7 @@ public class RedisScrimPage {
 
     /** Redis 인스턴스 참조용 필드 */
     private final UUID boardUUID;
+    private LocalDateTime updatedAt;
 
     public static RedisScrimPage of(Integer headCount, ScrimMapCode mapCode, String acceptorMemo, String requestorMemo,
                                     CertifiedMemberInfo acceptorCertifiedMemberInfo, List<PartyMemberInfo> acceptorPartyInfo,
@@ -56,7 +55,7 @@ public class RedisScrimPage {
         return new RedisScrimPage(UUID.randomUUID(), headCount, mapCode,
                                acceptorCertifiedMemberInfo, acceptorPartyInfo,acceptorMemo,
                                requestorCertifiedMemberInfo, requestorPartyInfo, requestorMemo,
-                               now, MatchingCategory.SCRIM ,acceptorId, requestorId, boardUUID
+                               MatchingCategory.SCRIM ,acceptorId, requestorId, boardUUID, now
         );
     }
 }

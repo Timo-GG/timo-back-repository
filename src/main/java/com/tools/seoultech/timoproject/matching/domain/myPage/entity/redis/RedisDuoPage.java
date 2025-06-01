@@ -34,7 +34,6 @@ public class RedisDuoPage {
     private UserInfo requestorUserInfo;
     private String requestorMemo;
 
-    private LocalDateTime updatedAt;
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final MatchingCategory matchingCategory;
@@ -43,6 +42,7 @@ public class RedisDuoPage {
 
     /** Redis 인스턴스 참조용 필드 */
     private final UUID boardUUID;
+    private LocalDateTime updatedAt;
 
 
     public static RedisDuoPage of(DuoMapCode mapCode, String acceptorMemo, String requestorMemo,
@@ -54,7 +54,7 @@ public class RedisDuoPage {
         return new RedisDuoPage( UUID.randomUUID(), mapCode,
                                  acceptorMemberInfo, acceptorUserInfo, acceptorMemo,
                                  requestorMemberInfo, requestorUserInfo, requestorMemo,
-                                 now, MatchingCategory.DUO, acceptorId, requestorId, boardUUID
+                                 MatchingCategory.DUO, acceptorId, requestorId, boardUUID, now
         );
     }
 }

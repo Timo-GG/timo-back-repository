@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
@@ -24,6 +23,7 @@ public class ScrimPage extends MyPage {
 
     @Enumerated(EnumType.STRING)
     private ScrimMapCode mapCode;
+
 
     @Convert(converter = ListPartyMemberInfoConverter.class)
     @Column(columnDefinition = "JSON")

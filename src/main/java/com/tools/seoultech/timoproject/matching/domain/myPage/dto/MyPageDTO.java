@@ -1,9 +1,8 @@
 package com.tools.seoultech.timoproject.matching.domain.myPage.dto;
 
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
@@ -29,45 +28,26 @@ public abstract class MyPageDTO {
     ) implements Response{}
 
     @Builder
+    // NOTE: 보낸 요청, 받은 요청 보기용.
     public record ResponseDuoPage(
             Long mypageId,
+            Long memberId,
             DuoMapCode mapCode,
+            PlayPosition myPosition,
+            CertifiedMemberInfo memberInfo,
             MatchingCategory matchingCategory,
-            MatchingStatus matchingStatus,
-            MyPageWrappedDuoData acceptor,
-            MyPageWrappedDuoData requestor,
-            Long roomId,
-            Long acceptorId,
-            Long requestorId
+            MatchingStatus matchingStatus
     ) implements Response{}
 
     @Builder
     public record ResponseScrimPage(
             Long mypageId,
+            Long memebrId,
             ScrimMapCode mapCode,
+            PlayPosition myPosition,
+            CertifiedMemberInfo memberInfo,
             MatchingCategory matchingCategory,
-            MatchingStatus matchingStatus,
-            MyPageWrappedScrimData acceptor,
-            MyPageWrappedScrimData requestor,
-            Long roomId,
-            Long acceptorId,
-            Long requestorId
-    ) implements Response{}
-
-    @Builder
-    public record MyPageWrappedDuoData(
-            CompactMemberInfo memberInfo,
-            UserInfo userInfo,
-            String univName,      // 대학명 추가
-            String department     // 학과명 추가
-    ) implements Response{}
-
-    @Builder
-    public record MyPageWrappedScrimData(
-            CompactMemberInfo memberInfo,
-            List<PartyMemberInfo> partyInfo,
-            String univName,      // 대학명 추가
-            String department     // 학과명 추가
+            MatchingStatus matchingStatus
     ) implements Response{}
 
     public interface Request extends BaseMyPageDtoInterface{}

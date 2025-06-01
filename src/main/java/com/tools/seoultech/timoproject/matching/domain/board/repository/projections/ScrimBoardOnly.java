@@ -1,7 +1,6 @@
 package com.tools.seoultech.timoproject.matching.domain.board.repository.projections;
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
-import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 
 import java.time.LocalDateTime;
