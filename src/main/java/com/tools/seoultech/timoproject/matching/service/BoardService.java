@@ -44,11 +44,15 @@ public class BoardService {
     }
 
     public boolean existsDuoByMemberId(Long memberId) {
-        return duoBoardRepository.existsByMemberId(memberId);
+        return duoBoardRepository.findByMemberId(memberId)
+                .filter(board -> board.getBoardUUID() != null && board.getUpdatedAt() != null)
+                .isPresent();
     }
 
     public boolean existsScrimByMemberId(Long memberId) {
-        return scrimBoardRepository.existsByMemberId(memberId);
+        return scrimBoardRepository.findByMemberId(memberId)
+                .filter(board -> board.getBoardUUID() != null && board.getUpdatedAt() != null)
+                .isPresent();
     }
 
     /** 게시글 수정 업데이트 */
