@@ -54,6 +54,10 @@ public class BoardFacadeImpl implements BoardFacade {
         }
     }
 
+    @Override
+    public BoardDTO.PageResponse readAllUnivWithPaging(int page, int size, String univName) {
+        return boardService.getAllUnivScrimBoardsWithPaging(page, size, univName);
+    }
 
     @Override
     public BoardDTO.Response update(BoardDTO.Request dto) throws Exception{

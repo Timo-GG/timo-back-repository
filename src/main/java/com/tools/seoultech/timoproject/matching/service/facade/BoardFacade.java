@@ -11,6 +11,8 @@ public interface BoardFacade {
         BoardDTO.Response read(UUID boardUUID) throws Exception;
         BoardDTO.PageResponse readAllWithPaging(MatchingCategory matchingCategory, int page, int size);
 
+        BoardDTO.PageResponse readAllUnivWithPaging(int page, int size, String univName);
+
         BoardDTO.Response update(BoardDTO.Request dto) throws Exception;
         void delete(UUID boardUUID);
         void deleteAll(MatchingCategory matchingCategory);

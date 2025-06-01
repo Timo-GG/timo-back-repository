@@ -36,6 +36,7 @@ public class ScrimBoard {
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
     @Indexed private String tier;
+    @Indexed private String univName;
 
 
     public static ScrimBoard of(ScrimMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<PartyMemberInfo> partyInfo, Long memberId
@@ -43,6 +44,6 @@ public class ScrimBoard {
         LocalDateTime now = LocalDateTime.now();
         return new ScrimBoard(UUID.randomUUID(), mapCode, memo, headCount,
                 memberInfo, partyInfo, now, memberId,
-                MatchingCategory.SCRIM, memberInfo.getRankInfo().getTier());
+                MatchingCategory.SCRIM, memberInfo.getRankInfo().getTier(), memberInfo.getUnivName());
     }
 }

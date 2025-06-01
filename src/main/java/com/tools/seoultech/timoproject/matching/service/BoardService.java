@@ -79,6 +79,8 @@ public class BoardService {
                 .orElseThrow(() -> new Exception("Board not found: " + boardUUID));
         return proj;
     }
+
+    /** 페이징된 듀오 게시글 조회 (최신순) */
     public BoardDTO.PageResponse getAllDuoBoardsWithPaging(int page, int size) {
         List<DuoBoardOnly> allBoards = duoBoardRepository.findAllBy()
                 .stream()
@@ -137,6 +139,61 @@ public class BoardService {
     /** 페이징된 스크림 게시글 조회 (최신순) */
     public BoardDTO.PageResponse getAllScrimBoardsWithPaging(int page, int size) {
         List<ScrimBoardOnly> allBoards = scrimBoardRepository.findAllBy()
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(board -> {
+                    try {
+                        return board.getBoardUUID() != null &&
+                                board.getUpdatedAt() != null;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .sorted((b1, b2) -> b2.getUpdatedAt().compareTo(b1.getUpdatedAt())) // 최신순 정렬
+                .collect(Collectors.toList());
+
+        // 페이징 처리
+        int start = page * size;
+        int end = Math.min(start + size, allBoards.size());
+
+        if (start >= allBoards.size()) {
+            return BoardDTO.PageResponse.builder()
+                    .content(List.of())
+                    .page(page)
+                    .size(size)
+                    .totalElements(allBoards.size())
+                    .totalPages((int) Math.ceil((double) allBoards.size() / size))
+                    .first(page == 0)
+                    .last(true)
+                    .hasNext(false)
+                    .hasPrevious(page > 0)
+                    .build();
+        }
+
+        List<ScrimBoardOnly> pagedBoards = allBoards.subList(start, end);
+        List<BoardDTO.Response> content = pagedBoards.stream()
+                .map(proj -> (BoardDTO.Response) boardMapper.toScrimDto(proj))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        int totalPages = (int) Math.ceil((double) allBoards.size() / size);
+
+        return BoardDTO.PageResponse.builder()
+                .content(content)
+                .page(page)
+                .size(size)
+                .totalElements(allBoards.size())
+                .totalPages(totalPages)
+                .first(page == 0)
+                .last(page >= totalPages - 1)
+                .hasNext(page < totalPages - 1)
+                .hasPrevious(page > 0)
+                .build();
+    }
+
+    /** 페이징된 우리 학교 한정 스크림 게시글 조회 (최신순) */
+    public BoardDTO.PageResponse getAllUnivScrimBoardsWithPaging(int page, int size, String univName) {
+        List<ScrimBoardOnly> allBoards = scrimBoardRepository.findAllByUnivName(univName)
                 .stream()
                 .filter(Objects::nonNull)
                 .filter(board -> {

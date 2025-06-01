@@ -77,7 +77,16 @@ public class BoardController{
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
-    // TODO : 우리 대학교 한정 내전 조회
+    /** [READ] 유저 대학교 한정 내전 조회 */
+    @GetMapping("/scrim/my/{univName}")
+    public ResponseEntity<APIDataResponse<BoardDTO.PageResponse>> getUnivScrimBoards(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @PathVariable String univName
+    ) throws Exception {
+        var response = boardFacade.readAllUnivWithPaging(page, size, univName);
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
+    }
 
     /** [Read] 게시글 UUID 조회 */
     @GetMapping("/duo/{boardUUID}")
@@ -100,7 +109,7 @@ public class BoardController{
     }
 
     @PutMapping("/scrim")
-    public ResponseEntity<APIDataResponse<BoardDTO.Response>> updateDuoBoard(@RequestBody BoardDTO.RequestUpdateScrim dto) throws Exception {
+    public ResponseEntity<APIDataResponse<BoardDTO.Response>> updateScrimBoard(@RequestBody BoardDTO.RequestUpdateScrim dto) throws Exception {
         var response = boardFacade.update(dto);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
