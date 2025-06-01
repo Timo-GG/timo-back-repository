@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,13 +22,25 @@ public class BoardController{
 
     @GetMapping("/duo/exists")
     public ResponseEntity<APIDataResponse<Boolean>> checkMyDuoBoardExists(@CurrentMemberId Long memberId) {
-        boolean exists = boardFacade.existsByMemberId(memberId);
+        boolean exists = boardFacade.existsDuoByMemberId(memberId);
+        return ResponseEntity.ok(APIDataResponse.of(exists));
+    }
+
+    @GetMapping("/scrim/exists")
+    public ResponseEntity<APIDataResponse<Boolean>> checkMyScrimBoardExists(@CurrentMemberId Long memberId) {
+        boolean exists = boardFacade.existsScrimByMemberId(memberId);
         return ResponseEntity.ok(APIDataResponse.of(exists));
     }
 
     @PutMapping("/duo/refresh")
     public ResponseEntity<APIDataResponse<BoardDTO.Response>> refreshMyDuoBoard(@CurrentMemberId Long memberId) throws Exception {
         var response = boardFacade.refreshMyDuoBoard(memberId);
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
+    }
+
+    @PutMapping("/scrim/refresh")
+    public ResponseEntity<APIDataResponse<BoardDTO.Response>> refreshMyScrimBoard(@CurrentMemberId Long memberId) throws Exception {
+        var response = boardFacade.refreshMyScrimBoard(memberId);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
@@ -56,13 +67,24 @@ public class BoardController{
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
-
+    /** [READ] 전체 대학교 내전 조회 */
     @GetMapping("/scrim")
     public ResponseEntity<APIDataResponse<BoardDTO.PageResponse>> getAllScrimBoards(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) throws Exception {
         var response = boardFacade.readAllWithPaging(MatchingCategory.SCRIM, page, size);
+        return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
+    }
+
+    /** [READ] 유저 대학교 한정 내전 조회 */
+    @GetMapping("/scrim/my/{univName}")
+    public ResponseEntity<APIDataResponse<BoardDTO.PageResponse>> getUnivScrimBoards(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @PathVariable String univName
+    ) throws Exception {
+        var response = boardFacade.readAllUnivWithPaging(page, size, univName);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }
 
@@ -87,7 +109,7 @@ public class BoardController{
     }
 
     @PutMapping("/scrim")
-    public ResponseEntity<APIDataResponse<BoardDTO.Response>> updateDuoBoard(@RequestBody BoardDTO.RequestUpdateScrim dto) throws Exception {
+    public ResponseEntity<APIDataResponse<BoardDTO.Response>> updateScrimBoard(@RequestBody BoardDTO.RequestUpdateScrim dto) throws Exception {
         var response = boardFacade.update(dto);
         return new ResponseEntity<>(APIDataResponse.of(response), HttpStatus.OK);
     }

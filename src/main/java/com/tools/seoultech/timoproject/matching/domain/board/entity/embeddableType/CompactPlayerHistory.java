@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CompactPlayerHistory {
+    private String avatarUrl;
     private RankInfoDto rankInfo;
     private List<String> most3Champ;
-    private List<MatchSummaryDTO> last10Match;
 }

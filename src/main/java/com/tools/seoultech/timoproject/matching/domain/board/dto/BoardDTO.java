@@ -72,7 +72,8 @@ public abstract class BoardDTO {
             ScrimMapCode mapCode,
             String memo,
             Integer headCount,
-            List<PartyMemberInfo> partyInfo
+            List<PartyMemberInfo> partyInfo,
+            LocalDateTime updatedAt
     ) implements Response {}
 
     @Getter
