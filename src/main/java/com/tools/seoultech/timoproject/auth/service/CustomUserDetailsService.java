@@ -1,7 +1,7 @@
 package com.tools.seoultech.timoproject.auth.service;
 
 import com.tools.seoultech.timoproject.auth.domain.CustomUserDetails;
-import com.tools.seoultech.timoproject.member.repository.MemberRepository;
+import com.tools.seoultech.timoproject.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

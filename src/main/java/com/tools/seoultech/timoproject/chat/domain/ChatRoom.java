@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,8 +20,8 @@ public class ChatRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String chatRoomName;
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoomMember> chatRoomMembers = new ArrayList<>();
 
     private Long lastMessageSenderId;
 
@@ -29,9 +31,20 @@ public class ChatRoom extends BaseEntity {
 
     private boolean isGroupChat = false;
 
-    public static ChatRoom createRoom(String chatRoomName) {
+    private boolean isTerminated;
+
+    private String matchId;
+
+    public static ChatRoom createRoom(String matchId) {
         ChatRoom room = new ChatRoom();
-        room.chatRoomName = chatRoomName;
+        room.matchId = matchId;
+        return room;
+    }
+
+    public static ChatRoom createChatRoom(Long memberId1, Long memberId2) {
+        ChatRoom room = new ChatRoom();
+        room.isGroupChat = false;
+        room.lastMessageTime = LocalDateTime.now();
         return room;
     }
 
@@ -40,5 +53,10 @@ public class ChatRoom extends BaseEntity {
         this.lastMessageTime = message.getRegDate();
         this.lastMessageContent = message.getContent();
     }
+
+    public void terminate() {
+        this.isTerminated = true;
+    }
+
 
 }

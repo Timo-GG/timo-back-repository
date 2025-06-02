@@ -1,16 +1,25 @@
 package com.tools.seoultech.timoproject.member.facade;
 
+import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
-import com.tools.seoultech.timoproject.member.dto.MemberInfoResponse;
+import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
+import com.tools.seoultech.timoproject.member.dto.MemberDto;
 
 public interface MemberFacade {
 
-    MemberInfoResponse getMemberInfo(Long memberId);
+    MemberDto getMemberInfo(Long memberId);
 
-    AccountDto.Response verifyPlayer(AccountDto.Request request);
+    MemberDto verifyPlayer(Long memberId, AccountDto.Request request);
 
-    boolean checkNickname(String nickname);
+    boolean checkUsername(String username);
 
-    String createRandomNickname();
+    MemberDto updateAccountInfo(Long memberId, UpdateMemberInfoRequest request);
 
+    MemberDto getMemberProfile(Long memberId);
+
+    MemberDto updateUsername(Long memberId, String username);
+
+    MemberDto updateUniv(Long memberId, UnivRequestDTO univ);
+
+    MemberDto resetRiotAccount(Long memberId);
 }

@@ -1,8 +1,7 @@
 package com.tools.seoultech.timoproject.auth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tools.seoultech.timoproject.member.domain.Member;
-import com.tools.seoultech.timoproject.member.domain.Role;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,24 +20,12 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public Long getMemberId() {
-        return member.getId();
+        return member.getMemberId();
     }
 
     @Override
     public String getUsername() {
         return member.getUsername();
-    }
-
-    public String getEmail() {
-        return member.getEmail();
-    }
-
-    public String getNickname() {
-        return member.getNickname();
-    }
-
-    public Role getRole() {
-        return member.getRole();
     }
 
     @Override

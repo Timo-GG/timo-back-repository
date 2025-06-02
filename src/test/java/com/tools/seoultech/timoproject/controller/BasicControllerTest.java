@@ -3,9 +3,7 @@ package com.tools.seoultech.timoproject.controller;
 
 import com.tools.seoultech.timoproject.global.config.TestSecurityConfig;
 import com.tools.seoultech.timoproject.global.error.ViewExceptionHandler;
-import com.tools.seoultech.timoproject.member.dto.AccountDto;
-import com.tools.seoultech.timoproject.riot.controller.BasicController;
-import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -30,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BasicControllerTest {
     @Autowired private MockMvc mvc;
 
-    @MockBean private BasicAPIService bas;
+    @MockBean private RiotAPIService bas;
 
 //    @Autowired
 //    public BasicControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {

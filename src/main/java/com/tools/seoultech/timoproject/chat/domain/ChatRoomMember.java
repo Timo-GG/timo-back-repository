@@ -1,6 +1,6 @@
 package com.tools.seoultech.timoproject.chat.domain;
 
-import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,6 +29,8 @@ public class ChatRoomMember {
 
     private Long lastReadMessageId;
 
+    private boolean isLeft;
+
     public void increaseUnreadCount() {
         this.unreadCount++;
     }
@@ -49,6 +51,10 @@ public class ChatRoomMember {
         chatRoomMember.lastReadMessageId = 0L;
 
         return chatRoomMember;
+    }
+
+    public void leave() {
+        this.isLeft = true;
     }
 
 }

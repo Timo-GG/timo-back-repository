@@ -1,56 +1,72 @@
 package com.tools.seoultech.timoproject.member.facade;
 
-import com.tools.seoultech.timoproject.member.domain.Member;
+import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
-import com.tools.seoultech.timoproject.member.dto.MemberInfoResponse;
+import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.service.MemberService;
-import com.tools.seoultech.timoproject.post.repository.CommentRepository;
-import com.tools.seoultech.timoproject.post.repository.PostRepository;
-import com.tools.seoultech.timoproject.rating.RatingRepository;
-import com.tools.seoultech.timoproject.rating.RatingService;
-import com.tools.seoultech.timoproject.riot.service.BasicAPIService;
+import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
+import com.tools.seoultech.timoproject.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class MemberFacadeImpl implements MemberFacade {
 
-    private final RatingService ratingService;
     private final MemberService memberService;
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
-    private final RatingRepository ratingRepository;
-    private final BasicAPIService riotService;
-
+    private final RiotAPIService riotService;
     @Override
-    public MemberInfoResponse getMemberInfo(Long memberId) {
+    public MemberDto getMemberInfo(Long memberId) {
         Member member = memberService.getById(memberId);
-        BigDecimal ratingAverage = ratingService.getRatingAverage(member.getId());
-        long postCount = postRepository.countByMemberId(member.getId());
-        long commentCount = commentRepository.countByMemberId(member.getId());
-        long ratingCount = ratingRepository.countByMemberId(member.getId());
-        return MemberInfoResponse.of(member, postCount, commentCount, ratingCount, ratingAverage);
+        return MemberDto.from(member);
     }
 
     @Override
-    public AccountDto.Response verifyPlayer(AccountDto.Request request) {
-        try{
-            AccountDto.Response response = riotService.findUserAccount(request);
-            return response;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public MemberDto verifyPlayer(Long memberId, AccountDto.Request request) {
+        AccountDto.Response response = riotService.findUserAccount(request);
+        String profileUrl = riotService.getProfileIconUrlByPuuid(response.getPuuid());
+        Member member = memberService.updateRiotAccount(
+            memberId, response.getPuuid(), response.getGameName(), response.getTagLine(), profileUrl);
+        return MemberDto.from(member);
     }
 
     @Override
-    public boolean checkNickname(String nickname) {return memberService.checkNickname(nickname);}
+    public boolean checkUsername(String nickname) {
+        return memberService.checkUsername(nickname);
+    }
+
+    @Override
+    public MemberDto updateAccountInfo(Long memberId, UpdateMemberInfoRequest request) {
+        memberService.updateAccountInfo(memberId, request);
+        return null;
+    }
 
 
     @Override
-    public String createRandomNickname() {return memberService.randomCreateNickname();}
+    public MemberDto getMemberProfile(Long memberId) {
+        Member member = memberService.getById(memberId);
+        return MemberDto.from(member);
+    }
+
+    @Override
+    public MemberDto updateUsername(Long memberId, String username) {
+        Member member = memberService.updateUsername(memberId, username);
+        return MemberDto.from(member);
+    }
+
+    @Override
+    public MemberDto updateUniv(Long memberId, UnivRequestDTO univ) {
+        Member member = memberService.updateUniv(memberId, univ);
+        return MemberDto.from(member);
+    }
+
+    @Override
+    public MemberDto resetRiotAccount(Long memberId) {
+        Member member = memberService.updateRiotAccount(memberId, null, null, null, null);
+        return MemberDto.from(member);
+    }
+
 }

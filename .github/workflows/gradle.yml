@@ -21,7 +21,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       
-      # application.properties 파일 생성
       - name: Make application.properties
         run: touch ./src/main/resources/application.properties
 
@@ -37,7 +36,7 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build -x test
 
-      - name: docker login
+      - name: Docker login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -49,7 +48,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and push
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -59,44 +58,48 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-
-      - name: Create docker-compose file
+      # Secrets에서 가져온 docker-compose.blue.yml 파일 생성
+      - name: Create docker-compose.blue.yml
         run: |
-          echo "${{ secrets.DOCKER_COMPOSE_SPRINGBOOT }}" > ./docker-compose.yml
+          echo "${{ secrets.DOCKER_COMPOSE_BLUE }}" > docker-compose.blue.yml
 
-      - name: Remove old compose folder
-        uses: appleboy/ssh-action@master
+      # Secrets에서 가져온 docker-compose.green.yml 파일 생성
+      - name: Create docker-compose.green.yml
+        run: |
+          echo "${{ secrets.DOCKER_COMPOSE_GREEN }}" > docker-compose.green.yml
+
+      # docker-compose.blue.yml & docker-compose.green.yml 업로드
+      - name: Upload docker-compose files to EC2
+        uses: appleboy/scp-action@master
+
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
-          script: |
-            echo "Removing old /home/ubuntu/compose folder..."
-            rm -rf /home/ubuntu/compose
-            mkdir -p /home/ubuntu/compose
-      
-      - name: Upload docker-compose file
+          source: "docker-compose.blue.yml,docker-compose.green.yml"
+          target: "/home/ubuntu/"
+          overwrite: true
+
+      # deploy.sh 업로드
+      - name: Upload deploy.sh to EC2
+
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
-          source: "./docker-compose.yml"
-          target: "/home/ubuntu/compose"
-          overwrite: true       # 기존 파일 덮어쓰기
+          source: "./deploy.sh"
+          target: "/home/ubuntu/"
+          overwrite: true
 
-      - name: Connect to EC2 and run docker
+      # deploy.sh 실행
+      - name: Execute deploy.sh script remotely
         uses: appleboy/ssh-action@master
-        env:
-          COMPOSE: "/home/ubuntu/compose/docker-compose.yml"
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
           port: 22
-          envs: COMPOSE
           script: |
-            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            sudo docker-compose -f $COMPOSE down --rmi all
-            sudo docker pull menten4859/timo-repo:latest
-            sudo docker-compose -f $COMPOSE up -d
+            chmod +x /home/ubuntu/deploy.sh
+            /home/ubuntu/deploy.sh

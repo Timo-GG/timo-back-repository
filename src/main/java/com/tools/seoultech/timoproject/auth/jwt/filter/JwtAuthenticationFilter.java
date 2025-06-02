@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,17 +35,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final HeaderTokenExtractor headerTokenExtractor;
     private final JwtResolver jwtResolver;
 
-    private static final List<AntPathRequestMatcher> whiteListPatternsForApi = List.of(
-            new AntPathRequestMatcher("/api/v1/auth/naver"),
-            new AntPathRequestMatcher("/api/v1/auth/refresh"),
-            new AntPathRequestMatcher("/api/v1/auth/test"),
-            new AntPathRequestMatcher("/api/v1/auth/test2"),
-            new AntPathRequestMatcher("/api/v1/chat/**"),
-            new AntPathRequestMatcher("/api/v1/members/player/verify"),
-            new AntPathRequestMatcher("/api/v1/members/nickname/**"),
+    private static final List<RequestMatcher> whiteListPatternsForApi = List.of(
+            new AntPathRequestMatcher("/api/v1/auth/**"),
+            new RegexRequestMatcher("^/api/v1/members/[0-9]+$", "GET"),
             new AntPathRequestMatcher("/naver/callback"),
-            new AntPathRequestMatcher("/api/v1/posts/public/**"),       // GET 요청 허용
-            new AntPathRequestMatcher("/api/v1/comments/public/**")      // GET 요청 허용
+            new AntPathRequestMatcher("/kakao/callback"),
+            new AntPathRequestMatcher("/discord/callback"),
+            new AntPathRequestMatcher("/api/v1/posts/public/**"),
+            new AntPathRequestMatcher("/api/v1/comments/public/**"),
+            new AntPathRequestMatcher("/api/v1/riot/**"),
+            new AntPathRequestMatcher("/api/v1/ranking/top"),
+            new AntPathRequestMatcher("/api/v1/ranking/position"),
+            new AntPathRequestMatcher("/api/v1/matching/*", "GET"),
+            new AntPathRequestMatcher("/api/v1/matching/scrim/my/*", "GET"),
+            new AntPathRequestMatcher("/api/v1/notifications/subscribe"),
+            new AntPathRequestMatcher("/bower_components/**"),
+            new AntPathRequestMatcher("/dist/**"),
+            new AntPathRequestMatcher("/plugins/**"),
+            new AntPathRequestMatcher("/css/**"),
+            new AntPathRequestMatcher("/js/**"),
+            new AntPathRequestMatcher("/img/**"),
+            new AntPathRequestMatcher("/actuator/**"),
+            new AntPathRequestMatcher("/v3/api-docs/**"),
+            new AntPathRequestMatcher("/swagger-ui/**"),
+            new AntPathRequestMatcher("/swagger-ui.html"),
+            new AntPathRequestMatcher("/api/v1/univ/**"),
+            new AntPathRequestMatcher("/swagger-ui.html")
     );
 
     @Override
@@ -61,7 +78,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 
-        List<AntPathRequestMatcher> skipList = new ArrayList<>();
+        List<RequestMatcher> skipList = new ArrayList<>();
         skipList.addAll(whiteListPatternsForApi);
 
         OrRequestMatcher orRequestMatcher = new OrRequestMatcher(new ArrayList<>(skipList));
