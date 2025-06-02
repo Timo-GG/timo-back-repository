@@ -30,7 +30,7 @@ public class ScrimBoard {
     private CertifiedMemberInfo memberInfo;
     private List<PartyMemberInfo> partyInfo;
 
-    private final LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     /** 검색용 내부 인덱스 필드 */
     @Indexed private final Long memberId;

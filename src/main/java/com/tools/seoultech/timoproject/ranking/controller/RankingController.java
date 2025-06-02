@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/v1/ranking")
@@ -115,5 +116,30 @@ public class RankingController {
             @RequestParam String tag) {
         int rank = rankingFacade.getRankingPosition(name, tag); // 1부터 시작
         return ResponseEntity.ok(APIDataResponse.of(rank));
+    }
+
+    @Operation(summary = "내 랭킹 즉시 업데이트", description = "현재 로그인한 사용자의 랭킹 정보를 Riot API에서 즉시 업데이트합니다.")
+    @PostMapping("/refresh")
+    public ResponseEntity<APIDataResponse<String>> refreshMyRanking(@CurrentMemberId Long memberId) {
+        try {
+            rankingFacade.updateRankingFromRiotAPI(memberId);
+            return ResponseEntity.ok(APIDataResponse.of("랭킹 정보가 업데이트되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body(APIDataResponse.of("랭킹 업데이트 실패: " + e.getMessage()));
+        }
+    }
+
+    @Operation(summary = "[관리자용] 전체 랭킹 즉시 업데이트", description = "모든 회원의 랭킹 정보를 즉시 업데이트합니다.")
+    @PostMapping("/refresh-all")
+    public ResponseEntity<APIDataResponse<String>> refreshAllRankings() {
+        try {
+            // 비동기로 실행 (시간이 오래 걸리므로)
+            CompletableFuture.runAsync(() -> rankingFacade.updateAllRankingsFromRiotAPI());
+            return ResponseEntity.ok(APIDataResponse.of("전체 랭킹 업데이트가 시작되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body(APIDataResponse.of("전체 랭킹 업데이트 실패: " + e.getMessage()));
+        }
     }
 }

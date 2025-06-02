@@ -28,14 +28,14 @@ public class RedisDataSeeder {
      */
     public void seedAll() {
         List<Record> accounts = List.of(
-                new Record("_PKwQ67bodvzelczCj5fuTf2Z9kuTcAfbv4HMkqrkPZGds5byukttzJFh_j_q2ixAnNE1_76R_lwAA", "Grizzly"),
-                new Record("Pk7D_JYdzK75BDx-Z4v38LxzoE9ZabqEu2I0nUlcQ-hwZO6NLVni1h_xYPZiiOYs8xVESXHMFDWhUw", "젠레스존제로우"),
-                new Record("qMVH5avv7uIks_HsABEXNcu19y5PTU6wUZw4lNceovcgu5OoR3MHgffp5dz6HKzJNiRZaznHQ_SMbg", "화이팅가보자"),
-                new Record("RnNIWfIB7GzlUz0Ce3AfgId6KnfLngVoGFO3XanbjVdAAN9I734yX3M1GjU2K9YYO-Wy3lHs0cG21A", "상욱Ryu"),
-                new Record("VgmEzR-sBudWE0n5WFVkbWjNQ-LaguyVFG1nqUAQq1sgp-zZ5_kVueYCKIQE88Rc9wpKATVyotnlkQ", "gaubeo202"),
-                new Record("ek6sEt_WkYH_b8dmGIQ0BJ8bqFQLqSNY5VS45KUpX9It2lqNgVgy47AT1hZ1MPrg0iWqQij4oEQK8g", "델리델리델리빵"),
-                new Record("kj6WEamVjBIUvNQ9bDYntsIGWDZmVwO6pzWnuQ-6ooKggrESnctOHJDkK9JC8LYn7FAJ0J0BeXGDMg", "RlwjD"),
-                new Record("2dktmBwMUaHn7bQR6JsHbv6pk51eTPve50ngq_y-_JlWpX_-xkS9UohgQsEGi4MouEgNlEp-pJMZnQ", "라쿤99")
+                new Record("mBSOaEQec9_RqMMaNziBfMnnRJDghKxjt7LkWtR7XCVvmxNOJvfeoh2lK0CQv7gyKUoLpYmTTXT61Q", "Grizzly"),
+                new Record("qSSkjTj-tHb_ESbnRcgglbAg4leEq8wkZJ704dIlP1xaz0oJGxBl5tLLKsIFJ3hOFZll7HyKHNnalg", "젠레스존제로우"),
+                new Record("iuVfUuyrpOSAXcvaER6avOXVBNg2X9TpatbWNU6clYzbbyCR5TiObI8sg03-ObxkgjxVu4-y-UnsAQ", "화이팅가보자"),
+                new Record("g6w3J6m5mdVlrqMXS4mrzPjkfEb_uEBNHO1BsX8Th99djLTC9qu69zNVbMcYz1-kKdN2JfG2sATzAA", "질병게임1"),
+                new Record("a0Cusd6WwwfNbZIOhR0ubLQ-C7FWGpDuaNybhiKJr4XgLpaK3Wl1twwq1xRModHCrLGVukAmHifexg", "gaubeo202"),
+                new Record("y2Pm33b7YvZiUN4FIbbrZBhu3sHN8xyGwLMetbvVuiRIJYIXMButZItv8R2pKeQMK4td6g_qPWTqXQ", "델리델리델리빵"),
+                new Record("6_F8VCBuYAQZhJ8HxOV6Buri54Dnv0z0XbLwkN8iOWTTYhN87HWuAmYXUDQizmfEpPkJTT1_O3cRxA", "RlwjD"),
+                new Record("x5TQOacbARKLbznMY1oqWzGVTZhBb-OLozfiMCa9McPKLJ7gO6tUhm6oZy4ffd_lwYqzRS--uxybFQ", "라쿤99")
         );
 
         String[] universities = {
