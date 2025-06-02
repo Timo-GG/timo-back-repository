@@ -84,7 +84,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // whitelist URL 적용
                         .requestMatchers(whitelistProperties.getUrls().toArray(new String[0])).permitAll()
-                        .requestMatchers(HttpMethod.GET, whitelistProperties.getPublicUrls().toArray(new String[0])).permitAll()
                         .requestMatchers(new RegexRequestMatcher("^/api/v1/members/\\d+$", "GET")).permitAll()
                         .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         // API 인증 필요 URL 설정

@@ -13,7 +13,10 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -40,8 +43,9 @@ public class RiotAPIService {
     private final RiotKrApiClient krApiClient;
     private final DataDragonClient dataDragonClient;
     private final ChampionCacheService championCacheService;
-    private final ExecutorService matchInfoExecutor;
-
+    @Autowired
+    @Qualifier("riotApiExecutor")
+    private TaskExecutor riotApiExecutor;
     @Value("${api_key}")
     private String api_key;
     private String ddragonVersion;
@@ -190,7 +194,7 @@ public class RiotAPIService {
                             log.error("매치 요약 정보 생성 중 오류 발생: {}", matchId, e);
                             return null;
                         }
-                    }, matchInfoExecutor))
+                    }, riotApiExecutor))
                     .toList();
 
             // 모든 CompletableFuture 완료 대기
@@ -236,7 +240,7 @@ public class RiotAPIService {
                             log.warn("매치 승패 확인 실패: {}", matchId, e);
                             return null;
                         }
-                    }, matchInfoExecutor))
+                    }, riotApiExecutor))
                     .toList();
 
             // 모든 작업 완료 대기 및 결과 수집

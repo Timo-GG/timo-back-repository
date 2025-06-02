@@ -13,6 +13,7 @@ import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
 import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisKeyValueTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class BoardService {
     private final MemberService memberService;
     private final RiotAPIService bas;
+    private final RedisKeyValueTemplate redisKeyValueTemplate;
 
     private final DuoBoardRepository duoBoardRepository;
     private final ScrimBoardRepository scrimBoardRepository;
@@ -59,8 +61,17 @@ public class BoardService {
     public DuoBoard updateDuoBoard(BoardDTO.RequestUpdateDuo dto) throws Exception {
         DuoBoard oldEntity = duoBoardRepository.findById(dto.boardUUID())
                 .orElseThrow(() -> new Exception("Board Not Found " + dto.boardUUID()));
-        DuoBoard newEntity = duoBoardRepository.save(boardMapper.toUpdatedEntity(oldEntity, dto));
-        return newEntity;
+
+        // 기존 엔티티 업데이트 (DELETE → SAVE 대신 UPDATE 사용)
+        DuoBoard updatedEntity = boardMapper.toUpdatedEntity(oldEntity, dto);
+        updatedEntity = updatedEntity.toBuilder()
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // RedisKeyValueTemplate.update() 사용으로 원자성 보장
+        redisKeyValueTemplate.update(updatedEntity);
+
+        return updatedEntity;
     }
 
     public ScrimBoard updateScrimBoard(BoardDTO.RequestUpdateScrim dto) throws Exception {

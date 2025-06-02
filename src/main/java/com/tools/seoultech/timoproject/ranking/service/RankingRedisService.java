@@ -159,4 +159,40 @@ public class RankingRedisService {
 
 		throw new BusinessException(ErrorCode.REDIS_RANKING_NOT_FOUND);
 	}
+
+	public void updateRankingFromRiotAPI(Long memberId, RiotRankingDto riotRankingDto) {
+		RedisRankingInfo existing = rankingInfoRedisRepository.findById(memberId.toString())
+				.orElseThrow(() -> new BusinessException(ErrorCode.REDIS_RANKING_NOT_FOUND));
+
+		var soloRank = riotRankingDto.soloRankInfo();
+		int newScore = RedisRankingInfo.calculateScore(soloRank.getTier(), soloRank.getRank(), soloRank.getLp());
+
+		// 새로운 정보로 업데이트
+		RedisRankingInfo updated = RedisRankingInfo.builder()
+				.id(existing.getId())
+				.memberId(existing.getMemberId())
+				.puuid(existing.getPuuid())
+				.gameName(existing.getGameName())
+				.tagLine(existing.getTagLine())
+				.profileIconUrl(riotRankingDto.profileIconUrl())
+				.university(existing.getUniversity())
+				.department(existing.getDepartment())
+				.tier(soloRank.getTier())
+				.rank(soloRank.getRank())
+				.lp(soloRank.getLp())
+				.mostChampions(riotRankingDto.most3ChampionNames())
+				.wins(riotRankingDto.recentWinLossSummary().wins())
+				.losses(riotRankingDto.recentWinLossSummary().losses())
+				.score(newScore)
+				.mbti(existing.getMbti())
+				.position(existing.getPosition())
+				.gender(existing.getGender())
+				.memo(existing.getMemo())
+				.build();
+
+		rankingInfoRedisRepository.save(updated);
+		saveRankInfo(memberId, updated);
+
+		log.info("Riot API 데이터로 랭킹 업데이트 완료: memberId={}, newScore={}", memberId, newScore);
+	}
 }

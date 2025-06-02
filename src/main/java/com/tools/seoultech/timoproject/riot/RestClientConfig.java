@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Configuration
 public class RestClientConfig {
@@ -17,16 +15,27 @@ public class RestClientConfig {
     @Value("${api_key}")
     private String apiKey;
 
-    @Bean
-    public ExecutorService matchInfoExecutor() {
-        return Executors.newFixedThreadPool(10); // 매치 10개 동시 처리
+    @Bean(name = "riotApiExecutor")
+    public ThreadPoolTaskExecutor riotApiExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(20);
+        executor.setThreadNamePrefix("RiotAPI-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(10);
+        executor.initialize();
+        return executor;
     }
-
     // RestClient 설정 (동기식 - 안정성 우선)
     @Bean
     public RestClient restClient() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(5000);  // 연결 타임아웃 5초
+        factory.setReadTimeout(5000);    // 읽기 타임아웃 5초
+
         return RestClient.builder()
-                .requestFactory(new SimpleClientHttpRequestFactory())
+                .requestFactory(factory)
                 .defaultHeader("X-Riot-Token", apiKey)
                 .defaultHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
                 .build();
