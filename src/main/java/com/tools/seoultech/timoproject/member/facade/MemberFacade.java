@@ -22,4 +22,6 @@ public interface MemberFacade {
     MemberDto updateUniv(Long memberId, UnivRequestDTO univ);
 
     MemberDto resetRiotAccount(Long memberId);
+
+    void updateUserAgreement(Long memberId);
 }

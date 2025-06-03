@@ -4,6 +4,7 @@
     import com.tools.seoultech.timoproject.global.constant.ErrorCode;
     import com.tools.seoultech.timoproject.global.exception.BusinessException;
     import com.tools.seoultech.timoproject.member.domain.entity.Member;
+    import com.tools.seoultech.timoproject.member.domain.entity.enumType.UserAgreement;
     import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
     import com.tools.seoultech.timoproject.member.service.MemberService;
     import com.tools.seoultech.timoproject.member.MemberRepository;
@@ -98,4 +99,13 @@
             return member;
         }
 
+        @Override
+        public void updateUserAgreement(Long memberId) {
+            Member member = getById(memberId);
+
+            if(member.getTerm() == UserAgreement.DISABLED || member.getTerm() == UserAgreement.ENABLED) {
+                throw new BusinessException(ErrorCode.ALREADY_AGREE_AGREEMENT);
+            }
+            member.updateUserAgreement();
+        }
     }

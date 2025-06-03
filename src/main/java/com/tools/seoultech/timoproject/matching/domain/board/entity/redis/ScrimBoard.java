@@ -59,7 +59,7 @@ public class ScrimBoard {
     @Indexed private final Long memberId;
     @Indexed private final MatchingCategory matchingCategory;
 
-    private final LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     public static ScrimBoard of(ScrimMapCode mapCode, String memo, Integer headCount, CertifiedMemberInfo memberInfo, List<CompactMemberInfo> partyInfo, Long memberId){
         LocalDateTime now = LocalDateTime.now();
