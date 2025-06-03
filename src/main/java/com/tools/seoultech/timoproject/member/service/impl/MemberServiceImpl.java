@@ -119,7 +119,6 @@
                 throw new BusinessException(ErrorCode.ALREADY_DISABLED_AGREEMENT);
             }
             member.updateUserAgreement(UserAgreement.REMOVABLE);
-            entityManager.flush();
         }
 
         @Override
