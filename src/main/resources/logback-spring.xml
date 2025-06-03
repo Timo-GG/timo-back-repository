@@ -1,53 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
 
-    <!-- (1) 변수 선언: 로그 저장 경로와 파일명 패턴 -->
+    <!-- 1) Spring Boot 디폴트 설정(콘솔, 패턴 등)을 가져오는 include -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <!-- 2) 변수 선언: 로그 저장 경로와 파일명 패턴 -->
     <property name="LOG_HOME" value="logs" />
     <!-- 롤링 파일명 패턴: logs/app-2025-06-03.log 형태로 생성 -->
     <property name="FILE_NAME_PATTERN" value="${LOG_HOME}/app-%d{yyyy-MM-dd}.log" />
     <!-- 보관 기간(일 단위) -->
     <property name="MAX_HISTORY" value="30" />
 
-    <!-- (2) 콘솔 출력용 Appender (기존 콘솔 로그 유지하고 싶다면) -->
-    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
-
-    <!-- (3) RollingFileAppender: 하루 단위로 로그 회전 -->
+    <!-- 3) RollingFileAppender: 하루 단위로 로그 회전 (파일 전용) -->
     <appender name="DailyRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 실제 기록될 파일(현재 실행 중인 로그 파일) -->
+        <!-- 실제 기록될 파일 위치 -->
         <file>${LOG_HOME}/app.log</file>
 
         <!-- rolling 정책: TimeBasedRollingPolicy -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- date 패턴: 하루마다 새 파일을 만든다. -->
+            <!-- 날짜별 파일명(예: app-2025-06-03.log) -->
             <fileNamePattern>${FILE_NAME_PATTERN}</fileNamePattern>
-            <!-- 보관 기간: ${MAX_HISTORY}일치 로그 파일을 보관 -->
+            <!-- 보관 기간: ${MAX_HISTORY}일치 로그 파일 보관 -->
             <maxHistory>${MAX_HISTORY}</maxHistory>
-            <!-- 압축 옵션: 오래된 로그를 gzip으로 묶으려면 주석 해제 -->
-            <!-- <cleanHistoryOnStart>true</cleanHistoryOnStart> -->
-            <!-- <timeBasedFileNamingAndTriggeringPolicy
-                 class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                 <maxFileSize>10MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy> -->
+            <!-- (원하면 압축 설정) -->
+            <!-- <compress>true</compress> -->
         </rollingPolicy>
 
+        <!-- encoder 없이, springBootDefault? 반드시 encoder 필요 -->
+        <encoder>
+            <!-- 파일용 패턴 (컬러 태그 없이, 일반 텍스트) -->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
     </appender>
 
-    <!-- (4) 루트 로거에 Appender 연결 -->
+    <!-- 4) 루트 로거에 Appender 연결 -->
     <root level="INFO">
-        <appender-ref ref="Console" />
-        <appender-ref ref="DailyRollingFile" />
+        <!-- Spring Boot 기본 컬러 콘솔 Appender (from console-appender.xml) -->
+        <appender-ref ref="CONSOLE"/>
+        <!-- 위에서 선언한 파일 Appender -->
+        <appender-ref ref="DailyRollingFile"/>
     </root>
 
-    <!-- (5) 특정 패키지 로그 레벨 별도 설정 (원하면) -->
-    <!--
-    <logger name="com.tools.seoultech.timoproject" level="DEBUG" additivity="false">
-        <appender-ref ref="DailyRollingFile" />
-        <appender-ref ref="Console" />
-    </logger>
-    -->
 </configuration>
