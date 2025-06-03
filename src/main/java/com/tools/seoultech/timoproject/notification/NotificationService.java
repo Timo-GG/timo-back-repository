@@ -58,11 +58,11 @@ public class NotificationService {
 		return notificationRepository.findByMemberAndIsReadFalse(member);
 	}
 
+
+
 	public void markAsRead(Long notificationId) {
-		notificationRepository.findById(notificationId).ifPresent(notification -> {
-			notification.markAsRead();
-			notificationRepository.save(notification);
-		});
+		// 읽음 처리 시 DB에서 삭제
+		notificationRepository.deleteById(notificationId);
 	}
 
 	private SseEmitter setupEmitter(Long memberId) {

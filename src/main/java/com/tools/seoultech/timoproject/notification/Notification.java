@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.notification;
 
+import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 
 import jakarta.persistence.Entity;
@@ -19,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Notification {
+public class Notification extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
 	private Long id;
