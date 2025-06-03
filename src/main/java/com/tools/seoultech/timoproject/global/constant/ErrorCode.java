@@ -70,6 +70,8 @@ public enum ErrorCode {
     UNIV_ALREADY_VERIFIED(903, HttpStatus.CREATED, "이미 인증이 완료된 사용자입니다."),
     RANKING_NOT_FOUND(904, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
     ALREADY_AGREE_AGREEMENT(900, HttpStatus.BAD_REQUEST, "계정 동의가 이미 완료되었거나 만료된 상태입니다."),
+    ALREADY_DISABLED_AGREEMENT(901, HttpStatus.BAD_REQUEST, "계정이 휴먼 계정 상태이거나 삭졔 예정이므로 동의를 진행할 수 없습니다."),
+    NOT_REMOVABLE_AGREEMENT(902, HttpStatus.BAD_REQUEST, "계정 동의가 삭제가능한 상태가 아닙니다."),
 
     REDIS_RANKING_NOT_FOUND(1000, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
     REDIS_ERROR(1001, HttpStatus.INTERNAL_SERVER_ERROR, "Redis 서버 에러입니다.");
