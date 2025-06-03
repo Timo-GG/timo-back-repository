@@ -4,10 +4,12 @@ import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.ReviewStatus;
+import com.tools.seoultech.timoproject.matching.service.converter.ReviewConverter;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.review.Review;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -39,16 +41,24 @@ public abstract class MyPage extends BaseEntity {
 
     /** Review 관련 */
     @Enumerated(EnumType.STRING)
-    private ReviewStatus reviewStatus = ReviewStatus.UNREVIEWED;
+    private ReviewStatus reviewStatus;
 
-    @Embedded private Review acceptorReview = new Review();
-    @Embedded private Review requestorReview = new Review();
+    @Convert(converter = ReviewConverter.class)
+    @Column(columnDefinition = "JSON")
+    private Review acceptorReview;
+
+    @Convert(converter = ReviewConverter.class)
+    @Column(columnDefinition = "JSON")
+    private Review requestorReview;
 
     protected MyPage(MatchingCategory matchingCategory, MatchingStatus status, Member acceptor, Member requestor){
         this.matchingCategory = matchingCategory;
         this.matchingStatus = status;
         this.acceptor = acceptor;
         this.requestor = requestor;
+        this.reviewStatus = ReviewStatus.UNREVIEWED;
+        this.acceptorReview = new Review();
+        this.requestorReview = new Review();
     }
 
     public  MyPage updateReview(Review review, Boolean isAcceptor){

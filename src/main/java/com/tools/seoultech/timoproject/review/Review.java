@@ -13,27 +13,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-@Embeddable
 @Getter
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Review {
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private OpponentAttitude attitude_score;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private OpponentConversation conversation_score;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private OpponentTalent talent_score;
 
-    @Column(nullable = false)
     private Integer evaluation_score;
 
-    @Column(nullable = false)
     private String memo;
 }
