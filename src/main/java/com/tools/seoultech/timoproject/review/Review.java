@@ -12,29 +12,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Builder
+
+@Embeddable
 @Getter
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id", nullable = false)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewer_id")
-    private Member reviewer;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewee_id")
-    private Member reviewee;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mypage_id")
-    private MyPage myPage;
-
+public class Review {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OpponentAttitude attitude_score;
