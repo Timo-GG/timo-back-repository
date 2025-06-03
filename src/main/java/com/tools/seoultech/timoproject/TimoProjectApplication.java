@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject;
 
+import jakarta.annotation.PostConstruct;
 import org.springdoc.core.configuration.SpringDocDataRestConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,10 +9,17 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.util.TimeZone;
+
 @EnableScheduling
 @SpringBootApplication(exclude = SpringDocDataRestConfiguration.class)
 public class TimoProjectApplication {
     public static void main(String[] args) {
         SpringApplication.run(TimoProjectApplication.class, args);
+    }
+
+    @PostConstruct
+    public void init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
     }
 }
