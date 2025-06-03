@@ -16,14 +16,16 @@ public class UnivApiFacadeImpl implements UnivApiFacade {
     }
 
     @Override
-    public void certify(UnivRequestDTO requestDto) throws IOException {
+    public Boolean certify(UnivRequestDTO requestDto) throws IOException {
         univService.checkUniv(requestDto.univName());
-        univService.certifyUniv(requestDto);
+        Boolean result = univService.certifyUniv(requestDto);
+        return result;
     }
 
     @Override
-    public void verify(UnivRequestDTO requestDto, Integer code) throws IOException {
-        univService.verifyRequest(requestDto, code);
+    public Boolean verify(UnivRequestDTO requestDto, Integer code) throws IOException {
+        Boolean result = univService.verifyRequest(requestDto, code);
+        return result;
     }
     @Override
     public Object getVerifiedUserList() throws Exception {

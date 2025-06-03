@@ -26,14 +26,16 @@ public class UnivApiController {
     }
     @PostMapping("/request")
     public ResponseEntity<APIErrorResponse> certify(@Valid @RequestBody UnivRequestDTO univRequestDto) throws Exception {
-        univApiFacade.certify(univRequestDto);
+        Boolean result = univApiFacade.certify(univRequestDto);
+        APIErrorResponse response = result ? APIErrorResponse.of(result, ErrorCode.OK) : APIErrorResponse.of(result, ErrorCode.FAILED_UNIV_CERTIFY);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(APIErrorResponse.of(true, ErrorCode.OK));
+                .body(response);
     }
     @PostMapping("/verify")
     public ResponseEntity<APIErrorResponse> verify(@RequestBody UnivRequestDTO univRequestDto, Integer code) throws Exception{
-        univApiFacade.verify(univRequestDto, code);
+        Boolean result = univApiFacade.verify(univRequestDto, code);
+        APIErrorResponse response = result ? APIErrorResponse.of(result, ErrorCode.OK) : APIErrorResponse.of(result, ErrorCode.FAILED_UNIV_CERTIFY);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIErrorResponse.of(true, ErrorCode.OK));

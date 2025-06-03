@@ -25,20 +25,22 @@ public class UnivService {
           System.err.println(response.toString());
      }
 
-     public void certifyUniv(UnivRequestDTO requestDto) throws IOException {
+     public Boolean certifyUniv(UnivRequestDTO requestDto) throws IOException {
           Map<String, Object> response = UnivCert.certify(api_key, requestDto.univEmail(), requestDto.univName(), true);
           System.out.println("✅ UnivCert 응답 전체: " + response);
           if (response.get("success").toString().equals("false")) {
                String message = response.get("message").toString();
-               if ("400".equals(response.get("code").toString())) {
-                    throw new BusinessException(ErrorCode.UNIV_ALREADY_VERIFIED);
-               }
-               throw new IOException(message);
+               return false;
           }
+          return true;
      }
-     public void verifyRequest(UnivRequestDTO requestDto, int code) throws IOException {
+     public Boolean verifyRequest(UnivRequestDTO requestDto, int code) throws IOException {
           Map<String, Object> response = UnivCert.certifyCode(api_key, requestDto.univEmail(), requestDto.univName(), code);
           System.err.println("[verifyRequest] response: " + response);
+          if (response.get("success").toString().equals("false")) {
+               return false;
+          }
+          return true;
      }
      public Object checkStatus(UnivRequestDTO requestDto) throws IOException {
           Map<String, Object> response = UnivCert.status(api_key, requestDto.univEmail());
