@@ -52,7 +52,8 @@ public interface BoardMapper {
                 .boardUUID(entity.getBoardUUID())
                 .mapCode(dto.mapCode()).memo(dto.memo()).headCount(dto.headCount())
                 .memberInfo(entity.getMemberInfo()).partyInfo(dto.partyInfo())
-                .memberId(entity.getMemberId()).matchingCategory(MatchingCategory.SCRIM).tier(entity.getTier()).build();
+                .memberId(entity.getMemberId()).matchingCategory(MatchingCategory.SCRIM).tier(entity.getTier()).univName(entity.getUnivName())
+                .build();
     }
 
     /** Projection → DTO */
@@ -69,7 +70,6 @@ public interface BoardMapper {
     @Mapping(target = "updatedAt", source = "updatedAt")
     BoardDTO.ResponseDuo toDuoDto(DuoBoard entity);
     BoardDTO.ResponseScrim toScrimDto(ScrimBoard entity);
-
 
     /** 유틸리티 */
     default CertifiedMemberInfo getCertifiedMemberInfo(Long memberId, @Context MemberService memberService, @Context RiotAPIService bas){

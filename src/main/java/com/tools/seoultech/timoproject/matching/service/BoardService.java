@@ -65,7 +65,6 @@ public class BoardService {
         // 기존 엔티티 업데이트 (DELETE → SAVE 대신 UPDATE 사용)
         DuoBoard updatedEntity = boardMapper.toUpdatedEntity(oldEntity, dto);
         updatedEntity = updatedEntity.toBuilder()
-                .updatedAt(LocalDateTime.now())
                 .build();
 
         // RedisKeyValueTemplate.update() 사용으로 원자성 보장
@@ -77,10 +76,16 @@ public class BoardService {
     public ScrimBoard updateScrimBoard(BoardDTO.RequestUpdateScrim dto) throws Exception {
         ScrimBoard oldEntity = scrimBoardRepository.findById(dto.boardUUID())
                 .orElseThrow(() -> new Exception("Board Not Found " + dto.boardUUID()));
-        ScrimBoard newEntity = scrimBoardRepository.save(boardMapper.toUpdatedEntity(oldEntity, dto));
-        return newEntity;
-    }
 
+        ScrimBoard updatedEntity = boardMapper.toUpdatedEntity(oldEntity, dto);
+        updatedEntity = updatedEntity.toBuilder()
+                .build();
+
+        // RedisKeyValueTemplate.update() 사용으로 원자성 보장
+        redisKeyValueTemplate.update(updatedEntity);
+
+        return updatedEntity;
+    }
 
     /** Redis에서 단일 Duo 게시판 게시글 조회 */
     public DuoBoardOnly getDuoBoard(UUID boardUUID) throws Exception {
@@ -265,7 +270,7 @@ public class BoardService {
         BoardOnly proj = duoBoardRepository.findByBoardUUID(boardUUID)
                 .map(p -> (BoardOnly) p)
                 .or(() -> scrimBoardRepository.findByBoardUUID(boardUUID)
-                    .map(p -> (BoardOnly) p))
+                        .map(p -> (BoardOnly) p))
                 .orElseThrow(() -> new Exception("Board not found: " + boardUUID));
         return proj;
     }
