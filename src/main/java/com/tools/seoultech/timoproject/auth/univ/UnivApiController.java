@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.auth.univ;
 
 import com.tools.seoultech.timoproject.global.APIErrorResponse;
+import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import jakarta.validation.Valid;
@@ -58,6 +59,12 @@ public class UnivApiController {
                 );
     }
 
+    @DeleteMapping("/delete/me")
+    public ResponseEntity<Void> deleteUniv(@CurrentMemberId Long memberId) throws Exception{
+        univApiFacade.deleteCertifiedUniv(memberId);
+        return ResponseEntity.noContent().build();
+    }
+
     @ExceptionHandler(value = {IOException.class})
     public ResponseEntity<APIErrorResponse> handleException(IOException e) {
         return ResponseEntity
@@ -70,4 +77,5 @@ public class UnivApiController {
                                 )
                 );
     }
+
 }

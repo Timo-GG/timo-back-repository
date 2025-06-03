@@ -1,5 +1,9 @@
 package com.tools.seoultech.timoproject.auth.univ;
 
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.CertifiedUnivInfo;
+import com.tools.seoultech.timoproject.member.service.MemberService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +13,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class UnivApiFacadeImpl implements UnivApiFacade {
     private final UnivService univService;
+
 
     @Override
     public void checkUniv(UnivRequestDTO requestDto) throws Exception {
@@ -35,5 +40,10 @@ public class UnivApiFacadeImpl implements UnivApiFacade {
     @Override
     public Object checkStatus(UnivRequestDTO requestDto) throws Exception {
         return univService.checkStatus(requestDto);
+    }
+
+    @Override
+    public void deleteCertifiedUniv(Long memberId) throws Exception{
+        univService.deleteCertifiedMember(memberId);
     }
 }
