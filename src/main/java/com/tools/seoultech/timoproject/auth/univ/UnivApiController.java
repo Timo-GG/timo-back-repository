@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.auth.univ;
 
 import com.tools.seoultech.timoproject.global.APIErrorResponse;
+import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import jakarta.validation.Valid;
@@ -26,14 +27,16 @@ public class UnivApiController {
     }
     @PostMapping("/request")
     public ResponseEntity<APIErrorResponse> certify(@Valid @RequestBody UnivRequestDTO univRequestDto) throws Exception {
-        univApiFacade.certify(univRequestDto);
+        Boolean result = univApiFacade.certify(univRequestDto);
+        APIErrorResponse response = result ? APIErrorResponse.of(result, ErrorCode.OK) : APIErrorResponse.of(result, ErrorCode.FAILED_UNIV_CERTIFY);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(APIErrorResponse.of(true, ErrorCode.OK));
+                .body(response);
     }
     @PostMapping("/verify")
     public ResponseEntity<APIErrorResponse> verify(@RequestBody UnivRequestDTO univRequestDto, Integer code) throws Exception{
-        univApiFacade.verify(univRequestDto, code);
+        Boolean result = univApiFacade.verify(univRequestDto, code);
+        APIErrorResponse response = result ? APIErrorResponse.of(result, ErrorCode.OK) : APIErrorResponse.of(result, ErrorCode.FAILED_UNIV_CERTIFY);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(APIErrorResponse.of(true, ErrorCode.OK));
@@ -56,6 +59,12 @@ public class UnivApiController {
                 );
     }
 
+    @DeleteMapping("/delete/me")
+    public ResponseEntity<Void> deleteUniv(@CurrentMemberId Long memberId) throws Exception{
+        univApiFacade.deleteCertifiedUniv(memberId);
+        return ResponseEntity.noContent().build();
+    }
+
     @ExceptionHandler(value = {IOException.class})
     public ResponseEntity<APIErrorResponse> handleException(IOException e) {
         return ResponseEntity
@@ -68,4 +77,5 @@ public class UnivApiController {
                                 )
                 );
     }
+
 }
