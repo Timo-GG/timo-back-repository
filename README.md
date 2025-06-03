@@ -1,10 +1,10 @@
 # Timo.gg <img src="https://github.com/user-attachments/assets/90416e02-b116-426a-8d7e-aedb8e6d29e0" align="left" width="100"></a>
-### LOL 듀오 매칭 서비스 
+### LOL 대학생 전용 팀원 매칭 플랫폼
 <br>
 
 ## 주요 기능
-- 듀오 매칭 
-- 게시판 기능 
+- 듀오 / 내전 게시판
+- 랭킹 기능 
 - 대화 기능
 - 소셜로그인
 - 평점 기능
