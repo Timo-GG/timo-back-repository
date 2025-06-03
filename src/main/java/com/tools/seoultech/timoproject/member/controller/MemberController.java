@@ -87,5 +87,21 @@ public class MemberController {
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }
 
+    @PutMapping("/userAgreement")
+    public ResponseEntity<Void> updateUserAgreement(@CurrentMemberId Long memberId){
+        memberFacade.updateUserAgreement(memberId);
+        return ResponseEntity.ok().build();
+    }
 
+    @DeleteMapping("/userAgreement/soft")
+    public ResponseEntity<Void> softDeleteUserAgreement(@CurrentMemberId Long memberId){
+        memberFacade.softDeleteUserAgreement(memberId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/userAgreement/hard")
+    public ResponseEntity<Void> hardDeleteUserAgreement(@CurrentMemberId Long memberId){
+        memberFacade.hardDeleteUserAgreement(memberId);
+        return ResponseEntity.ok().build();
+    }
 }

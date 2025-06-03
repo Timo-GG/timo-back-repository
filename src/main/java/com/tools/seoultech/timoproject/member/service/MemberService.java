@@ -23,5 +23,7 @@ public interface MemberService {
 
     Member updateUniv(Long memberId, UnivRequestDTO univ);
 
-
+    void updateUserAgreement(Long memberId);
+    void softDeleteUserAgreement(Long memberId);
+    void hardDeleteUserAgreement(Long memberId);
 }

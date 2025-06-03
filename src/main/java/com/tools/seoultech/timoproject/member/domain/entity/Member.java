@@ -4,6 +4,8 @@ import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
 import com.tools.seoultech.timoproject.member.domain.entity.enumType.Role;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.CertifiedUnivInfo;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
+import com.tools.seoultech.timoproject.member.domain.entity.enumType.TermsOfService;
+import com.tools.seoultech.timoproject.member.domain.entity.enumType.UserAgreement;
 import com.tools.seoultech.timoproject.ranking.RankingInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -45,6 +47,9 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private RankingInfo rankingInfo;
 
+    @Enumerated(value = EnumType.STRING)
+    private UserAgreement term = UserAgreement.NOTHING;
+
     public void updateUsername(String username) {
         this.username = username;
     }
@@ -55,5 +60,8 @@ public class Member {
 
     public void updateUnivAccount(String univName, String univCertifiedEmail) {
         this.certifiedUnivInfo = new CertifiedUnivInfo(univCertifiedEmail, univName);
+    }
+    public void updateUserAgreement(UserAgreement term) {
+        this.term = term;
     }
 }
