@@ -8,6 +8,8 @@ import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -20,6 +22,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice(annotations = RestController.class)
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
 public class APIExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler
@@ -27,10 +30,10 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Unhandled exception occurred", e);
         return getInternalResponseEntity(e, ErrorCode.API_ACCESS_ERROR, request);
     }
-    @ExceptionHandler
+    @ExceptionHandler(GeneralException.class)
     public ResponseEntity<Object> handleGeneralException(GeneralException e, WebRequest request) {
         log.error("Unhandled exception occurred", e);
-        return getInternalResponseEntity(e, ErrorCode.INTERNAL_ERROR, request);
+        return getInternalResponseEntity(e, e.getErrorCode(), request);
     }
     @ExceptionHandler
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e, WebRequest request) {
