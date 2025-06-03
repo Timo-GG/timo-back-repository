@@ -108,7 +108,26 @@
             if(member.getTerm() == UserAgreement.DISABLED || member.getTerm() == UserAgreement.ENABLED) {
                 throw new BusinessException(ErrorCode.ALREADY_AGREE_AGREEMENT);
             }
-            member.updateUserAgreement();
+            member.updateUserAgreement(UserAgreement.ENABLED);
             entityManager.flush();
+        }
+
+        @Override
+        public void softDeleteUserAgreement(Long memberId) {
+            Member member = getById(memberId);
+            if(member.getTerm() == UserAgreement.DISABLED) {
+                throw new BusinessException(ErrorCode.ALREADY_DISABLED_AGREEMENT);
+            }
+            member.updateUserAgreement(UserAgreement.REMOVABLE);
+            entityManager.flush();
+        }
+
+        @Override
+        public void hardDeleteUserAgreement(Long memberId) {
+            Member member = getById(memberId);
+            if(member.getTerm() != UserAgreement.REMOVABLE) {
+                throw new BusinessException(ErrorCode.NOT_REMOVABLE_AGREEMENT);
+            }
+            memberRepository.deleteById(memberId);
         }
     }

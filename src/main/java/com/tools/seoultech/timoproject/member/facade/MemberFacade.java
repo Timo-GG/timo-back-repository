@@ -24,4 +24,6 @@ public interface MemberFacade {
     MemberDto resetRiotAccount(Long memberId);
 
     void updateUserAgreement(Long memberId);
+    void softDeleteUserAgreement(Long memberId);
+    void hardDeleteUserAgreement(Long memberId);
 }
