@@ -66,7 +66,7 @@ public enum ErrorCode {
 
     ALREADY_USED_RIOT_ACCOUNT(900, HttpStatus.BAD_REQUEST, "이미 사용중인 소환사 계정입니다."),
     ALREADY_USED_USERNAME(901, HttpStatus.BAD_REQUEST, "이미 사용중인 닉네임입니다."),
-    ALREADY_USED_UNIV_ACCOUNT(902, HttpStatus.BAD_REQUEST, "이미 사용중인 학교 계정입니다."),
+    ALREADY_USED_UNIV_ACCOUNT(902, HttpStatus.BAD_REQUEST, "이미 이메일 인증이 완료된 계정입니다."),
     FAILED_UNIV_CERTIFY(903, HttpStatus.BAD_REQUEST, "Univ Certify에 실패했습니다."),
     FAILED_UNIV_VERIFY(904, HttpStatus.BAD_REQUEST, "Univ Verify에 실패했습니다.."),
     UNIV_ALREADY_VERIFIED(905, HttpStatus.CREATED, "이미 인증이 완료된 사용자입니다."),
@@ -76,7 +76,7 @@ public enum ErrorCode {
     NOT_REMOVABLE_AGREEMENT(909, HttpStatus.BAD_REQUEST, "계정 동의가 삭제가능한 상태가 아닙니다."),
 
     REDIS_RANKING_NOT_FOUND(1000, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
-    REDIS_ERROR(1001, HttpStatus.INTERNAL_SERVER_ERROR, "Redis 서버 에러입니다.");
+    MISMATCHED_EMAIL_DOMAIN(1001, HttpStatus.BAD_REQUEST, "일치하지 않는 메일 도메인입니다.");
 
 
     private final int code;
