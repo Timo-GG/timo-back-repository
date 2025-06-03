@@ -12,47 +12,47 @@ INSERT INTO member (
     member_id, username, email,
     univ_certified_email, univ_name, department,
     puuid, game_name, tag_line,
-    o_auth_provider, role)
+    o_auth_provider, role, term)
 VALUES
     (1, 'yorushika_fan', 'yorushika@seoultech.ac.kr',
      'yorushika@seoultech.ac.kr', '서울과학기술대학교', '컴퓨터공학과',
      '8EGZHOO06vP0fft1Yp4ECBml3x9_fkI7V6veALWs5GTeAdyNTbNSbtaqo-HsCSTvWjhkWfaVBhcBcw', '짱아깨비', 'k r',
-     'KAKAO', 'MEMBER'),
+     'KAKAO', 'MEMBER', 'NOTHING'),
 
     (2, 'tos_expert', 'tos@yonsei.ac.kr',
      'tos@yonsei.ac.kr', '연세대학교', '전기전자공학부',
      'nVCMArF5NcP3QNpJHul7WdSz94t5XsC5B834p0U5sCmm-hrPVcwapto6Fe_tClDGcoI6FrhA9Cz6sg', '트리오브세이비어아시는구나', 'TOS',
-     'DISCORD', 'MEMBER'),
+     'DISCORD', 'MEMBER', 'NOTHING'),
 
     (3, 'carrot_meat', 'carrot@snu.ac.kr',
      'carrot@snu.ac.kr', '서울대학교', '컴퓨터공학부',
      'H2qph9yZZEzSU7yP83gltR7naLJla-wS2ZCCElDWmqVKfNHx804xxh2uyMtvXB6Q5uL9KRP1-ZQLPg', '고기당근', 'KR1',
-     'NAVER', 'MEMBER'),
+     'NAVER', 'MEMBER', 'NOTHING'),
 
     (4, 'jjang_gaebi', 'jjang@korea.ac.kr',
      'jjang@korea.ac.kr', '고려대학교', '기계공학과',
      '_GcmJPP4mRKxDSka41Glg6cOJ6YEMP2TdJrb2Eq8QqvM4maTmz8fUyaVFOAchm2vOOXppAsrWxJ33A', 'YORUSHlKA', 'KR1',
-     'KAKAO', 'MEMBER'),
+     'KAKAO', 'MEMBER', 'NOTHING'),
 
     (5, 'wooggie_user', 'wooggie@kaist.ac.kr',
      'wooggie@kaist.ac.kr', '한국과학기술원', '전산학부',
      '2E4RxGivt7BFF_CRAdBpZTarV04psZLpdr5CxVK7Mztv3wyX0CZhTivBwElokYSUDXNzB_5O7dza7A', 'Wooggie', 'KR1',
-     'DISCORD', 'MEMBER'),
+     'DISCORD', 'MEMBER', 'NOTHING'),
 
     (6, 'mingyu_player', 'mingyu@hanyang.ac.kr',
      'mingyu@hanyang.ac.kr', '한양대학교', '산업공학과',
      'jSb1d_yjML3gF48MHepEqKDX3zhx5gM67h9zzCwGhrjJ1-_R1636mAmcoMw0gUld_V7nYvjLzSarfA', '민규', 'TAG',
-     'NAVER', 'MEMBER'),
+     'NAVER', 'MEMBER', 'NOTHING'),
 
     (7, 'yellow_life', 'yellow@inha.ac.kr',
      'yellow@inha.ac.kr', '인하대학교', '정보통신공학과',
      'sF_0J4F9qT3dSEtQ3xOqefopRVXJy4vk61J4yGFB7AZhUQMGnC9ob_QFiE38FxOPusWnvZIaW8Yb9g', '나노란색살래', 'KR1',
-     'KAKAO', 'MEMBER'),
+     'KAKAO', 'MEMBER', 'NOTHING'),
 
     (8, 'smiling_star', 'star@ajou.ac.kr',
      'star@ajou.ac.kr', '아주대학교', '소프트웨어학과',
      '1UizYcdkcZPAyuoG45kn8x_VXK53-xWDW6sxbxqgghdbzNdIwJNflZFHPiEq3PcXemdAnfFrIIGM6g', '웃는 별', 'KR1',
-     'DISCORD', 'MEMBER');
+     'DISCORD', 'MEMBER', 'NOTHING');
 
 INSERT INTO ranking_info (rank_id, member_id, position, mbti, gender, memo)
 VALUES
