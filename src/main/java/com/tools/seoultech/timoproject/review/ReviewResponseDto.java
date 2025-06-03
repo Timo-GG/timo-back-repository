@@ -5,9 +5,6 @@ import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.Op
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.OpponentTalent;
 
 public record ReviewResponseDto(
-        Long id,
-        String reviewerName,
-        String revieweeName,
         OpponentAttitude attitudeScore,
         OpponentConversation conversationScore,
         OpponentTalent talentScore,
@@ -16,9 +13,6 @@ public record ReviewResponseDto(
 ) {
     public static ReviewResponseDto fromEntity(Review review) {
         return new ReviewResponseDto(
-                review.getId(),
-                review.getReviewer().getUsername(),
-                review.getReviewee().getUsername(),
                 review.getAttitude_score(),
                 review.getConversation_score(),
                 review.getTalent_score(),
