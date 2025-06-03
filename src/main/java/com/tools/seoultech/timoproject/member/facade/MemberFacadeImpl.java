@@ -73,4 +73,14 @@ public class MemberFacadeImpl implements MemberFacade {
     public void updateUserAgreement(Long memberId) {
         memberService.updateUserAgreement(memberId);;
     }
+
+    @Override
+    public void softDeleteUserAgreement(Long memberId) {
+        memberService.softDeleteUserAgreement(memberId);
+    }
+
+    @Override
+    public void hardDeleteUserAgreement(Long memberId) {
+        memberService.hardDeleteUserAgreement(memberId);
+    }
 }

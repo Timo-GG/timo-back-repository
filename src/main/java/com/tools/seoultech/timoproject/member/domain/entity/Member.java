@@ -61,7 +61,7 @@ public class Member {
     public void updateUnivAccount(String univName, String univCertifiedEmail) {
         this.certifiedUnivInfo = new CertifiedUnivInfo(univCertifiedEmail, univName);
     }
-    public void updateUserAgreement() {
-        this.term = UserAgreement.ENABLED;
+    public void updateUserAgreement(UserAgreement term) {
+        this.term = term;
     }
 }
