@@ -69,4 +69,8 @@ public class MemberFacadeImpl implements MemberFacade {
         return MemberDto.from(member);
     }
 
+    @Override
+    public void updateUserAgreement(Long memberId) {
+        memberService.updateUserAgreement(memberId);;
+    }
 }

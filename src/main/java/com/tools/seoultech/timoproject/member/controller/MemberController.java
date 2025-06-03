@@ -87,5 +87,9 @@ public class MemberController {
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }
 
-
+    @PutMapping("/userAgreement")
+    public ResponseEntity<Void> updateUserAgreement(@CurrentMemberId Long memberId){
+        memberFacade.updateUserAgreement(memberId);
+        return ResponseEntity.ok().build();
+    }
 }

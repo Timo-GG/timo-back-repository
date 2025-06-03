@@ -69,6 +69,7 @@ public enum ErrorCode {
     ALREADY_USED_UNIV_ACCOUNT(902, HttpStatus.BAD_REQUEST, "이미 사용중인 학교 계정입니다."),
     UNIV_ALREADY_VERIFIED(903, HttpStatus.CREATED, "이미 인증이 완료된 사용자입니다."),
     RANKING_NOT_FOUND(904, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
+    ALREADY_AGREE_AGREEMENT(900, HttpStatus.BAD_REQUEST, "계정 동의가 이미 완료되었거나 만료된 상태입니다."),
 
     REDIS_RANKING_NOT_FOUND(1000, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
     REDIS_ERROR(1001, HttpStatus.INTERNAL_SERVER_ERROR, "Redis 서버 에러입니다.");
