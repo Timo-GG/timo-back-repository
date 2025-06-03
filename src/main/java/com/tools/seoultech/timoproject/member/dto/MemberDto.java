@@ -4,6 +4,7 @@ import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.Certi
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 import com.tools.seoultech.timoproject.member.domain.entity.enumType.Role;
+import com.tools.seoultech.timoproject.member.domain.entity.enumType.UserAgreement;
 import com.tools.seoultech.timoproject.ranking.RankingInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.PlayPosition;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Gender;
@@ -15,7 +16,8 @@ public record MemberDto(
         RiotAccountDto riotAccount,
         CertifiedUnivInfoDto certifiedUnivInfo,
         Role role,
-        RankingInfoDto rankingInfo
+        RankingInfoDto rankingInfo,
+        UserAgreement term
 ) {
     public static MemberDto from(Member entity) {
         return new MemberDto(
@@ -25,7 +27,8 @@ public record MemberDto(
                 entity.getRiotAccount() != null ? RiotAccountDto.from(entity.getRiotAccount()) : null,
                 entity.getCertifiedUnivInfo() != null ? CertifiedUnivInfoDto.from(entity.getCertifiedUnivInfo()) : null,
                 entity.getRole(),
-                entity.getRankingInfo() != null ? RankingInfoDto.from(entity.getRankingInfo()) : null
+                entity.getRankingInfo() != null ? RankingInfoDto.from(entity.getRankingInfo()) : null,
+                entity.getTerm()
         );
     }
 
