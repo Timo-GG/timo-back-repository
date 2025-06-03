@@ -1,5 +1,9 @@
 package com.tools.seoultech.timoproject.auth.univ;
 
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.CertifiedUnivInfo;
+import com.tools.seoultech.timoproject.member.service.MemberService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,20 +14,23 @@ import java.io.IOException;
 public class UnivApiFacadeImpl implements UnivApiFacade {
     private final UnivService univService;
 
+
     @Override
     public void checkUniv(UnivRequestDTO requestDto) throws Exception {
         univService.checkUniv(requestDto.univName());
     }
 
     @Override
-    public void certify(UnivRequestDTO requestDto) throws IOException {
+    public Boolean certify(UnivRequestDTO requestDto) throws IOException {
         univService.checkUniv(requestDto.univName());
-        univService.certifyUniv(requestDto);
+        Boolean result = univService.certifyUniv(requestDto);
+        return result;
     }
 
     @Override
-    public void verify(UnivRequestDTO requestDto, Integer code) throws IOException {
-        univService.verifyRequest(requestDto, code);
+    public Boolean verify(UnivRequestDTO requestDto, Integer code) throws IOException {
+        Boolean result = univService.verifyRequest(requestDto, code);
+        return result;
     }
     @Override
     public Object getVerifiedUserList() throws Exception {
@@ -33,5 +40,10 @@ public class UnivApiFacadeImpl implements UnivApiFacade {
     @Override
     public Object checkStatus(UnivRequestDTO requestDto) throws Exception {
         return univService.checkStatus(requestDto);
+    }
+
+    @Override
+    public void deleteCertifiedUniv(Long memberId) throws Exception{
+        univService.deleteCertifiedMember(memberId);
     }
 }

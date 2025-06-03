@@ -67,11 +67,13 @@ public enum ErrorCode {
     ALREADY_USED_RIOT_ACCOUNT(900, HttpStatus.BAD_REQUEST, "이미 사용중인 소환사 계정입니다."),
     ALREADY_USED_USERNAME(901, HttpStatus.BAD_REQUEST, "이미 사용중인 닉네임입니다."),
     ALREADY_USED_UNIV_ACCOUNT(902, HttpStatus.BAD_REQUEST, "이미 사용중인 학교 계정입니다."),
-    UNIV_ALREADY_VERIFIED(903, HttpStatus.CREATED, "이미 인증이 완료된 사용자입니다."),
-    RANKING_NOT_FOUND(904, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
-    ALREADY_AGREE_AGREEMENT(900, HttpStatus.BAD_REQUEST, "계정 동의가 이미 완료되었거나 만료된 상태입니다."),
-    ALREADY_DISABLED_AGREEMENT(901, HttpStatus.BAD_REQUEST, "계정이 휴먼 계정 상태이거나 삭졔 예정이므로 동의를 진행할 수 없습니다."),
-    NOT_REMOVABLE_AGREEMENT(902, HttpStatus.BAD_REQUEST, "계정 동의가 삭제가능한 상태가 아닙니다."),
+    FAILED_UNIV_CERTIFY(903, HttpStatus.BAD_REQUEST, "Univ Certify에 실패했습니다."),
+    FAILED_UNIV_VERIFY(904, HttpStatus.BAD_REQUEST, "Univ Verify에 실패했습니다.."),
+    UNIV_ALREADY_VERIFIED(905, HttpStatus.CREATED, "이미 인증이 완료된 사용자입니다."),
+    RANKING_NOT_FOUND(906, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
+    ALREADY_AGREE_AGREEMENT(907, HttpStatus.BAD_REQUEST, "계정 동의가 이미 완료되었거나 만료된 상태입니다."),
+    ALREADY_DISABLED_AGREEMENT(908, HttpStatus.BAD_REQUEST, "계정이 휴먼 계정 상태이거나 삭졔 예정이므로 동의를 진행할 수 없습니다."),
+    NOT_REMOVABLE_AGREEMENT(909, HttpStatus.BAD_REQUEST, "계정 동의가 삭제가능한 상태가 아닙니다."),
 
     REDIS_RANKING_NOT_FOUND(1000, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
     REDIS_ERROR(1001, HttpStatus.INTERNAL_SERVER_ERROR, "Redis 서버 에러입니다.");

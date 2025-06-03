@@ -12,44 +12,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Builder
+
 @Getter
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id", nullable = false)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewer_id")
-    private Member reviewer;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviewee_id")
-    private Member reviewee;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mypage_id")
-    private MyPage myPage;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+public class Review {
     private OpponentAttitude attitude_score;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private OpponentConversation conversation_score;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private OpponentTalent talent_score;
 
-    @Column(nullable = false)
     private Integer evaluation_score;
 
-    @Column(nullable = false)
     private String memo;
 }

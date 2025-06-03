@@ -14,8 +14,8 @@ INSERT INTO member (
     puuid, game_name, tag_line,
     o_auth_provider, role, term)
 VALUES
-    (1, 'yorushika_fan', 'yorushika@seoultech.ac.kr',
-     'yorushika@seoultech.ac.kr', '서울과학기술대학교', '컴퓨터공학과',
+    (1, 'yorushika_fan', 'louis5103@seoultech.ac.kr',
+     'louis5103@seoultech.ac.kr', '서울과학기술대학교', '컴퓨터공학과',
      '8EGZHOO06vP0fft1Yp4ECBml3x9_fkI7V6veALWs5GTeAdyNTbNSbtaqo-HsCSTvWjhkWfaVBhcBcw', '짱아깨비', 'k r',
      'KAKAO', 'MEMBER', 'NOTHING'),
 
@@ -67,16 +67,16 @@ VALUES
 
 -- my_page 테이블에 더미 데이터 삽입 (inheritance 전략 고려)
 INSERT INTO my_page (
-    mypage_id, matching_category, category, status, acceptor_id, requestor_id)
+    mypage_id, matching_category, category, status, acceptor_id, requestor_id, review_status, reg_date, mod_date)
 VALUES
-    (1, 'DUO', 'DUO', 'WAITING', 1, 2),
-    (2, 'DUO', 'DUO', 'CONNECTED', 3, 4),
-    (3, 'DUO', 'DUO', 'COMPLETED', 5, 6),
-    (4, 'DUO', 'DUO', 'DISCONNECTED', 7, 8),
+    (1, 'DUO', 'DUO', 'WAITING', 1, 2, 'UNREVIEWED', now(), now()),
+    (2, 'DUO', 'DUO', 'CONNECTED', 3, 4, 'UNREVIEWED', now(), now()),
+    (3, 'DUO', 'DUO', 'COMPLETED', 5, 6, 'UNREVIEWED', now(), now()),
+    (4, 'DUO', 'DUO', 'DISCONNECTED', 7, 8, 'UNREVIEWED', now(), now()),
 
-    (5, 'SCRIM', 'SCRIM', 'WAITING', 4, 1),
-    (6, 'SCRIM', 'SCRIM', 'WAITING', 1, 2),
-    (7, 'SCRIM', 'SCRIM', 'WAITING', 8, 3);
+    (5, 'SCRIM', 'SCRIM', 'WAITING', 4, 1, 'UNREVIEWED', now(), now()),
+    (6, 'SCRIM', 'SCRIM', 'WAITING', 1, 2, 'UNREVIEWED', now(), now()),
+    (7, 'SCRIM', 'SCRIM', 'WAITING', 8, 3, 'UNREVIEWED', now(), now());
 
 
 -- duo_page 테이블에 더미 데이터 삽입 (map_code를 문자열로 수정)
