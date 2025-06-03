@@ -1,11 +1,14 @@
 package com.tools.seoultech.timoproject.notification;
 
+import java.time.LocalDateTime;
+
 public record NotificationResponse(
 	Long id,
 	NotificationType type,
 	String message,
 	String redirectUrl,
-	boolean isRead
+	boolean isRead,
+	LocalDateTime regDate
 ) {
 	public static NotificationResponse from(Notification notification) {
 		return new NotificationResponse(
@@ -13,7 +16,8 @@ public record NotificationResponse(
 			notification.getType(),
 			notification.getMessage(),
 			notification.getRedirectUrl(),
-			notification.isRead()
+			notification.isRead(),
+				notification.getRegDate()
 		);
 	}
 }
