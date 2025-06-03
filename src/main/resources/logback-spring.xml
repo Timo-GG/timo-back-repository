@@ -42,5 +42,4 @@
         <!-- 위에서 선언한 파일 Appender -->
         <appender-ref ref="DailyRollingFile"/>
     </root>
-
 </configuration>
