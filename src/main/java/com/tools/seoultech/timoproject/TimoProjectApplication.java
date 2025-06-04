@@ -5,13 +5,10 @@ import org.springdoc.core.configuration.SpringDocDataRestConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 import java.util.TimeZone;
 
 @EnableScheduling
 @SpringBootApplication(exclude = SpringDocDataRestConfiguration.class)
-@EnableTransactionManagement(proxyTargetClass = true)
 public class TimoProjectApplication {
     public static void main(String[] args) {
         SpringApplication.run(TimoProjectApplication.class, args);
