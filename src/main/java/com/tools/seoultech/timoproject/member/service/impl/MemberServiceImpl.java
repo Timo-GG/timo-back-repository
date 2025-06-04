@@ -122,11 +122,8 @@
             if(member.getTerm() == UserAgreement.DISABLED) {
                 throw new BusinessException(ErrorCode.ALREADY_DISABLED_AGREEMENT);
             }
-            UserAgreement beforeTerm = member.getTerm();
             member.updateUserAgreement(UserAgreement.REMOVABLE);
-            UserAgreement afterTerm = member.getTerm();
 
-            log.info("Term 변경: {} -> {}", beforeTerm, afterTerm);
             memberRepository.saveAndFlush(member); // 저장 + 플러시 한번에
         }
 
