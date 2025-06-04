@@ -112,6 +112,7 @@
             entityManager.flush();
         }
 
+        @Transactional
         @Override
         public void softDeleteUserAgreement(Long memberId) {
             Member member = getById(memberId);
@@ -119,8 +120,10 @@
                 throw new BusinessException(ErrorCode.ALREADY_DISABLED_AGREEMENT);
             }
             member.updateUserAgreement(UserAgreement.REMOVABLE);
+            entityManager.flush();
         }
 
+        @Transactional
         @Override
         public void hardDeleteUserAgreement(Long memberId) {
             Member member = getById(memberId);
