@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@RedisHash(value = "ScrimBoard", timeToLive = 2 * 60)
+@RedisHash(value = "ScrimBoard", timeToLive = 24 * 60 * 60)
 @Getter @Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScrimBoard {

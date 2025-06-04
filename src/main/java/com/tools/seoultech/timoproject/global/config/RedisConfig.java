@@ -34,20 +34,6 @@ public class RedisConfig {
         return new LettuceConnectionFactory(redisHost, redisPort);
     }
 
-    @PostConstruct
-    public void configureRedis() {
-        try {
-            RedisTemplate<String, Object> template = redisTemplate();
-            template.execute((RedisCallback<Object>) connection -> {
-                connection.execute("CONFIG", "SET".getBytes(), "notify-keyspace-events".getBytes(), "Ex".getBytes());
-                return null;
-            });
-        } catch (Exception e) {
-            // Redis 설정 실패 시 로그만 출력
-            System.out.println("Redis keyspace events 설정 실패: " + e.getMessage());
-        }
-    }
-
     /** Spring <-> Redis 간에 전송 형태 설정 : Sorted-Set 및 Hash 데이터 처리를 위한 RedisTemplate 설정 */
     @Bean
     @Primary
