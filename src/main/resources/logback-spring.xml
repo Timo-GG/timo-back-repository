@@ -1,45 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
 
-    <!-- 1) Spring Boot 디폴트 설정(콘솔, 패턴 등)을 가져오는 include -->
+    <!-- 한국 시간대 패턴 정의 -->
+    <property name="KOREA_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS}{Asia/Seoul} %5p [%t] %-40.40logger{39} : %m%n"/>
+
+    <!-- Spring Boot 기본 설정 가져오기 -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- 기본 CONSOLE_LOG_PATTERN을 한국 시간대로 오버라이드 -->
+    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}{Asia/Seoul}){faint} %clr(%5p) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n" />
+
+    <!-- 이제 기본 console appender include -->
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
-    <!-- 2) 변수 선언: 로그 저장 경로와 파일명 패턴 -->
+    <!-- 변수 선언: 로그 저장 경로와 파일명 패턴 -->
     <property name="LOG_HOME" value="logs" />
-    <!-- 롤링 파일명 패턴: logs/app-2025-06-03.log 형태로 생성 -->
     <property name="FILE_NAME_PATTERN" value="${LOG_HOME}/app-%d{yyyy-MM-dd}.log" />
-    <!-- 보관 기간(일 단위) -->
     <property name="MAX_HISTORY" value="30" />
 
-    <!-- 3) RollingFileAppender: 하루 단위로 로그 회전 (파일 전용) -->
+    <!-- RollingFileAppender: 하루 단위로 로그 회전 (파일 전용) -->
     <appender name="DailyRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 실제 기록될 파일 위치 -->
         <file>${LOG_HOME}/app.log</file>
 
-        <!-- rolling 정책: TimeBasedRollingPolicy -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 날짜별 파일명(예: app-2025-06-03.log) -->
             <fileNamePattern>${FILE_NAME_PATTERN}</fileNamePattern>
-            <!-- 보관 기간: ${MAX_HISTORY}일치 로그 파일 보관 -->
             <maxHistory>${MAX_HISTORY}</maxHistory>
-            <!-- (원하면 압축 설정) -->
-            <!-- <compress>true</compress> -->
         </rollingPolicy>
 
-        <!-- encoder 없이, springBootDefault? 반드시 encoder 필요 -->
         <encoder>
-            <!-- 파일용 패턴 (컬러 태그 없이, 일반 텍스트) -->
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <!-- 파일용은 색깔 없는 한국 시간대 패턴 사용 -->
+            <pattern>${KOREA_LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
 
-    <!-- 4) 루트 로거에 Appender 연결 -->
+    <!-- 루트 로거에 Appender 연결 -->
     <root level="INFO">
-        <!-- Spring Boot 기본 컬러 콘솔 Appender (from console-appender.xml) -->
         <appender-ref ref="CONSOLE"/>
-        <!-- 위에서 선언한 파일 Appender -->
         <appender-ref ref="DailyRollingFile"/>
     </root>
 
