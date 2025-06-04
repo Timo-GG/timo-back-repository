@@ -85,11 +85,6 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/compose
-            
-            # Redis 백업
-            /usr/bin/docker exec timo-redis redis-cli --pass "timopassword" BGSAVE || true
-            
-            # Spring 서비스만 업데이트
-            /usr/bin/docker compose stop spring
-            /usr/bin/docker compose pull spring
-            /usr/bin/docker compose up -d spring
+            /usr/bin/docker compose down || true
+            /usr/bin/docker compose pull
+            /usr/bin/docker compose up -d
