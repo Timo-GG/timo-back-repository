@@ -14,12 +14,14 @@ import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisKeyValueTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +30,7 @@ public class BoardService {
     private final MemberService memberService;
     private final RiotAPIService bas;
     private final RedisKeyValueTemplate redisKeyValueTemplate;
+    private final RedisTemplate redisTemplate;
 
     private final DuoBoardRepository duoBoardRepository;
     private final ScrimBoardRepository scrimBoardRepository;
@@ -62,15 +65,22 @@ public class BoardService {
         DuoBoard oldEntity = duoBoardRepository.findById(dto.boardUUID())
                 .orElseThrow(() -> new Exception("Board Not Found " + dto.boardUUID()));
 
-        // 기존 엔티티 업데이트 (DELETE → SAVE 대신 UPDATE 사용)
-        LocalDateTime oldEntityUpdatedAt = oldEntity.getUpdatedAt();
+        // 기존 TTL 조회
+        String redisKey = "DuoBoard:" + dto.boardUUID();
+        Long remainingTtl = redisTemplate.getExpire(redisKey, TimeUnit.SECONDS);
+
+        // 기존 updatedAt 보존하여 업데이트
         DuoBoard updatedEntity = boardMapper.toUpdatedEntity(oldEntity, dto);
         updatedEntity = updatedEntity.toBuilder()
-                .updatedAt(oldEntityUpdatedAt)
+                .updatedAt(oldEntity.getUpdatedAt())
                 .build();
 
-        // RedisKeyValueTemplate.update() 사용으로 원자성 보장
         redisKeyValueTemplate.update(updatedEntity);
+
+        // TTL이 있었다면 다시 설정
+        if (remainingTtl != null && remainingTtl > 0) {
+            redisTemplate.expire(redisKey, remainingTtl, TimeUnit.SECONDS);
+        }
 
         return updatedEntity;
     }
@@ -79,14 +89,22 @@ public class BoardService {
         ScrimBoard oldEntity = scrimBoardRepository.findById(dto.boardUUID())
                 .orElseThrow(() -> new Exception("Board Not Found " + dto.boardUUID()));
 
-        LocalDateTime oldEntityUpdatedAt = oldEntity.getUpdatedAt();
+        // 기존 TTL 조회
+        String redisKey = "ScrimBoard:" + dto.boardUUID();
+        Long remainingTtl = redisTemplate.getExpire(redisKey, TimeUnit.SECONDS);
+
+        // 기존 updatedAt 보존하여 업데이트
         ScrimBoard updatedEntity = boardMapper.toUpdatedEntity(oldEntity, dto);
         updatedEntity = updatedEntity.toBuilder()
-                .updatedAt(oldEntityUpdatedAt)
+                .updatedAt(oldEntity.getUpdatedAt())
                 .build();
 
-        // RedisKeyValueTemplate.update() 사용으로 원자성 보장
         redisKeyValueTemplate.update(updatedEntity);
+
+        // TTL이 있었다면 다시 설정
+        if (remainingTtl != null && remainingTtl > 0) {
+            redisTemplate.expire(redisKey, remainingTtl, TimeUnit.SECONDS);
+        }
 
         return updatedEntity;
     }

@@ -37,6 +37,7 @@ public interface BoardMapper {
     }
 
     /** Redis → Redis */
+    @Mapping(target = "updatedAt", ignore = true)
     default DuoBoard toUpdatedEntity(DuoBoard entity, BoardDTO.RequestUpdateDuo dto){
         return DuoBoard.builder()
                 .boardUUID(entity.getBoardUUID())
@@ -46,7 +47,7 @@ public interface BoardMapper {
                 .opponentPosition(dto.duoInfo().getOpponentPosition()).opponentStyle(dto.duoInfo().getOpponentStyle())
                 .memberId(entity.getMemberId()).matchingCategory(MatchingCategory.DUO).tier(entity.getTier()).build();
     }
-
+    @Mapping(target = "updatedAt", ignore = true)
     default ScrimBoard toUpdatedEntity(ScrimBoard entity, BoardDTO.RequestUpdateScrim dto){
         return ScrimBoard.builder()
                 .boardUUID(entity.getBoardUUID())
