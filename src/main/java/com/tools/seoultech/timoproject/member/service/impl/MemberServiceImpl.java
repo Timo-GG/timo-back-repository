@@ -11,11 +11,14 @@
     import jakarta.persistence.EntityManager;
     import jakarta.persistence.EntityNotFoundException;
     import lombok.RequiredArgsConstructor;
+    import lombok.extern.slf4j.Slf4j;
     import org.springframework.stereotype.Service;
+    import org.springframework.transaction.annotation.Propagation;
     import org.springframework.transaction.annotation.Transactional;
 
     import java.util.UUID;
 
+    @Slf4j
     @Service
     @RequiredArgsConstructor
     public class MemberServiceImpl implements MemberService {
@@ -112,15 +115,19 @@
             entityManager.flush();
         }
 
-        @Transactional
+        @Transactional(propagation = Propagation.REQUIRES_NEW)
         @Override
         public void softDeleteUserAgreement(Long memberId) {
             Member member = getById(memberId);
             if(member.getTerm() == UserAgreement.DISABLED) {
                 throw new BusinessException(ErrorCode.ALREADY_DISABLED_AGREEMENT);
             }
+            UserAgreement beforeTerm = member.getTerm();
             member.updateUserAgreement(UserAgreement.REMOVABLE);
-            entityManager.flush();
+            UserAgreement afterTerm = member.getTerm();
+
+            log.info("Term 변경: {} -> {}", beforeTerm, afterTerm);
+            memberRepository.saveAndFlush(member); // 저장 + 플러시 한번에
         }
 
         @Transactional
