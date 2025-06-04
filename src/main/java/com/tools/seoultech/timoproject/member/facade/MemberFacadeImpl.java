@@ -7,6 +7,7 @@ import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import com.tools.seoultech.timoproject.member.dto.MemberDto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -70,16 +71,19 @@ public class MemberFacadeImpl implements MemberFacade {
     }
 
     @Override
+    @Transactional
     public void updateUserAgreement(Long memberId) {
         memberService.updateUserAgreement(memberId);;
     }
 
     @Override
+    @Transactional
     public void softDeleteUserAgreement(Long memberId) {
         memberService.softDeleteUserAgreement(memberId);
     }
 
     @Override
+    @Transactional
     public void hardDeleteUserAgreement(Long memberId) {
         memberService.hardDeleteUserAgreement(memberId);
     }
