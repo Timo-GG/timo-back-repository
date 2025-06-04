@@ -63,8 +63,10 @@ public class BoardService {
                 .orElseThrow(() -> new Exception("Board Not Found " + dto.boardUUID()));
 
         // 기존 엔티티 업데이트 (DELETE → SAVE 대신 UPDATE 사용)
+        LocalDateTime oldEntityUpdatedAt = oldEntity.getUpdatedAt();
         DuoBoard updatedEntity = boardMapper.toUpdatedEntity(oldEntity, dto);
         updatedEntity = updatedEntity.toBuilder()
+                .updatedAt(oldEntityUpdatedAt)
                 .build();
 
         // RedisKeyValueTemplate.update() 사용으로 원자성 보장
@@ -77,8 +79,10 @@ public class BoardService {
         ScrimBoard oldEntity = scrimBoardRepository.findById(dto.boardUUID())
                 .orElseThrow(() -> new Exception("Board Not Found " + dto.boardUUID()));
 
+        LocalDateTime oldEntityUpdatedAt = oldEntity.getUpdatedAt();
         ScrimBoard updatedEntity = boardMapper.toUpdatedEntity(oldEntity, dto);
         updatedEntity = updatedEntity.toBuilder()
+                .updatedAt(oldEntityUpdatedAt)
                 .build();
 
         // RedisKeyValueTemplate.update() 사용으로 원자성 보장
