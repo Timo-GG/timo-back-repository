@@ -31,7 +31,6 @@ public class UnivService {
           if(response.get("success").toString().equals("false")){
                throw new IOException(response.get("message").toString());
           }
-          System.err.println("checkUniv: " + response.toString());
      }
 
      public Boolean certifyUniv(UnivRequestDTO requestDto) throws IOException {
@@ -52,7 +51,6 @@ public class UnivService {
      }
      public Boolean verifyRequest(UnivRequestDTO requestDto, int code) throws IOException {
           Map<String, Object> response = UnivCert.certifyCode(api_key, requestDto.univEmail(), requestDto.univName(), code);
-          System.err.println("[verifyRequest] response: " + response);
           if (response.get("success").toString().equals("false")) {
                return false;
           }
