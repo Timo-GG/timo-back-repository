@@ -31,20 +31,26 @@ public class UnivService {
           if(response.get("success").toString().equals("false")){
                throw new IOException(response.get("message").toString());
           }
-          System.err.println("checkUniv: " + response.toString());
      }
 
      public Boolean certifyUniv(UnivRequestDTO requestDto) throws IOException {
           Map<String, Object> response = UnivCert.certify(api_key, requestDto.univEmail(), requestDto.univName(), true);
           if (response.get("success").toString().equals("false")) {
                String message = response.get("message").toString();
-               return false;
+
+               // 메시지에 따른 구체적인 예외 처리
+               if (message.contains("이미 완료된 요청")) {
+                    throw new BusinessException(ErrorCode.ALREADY_USED_UNIV_ACCOUNT); // 902
+               } else if (message.contains("일치하지 않는 메일 도메인")) {
+                    throw new BusinessException(ErrorCode.MISMATCHED_EMAIL_DOMAIN); // 1001
+               } else {
+                    throw new BusinessException(ErrorCode.FAILED_UNIV_CERTIFY);
+               }
           }
           return true;
      }
      public Boolean verifyRequest(UnivRequestDTO requestDto, int code) throws IOException {
           Map<String, Object> response = UnivCert.certifyCode(api_key, requestDto.univEmail(), requestDto.univName(), code);
-          System.err.println("[verifyRequest] response: " + response);
           if (response.get("success").toString().equals("false")) {
                return false;
           }

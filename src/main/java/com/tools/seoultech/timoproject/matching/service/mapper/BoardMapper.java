@@ -37,6 +37,7 @@ public interface BoardMapper {
     }
 
     /** Redis → Redis */
+    @Mapping(target = "updatedAt", ignore = true)
     default DuoBoard toUpdatedEntity(DuoBoard entity, BoardDTO.RequestUpdateDuo dto){
         return DuoBoard.builder()
                 .boardUUID(entity.getBoardUUID())
@@ -46,13 +47,14 @@ public interface BoardMapper {
                 .opponentPosition(dto.duoInfo().getOpponentPosition()).opponentStyle(dto.duoInfo().getOpponentStyle())
                 .memberId(entity.getMemberId()).matchingCategory(MatchingCategory.DUO).tier(entity.getTier()).build();
     }
-
+    @Mapping(target = "updatedAt", ignore = true)
     default ScrimBoard toUpdatedEntity(ScrimBoard entity, BoardDTO.RequestUpdateScrim dto){
         return ScrimBoard.builder()
                 .boardUUID(entity.getBoardUUID())
                 .mapCode(dto.mapCode()).memo(dto.memo()).headCount(dto.headCount())
                 .memberInfo(entity.getMemberInfo()).partyInfo(dto.partyInfo())
-                .memberId(entity.getMemberId()).matchingCategory(MatchingCategory.SCRIM).tier(entity.getTier()).build();
+                .memberId(entity.getMemberId()).matchingCategory(MatchingCategory.SCRIM).tier(entity.getTier()).univName(entity.getUnivName())
+                .build();
     }
 
     /** Projection → DTO */
@@ -69,7 +71,6 @@ public interface BoardMapper {
     @Mapping(target = "updatedAt", source = "updatedAt")
     BoardDTO.ResponseDuo toDuoDto(DuoBoard entity);
     BoardDTO.ResponseScrim toScrimDto(ScrimBoard entity);
-
 
     /** 유틸리티 */
     default CertifiedMemberInfo getCertifiedMemberInfo(Long memberId, @Context MemberService memberService, @Context RiotAPIService bas){
