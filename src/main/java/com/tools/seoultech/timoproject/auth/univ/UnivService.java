@@ -3,7 +3,12 @@ package com.tools.seoultech.timoproject.auth.univ;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.BusinessException;
+import com.tools.seoultech.timoproject.member.MemberRepository;
+import com.tools.seoultech.timoproject.member.domain.entity.Member;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.CertifiedUnivInfo;
+import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.univcert.api.UnivCert;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,28 +22,39 @@ public class UnivService {
      @Value("${univ_api_key}")
      private String api_key;
 
+     private final MemberService memberService;
+     private final MemberRepository memberRepository;
+     private final EntityManager entityManager;
+
      public void checkUniv(String univName) throws IOException{
           Map<String, Object> response = UnivCert.check(univName);
           if(response.get("success").toString().equals("false")){
                throw new IOException(response.get("message").toString());
           }
-          System.err.println(response.toString());
      }
 
-     public void certifyUniv(UnivRequestDTO requestDto) throws IOException {
+     public Boolean certifyUniv(UnivRequestDTO requestDto) throws IOException {
           Map<String, Object> response = UnivCert.certify(api_key, requestDto.univEmail(), requestDto.univName(), true);
-          System.out.println("✅ UnivCert 응답 전체: " + response);
           if (response.get("success").toString().equals("false")) {
                String message = response.get("message").toString();
-               if ("400".equals(response.get("code").toString())) {
-                    throw new BusinessException(ErrorCode.UNIV_ALREADY_VERIFIED);
+
+               // 메시지에 따른 구체적인 예외 처리
+               if (message.contains("이미 완료된 요청")) {
+                    throw new BusinessException(ErrorCode.ALREADY_USED_UNIV_ACCOUNT); // 902
+               } else if (message.contains("일치하지 않는 메일 도메인")) {
+                    throw new BusinessException(ErrorCode.MISMATCHED_EMAIL_DOMAIN); // 1001
+               } else {
+                    throw new BusinessException(ErrorCode.FAILED_UNIV_CERTIFY);
                }
-               throw new IOException(message);
           }
+          return true;
      }
-     public void verifyRequest(UnivRequestDTO requestDto, int code) throws IOException {
+     public Boolean verifyRequest(UnivRequestDTO requestDto, int code) throws IOException {
           Map<String, Object> response = UnivCert.certifyCode(api_key, requestDto.univEmail(), requestDto.univName(), code);
-          System.err.println("[verifyRequest] response: " + response);
+          if (response.get("success").toString().equals("false")) {
+               return false;
+          }
+          return true;
      }
      public Object checkStatus(UnivRequestDTO requestDto) throws IOException {
           Map<String, Object> response = UnivCert.status(api_key, requestDto.univEmail());
@@ -55,4 +71,13 @@ public class UnivService {
           return response;
      }
 
+     public void deleteCertifiedMember(Long memberId) throws IOException {
+          Member member = memberService.getById(memberId);
+          UnivCert.clear(api_key, member.getCertifiedUnivInfo().getUnivCertifiedEmail());
+          member = member.toBuilder()
+                  .certifiedUnivInfo(new CertifiedUnivInfo())
+                  .build();
+          memberRepository.save(member);
+
+     }
 }

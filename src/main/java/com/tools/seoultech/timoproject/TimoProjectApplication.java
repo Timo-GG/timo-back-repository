@@ -4,9 +4,6 @@ import jakarta.annotation.PostConstruct;
 import org.springdoc.core.configuration.SpringDocDataRestConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.TimeZone;
@@ -20,6 +17,9 @@ public class TimoProjectApplication {
 
     @PostConstruct
     public void init() {
+        // JVM 타임존 설정
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+        // 시스템 프로퍼티로도 설정
+        System.setProperty("user.timezone", "Asia/Seoul");
     }
 }

@@ -56,6 +56,7 @@ public abstract class BoardDTO {
 
     @Builder
     public record ResponseDuo(
+            Long memberId,
             UUID boardUUID,
             CertifiedMemberInfo memberInfo,
             DuoMapCode mapCode,
@@ -67,6 +68,7 @@ public abstract class BoardDTO {
 
     @Builder
     public record ResponseScrim(
+            Long memberId,
             UUID boardUUID,
             CertifiedMemberInfo memberInfo,
             ScrimMapCode mapCode,

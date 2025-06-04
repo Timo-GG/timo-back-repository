@@ -14,8 +14,8 @@ INSERT INTO member (
     puuid, game_name, tag_line,
     o_auth_provider, role, term)
 VALUES
-    (1, 'yorushika_fan', 'yorushika@seoultech.ac.kr',
-     'yorushika@seoultech.ac.kr', '서울과학기술대학교', '컴퓨터공학과',
+    (1, 'yorushika_fan', 'louis5103@seoultech.ac.kr',
+     'louis5103@seoultech.ac.kr', '서울과학기술대학교', '컴퓨터공학과',
      '8EGZHOO06vP0fft1Yp4ECBml3x9_fkI7V6veALWs5GTeAdyNTbNSbtaqo-HsCSTvWjhkWfaVBhcBcw', '짱아깨비', 'k r',
      'KAKAO', 'MEMBER', 'NOTHING'),
 
