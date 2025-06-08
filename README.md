@@ -2,7 +2,7 @@
 ### LOL 대학생 전용 팀원 매칭 플랫폼
 <br>
 
-<a href="timo.kr">TIMO.GG</a>
+<a href="https://www.timo.kr">TIMO.GG</a>
 
 ## 주요 기능
 - 듀오 / 내전 게시판
