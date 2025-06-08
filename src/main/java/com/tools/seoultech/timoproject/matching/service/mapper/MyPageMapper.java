@@ -122,6 +122,9 @@ public interface MyPageMapper {
                     .requestor(requestorInfo)
                     .acceptorId(duoPage.getAcceptor().getMemberId())
                     .requestorId(duoPage.getRequestor().getMemberId())
+                    .acceptorReview(duoPage.getAcceptorReview())
+                    .requestorReview(duoPage.getRequestorReview())
+                    .reviewStatus(duoPage.getReviewStatus())
                     .build();
 
         } else if (entity instanceof ScrimPage scrimPage){
@@ -177,6 +180,9 @@ public interface MyPageMapper {
     @Mapping(target = "requestor", expression = "java(getMyPageWrappedDuoDataWithUniv(entity.getRequestorUserInfo(), entity.getRequestorMemberInfo(), entity.getRequestor()))")
     @Mapping(target = "acceptorId", expression = "java(entity.getAcceptor().getMemberId())")
     @Mapping(target = "requestorId", expression = "java(entity.getRequestor().getMemberId())")
+    @Mapping(target = "acceptorReview", expression = "java(entity.getAcceptorReview())")
+    @Mapping(target = "requestorReview", expression = "java(entity.getRequestorReview())")
+    @Mapping(target = "reviewStatus", source = "entity.reviewStatus")
     MyPageDTO.ResponseDuoPage toDuoDto(DuoPage entity);
 
 
