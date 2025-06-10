@@ -30,7 +30,9 @@ public class RankingService {
 
         entity.updateFrom(dto);
 
-        if (dto.department() != null) {
+        if (dto.department() != null &&
+                !dto.department().trim().isEmpty() &&
+                entity.getMember().getCertifiedUnivInfo() != null) {
             entity.getMember()
                     .getCertifiedUnivInfo()
                     .updateDepartment(dto.department());
