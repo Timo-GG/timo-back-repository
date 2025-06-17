@@ -5,17 +5,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CompactMemberInfo;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 @Converter(autoApply = false)
 public class CompactMemberInfoConverter implements AttributeConverter<CompactMemberInfo, String> {
-    private static final ObjectMapper mapper = new ObjectMapper();
+
+    private final ObjectMapper objectMapper;
+
+    public CompactMemberInfoConverter(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public String convertToDatabaseColumn(CompactMemberInfo attribute) {
         try {
-            return attribute == null ? null : mapper.writeValueAsString(attribute);
+            return attribute == null ? null : objectMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e);
         }
@@ -24,7 +31,7 @@ public class CompactMemberInfoConverter implements AttributeConverter<CompactMem
     @Override
     public CompactMemberInfo convertToEntityAttribute(String dbData) {
         try {
-            return dbData == null ? null : mapper.readValue(dbData, CompactMemberInfo.class);
+            return dbData == null ? null : objectMapper.readValue(dbData, CompactMemberInfo.class);
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
