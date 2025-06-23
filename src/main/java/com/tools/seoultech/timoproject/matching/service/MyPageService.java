@@ -101,6 +101,22 @@ public class MyPageService {
         return redisScrimPageRepository.findAllBy();
     }
 
+    public boolean existsDuoPageBy(Long memberId, UUID boardUUID) {
+        return redisDuoPageRepository.findByRequestorIdAndBoardUUID(memberId, boardUUID).isPresent();
+    }
+
+    // 특정 게시글에 이미 신청했는지 확인 (내전)
+    public boolean existsScrimPageBy(Long memberId, UUID boardUUID) {
+        return redisScrimPageRepository.findByRequestorIdAndBoardUUID(memberId, boardUUID).isPresent();
+    }
+
+    // 통합 확인 메서드
+    public boolean existsPageBy(Long memberId, UUID boardUUID) {
+        boolean duoExists = existsDuoPageBy(memberId, boardUUID);
+        boolean scrimExists = existsScrimPageBy(memberId, boardUUID);
+        return duoExists || scrimExists;
+    }
+
     /** MyPage UUID 삭제 */
     public void deleteDuoMyPage(UUID BoardUUID) {
         redisDuoPageRepository.deleteById(BoardUUID);

@@ -14,12 +14,7 @@ public record ReviewRequestDto(
         String memo
 ) {
     public Review toEntity() {
-        return Review.builder()
-                .attitude_score(attitudeScore)
-                .conversation_score(conversationScore)
-                .talent_score(talentScore)
-                .evaluation_score(evaluationScore)
-                .memo(memo)
-                .build();
+        return Review.create(attitudeScore, conversationScore, talentScore,
+                evaluationScore, memo);
     }
 }

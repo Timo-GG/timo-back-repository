@@ -42,7 +42,7 @@ public class RedisDuoPage {
     @Indexed private final Long requestorId;
 
     /** Redis 인스턴스 참조용 필드 */
-    private final UUID boardUUID;
+    @Indexed private final UUID boardUUID;
 
 
     public static RedisDuoPage of(DuoMapCode mapCode, String acceptorMemo, String requestorMemo,

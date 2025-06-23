@@ -64,6 +64,14 @@ public class MyPageController {
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }
 
+    @GetMapping("/mypage/exists/{boardUUID}")
+    public ResponseEntity<APIDataResponse<Boolean>> checkAlreadyApplied(
+            @CurrentMemberId Long memberId,
+            @PathVariable UUID boardUUID) throws Exception {
+        boolean exists = myPageFacade.existsPageBy(memberId, boardUUID);
+        return ResponseEntity.ok(APIDataResponse.of(exists));
+    }
+
     /** Update */
     @PostMapping("/mypage/duo")
     public ResponseEntity<APIDataResponse<MatchingDTO.Response>> createDuoBoard(@RequestBody MatchingDTO.RequestDuo requestDto) throws Exception{
