@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.member.controller;
 
+import com.tools.seoultech.timoproject.auth.dto.RiotLoginParams;
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
@@ -103,5 +104,14 @@ public class MemberController {
     public ResponseEntity<Void> hardDeleteUserAgreement(@CurrentMemberId Long memberId){
         memberFacade.hardDeleteUserAgreement(memberId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/riot/link")
+    public ResponseEntity<APIDataResponse<String>> linkRiotAccount(
+            @RequestBody RiotLoginParams params,
+            @CurrentMemberId Long memberId) {
+
+        String result = memberFacade.linkRiotAccount(memberId, params);
+        return ResponseEntity.ok(APIDataResponse.of(result));
     }
 }

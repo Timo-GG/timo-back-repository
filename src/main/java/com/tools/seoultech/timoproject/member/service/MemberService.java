@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.member.service;
 
 
+import com.tools.seoultech.timoproject.auth.dto.RiotLoginParams;
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
@@ -26,4 +27,6 @@ public interface MemberService {
     void updateUserAgreement(Long memberId);
     void softDeleteUserAgreement(Long memberId);
     void hardDeleteUserAgreement(Long memberId);
+
+    String linkRiotAccount(Long memberId, RiotLoginParams params);
 }
