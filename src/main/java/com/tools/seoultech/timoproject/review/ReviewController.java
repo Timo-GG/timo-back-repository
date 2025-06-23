@@ -16,7 +16,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping("/myPageId")
+    @PostMapping("/{myPageId}")
     @Operation(summary = "리뷰 작성", description = "리뷰를 작성합니다.")
     public ResponseEntity<Review> createReview(
             @CurrentMemberId Long currentMemberId,

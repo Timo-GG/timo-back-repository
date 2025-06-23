@@ -45,7 +45,7 @@ public class RedisScrimPage {
     @Indexed private final Long requestorId;
 
     /** Redis 인스턴스 참조용 필드 */
-    private final UUID boardUUID;
+    @Indexed private final UUID boardUUID;
 
     public static RedisScrimPage of(Integer headCount, ScrimMapCode mapCode, String acceptorMemo, String requestorMemo,
                                     CertifiedMemberInfo acceptorCertifiedMemberInfo, List<PartyMemberInfo> acceptorPartyInfo,

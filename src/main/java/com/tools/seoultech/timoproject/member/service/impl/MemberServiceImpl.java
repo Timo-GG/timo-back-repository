@@ -1,9 +1,14 @@
     package com.tools.seoultech.timoproject.member.service.impl;
 
+    import com.tools.seoultech.timoproject.auth.dto.OAuthInfoResponse;
+    import com.tools.seoultech.timoproject.auth.dto.RiotInfoResponse;
+    import com.tools.seoultech.timoproject.auth.dto.RiotLoginParams;
+    import com.tools.seoultech.timoproject.auth.service.RequestOAuthInfoService;
     import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
     import com.tools.seoultech.timoproject.global.constant.ErrorCode;
     import com.tools.seoultech.timoproject.global.exception.BusinessException;
     import com.tools.seoultech.timoproject.member.domain.entity.Member;
+    import com.tools.seoultech.timoproject.member.domain.entity.enumType.RiotVerificationType;
     import com.tools.seoultech.timoproject.member.domain.entity.enumType.UserAgreement;
     import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
     import com.tools.seoultech.timoproject.member.service.MemberService;
@@ -24,6 +29,8 @@
     public class MemberServiceImpl implements MemberService {
         private final MemberRepository memberRepository;
         private final EntityManager entityManager;
+        private final RequestOAuthInfoService requestOAuthInfoService;
+
 
         @Override
         public Member getById(Long memberId) {
@@ -69,9 +76,16 @@
         public Member updateRiotAccount(Long memberId, String puuid, String playerName, String playerTag, String profileIconUrl) {
             Member member = getById(memberId);
             // 중복된 소환사 puuid 존재 여부 체크
-            if (puuid != null && memberRepository.existsByRiotAccount_PuuidAndMemberIdNot(puuid, memberId)) {
-                throw new BusinessException(ErrorCode.ALREADY_USED_RIOT_ACCOUNT);
-            }
+//            if (puuid != null) {
+//                // RSO_VERIFIED 계정의 PUUID가 이미 사용 중인지 확인
+//                boolean isRSOPuuidUsed = memberRepository.existsByRiotAccount_PuuidAndRiotAccount_VerificationTypeAndMemberIdNot(
+//                        puuid, RiotVerificationType.RSO_VERIFIED, memberId);
+//
+//                if (isRSOPuuidUsed) {
+//                    throw new BusinessException(ErrorCode.ALREADY_USED_RIOT_ACCOUNT);
+//                }
+//            }
+
             member.updateRiotAccount(puuid, playerName, playerTag, profileIconUrl);
 
             return member;
@@ -135,5 +149,50 @@
                 throw new BusinessException(ErrorCode.NOT_REMOVABLE_AGREEMENT);
             }
             memberRepository.deleteById(memberId);
+        }
+
+        @Override
+        @Transactional
+        public String linkRiotAccount(Long memberId, RiotLoginParams params) {
+            Member member = getById(memberId);
+
+            // 이미 RSO 인증된 계정인지 확인
+            if (member.getRiotAccount() != null &&
+                    member.getRiotAccount().getVerificationType() == RiotVerificationType.RSO_VERIFIED) {
+                throw new BusinessException(ErrorCode.ALREADY_LINKED_RIOT_ACCOUNT);
+            }
+
+            // 🔥 기존 RequestOAuthInfoService 활용
+            OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
+            RiotInfoResponse riotInfo = (RiotInfoResponse) oAuthInfoResponse;
+
+            // RSO 계정 정보로 업데이트
+            if (riotInfo.getPuuid() != null && riotInfo.getGameName() != null) {
+                // 🔥 기존 updateRiotAccount 메서드 확장
+                updateRiotAccountWithRSO(member, riotInfo);
+
+                log.info("✅ 기존 회원 Riot 계정 연동 완료: {}#{}",
+                        riotInfo.getGameName(), riotInfo.getTagLine());
+
+                return "Riot 계정 연동이 완료되었습니다";
+            } else {
+                throw new BusinessException(ErrorCode.RIOT_ACCOUNT_INFO_NOT_FOUND);
+            }
+        }
+
+        private void updateRiotAccountWithRSO(Member member, RiotInfoResponse riotInfo) {
+            // 중복된 소환사 puuid 존재 여부 체크
+            if (memberRepository.existsByRiotAccount_PuuidAndMemberIdNot(
+                    riotInfo.getPuuid(), member.getMemberId())) {
+                throw new BusinessException(ErrorCode.ALREADY_USED_RIOT_ACCOUNT);
+            }
+
+            // RSO 인증으로 업데이트
+            member.updateRiotAccountWithRSO(
+                    riotInfo.getPuuid(),
+                    riotInfo.getGameName(),
+                    riotInfo.getTagLine(),
+                    riotInfo.getProfileUrl()
+            );
         }
     }

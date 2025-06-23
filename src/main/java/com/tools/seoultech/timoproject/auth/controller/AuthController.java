@@ -47,6 +47,12 @@ public class AuthController {
         return ResponseEntity.ok(APIDataResponse.of(tokens));
     }
 
+    @PostMapping("/riot")
+    public ResponseEntity<APIDataResponse<LoginResponse>> loginRiot(@RequestBody RiotLoginParams params) {
+        LoginResponse tokens = oAuthLoginService.login(params);
+        return ResponseEntity.ok(APIDataResponse.of(tokens));
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<APIDataResponse<TokenCollection>> refreshToken(@RequestHeader("Refresh-Token") String refreshToken) {
 

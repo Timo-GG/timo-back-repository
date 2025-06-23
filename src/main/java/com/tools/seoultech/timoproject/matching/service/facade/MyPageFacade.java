@@ -17,6 +17,8 @@ public interface MyPageFacade {
     List<MatchingDTO.Response> readAllMyRequestor(Long requestorId) throws Exception;
     List<MatchingDTO.Response> readAllMyAcceptor(Long acceptorId) throws Exception;
 
+    boolean existsPageBy(Long memberId, UUID boardUUID);
+
     void deleteMyPage(UUID myPageUUID) throws Exception;
     void deleteAllMyPage(MatchingCategory matchingCategory) throws Exception;
 

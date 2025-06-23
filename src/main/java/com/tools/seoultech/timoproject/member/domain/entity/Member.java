@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.member.domain.entity;
 
 import com.tools.seoultech.timoproject.member.domain.OAuthProvider;
+import com.tools.seoultech.timoproject.member.domain.entity.enumType.RiotVerificationType;
 import com.tools.seoultech.timoproject.member.domain.entity.enumType.Role;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.CertifiedUnivInfo;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
@@ -55,7 +56,11 @@ public class Member {
     }
 
     public void updateRiotAccount(String puuid, String name, String tag, String profileUrl) {
-        this.riotAccount = new RiotAccount(puuid, name, tag, profileUrl);
+        if(puuid != null){
+            this.riotAccount = new RiotAccount(puuid, name, tag, profileUrl, RiotVerificationType.API_PARSED);
+        }else{
+            this.riotAccount = new RiotAccount(puuid, name, tag, profileUrl, RiotVerificationType.NONE);
+        }
     }
 
     public void updateUnivAccount(String univName, String univCertifiedEmail) {
@@ -63,5 +68,10 @@ public class Member {
     }
     public void updateUserAgreement(UserAgreement term) {
         this.term = term;
+    }
+
+    public void updateRiotAccountWithRSO(String puuid, String name, String tag, String profileUrl) {
+        this.riotAccount = new RiotAccount(puuid, name, tag, profileUrl,
+                RiotVerificationType.RSO_VERIFIED);
     }
 }

@@ -16,4 +16,5 @@ public interface RedisDuoPageRepository extends CrudRepository<RedisDuoPage, UUI
     List<RedisDuoPageOnly> findByAcceptorIdOrRequestorId(Long acceptorId, Long requestorId);
     List<RedisDuoPageOnly> findAllByAcceptorId(Long acceptorId);
     List<RedisDuoPageOnly> findAllByRequestorId(Long requestorId);
+    Optional<RedisDuoPageOnly> findByRequestorIdAndBoardUUID(Long requestorId, UUID boardUUID);
 }

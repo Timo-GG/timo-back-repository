@@ -52,7 +52,7 @@ public class UnivService {
      public Boolean verifyRequest(UnivRequestDTO requestDto, int code) throws IOException {
           Map<String, Object> response = UnivCert.certifyCode(api_key, requestDto.univEmail(), requestDto.univName(), code);
           if (response.get("success").toString().equals("false")) {
-               return false;
+               throw new BusinessException(ErrorCode.FAILED_UNIV_CERTIFY);
           }
           return true;
      }
