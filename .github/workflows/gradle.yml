@@ -58,18 +58,24 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-      # 단일 docker-compose.yml 파일 생성
+
+      # ✅ .env 파일 생성 단계 추가
+      - name: Create .env file
+        run: |
+          echo "FIREBASE_SERVICE_ACCOUNT_KEY=${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > .env
+
+      # docker-compose.yml 생성
       - name: Create docker-compose.yml
         run: |
           echo "${{ secrets.DOCKER_COMPOSE }}" > docker-compose.yml
-      # docker-compose.yml 업로드
-      - name: Upload docker-compose.yml to EC2
+    
+      - name: Upload files to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
-          source: "docker-compose.yml"
+          source: "docker-compose.yml,.env"
           target: "/home/ubuntu/"
           overwrite: true
 
@@ -82,7 +88,8 @@ jobs:
           key: ${{ secrets.EC2_PEM }}
           port: 22
           script: |
-            cd /home/ubuntu/compose
+            cd /home/ubuntu/compose            
+            cp /home/ubuntu/.env .
             /usr/bin/docker compose stop spring
             /usr/bin/docker compose pull spring
             /usr/bin/docker compose up -d spring
