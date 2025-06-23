@@ -76,7 +76,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PEM }}
           source: "docker-compose.yml,.env"
-          target: "/home/ubuntu/"
+          target: "/home/ubuntu/compose/"
           overwrite: true
 
       # 애플리케이션 배포
@@ -89,7 +89,6 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/compose            
-            cp /home/ubuntu/.env .
             /usr/bin/docker compose stop spring
             /usr/bin/docker compose pull spring
             /usr/bin/docker compose up -d spring
