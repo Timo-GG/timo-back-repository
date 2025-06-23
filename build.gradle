@@ -109,6 +109,10 @@ dependencies {
     implementation 'org.flywaydb:flyway-core:11.9.0'
     implementation 'org.flywaydb:flyway-mysql'
 
+    //FCM
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+
 
 }
 tasks.named('test') {
