@@ -39,6 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new AntPathRequestMatcher("/api/v1/auth/*"),
             new AntPathRequestMatcher("/api/v1/auth/univ/*"),
             new RegexRequestMatcher("^/api/v1/members/[0-9]+$", "GET"),
+            new AntPathRequestMatcher("/auth/callback/**"),
             new AntPathRequestMatcher("/naver/callback"),
             new AntPathRequestMatcher("/kakao/callback"),
             new AntPathRequestMatcher("/discord/callback"),

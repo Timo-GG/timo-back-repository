@@ -3,6 +3,7 @@ package com.tools.seoultech.timoproject.member.dto;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.CertifiedUnivInfo;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
+import com.tools.seoultech.timoproject.member.domain.entity.enumType.RiotVerificationType;
 import com.tools.seoultech.timoproject.member.domain.entity.enumType.Role;
 import com.tools.seoultech.timoproject.member.domain.entity.enumType.UserAgreement;
 import com.tools.seoultech.timoproject.ranking.RankingInfo;
@@ -36,14 +37,16 @@ public record MemberDto(
             String puuid,
             String accountName,
             String accountTag,
-            String profileUrl
+            String profileUrl,
+            RiotVerificationType verificationType
     ) {
         public static RiotAccountDto from(RiotAccount entity) {
             return new RiotAccountDto(
                     entity.getPuuid(),
                     entity.getGameName(),
                     entity.getTagLine(),
-                    entity.getProfileUrl()
+                    entity.getProfileUrl(),
+                    entity.getVerificationType()
             );
         }
     }

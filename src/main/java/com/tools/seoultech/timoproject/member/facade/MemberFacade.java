@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.member.facade;
 
+import com.tools.seoultech.timoproject.auth.dto.RiotLoginParams;
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
@@ -26,4 +27,6 @@ public interface MemberFacade {
     void updateUserAgreement(Long memberId);
     void softDeleteUserAgreement(Long memberId);
     void hardDeleteUserAgreement(Long memberId);
+
+    String linkRiotAccount(Long memberId, RiotLoginParams params);
 }

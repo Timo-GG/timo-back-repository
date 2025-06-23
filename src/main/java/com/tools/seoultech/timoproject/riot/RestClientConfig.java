@@ -41,6 +41,19 @@ public class RestClientConfig {
                 .build();
     }
 
+    // RSO 전용 RestClient (Bearer 토큰 사용)
+    @Bean
+    public RestClient rsoRestClient() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(5000);
+        factory.setReadTimeout(5000);
+
+        return RestClient.builder()
+                .requestFactory(factory)
+                .defaultHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+                .build();
+    }
+
     // 동기식 클라이언트들
     @Bean
     public RiotAsiaApiClient riotAsiaApiClient(RestClient restClient) {
@@ -67,6 +80,17 @@ public class RestClientConfig {
                 .builderFor(adapter)
                 .build();
         return factory.createClient(DataDragonClient.class);
+    }
+
+    // RSO 전용 클라이언트
+    @Bean
+    public RiotRSOApiClient riotRSOApiClient() {
+        RestClient rsoClient = rsoRestClient(); // API 키 없는 별도 클라이언트
+        RestClientAdapter adapter = RestClientAdapter.create(rsoClient);
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory
+                .builderFor(adapter)
+                .build();
+        return factory.createClient(RiotRSOApiClient.class);
     }
 
 }

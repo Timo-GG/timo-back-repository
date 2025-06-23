@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.member.facade;
 
+import com.tools.seoultech.timoproject.auth.dto.RiotLoginParams;
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
@@ -86,5 +87,11 @@ public class MemberFacadeImpl implements MemberFacade {
     @Transactional
     public void hardDeleteUserAgreement(Long memberId) {
         memberService.hardDeleteUserAgreement(memberId);
+    }
+
+    @Override
+    @Transactional
+    public String linkRiotAccount(Long memberId, RiotLoginParams params) {
+        return memberService.linkRiotAccount(memberId, params);
     }
 }

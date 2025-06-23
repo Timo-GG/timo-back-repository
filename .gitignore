@@ -247,3 +247,5 @@ docker-compose.yml
 *.dll
 
 src/test/java/com/tools/seoultech/timoproject/post/repository/UserAccountRepositoryTest.java
+
+src/main/resources/config/firebase-service-account.json

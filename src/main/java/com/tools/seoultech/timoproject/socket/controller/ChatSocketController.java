@@ -6,10 +6,17 @@ import com.tools.seoultech.timoproject.chat.domain.ChatRoomMember;
 import com.tools.seoultech.timoproject.chat.dto.*;
 import com.tools.seoultech.timoproject.chat.repository.ChatRoomMemberRepository;
 import com.tools.seoultech.timoproject.chat.service.ChatService;
+import com.tools.seoultech.timoproject.firebase.FCMService;
+import com.tools.seoultech.timoproject.firebase.FCMToken;
+import com.tools.seoultech.timoproject.firebase.FCMTokenRepository;
 import com.tools.seoultech.timoproject.global.annotation.SocketController;
 import com.tools.seoultech.timoproject.global.annotation.SocketMapping;
+import com.tools.seoultech.timoproject.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @SocketController
 @Slf4j
@@ -18,25 +25,60 @@ public class ChatSocketController {
 
     private final ChatService chatService;
     private final ChatRoomMemberRepository chatRoomMemberRepository;
+    private final FCMService fcmService;
+    private final FCMTokenRepository fcmTokenRepository;
+    private final MemberRepository memberRepository;
 
     @SocketMapping(endpoint = "send_message", requestCls = ChatMessageDTO.class)
     public void handleSendMessage(SocketIOClient senderClient, SocketIOServer server,
                                   ChatMessageDTO data) {
-        Long senderId = senderClient.get("memberId"); // 서버 세션에서 memberId 조회
+        Long senderId = senderClient.get("memberId");
         Long roomId = data.roomId();
         String roomName = "chat_" + roomId;
 
-        // 클라이언트가 보낸 DTO를 기반으로 새 메시지 DTO 생성
         ChatMessageDTO chatMessage = ChatMessageDTO.builder()
                 .roomId(roomId)
                 .senderId(senderId)
                 .content(data.content())
                 .build();
 
-        // DB 저장 후, 생성된 메시지 DTO 반환
         ChatMessageDTO savedChatMessage = chatService.saveMessage(chatMessage);
 
-        // 공통 DTO에 필요한 필드들을 세팅하여 메시지 이벤트 생성
+        // FCM 알림 전송 로직 추가
+        try {
+            // 채팅방 참여자들 조회 (발신자 제외)
+            List<ChatRoomMember> activeMembers = chatService.findActiveMembers(roomId);
+            List<Long> recipientIds = activeMembers.stream()
+                    .map(member -> member.getMember().getMemberId())
+                    .filter(id -> !id.equals(senderId))
+                    .collect(Collectors.toList());
+
+            if (!recipientIds.isEmpty()) {
+                // 발신자 정보 조회
+                String senderName = memberRepository.findById(senderId)
+                        .map(member -> member.getUsername())
+                        .orElse("알 수 없는 사용자");
+
+                // 수신자들의 FCM 토큰 조회
+                List<String> fcmTokens = fcmTokenRepository.findByMemberIdInAndIsActiveTrue(recipientIds)
+                        .stream()
+                        .map(FCMToken::getToken)
+                        .collect(Collectors.toList());
+
+                // FCM 알림 전송
+                fcmService.sendChatNotification(
+                        roomId,
+                        senderName,
+                        data.content(),
+                        fcmTokens,
+                        senderId
+                );
+            }
+        } catch (Exception e) {
+            log.error("FCM 알림 전송 중 오류 발생: {}", e.getMessage());
+        }
+
+        // 기존 소켓 메시지 전송 로직
         ChatSocketDTO<ChatMessageDTO> eventDTO = ChatSocketDTO.<ChatMessageDTO>builder()
                 .eventType("receive_message")
                 .roomId(roomId)
@@ -44,7 +86,6 @@ public class ChatSocketController {
                 .payload(savedChatMessage)
                 .build();
 
-        // 같은 방에 접속한 클라이언트들에게 메시지 전송 (보낸 클라이언트 제외)
         senderClient.getNamespace().getRoomOperations(roomName).getClients().forEach(client -> {
             if (!client.getSessionId().equals(senderClient.getSessionId())) {
                 client.sendEvent("receive_message", eventDTO);

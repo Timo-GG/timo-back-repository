@@ -7,8 +7,11 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Duo
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingStatus;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.ReviewStatus;
+import com.tools.seoultech.timoproject.review.Review;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +41,11 @@ public abstract class MyPageDTO {
             MyPageWrappedDuoData requestor,
             Long roomId,
             Long acceptorId,
-            Long requestorId
+            Long requestorId,
+            Review acceptorReview,
+            Review requestorReview,
+            ReviewStatus reviewStatus,
+            LocalDateTime createdAt
     ) implements Response{}
 
     @Builder
@@ -51,7 +58,11 @@ public abstract class MyPageDTO {
             MyPageWrappedScrimData requestor,
             Long roomId,
             Long acceptorId,
-            Long requestorId
+            Long requestorId,
+            Review acceptorReview,
+            Review requestorReview,
+            ReviewStatus reviewStatus,
+            LocalDateTime createdAt
     ) implements Response{}
 
     @Builder

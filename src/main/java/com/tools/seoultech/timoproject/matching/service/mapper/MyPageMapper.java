@@ -45,9 +45,11 @@ public interface MyPageMapper {
         ScrimBoardOnly proj = boardService.getScrimBoard(dto.boardUUID());
 
         return RedisScrimPage.of(proj.getHeadCount(), proj.getMapCode(), proj.getMemo(), dto.requestorMemo(),
-                proj.getMemberInfo(), proj.getPartyInfo(),
-                BoardMapper.Instance.getCertifiedMemberInfo(dto.requestorId(), memberService, bas) , dto.partyInfo(),
-                dto.requestorId(), dto.requestorId(), dto.boardUUID());
+                proj.getMemberInfo(), proj.getPartyInfo(),                    // acceptor 정보 (게시글 작성자)
+                BoardMapper.Instance.getCertifiedMemberInfo(dto.requestorId(), memberService, bas), dto.partyInfo(),  // requestor 정보 (신청자)
+                proj.getMemberId(),  // acceptorId (게시글 작성자 ID)
+                dto.requestorId(),   // requestorId (신청자 ID)
+                dto.boardUUID());
     }
 
 
@@ -122,6 +124,10 @@ public interface MyPageMapper {
                     .requestor(requestorInfo)
                     .acceptorId(duoPage.getAcceptor().getMemberId())
                     .requestorId(duoPage.getRequestor().getMemberId())
+                    .acceptorReview(duoPage.getAcceptorReview())
+                    .requestorReview(duoPage.getRequestorReview())
+                    .reviewStatus(duoPage.getReviewStatus())
+                    .createdAt(duoPage.getRegDate())
                     .build();
 
         } else if (entity instanceof ScrimPage scrimPage){
@@ -152,6 +158,10 @@ public interface MyPageMapper {
                     .requestor(requestorInfo)
                     .acceptorId(scrimPage.getAcceptor().getMemberId())
                     .requestorId(scrimPage.getRequestor().getMemberId())
+                    .acceptorReview(scrimPage.getAcceptorReview())
+                    .requestorReview(scrimPage.getRequestorReview())
+                    .reviewStatus(scrimPage.getReviewStatus())
+                    .createdAt(scrimPage.getRegDate())
                     .build();
 
         } else throw new GeneralException("bool fucked");
@@ -177,6 +187,9 @@ public interface MyPageMapper {
     @Mapping(target = "requestor", expression = "java(getMyPageWrappedDuoDataWithUniv(entity.getRequestorUserInfo(), entity.getRequestorMemberInfo(), entity.getRequestor()))")
     @Mapping(target = "acceptorId", expression = "java(entity.getAcceptor().getMemberId())")
     @Mapping(target = "requestorId", expression = "java(entity.getRequestor().getMemberId())")
+    @Mapping(target = "acceptorReview", expression = "java(entity.getAcceptorReview())")
+    @Mapping(target = "requestorReview", expression = "java(entity.getRequestorReview())")
+    @Mapping(target = "reviewStatus", source = "entity.reviewStatus")
     MyPageDTO.ResponseDuoPage toDuoDto(DuoPage entity);
 
 

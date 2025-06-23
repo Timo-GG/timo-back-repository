@@ -121,6 +121,11 @@ public class MyPageFacadeImpl implements MyPageFacade {
         }
     }
 
+    @Override
+    public boolean existsPageBy(Long memberId, UUID boardUUID) {
+        return myPageService.existsPageBy(memberId, boardUUID);
+    }
+
     /**
      * MyPage CRUD 서비스 in MySQL
      * @apiNote : [create] : <strong>백엔드 내부 테스트용.</strong> MySQL 마이페이지 생성. <br>
