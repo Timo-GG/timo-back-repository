@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ChatSocketController {
 
-    private final ChatService chatService;
     private final SocketAuthenticationService authService;
     private final SocketMessageService messageService;
     private final SocketRoomService roomService;
