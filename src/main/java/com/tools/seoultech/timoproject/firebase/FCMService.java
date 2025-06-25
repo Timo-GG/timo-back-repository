@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class FCMService {
 
     private final FirebaseMessaging firebaseMessaging;
+    private final FCMTokenService fcmTokenService;
 
     public void sendChatNotification(Long chatRoomId, String senderName, String messageContent,
                                      List<String> targetTokens, Long senderId) {
@@ -49,13 +50,32 @@ public class FCMService {
             BatchResponse response = firebaseMessaging.sendEachForMulticast(message);
             log.info("FCM 알림 전송 성공: {}/{}", response.getSuccessCount(), targetTokens.size());
 
-            // 실패한 토큰들 로깅
             if (response.getFailureCount() > 0) {
+                List<String> invalidTokens = new ArrayList<>();
                 List<SendResponse> responses = response.getResponses();
+
                 for (int i = 0; i < responses.size(); i++) {
                     if (!responses.get(i).isSuccessful()) {
-                        log.warn("FCM 전송 실패 - 토큰: {}, 오류: {}",
-                                targetTokens.get(i), responses.get(i).getException().getMessage());
+                        String errorMessage = responses.get(i).getException().getMessage();
+                        String token = targetTokens.get(i);
+
+                        if (errorMessage.contains("Requested entity was not found") ||
+                                errorMessage.contains("UNREGISTERED") ||
+                                errorMessage.contains("registration-token-not-registered")) {
+                            invalidTokens.add(token);
+                            log.warn("만료된 FCM 토큰 발견: {}", token);
+                        } else {
+                            log.warn("FCM 전송 실패 - 토큰: {}, 오류: {}", token, errorMessage);
+                        }
+                    }
+                }
+
+                if (!invalidTokens.isEmpty()) {
+                    try {
+                        fcmTokenService.deactivateTokens(invalidTokens);
+                        log.info("{}개의 만료된 FCM 토큰을 비활성화했습니다", invalidTokens.size());
+                    } catch (Exception e) {
+                        log.error("FCM 토큰 비활성화 중 오류 발생", e);
                     }
                 }
             }
