@@ -30,6 +30,7 @@ public class RedisRankingInfo implements Serializable {
     private String gameName;
     private String tagLine;
     private String profileIconUrl;
+    private String verificationType;
 
     // 대학 정보
     private String university;
@@ -103,6 +104,7 @@ public class RedisRankingInfo implements Serializable {
                 .memberId(memberId)
                 .puuid(riotAccount.getPuuid())
                 .gameName(riotAccount.getGameName())
+                .verificationType(riotAccount.getVerificationType().name())
                 .profileIconUrl(riotRankingDto.profileIconUrl())
                 .tagLine(riotAccount.getTagLine())
                 .university(univInfo.getUnivName())

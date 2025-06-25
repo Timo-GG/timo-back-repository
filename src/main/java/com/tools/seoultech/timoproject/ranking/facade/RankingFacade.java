@@ -18,5 +18,5 @@ public interface RankingFacade {
     int getRankingPosition(String name, String tag);
     void updateRankingFromRiotAPI(Long memberId);
     void updateAllRankingsFromRiotAPI();
-
+    void updateVerificationType(Long memberId, String verificationType);
 }
