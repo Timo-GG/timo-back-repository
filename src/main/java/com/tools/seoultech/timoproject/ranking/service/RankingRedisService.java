@@ -175,6 +175,7 @@ public class RankingRedisService {
 				.gameName(existing.getGameName())
 				.tagLine(existing.getTagLine())
 				.profileIconUrl(riotRankingDto.profileIconUrl())
+				.verificationType(existing.getVerificationType())
 				.university(existing.getUniversity())
 				.department(existing.getDepartment())
 				.tier(soloRank.getTier())
@@ -194,5 +195,37 @@ public class RankingRedisService {
 		saveRankInfo(memberId, updated);
 
 		log.info("Riot API 데이터로 랭킹 업데이트 완료: memberId={}, newScore={}", memberId, newScore);
+	}
+
+	public void updateVerificationType(Long memberId, String verificationType) {
+		RedisRankingInfo existing = rankingInfoRedisRepository.findById(memberId.toString())
+				.orElseThrow(() -> new BusinessException(ErrorCode.REDIS_RANKING_NOT_FOUND));
+
+		// verificationType만 업데이트
+		RedisRankingInfo updated = RedisRankingInfo.builder()
+				.id(existing.getId())
+				.memberId(existing.getMemberId())
+				.puuid(existing.getPuuid())
+				.gameName(existing.getGameName())
+				.tagLine(existing.getTagLine())
+				.profileIconUrl(existing.getProfileIconUrl())
+				.verificationType(verificationType) // ✅ 새로운 verificationType
+				.university(existing.getUniversity())
+				.department(existing.getDepartment())
+				.tier(existing.getTier())
+				.rank(existing.getRank())
+				.lp(existing.getLp())
+				.mostChampions(existing.getMostChampions())
+				.wins(existing.getWins())
+				.losses(existing.getLosses())
+				.score(existing.getScore())
+				.mbti(existing.getMbti())
+				.position(existing.getPosition())
+				.gender(existing.getGender())
+				.memo(existing.getMemo())
+				.build();
+
+		rankingInfoRedisRepository.save(updated);
+		log.info("verificationType 업데이트 완료: memberId={}, verificationType={}", memberId, verificationType);
 	}
 }

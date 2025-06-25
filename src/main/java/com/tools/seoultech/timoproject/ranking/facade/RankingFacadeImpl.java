@@ -85,6 +85,11 @@ public class RankingFacadeImpl implements RankingFacade {
     }
 
     @Override
+    public void updateVerificationType(Long memberId, String verificationType) {
+        rankingRedisService.updateVerificationType(memberId, verificationType);
+    }
+
+    @Override
     public void updateRankingFromRiotAPI(Long memberId) {
         try {
             // 1. 회원 정보 조회
