@@ -12,6 +12,7 @@ import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -70,5 +71,14 @@ public class ChatController {
     public APIDataResponse<Void> leaveChatRoom(@PathVariable Long roomId, @CurrentMemberId Long memberId) {
         chatService.leaveRoom(memberId, roomId);
         return APIDataResponse.empty();
+    }
+
+    @GetMapping("/rooms/{roomId}/messages/since")
+    public List<ChatMessageDTO> getMessagesSince(
+            @PathVariable Long roomId,
+            @RequestParam String since) {
+        String cleanSince = since.replace("Z", "");
+        LocalDateTime sinceTime = LocalDateTime.parse(cleanSince);
+        return chatService.getMessagesSince(roomId, sinceTime);
     }
 }

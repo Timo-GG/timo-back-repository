@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,6 +69,7 @@ public class ChatService {
                 .roomId(chatRoom.getId())
                 .senderId(message.getSenderId())
                 .content(message.getContent())
+                .timestamp(message.getRegDate().toString())
                 .build();
     }
 
@@ -76,8 +78,14 @@ public class ChatService {
      */
     @Transactional(readOnly = true)
     public List<ChatMessageDTO> getMessages(Long roomId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "regDate"));
+        // ✅ page 값 검증 및 조정
+        int actualPage = Math.max(0, page); // 음수 방지
+
+        Pageable pageable = PageRequest.of(actualPage, size, Sort.by(Sort.Direction.DESC, "regDate"));
         Page<Message> messagePage = messageRepository.findByChatRoom_Id(roomId, pageable);
+
+        log.info("메시지 조회: roomId={}, page={}, size={}, 조회된 메시지 수={}",
+                roomId, actualPage, size, messagePage.getContent().size());
 
         return messagePage.stream()
                 .map(m -> ChatMessageDTO.builder()
@@ -85,9 +93,11 @@ public class ChatService {
                         .roomId(m.getChatRoom().getId())
                         .senderId(m.getSenderId())
                         .content(m.getContent())
+                        .timestamp(m.getRegDate().toString())
                         .build())
                 .collect(Collectors.toList());
     }
+
 
     /**
      * 안 읽은 메시지 개수 조회
@@ -283,5 +293,28 @@ public class ChatService {
 
         // ✅ 3개 파라미터 메서드 사용
         return ChatRoomResponse.of(room, myMembership, opponentMembership);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChatMessageDTO> getMessagesSince(Long roomId, LocalDateTime sinceTime) {
+        List<Message> messages = messageRepository.findByChatRoom_IdAndRegDateAfterOrderByRegDateAsc(roomId, sinceTime);
+
+        return messages.stream()
+                .map(m -> ChatMessageDTO.builder()
+                        .messageId(m.getId())
+                        .roomId(m.getChatRoom().getId())
+                        .senderId(m.getSenderId())
+                        .content(m.getContent())
+                        .timestamp(m.getRegDate().toString())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isUserInRoom(Long memberId, Long roomId) {
+        return chatRoomMemberRepository
+                .findByChatRoomIdAndMember_MemberId(roomId, memberId)
+                .filter(member -> !member.isLeft())
+                .isPresent();
     }
 }

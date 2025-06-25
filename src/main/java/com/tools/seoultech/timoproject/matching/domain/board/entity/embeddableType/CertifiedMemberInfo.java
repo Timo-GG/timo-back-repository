@@ -14,6 +14,7 @@ public class CertifiedMemberInfo extends CompactMemberInfo{
     private String department;
     private Gender gender;
     private String mbti;
+    private String verificationType;
 
     public CertifiedMemberInfo(String univName, String department, Gender gender, String mbti,
                                RiotAccount riotAccount, RankInfoDto rankInfo, List<String> most3Champ) {
@@ -22,5 +23,8 @@ public class CertifiedMemberInfo extends CompactMemberInfo{
         this.department = department;
         this.gender = gender;
         this.mbti = mbti;
+        this.verificationType = riotAccount.getVerificationType() != null ?
+                riotAccount.getVerificationType().name() : null;
+
     }
 }
