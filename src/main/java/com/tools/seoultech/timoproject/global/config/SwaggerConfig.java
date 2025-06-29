@@ -10,6 +10,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
 
+import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.configuration.SpringDocDataRestConfiguration;
 import org.springdoc.core.models.GroupedOpenApi;
@@ -18,15 +19,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.util.List;
+
 /**
  * 인증이 필요없는 API에는 @Operation(summary = "공개 API", security = @SecurityRequirement(name = "")) 추가.
 */
 
 @OpenAPIDefinition(
         info = @io.swagger.v3.oas.annotations.info.Info(
-                title = "API 문서",
+                title = "TIMO.GG API",
                 version = "v1",
-                description = "swagger v1 UI Test"
+                description = "대학생 전용 LOL 매칭 플랫폼 API"
         ),
         security = @SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME_NAME)
 )
@@ -46,6 +49,14 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
+                .info(new Info()
+                        .title("TIMO.GG API")
+                        .version("v1")
+                        .description("대학생 전용 LOL 매칭 플랫폼 API"))
+                .servers(List.of(
+                        new Server().url("https://timo.kr").description("Production server"),
+                        new Server().url("http://localhost:8080").description("Local development server")
+                ))
                 .components(new Components());
     }
 
@@ -53,14 +64,13 @@ public class SwaggerConfig {
     public GroupedOpenApi groupedOpenApi() {
         String[] paths = {"/api/v1/**"};
         String[] packagesToScan = {
-                "com.tools.seoultech.timoproject.riot",
                 "com.tools.seoultech.timoproject.member",
                 "com.tools.seoultech.timoproject.matching.controller",
                 "com.tools.seoultech.timoproject.ranking",
                 "com.tools.seoultech.timoproject.auth",
                 "com.tools.seoultech.timoproject.riot",
                 "com.tools.seoultech.timoproject.notification",
-                "com.tools.seoultech.timoproject.review",
+                "com.tools.seoultech.timoproject.review"
 
         };
         return GroupedOpenApi.builder()

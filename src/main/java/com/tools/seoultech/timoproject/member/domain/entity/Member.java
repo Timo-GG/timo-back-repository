@@ -33,6 +33,10 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(name = "notification_email")
+    @Email
+    private String notificationEmail;
+
     @Embedded
     private RiotAccount riotAccount;
 
@@ -66,6 +70,7 @@ public class Member {
     public void updateUnivAccount(String univName, String univCertifiedEmail) {
         this.certifiedUnivInfo = new CertifiedUnivInfo(univCertifiedEmail, univName);
     }
+
     public void updateUserAgreement(UserAgreement term) {
         this.term = term;
     }
@@ -73,5 +78,17 @@ public class Member {
     public void updateRiotAccountWithRSO(String puuid, String name, String tag, String profileUrl) {
         this.riotAccount = new RiotAccount(puuid, name, tag, profileUrl,
                 RiotVerificationType.RSO_VERIFIED);
+    }
+
+    public void updateNotificationEmail(String notificationEmail) {
+        this.notificationEmail = notificationEmail;
+    }
+
+    public boolean shouldReceiveEmailNotification() {
+        return notificationEmail != null && !notificationEmail.trim().isEmpty();
+    }
+
+    public String getEmailForNotification() {
+        return shouldReceiveEmailNotification() ? notificationEmail : null;
     }
 }

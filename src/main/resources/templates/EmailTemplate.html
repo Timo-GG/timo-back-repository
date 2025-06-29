@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TIMO.GG 알림</title>
+    <style type="text/css">
+        /* 기존 CSS 스타일 유지 */
+        body, table, td, a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #f4f4f4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            border: 0;
+            outline: none;
+            text-decoration: none;
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+
+        /* 모바일 반응형 */
+        @media only screen and (max-width: 600px) {
+            .mobile-padding {
+                padding: 20px !important;
+            }
+
+            .mobile-font-large {
+                font-size: 24px !important;
+            }
+
+            .mobile-font-medium {
+                font-size: 16px !important;
+            }
+
+            .mobile-font-small {
+                font-size: 15px !important;
+            }
+
+            .mobile-button {
+                display: block !important;
+                width: 100% !important;
+                padding: 18px 20px !important;
+                box-sizing: border-box !important;
+            }
+
+            .mobile-notification-padding {
+                padding: 15px !important;
+            }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+<!-- 메인 컨테이너 -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f4f4f4;">
+    <tr>
+        <td align="center" style="padding: 20px 0;">
+            <!-- 이메일 컨테이너 -->
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; margin: 0 auto;">
+
+                <!-- 헤더 -->
+                <tr>
+                    <td style="background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%); padding: 30px 20px; text-align: center;" class="mobile-padding">
+                        <!-- 로고 -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td align="center" style="padding-bottom: 15px;">
+                                    <img src="https://raw.githubusercontent.com/Timo-GG/timo-back-repository/refs/heads/main/timo-icon.png"
+                                         alt="TIMO 로고" width="60" height="60"
+                                         style="border-radius: 12px; display: block;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <h1 style="color: #ffffff; font-size: 28px; font-weight: bold; margin: 0; letter-spacing: 2px;" class="mobile-font-large">TI&#173;MO&#173;.GG</h1>
+                                    <p style="color: #ffffff; font-size: 14px; margin: 5px 0 0 0; opacity: 0.9;">LOL 대학생 전용 매칭 플랫폼</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- 본문 -->
+                <tr>
+                    <td style="padding: 40px 30px;" class="mobile-padding">
+                        <!-- 인사말 -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td>
+                                    <h2 style="font-size: 18px; color: #2d3748; margin: 0 0 20px 0; font-weight: 600;" class="mobile-font-medium">
+                                        안녕하세요! <span th:text="${username}">사용자</span>님
+                                    </h2>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 알림 박스 -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 20px 0;">
+                            <tr>
+                                <td style="background-color: #f7fafc; border-left: 4px solid #00d4aa; padding: 20px; border-radius: 0 8px 8px 0;" class="mobile-notification-padding">
+                                    <h3 style="font-size: 18px; font-weight: 600; color: #2d3748; margin: 0 0 10px 0;" th:text="${notification_title}">
+                                        알림 제목
+                                    </h3>
+                                    <p style="font-size: 16px; color: #4a5568; margin: 0; line-height: 1.5;" th:text="${notification_message}">
+                                        알림 내용
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 설명 텍스트 -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td>
+                                    <p style="font-size: 16px; color: #4a5568; line-height: 1.6; margin: 0 0 30px 0;" class="mobile-font-small">
+                                        위 알림에 대한 자세한 내용을 확인하시려면 아래 버튼을 클릭해주세요.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- CTA 버튼 -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td align="center" style="padding: 20px 0;">
+                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                        <tr>
+                                            <td style="background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%); border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);" class="mobile-button">
+                                                <a th:href="${redirect_url}"
+                                                   style="display: inline-block; padding: 16px 32px; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600; text-align: center;"
+                                                   class="mobile-button">
+                                                    지금 확인하기
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 마무리 텍스트 -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td>
+                                    <p style="font-size: 16px; color: #4a5568; line-height: 1.6; margin: 0;" class="mobile-font-small">
+                                        문의사항이 있으시면 언제든지 저희에게 연락해주세요.<br>
+                                        즐거운 게임 되세요! 🎮
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- 푸터 -->
+                <tr>
+                    <td style="background-color: #2d3748; padding: 30px 20px; text-align: center;" class="mobile-padding">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td align="center">
+                                    <p style="color: #a0aec0; font-size: 14px; margin: 0 0 15px 0; line-height: 1.5;">
+                                        이 메일은 <a href="https://timo.kr" style="color: #00d4aa; text-decoration: none; font-weight: bold;">TIMO.GG</a> 알림 서비스에서 발송되었습니다.<br>
+                                        더 이상 알림을 받고 싶지 않으시면 계정 설정에서 변경해주세요.
+                                    </p>
+
+                                    <p style="margin: 20px 0;">
+                                        <a href="https://timo.kr" style="color: #00d4aa; text-decoration: none; font-size: 14px;">
+                                            웹사이트 방문하기
+                                        </a>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -47,11 +47,11 @@ public class RankingRedisService {
 
 	public void saveRankInfo(Long memberId, RedisRankingInfo rankingInfo) {
 		int score = rankingInfo.getScore();
-		String memberIdStr = memberId.toString();
+		String id = memberId.toString();
 		String universityKey = buildUniversityKey(rankingInfo.getUniversity());
 
-		redisTemplate.opsForZSet().add(RANKING_KEY, memberIdStr, score);
-		redisTemplate.opsForZSet().add(universityKey, memberIdStr, score);
+		redisTemplate.opsForZSet().add(RANKING_KEY, id, score);
+		redisTemplate.opsForZSet().add(universityKey, id, score);
 
 		log.info("랭킹 저장 완료: memberId={}, university={}", memberId, rankingInfo.getUniversity());
 	}

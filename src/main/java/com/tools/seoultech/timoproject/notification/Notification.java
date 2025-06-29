@@ -3,6 +3,8 @@ package com.tools.seoultech.timoproject.notification;
 import com.tools.seoultech.timoproject.global.BaseEntity;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 
+import com.tools.seoultech.timoproject.notification.dto.NotificationRequest;
+import com.tools.seoultech.timoproject.notification.enumType.NotificationType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -39,6 +41,16 @@ public class Notification extends BaseEntity {
 
 	public void markAsRead() {
 		this.isRead = true;
+	}
+
+	public static Notification create(Member member, NotificationRequest request, String formattedMessage) {
+		return Notification.builder()
+				.member(member)
+				.type(request.type())
+				.message(formattedMessage)
+				.redirectUrl(request.redirectUrl())
+				.isRead(false)
+				.build();
 	}
 
 }

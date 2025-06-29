@@ -18,7 +18,8 @@ public record MemberDto(
         CertifiedUnivInfoDto certifiedUnivInfo,
         Role role,
         RankingInfoDto rankingInfo,
-        UserAgreement term
+        UserAgreement term,
+        String notificationEmail
 ) {
     public static MemberDto from(Member entity) {
         return new MemberDto(
@@ -29,7 +30,8 @@ public record MemberDto(
                 entity.getCertifiedUnivInfo() != null ? CertifiedUnivInfoDto.from(entity.getCertifiedUnivInfo()) : null,
                 entity.getRole(),
                 entity.getRankingInfo() != null ? RankingInfoDto.from(entity.getRankingInfo()) : null,
-                entity.getTerm()
+                entity.getTerm(),
+                entity.getNotificationEmail()
         );
     }
 
