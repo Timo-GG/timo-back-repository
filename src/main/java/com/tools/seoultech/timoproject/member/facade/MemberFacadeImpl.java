@@ -4,6 +4,7 @@ import com.tools.seoultech.timoproject.auth.dto.RiotLoginParams;
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
+import com.tools.seoultech.timoproject.member.dto.NotificationEmailResponse;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
@@ -93,5 +94,15 @@ public class MemberFacadeImpl implements MemberFacade {
     @Transactional
     public String linkRiotAccount(Long memberId, RiotLoginParams params) {
         return memberService.linkRiotAccount(memberId, params);
+    }
+
+    @Override
+    public void updateNotificationEmail(Long memberId, String notificationEmail) {
+        memberService.updateNotificationEmail(memberId, notificationEmail);
+    }
+
+    @Override
+    public NotificationEmailResponse getNotificationEmailSettings(Long memberId) {
+        return memberService.getNotificationEmailSettings(memberId);
     }
 }

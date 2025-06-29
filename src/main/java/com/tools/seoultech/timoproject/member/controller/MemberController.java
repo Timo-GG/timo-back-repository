@@ -3,13 +3,12 @@ package com.tools.seoultech.timoproject.member.controller;
 import com.tools.seoultech.timoproject.auth.dto.RiotLoginParams;
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
-import com.tools.seoultech.timoproject.member.dto.AccountDto;
-import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
+import com.tools.seoultech.timoproject.member.dto.*;
 import com.tools.seoultech.timoproject.member.facade.MemberFacade;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
-import com.tools.seoultech.timoproject.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -113,5 +112,24 @@ public class MemberController {
 
         String result = memberFacade.linkRiotAccount(memberId, params);
         return ResponseEntity.ok(APIDataResponse.of(result));
+    }
+
+    @Operation(summary = "이메일 알림 설정 업데이트")
+    @PutMapping("/notification-email")
+    public ResponseEntity<Void> updateNotificationEmail(
+            @CurrentMemberId Long memberId,
+            @RequestBody @Valid NotificationEmailRequest request) {
+
+        memberFacade.updateNotificationEmail(memberId, request.notificationEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "이메일 알림 설정 조회")
+    @GetMapping("/notification-email")
+    public ResponseEntity<APIDataResponse<NotificationEmailResponse>> getNotificationEmail(
+            @CurrentMemberId Long memberId) {
+
+        NotificationEmailResponse response = memberFacade.getNotificationEmailSettings(memberId);
+        return ResponseEntity.ok(APIDataResponse.of(response));
     }
 }
