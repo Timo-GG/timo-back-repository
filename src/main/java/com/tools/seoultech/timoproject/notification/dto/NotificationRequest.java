@@ -1,4 +1,6 @@
-package com.tools.seoultech.timoproject.notification;
+package com.tools.seoultech.timoproject.notification.dto;
+
+import com.tools.seoultech.timoproject.notification.enumType.NotificationType;
 
 public record NotificationRequest(
 		NotificationType type,

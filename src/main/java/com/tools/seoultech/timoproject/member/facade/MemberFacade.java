@@ -3,6 +3,7 @@ package com.tools.seoultech.timoproject.member.facade;
 import com.tools.seoultech.timoproject.auth.dto.RiotLoginParams;
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
+import com.tools.seoultech.timoproject.member.dto.NotificationEmailResponse;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
 import com.tools.seoultech.timoproject.member.dto.MemberDto;
 
@@ -29,4 +30,7 @@ public interface MemberFacade {
     void hardDeleteUserAgreement(Long memberId);
 
     String linkRiotAccount(Long memberId, RiotLoginParams params);
+
+    void updateNotificationEmail(Long memberId, String notificationEmail);
+    NotificationEmailResponse getNotificationEmailSettings(Long memberId);
 }

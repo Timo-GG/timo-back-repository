@@ -10,6 +10,7 @@
     import com.tools.seoultech.timoproject.member.domain.entity.Member;
     import com.tools.seoultech.timoproject.member.domain.entity.enumType.RiotVerificationType;
     import com.tools.seoultech.timoproject.member.domain.entity.enumType.UserAgreement;
+    import com.tools.seoultech.timoproject.member.dto.NotificationEmailResponse;
     import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
     import com.tools.seoultech.timoproject.member.service.MemberService;
     import com.tools.seoultech.timoproject.member.MemberRepository;
@@ -178,6 +179,43 @@
             } else {
                 throw new BusinessException(ErrorCode.RIOT_ACCOUNT_INFO_NOT_FOUND);
             }
+        }
+
+        @Transactional
+        @Override
+        public void updateNotificationEmail(Long memberId, String notificationEmail) {
+            Member member = getById(memberId);
+
+            validateNotificationEmail(notificationEmail);
+            member.updateNotificationEmail(notificationEmail);
+            memberRepository.save(member);
+
+            log.info("알림 이메일 설정 변경 - memberId: {}, email: {}", memberId, notificationEmail);
+        }
+
+        @Transactional(readOnly = true)
+        @Override
+        public NotificationEmailResponse getNotificationEmailSettings(Long memberId) {
+            Member member = getById(memberId);
+            return NotificationEmailResponse.from(member);
+        }
+
+        @Transactional
+        @Override
+        public Member save(Member member) {
+            return memberRepository.save(member);
+        }
+
+        private void validateNotificationEmail(String email) {
+            if (email != null && !email.trim().isEmpty()) {
+                if (!isValidEmail(email)) {
+                    throw new BusinessException(ErrorCode.INVALID_EMAIL_FORMAT);
+                }
+            }
+        }
+
+        private boolean isValidEmail(String email) {
+            return email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
         }
 
         private void updateRiotAccountWithRSO(Member member, RiotInfoResponse riotInfo) {

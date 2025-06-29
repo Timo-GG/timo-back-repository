@@ -1,14 +1,9 @@
 package com.tools.seoultech.timoproject.matching.service;
 
 
-import com.tools.seoultech.timoproject.chat.service.ChatService;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.DuoPage;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.mysql.ScrimPage;
-import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisDuoPageOnly;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
-import com.tools.seoultech.timoproject.notification.NotificationRequest;
-import com.tools.seoultech.timoproject.notification.NotificationService;
-import com.tools.seoultech.timoproject.notification.NotificationType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

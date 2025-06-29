@@ -78,7 +78,8 @@ public enum ErrorCode {
     REDIS_RANKING_NOT_FOUND(1000, HttpStatus.NOT_FOUND, "랭킹 정보가 존재하지 않습니다."),
     MISMATCHED_EMAIL_DOMAIN(1001, HttpStatus.BAD_REQUEST, "일치하지 않는 메일 도메인입니다."),
     ALREADY_LINKED_RIOT_ACCOUNT(1002, HttpStatus.BAD_REQUEST, "이미 연동되어 있는 라이엇 계정입니다."),
-    RIOT_ACCOUNT_INFO_NOT_FOUND(1003, HttpStatus.NOT_FOUND, "라이엇 계정 정보가 존재하지 않습니다."),;
+    RIOT_ACCOUNT_INFO_NOT_FOUND(1003, HttpStatus.NOT_FOUND, "라이엇 계정 정보가 존재하지 않습니다."),
+    INVALID_EMAIL_FORMAT(1004,HttpStatus.BAD_REQUEST, "유효하지 않은 이메일 형식입니다." );
 
 
     private final int code;
