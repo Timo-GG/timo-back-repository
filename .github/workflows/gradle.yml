@@ -59,11 +59,6 @@ jobs:
             linux/amd64
             linux/arm64
 
-      # ✅ .env 파일 생성 단계 추가
-      - name: Create .env file
-        run: |
-          echo "FIREBASE_SERVICE_ACCOUNT_KEY=${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}" > .env
-
       # docker-compose.yml 생성
       - name: Create docker-compose.yml
         run: |
@@ -89,6 +84,6 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/compose            
-            /usr/bin/docker compose stop spring
-            /usr/bin/docker compose pull spring
-            /usr/bin/docker compose up -d spring
+            /usr/bin/docker compose stop 
+            /usr/bin/docker compose pull 
+            /usr/bin/docker compose up -d 
