@@ -10,6 +10,7 @@
 - 대화 기능
 - 소셜로그인
 - 평점 기능
+- 알림 기능
 
 ## Backend Developer
 - <a href="https://github.com/Changha-dev">전창하</a>
