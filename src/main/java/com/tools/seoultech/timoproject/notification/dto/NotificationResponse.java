@@ -1,4 +1,7 @@
-package com.tools.seoultech.timoproject.notification;
+package com.tools.seoultech.timoproject.notification.dto;
+
+import com.tools.seoultech.timoproject.notification.Notification;
+import com.tools.seoultech.timoproject.notification.enumType.NotificationType;
 
 import java.time.LocalDateTime;
 
