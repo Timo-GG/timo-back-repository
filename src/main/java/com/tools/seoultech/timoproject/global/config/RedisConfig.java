@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisKeyValueAdapter;
@@ -28,11 +29,19 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
-    // NOTE: RedisTemplate용 Config
+    @Value("${spring.data.redis.password}")
+    private String redisPassword;
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(redisHost, redisPort);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(redisHost);
+        config.setPort(redisPort);
+        config.setPassword(redisPassword);
+
+        return new LettuceConnectionFactory(config);
     }
+
 
     /** Spring <-> Redis 간에 전송 형태 설정 : Sorted-Set 및 Hash 데이터 처리를 위한 RedisTemplate 설정 */
     @Bean
