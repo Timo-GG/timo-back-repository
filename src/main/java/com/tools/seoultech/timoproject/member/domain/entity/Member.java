@@ -80,6 +80,18 @@ public class Member {
                 RiotVerificationType.RSO_VERIFIED);
     }
 
+    /**
+     * RiotAccount의 인증 타입만 업데이트
+     * 기존 RiotAccount 정보는 유지하면서 verificationType만 변경
+     */
+    public void updateRiotAccountVerificationType(RiotVerificationType newVerificationType) {
+        if (this.riotAccount == null) {
+            throw new IllegalStateException("RiotAccount가 존재하지 않습니다. 인증 타입을 업데이트할 수 없습니다.");
+        }
+
+        this.riotAccount = RiotAccount.withUpdatedVerificationType(this.riotAccount, newVerificationType);
+    }
+
     public void updateNotificationEmail(String notificationEmail) {
         this.notificationEmail = notificationEmail;
     }

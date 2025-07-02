@@ -18,6 +18,7 @@ import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
 import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MyPageService {
@@ -203,5 +205,79 @@ public class MyPageService {
         pageRepository.deleteById(mypageId);
     }
 
+
+    public void updateVerificationTypeInMyPages(Long memberId, String verificationType) {
+        log.info("🔄 MyPage 인증 타입 업데이트 시작: memberId={}, type={}",
+                memberId, verificationType);
+
+        int duoUpdated = updateDuoPageVerification(memberId, verificationType);
+        int scrimUpdated = updateScrimPageVerification(memberId, verificationType);
+
+        log.info("✅ MyPage 인증 타입 업데이트 완료: memberId={}, duo={}, scrim={}",
+                memberId, duoUpdated, scrimUpdated);
+    }
+
+    private int updateDuoPageVerification(Long memberId, String verificationType) {
+        int updateCount = 0;
+
+        try {
+            List<RedisDuoPageOnly> acceptorPages = redisDuoPageRepository.findAllByAcceptorId(memberId);
+            for (RedisDuoPageOnly pageProjection : acceptorPages) {
+                RedisDuoPage updated = RedisDuoPage.updateAcceptorVerificationFromProjection(
+                        pageProjection, verificationType);
+                redisDuoPageRepository.save(updated);
+                updateCount++;
+            }
+
+            List<RedisDuoPageOnly> requestorPages = redisDuoPageRepository.findAllByRequestorId(memberId);
+            for (RedisDuoPageOnly pageProjection : requestorPages) {
+                RedisDuoPage updated = RedisDuoPage.updateRequestorVerificationFromProjection(
+                        pageProjection, verificationType);
+                redisDuoPageRepository.save(updated);
+                updateCount++;
+            }
+
+            log.debug("✅ Duo 페이지 업데이트 완료: count={}", updateCount);
+
+        } catch (Exception e) {
+            log.error("❌ Duo 페이지 인증 타입 업데이트 실패: memberId={}", memberId, e);
+            throw e;
+        }
+
+        return updateCount;
+    }
+
+    private int updateScrimPageVerification(Long memberId, String verificationType) {
+        int updateCount = 0;
+
+        try {
+            // Acceptor로 참여한 페이지들
+            List<RedisScrimPageOnly> acceptorPages = redisScrimPageRepository.findByAcceptorId(memberId);
+            for (RedisScrimPageOnly pageProjection : acceptorPages) {
+                // Projection → Entity 변환 후 업데이트
+                RedisScrimPage updated = RedisScrimPage.updateAcceptorVerificationFromProjection(
+                        pageProjection, verificationType);
+                redisScrimPageRepository.save(updated);
+                updateCount++;
+            }
+
+            List<RedisScrimPageOnly> requestorPages = redisScrimPageRepository.findByRequestorId(memberId);
+            for (RedisScrimPageOnly pageProjection : requestorPages) {
+                // Projection → Entity 변환 후 업데이트
+                RedisScrimPage updated = RedisScrimPage.updateRequestorVerificationFromProjection(
+                        pageProjection, verificationType);
+                redisScrimPageRepository.save(updated);
+                updateCount++;
+            }
+
+            log.debug("✅ Scrim 페이지 업데이트 완료: count={}", updateCount);
+
+        } catch (Exception e) {
+            log.error("❌ Scrim 페이지 인증 타입 업데이트 실패: memberId={}", memberId, e);
+            throw e;
+        }
+
+        return updateCount;
+    }
 
 }

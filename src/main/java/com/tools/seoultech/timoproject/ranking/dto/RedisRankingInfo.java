@@ -25,7 +25,7 @@ public class RedisRankingInfo implements Serializable {
 
     private Long memberId;
     private String puuid;
-    
+
     // 소환사 정보
     private String gameName;
     private String tagLine;
@@ -35,7 +35,7 @@ public class RedisRankingInfo implements Serializable {
     // 대학 정보
     private String university;
     private String department;
-    
+
     // 라이엇 API 정보
     private String tier;
     private String rank;
@@ -43,7 +43,7 @@ public class RedisRankingInfo implements Serializable {
     private List<String> mostChampions;
     private int wins;
     private int losses;
-    
+
     // 랭킹 점수
     private Integer score;
 
@@ -71,7 +71,7 @@ public class RedisRankingInfo implements Serializable {
             case "CHALLENGER" -> 3600;
             default -> 0;
         };
-        
+
         int rankScore = switch (rank) {
             case "IV" -> 0;
             case "III" -> 100;
@@ -79,7 +79,7 @@ public class RedisRankingInfo implements Serializable {
             case "I" -> 300;
             default -> 0;
         };
-        
+
         return baseScore + rankScore + lp;
     }
 
@@ -116,6 +116,89 @@ public class RedisRankingInfo implements Serializable {
                 .wins(riotRankingDto.recentWinLossSummary().wins())
                 .losses(riotRankingDto.recentWinLossSummary().losses())
                 .score(calculateScore(soloRank.getTier(), soloRank.getRank(), soloRank.getLp()))
+                .build();
+    }
+
+    public static RedisRankingInfo updateFromRiotAPI(RedisRankingInfo existing, RiotRankingDto riotRankingDto) {
+        var soloRank = riotRankingDto.soloRankInfo();
+        int newScore = calculateScore(soloRank.getTier(), soloRank.getRank(), soloRank.getLp());
+
+        return RedisRankingInfo.builder()
+                // 기존 정보 유지
+                .id(existing.getId())
+                .memberId(existing.getMemberId())
+                .puuid(existing.getPuuid())
+                .gameName(existing.getGameName())
+                .tagLine(existing.getTagLine())
+                .verificationType(existing.getVerificationType())
+                .university(existing.getUniversity())
+                .department(existing.getDepartment())
+                .mbti(existing.getMbti())
+                .position(existing.getPosition())
+                .gender(existing.getGender())
+                .memo(existing.getMemo())
+
+                // Riot API에서 새로 받은 정보로 업데이트
+                .profileIconUrl(riotRankingDto.profileIconUrl())
+                .tier(soloRank.getTier())
+                .rank(soloRank.getRank())
+                .lp(soloRank.getLp())
+                .mostChampions(riotRankingDto.most3ChampionNames())
+                .wins(riotRankingDto.recentWinLossSummary().wins())
+                .losses(riotRankingDto.recentWinLossSummary().losses())
+                .score(newScore)
+                .build();
+    }
+
+    public static RedisRankingInfo updateVerificationType(RedisRankingInfo existing, String newVerificationType) {
+        return RedisRankingInfo.builder()
+                .id(existing.getId())
+                .memberId(existing.getMemberId())
+                .puuid(existing.getPuuid())
+                .gameName(existing.getGameName())
+                .tagLine(existing.getTagLine())
+                .profileIconUrl(existing.getProfileIconUrl())
+                .verificationType(newVerificationType) // 새로운 인증 타입
+                .university(existing.getUniversity())
+                .department(existing.getDepartment())
+                .tier(existing.getTier())
+                .rank(existing.getRank())
+                .lp(existing.getLp())
+                .mostChampions(existing.getMostChampions())
+                .wins(existing.getWins())
+                .losses(existing.getLosses())
+                .score(existing.getScore())
+                .mbti(existing.getMbti())
+                .position(existing.getPosition())
+                .gender(existing.getGender())
+                .memo(existing.getMemo())
+                .build();
+    }
+
+    public static RedisRankingInfo updateUserInfo(RedisRankingInfo existing, RankingUpdateRequestDto dto) {
+        return RedisRankingInfo.builder()
+                .id(existing.getId())
+                .memberId(existing.getMemberId())
+                .puuid(existing.getPuuid())
+                .gameName(existing.getGameName())
+                .tagLine(existing.getTagLine())
+                .profileIconUrl(existing.getProfileIconUrl())
+                .verificationType(existing.getVerificationType())
+                .university(existing.getUniversity())
+                .tier(existing.getTier())
+                .rank(existing.getRank())
+                .lp(existing.getLp())
+                .mostChampions(existing.getMostChampions())
+                .wins(existing.getWins())
+                .losses(existing.getLosses())
+                .score(existing.getScore())
+
+                // 업데이트할 사용자 정보들
+                .department(dto.department() != null ? dto.department() : existing.getDepartment())
+                .mbti(dto.mbti() != null ? dto.mbti() : existing.getMbti())
+                .position(dto.position() != null ? dto.position() : existing.getPosition())
+                .gender(dto.gender() != null ? dto.gender() : existing.getGender())
+                .memo(dto.memo() != null ? dto.memo() : existing.getMemo())
                 .build();
     }
 }

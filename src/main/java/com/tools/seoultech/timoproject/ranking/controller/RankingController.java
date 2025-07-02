@@ -118,15 +118,6 @@ public class RankingController {
         return ResponseEntity.ok(APIDataResponse.of(rank));
     }
 
-    @Operation(summary = "인증 타입 업데이트", description = "사용자의 인증 타입을 업데이트합니다.")
-    @PostMapping("/verification-type")
-    public ResponseEntity<?> updateVerificationType(
-            @CurrentMemberId Long memberId,
-            @RequestParam String verificationType) {
-        rankingFacade.updateVerificationType(memberId, verificationType);
-        return ResponseEntity.ok(APIDataResponse.of("인증 타입이 업데이트되었습니다."));
-    }
-
     @Operation(summary = "내 랭킹 즉시 업데이트", description = "현재 로그인한 사용자의 랭킹 정보를 Riot API에서 즉시 업데이트합니다.")
     @PostMapping("/refresh")
     public ResponseEntity<APIDataResponse<String>> refreshMyRanking(@CurrentMemberId Long memberId) {
