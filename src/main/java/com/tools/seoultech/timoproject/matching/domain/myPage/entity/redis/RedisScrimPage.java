@@ -4,6 +4,7 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableTy
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.PartyMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.ScrimMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisScrimPageOnly;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,6 +59,62 @@ public class RedisScrimPage {
                                requestorCertifiedMemberInfo, requestorPartyInfo, requestorMemo,
                                now, MatchingCategory.SCRIM ,acceptorId, requestorId, boardUUID
         );
+    }
+
+    public static RedisScrimPage updateAcceptorVerificationFromProjection(
+            RedisScrimPageOnly projection, String newVerificationType) {
+
+        CertifiedMemberInfo updatedAcceptorInfo = CertifiedMemberInfo.withUpdatedVerificationType(
+                projection.getAcceptorCertifiedMemberInfo(), newVerificationType);
+
+        return RedisScrimPage.builder()
+                .myPageUUID(projection.getMyPageUUID())
+                .headCount(projection.getHeadCount())
+                .mapCode(projection.getMapCode())
+                .acceptorCertifiedMemberInfo(updatedAcceptorInfo)
+                .acceptorPartyInfo(projection.getAcceptorPartyInfo())
+                .acceptorMemo(projection.getAcceptorMemo())
+                .requestorCertifiedMemberInfo(projection.getRequestorCertifiedMemberInfo())
+                .requestorPartyInfo(projection.getRequestorPartyInfo())
+                .requestorMemo(projection.getRequestorMemo())
+                .updatedAt(projection.getUpdatedAt())
+                .matchingCategory(projection.getMatchingCategory())
+                .acceptorId(projection.getAcceptorId())
+                .requestorId(projection.getRequestorId())
+                .boardUUID(projection.getBoardUUID())
+                .build();
+    }
+
+    /**
+     * Projection에서 Requestor 인증 타입 업데이트하여 Entity 생성
+     */
+    public static RedisScrimPage updateRequestorVerificationFromProjection(
+            RedisScrimPageOnly projection, String newVerificationType) {
+
+        CertifiedMemberInfo updatedRequestorInfo = CertifiedMemberInfo.withUpdatedVerificationType(
+                projection.getRequestorCertifiedMemberInfo(), newVerificationType);
+
+        return RedisScrimPage.builder()
+                .myPageUUID(projection.getMyPageUUID())
+                .headCount(projection.getHeadCount())
+                .mapCode(projection.getMapCode())
+                .acceptorCertifiedMemberInfo(projection.getAcceptorCertifiedMemberInfo())
+                .acceptorPartyInfo(projection.getAcceptorPartyInfo())
+                .acceptorMemo(projection.getAcceptorMemo())
+                .requestorCertifiedMemberInfo(updatedRequestorInfo)
+                .requestorPartyInfo(projection.getRequestorPartyInfo())
+                .requestorMemo(projection.getRequestorMemo())
+                .updatedAt(projection.getUpdatedAt())
+                .matchingCategory(projection.getMatchingCategory())
+                .acceptorId(projection.getAcceptorId())
+                .requestorId(projection.getRequestorId())
+                .boardUUID(projection.getBoardUUID())
+                .build();
+    }
+
+
+    private static CertifiedMemberInfo updateCertifiedMemberInfo(CertifiedMemberInfo original, String newVerificationType) {
+        return CertifiedMemberInfo.withUpdatedVerificationType(original, newVerificationType);
     }
 }
 
