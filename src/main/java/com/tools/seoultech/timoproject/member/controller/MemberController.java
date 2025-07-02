@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.global.annotation.CurrentMemberId;
 import com.tools.seoultech.timoproject.member.dto.*;
 import com.tools.seoultech.timoproject.member.facade.MemberFacade;
+import com.tools.seoultech.timoproject.member.facade.VerificationSyncFacade;
 import com.tools.seoultech.timoproject.riot.dto.APIDataResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberFacade memberFacade;
+    private final VerificationSyncFacade verificationSyncFacade;
 
     @GetMapping("/me")
     public ResponseEntity<APIDataResponse<MemberDto>> getMember(@CurrentMemberId Long memberId) {
@@ -131,5 +133,16 @@ public class MemberController {
 
         NotificationEmailResponse response = memberFacade.getNotificationEmailSettings(memberId);
         return ResponseEntity.ok(APIDataResponse.of(response));
+    }
+
+    @Operation(summary = "인증 타입 업데이트", description = "사용자의 인증 타입을 모든 시스템에서 업데이트합니다.")
+    @PostMapping("/verification-type")
+    public ResponseEntity<?> updateVerificationType(
+            @CurrentMemberId Long memberId,
+            @RequestParam String verificationType) {
+
+        verificationSyncFacade.syncVerificationTypeAcrossAllSystems(memberId, verificationType);
+
+        return ResponseEntity.ok(APIDataResponse.of("모든 시스템의 인증 타입이 동기화되었습니다."));
     }
 }

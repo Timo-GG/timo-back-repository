@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.matching.service;
 
 import com.tools.seoultech.timoproject.matching.domain.board.dto.BoardDTO;
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.DuoBoard;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.redis.ScrimBoard;
 import com.tools.seoultech.timoproject.matching.domain.board.repository.DuoBoardRepository;
@@ -13,6 +14,7 @@ import com.tools.seoultech.timoproject.matching.service.mapper.BoardMapper;
 import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisKeyValueTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,12 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -367,5 +371,104 @@ public class BoardService {
                 .build();
 
         return scrimBoardRepository.save(refreshedBoard);
+    }
+
+    public void updateVerificationTypeInBoards(Long memberId, String verificationType) {
+        int duoUpdated = updateDuoBoardVerification(memberId, verificationType);
+        int scrimUpdated = updateScrimBoardVerification(memberId, verificationType);
+
+        log.info("✅ Board 인증 타입 업데이트 완료: memberId={}, duo={}, scrim={}",
+                memberId, duoUpdated, scrimUpdated);
+    }
+
+    /**
+     * 듀오 게시글의 인증 타입 업데이트
+     */
+    private int updateDuoBoardVerification(Long memberId, String verificationType) {
+        int updateCount = 0;
+
+        try {
+            Optional<DuoBoard> duoBoardOpt = duoBoardRepository.findByMemberId(memberId);
+
+            if (duoBoardOpt.isPresent()) {
+                DuoBoard currentBoard = duoBoardOpt.get();
+                CertifiedMemberInfo currentInfo = currentBoard.getMemberInfo();
+                CertifiedMemberInfo updatedInfo = CertifiedMemberInfo.withUpdatedVerificationType(
+                        currentInfo, verificationType);
+                DuoBoard updatedBoard = currentBoard.toBuilder()
+                        .memberInfo(updatedInfo)
+                        .build();
+
+                DuoBoard saved = duoBoardRepository.save(updatedBoard);
+
+                Optional<DuoBoardOnly> savedBoardOpt = duoBoardRepository.findByBoardUUID(saved.getBoardUUID());
+                if (savedBoardOpt.isPresent()) {
+                    String savedVerificationType = savedBoardOpt.get().getMemberInfo().getVerificationType();
+                    if (verificationType.equals(savedVerificationType)) {
+                        log.info("✅ 듀오 게시글 업데이트 검증 성공: {}", savedVerificationType);
+                    } else {
+                        log.error("❌ 듀오 게시글 업데이트 검증 실패: 예상={}, 실제={}",
+                                verificationType, savedVerificationType);
+                    }
+                }
+
+                updateCount++;
+            } else {
+                log.info("ℹ️ 해당 회원의 듀오 게시글 없음: memberId={}", memberId);
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 듀오 게시글 인증 타입 업데이트 실패: memberId={}", memberId, e);
+            throw e;
+        }
+
+        return updateCount;
+    }
+
+    /**
+     * 스크림 게시글의 인증 타입 업데이트
+     */
+    private int updateScrimBoardVerification(Long memberId, String verificationType) {
+        int updateCount = 0;
+
+        try {
+            // 해당 회원의 스크림 게시글 찾기
+            Optional<ScrimBoard> scrimBoardOpt = scrimBoardRepository.findByMemberId(memberId);
+
+            if (scrimBoardOpt.isPresent()) {
+                ScrimBoard currentBoard = scrimBoardOpt.get();
+                log.info("🔍 스크림 게시글 발견: boardUUID={}", currentBoard.getBoardUUID());
+
+                CertifiedMemberInfo currentInfo = currentBoard.getMemberInfo();
+                CertifiedMemberInfo updatedInfo = CertifiedMemberInfo.withUpdatedVerificationType(
+                        currentInfo, verificationType);
+                ScrimBoard updatedBoard = currentBoard.toBuilder()
+                        .memberInfo(updatedInfo)
+                        .build();
+
+                ScrimBoard saved = scrimBoardRepository.save(updatedBoard);
+
+                Optional<ScrimBoardOnly> savedBoardOpt = scrimBoardRepository.findByBoardUUID(saved.getBoardUUID());
+                if (savedBoardOpt.isPresent()) {
+                    String savedVerificationType = savedBoardOpt.get().getMemberInfo().getVerificationType();
+                    if (verificationType.equals(savedVerificationType)) {
+                        log.info("✅ 스크림 게시글 업데이트 검증 성공: {}", savedVerificationType);
+                    } else {
+                        log.error("❌ 스크림 게시글 업데이트 검증 실패: 예상={}, 실제={}",
+                                verificationType, savedVerificationType);
+                    }
+                }
+
+                updateCount++;
+            } else {
+                log.info("ℹ️ 해당 회원의 스크림 게시글 없음: memberId={}", memberId);
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 스크림 게시글 인증 타입 업데이트 실패: memberId={}", memberId, e);
+            throw e;
+        }
+
+        return updateCount;
     }
 }

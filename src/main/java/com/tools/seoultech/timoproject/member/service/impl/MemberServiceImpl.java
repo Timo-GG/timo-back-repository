@@ -32,7 +32,6 @@
         private final EntityManager entityManager;
         private final RequestOAuthInfoService requestOAuthInfoService;
 
-
         @Override
         public Member getById(Long memberId) {
             return memberRepository.findById(memberId).
@@ -163,13 +162,12 @@
                 throw new BusinessException(ErrorCode.ALREADY_LINKED_RIOT_ACCOUNT);
             }
 
-            // 🔥 기존 RequestOAuthInfoService 활용
+            // 기존 RequestOAuthInfoService 활용
             OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
             RiotInfoResponse riotInfo = (RiotInfoResponse) oAuthInfoResponse;
 
-            // RSO 계정 정보로 업데이트
             if (riotInfo.getPuuid() != null && riotInfo.getGameName() != null) {
-                // 🔥 기존 updateRiotAccount 메서드 확장
+
                 updateRiotAccountWithRSO(member, riotInfo);
 
                 log.info("✅ 기존 회원 Riot 계정 연동 완료: {}#{}",
@@ -206,19 +204,25 @@
             return memberRepository.save(member);
         }
 
-        private void validateNotificationEmail(String email) {
-            if (email != null && !email.trim().isEmpty()) {
-                if (!isValidEmail(email)) {
-                    throw new BusinessException(ErrorCode.INVALID_EMAIL_FORMAT);
-                }
+        @Override
+        @Transactional
+        public void updateVerificationType(Long memberId, String verificationType) {
+            Member member = getById(memberId);
+
+            if (member.getRiotAccount() == null) {
+                log.warn("⚠️ RiotAccount가 없는 회원: memberId={}", memberId);
+                return;
             }
+
+            // Member 엔티티의 verificationType 업데이트
+            RiotVerificationType newType = RiotVerificationType.valueOf(verificationType);
+            member.updateRiotAccountVerificationType(newType);
+
+            log.debug("✅ Member 인증 타입 업데이트 완료: memberId={}, verificationType={}",
+                    memberId, verificationType);
         }
 
-        private boolean isValidEmail(String email) {
-            return email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
-        }
-
-        private void updateRiotAccountWithRSO(Member member, RiotInfoResponse riotInfo) {
+        public void updateRiotAccountWithRSO(Member member, RiotInfoResponse riotInfo) {
             // 중복된 소환사 puuid 존재 여부 체크
             if (memberRepository.existsByRiotAccount_PuuidAndMemberIdNot(
                     riotInfo.getPuuid(), member.getMemberId())) {
@@ -233,4 +237,17 @@
                     riotInfo.getProfileUrl()
             );
         }
+
+        private void validateNotificationEmail(String email) {
+            if (email != null && !email.trim().isEmpty()) {
+                if (!isValidEmail(email)) {
+                    throw new BusinessException(ErrorCode.INVALID_EMAIL_FORMAT);
+                }
+            }
+        }
+
+        private boolean isValidEmail(String email) {
+            return email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
+        }
+
     }
