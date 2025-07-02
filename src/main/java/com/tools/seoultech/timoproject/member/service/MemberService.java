@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.member.service;
 
 
+import com.tools.seoultech.timoproject.auth.dto.RiotInfoResponse;
 import com.tools.seoultech.timoproject.auth.dto.RiotLoginParams;
 import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
@@ -30,6 +31,7 @@ public interface MemberService {
     void hardDeleteUserAgreement(Long memberId);
 
     String linkRiotAccount(Long memberId, RiotLoginParams params);
+    void updateVerificationType(Long memberId, String verificationType);
 
     void updateNotificationEmail(Long memberId, String notificationEmail);
     NotificationEmailResponse getNotificationEmailSettings(Long memberId);

@@ -1,5 +1,6 @@
 package com.tools.seoultech.timoproject.riot.utils;
 
+import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.CertifiedMemberInfo;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
 
 public final class RiotAccountUtil {
@@ -20,5 +21,12 @@ public final class RiotAccountUtil {
         }
 
         return gameName + "#" + tagLine;
+    }
+
+    public static String extractGameNameFromMemberInfo(CertifiedMemberInfo memberInfo) {
+        if (memberInfo == null) {
+            return "알 수 없는 사용자";
+        }
+        return extractGameName(memberInfo.getRiotAccount());
     }
 }

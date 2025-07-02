@@ -5,7 +5,7 @@ import com.tools.seoultech.timoproject.notification.enumType.NotificationType;
 public record NotificationRequest(
 		NotificationType type,
 		String redirectUrl,
-		String nickname  // 닉네임 필드 추가
+		String nickname
 ) {
 	// 닉네임이 없는 경우를 위한 생성자
 	public NotificationRequest(NotificationType type, String redirectUrl) {

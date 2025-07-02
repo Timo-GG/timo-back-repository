@@ -4,6 +4,9 @@ import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableTy
 import com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableType.UserInfo;
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.DuoMapCode;
 import com.tools.seoultech.timoproject.matching.domain.myPage.entity.EnumType.MatchingCategory;
+import com.tools.seoultech.timoproject.matching.domain.myPage.entity.redis.repository.projections.RedisDuoPageOnly;
+import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
+import com.tools.seoultech.timoproject.member.domain.entity.enumType.RiotVerificationType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,5 +59,58 @@ public class RedisDuoPage {
                                  requestorMemberInfo, requestorUserInfo, requestorMemo,
                                  now, MatchingCategory.DUO, acceptorId, requestorId, boardUUID
         );
+    }
+
+    public static RedisDuoPage updateAcceptorVerificationFromProjection(
+            RedisDuoPageOnly projection, String newVerificationType) {
+
+        CertifiedMemberInfo updatedAcceptorInfo = CertifiedMemberInfo.withUpdatedVerificationType(
+                projection.getAcceptorCertifiedMemberInfo(), newVerificationType);
+
+        return RedisDuoPage.builder()
+                .myPageUUID(projection.getMyPageUUID())
+                .mapCode(projection.getMapCode())
+                .acceptorCertifiedMemberInfo(updatedAcceptorInfo)
+                .acceptorUserInfo(projection.getAcceptorUserInfo())
+                .acceptorMemo(projection.getAcceptorMemo())
+                .requestorCertifiedMemberInfo(projection.getRequestorCertifiedMemberInfo())
+                .requestorUserInfo(projection.getRequestorUserInfo())
+                .requestorMemo(projection.getRequestorMemo())
+                .updatedAt(projection.getUpdatedAt())
+                .matchingCategory(projection.getMatchingCategory())
+                .acceptorId(projection.getAcceptorId())
+                .requestorId(projection.getRequestorId())
+                .boardUUID(projection.getBoardUUID())
+                .build();
+    }
+
+    public static RedisDuoPage updateRequestorVerificationFromProjection(
+            RedisDuoPageOnly projection, String newVerificationType) {
+
+        CertifiedMemberInfo updatedRequestorInfo = CertifiedMemberInfo.withUpdatedVerificationType(
+                projection.getRequestorCertifiedMemberInfo(), newVerificationType);
+
+        return RedisDuoPage.builder()
+                .myPageUUID(projection.getMyPageUUID())
+                .mapCode(projection.getMapCode())
+                .acceptorCertifiedMemberInfo(projection.getAcceptorCertifiedMemberInfo())
+                .acceptorUserInfo(projection.getAcceptorUserInfo())
+                .acceptorMemo(projection.getAcceptorMemo())
+                .requestorCertifiedMemberInfo(updatedRequestorInfo)
+                .requestorUserInfo(projection.getRequestorUserInfo())
+                .requestorMemo(projection.getRequestorMemo())
+                .updatedAt(projection.getUpdatedAt())
+                .matchingCategory(projection.getMatchingCategory())
+                .acceptorId(projection.getAcceptorId())
+                .requestorId(projection.getRequestorId())
+                .boardUUID(projection.getBoardUUID())
+                .build();
+    }
+
+    /**
+     * CertifiedMemberInfo의 verificationType 업데이트 헬퍼
+     */
+    private static CertifiedMemberInfo updateCertifiedMemberInfo(CertifiedMemberInfo original, String newVerificationType) {
+        return CertifiedMemberInfo.withUpdatedVerificationType(original, newVerificationType);
     }
 }

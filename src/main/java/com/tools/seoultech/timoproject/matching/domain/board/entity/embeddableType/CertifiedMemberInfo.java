@@ -2,6 +2,7 @@ package com.tools.seoultech.timoproject.matching.domain.board.entity.embeddableT
 
 import com.tools.seoultech.timoproject.matching.domain.board.entity.enumType.Gender;
 import com.tools.seoultech.timoproject.member.domain.entity.embeddableType.RiotAccount;
+import com.tools.seoultech.timoproject.member.domain.entity.enumType.RiotVerificationType;
 import com.tools.seoultech.timoproject.riot.dto.RankInfoDto;
 import lombok.Getter;
 
@@ -25,6 +26,22 @@ public class CertifiedMemberInfo extends CompactMemberInfo{
         this.mbti = mbti;
         this.verificationType = riotAccount.getVerificationType() != null ?
                 riotAccount.getVerificationType().name() : null;
+    }
 
+    public static CertifiedMemberInfo withUpdatedVerificationType(CertifiedMemberInfo original, String newVerificationType) {
+        RiotAccount updatedRiotAccount = RiotAccount.withUpdatedVerificationType(
+                original.getRiotAccount(),
+                RiotVerificationType.valueOf(newVerificationType)
+        );
+
+        return new CertifiedMemberInfo(
+                original.getUnivName(),
+                original.getDepartment(),
+                original.getGender(),
+                original.getMbti(),
+                updatedRiotAccount,
+                original.getRankInfo(),
+                original.getMost3Champ()
+        );
     }
 }
