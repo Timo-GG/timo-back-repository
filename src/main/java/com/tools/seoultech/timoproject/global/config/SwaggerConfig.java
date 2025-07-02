@@ -54,7 +54,7 @@ public class SwaggerConfig {
                         .version("v1")
                         .description("대학생 전용 LOL 매칭 플랫폼 API"))
                 .servers(List.of(
-                        new Server().url("https://timo.kr").description("Production server"),
+                        new Server().url("https://api.timo.kr").description("Production server"),
                         new Server().url("http://localhost:8080").description("Local development server")
                 ))
                 .components(new Components());
