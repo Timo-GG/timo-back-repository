@@ -7,4 +7,5 @@ import java.util.UUID;
 public interface MatchingFacade {
     MyPageDTO.Response doAcceptEvent(UUID myPageUUID) throws Exception;
     void doRejectEvent(UUID myPageUUID) throws Exception;
+    void doCancelEvent(UUID myPageUUID) throws Exception;
 }

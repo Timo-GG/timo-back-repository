@@ -42,12 +42,12 @@ public class MatchingService {
     }
 
     /** Duo 매칭 거절 */
-    public void doDuoRejectEvent(UUID myPageUUID) throws Exception {
+    public void deleteDuoMyPage(UUID myPageUUID) throws Exception {
         myPageService.deleteDuoMyPage(myPageUUID);
     }
 
     /** Scrim 매칭 거절 */
-    public void doScrimRejectEvent(UUID myPageUUID) throws Exception {
+    public void deleteScrimMyPage(UUID myPageUUID) throws Exception {
         myPageService.deleteScrimMyPage(myPageUUID);
     }
 }

@@ -20,14 +20,20 @@ public class MatchingController {
     private final MatchingFacade matchingFacade;
 
     @GetMapping("/accept/{myPageUUID}")
-    public ResponseEntity<APIDataResponse<MyPageDTO.Response>> matchingEvent(@PathVariable UUID myPageUUID) throws Exception {
+    public ResponseEntity<APIDataResponse<MyPageDTO.Response>> acceptEvent(@PathVariable UUID myPageUUID) throws Exception {
         var dto = matchingFacade.doAcceptEvent(myPageUUID);
         return ResponseEntity.ok(APIDataResponse.of(dto));
     }
 
     @GetMapping("/reject/{myPageUUID}")
-    public ResponseEntity<Void> requestEvent(@PathVariable UUID myPageUUID) throws Exception {
+    public ResponseEntity<Void> rejectEvent(@PathVariable UUID myPageUUID) throws Exception {
         matchingFacade.doRejectEvent(myPageUUID);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/cancel/{myPageUUID}")
+    public ResponseEntity<Void> cancelEvent(@PathVariable UUID myPageUUID) throws Exception {
+        matchingFacade.doCancelEvent(myPageUUID);
         return ResponseEntity.noContent().build();
     }
 }

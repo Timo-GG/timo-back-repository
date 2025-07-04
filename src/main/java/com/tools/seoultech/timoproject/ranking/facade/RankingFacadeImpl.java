@@ -4,8 +4,7 @@ import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.BusinessException;
 import com.tools.seoultech.timoproject.member.MemberRepository;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
-import com.tools.seoultech.timoproject.notification.dto.NotificationRequest;
-import com.tools.seoultech.timoproject.notification.service.NotificationService;
+import com.tools.seoultech.timoproject.notification.service.AsyncNotificationService;
 import com.tools.seoultech.timoproject.notification.enumType.NotificationType;
 import com.tools.seoultech.timoproject.riot.dto.RiotRankingDto;
 import com.tools.seoultech.timoproject.riot.facade.RiotFacade;
@@ -25,16 +24,17 @@ import java.util.List;
 public class RankingFacadeImpl implements RankingFacade {
     private final RankingService rankingService;
     private final RankingRedisService rankingRedisService;
-    private final NotificationService notificationService;
+    private final AsyncNotificationService asyncNotificationService;
     private final MemberRepository memberRepository;
     private final RiotFacade riotFacade;
-    
+
     @Override
     public void createRanking(Long memberId, String puuid) {
         RiotRankingDto riotRanking = riotFacade.getRiotRanking(puuid);
         rankingRedisService.createInitialRanking(memberId, riotRanking);
-        notificationService.sendNotification(memberId,
-            new NotificationRequest(NotificationType.RANKING_REGISTERED, "/ranking"));
+
+        asyncNotificationService.sendRankingNotificationAsync(
+                memberId, NotificationType.RANKING_REGISTERED, "/ranking");
     }
 
     @Override
