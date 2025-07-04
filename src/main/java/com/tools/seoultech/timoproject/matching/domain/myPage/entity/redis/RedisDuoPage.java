@@ -18,7 +18,7 @@ import org.springframework.data.redis.core.index.Indexed;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@RedisHash(value = "DuoMyPage", timeToLive = 15 * 60)
+@RedisHash(value = "DuoMyPage", timeToLive = 24 * 60 * 60)
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
