@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@RedisHash(value = "ScrimMyPage", timeToLive = 15 * 60)
+@RedisHash(value = "ScrimMyPage", timeToLive = 24 * 60 * 60)
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
