@@ -72,7 +72,7 @@ public class MyPageController {
         return ResponseEntity.ok(APIDataResponse.of(exists));
     }
 
-    /** Update */
+    /** Create */
     @PostMapping("/mypage/duo")
     public ResponseEntity<APIDataResponse<MatchingDTO.Response>> createDuoBoard(@RequestBody MatchingDTO.RequestDuo requestDto) throws Exception{
         var dto = myPageFacade.createMyPage(requestDto);
