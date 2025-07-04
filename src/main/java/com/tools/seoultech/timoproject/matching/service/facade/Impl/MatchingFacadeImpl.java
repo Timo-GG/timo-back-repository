@@ -14,7 +14,7 @@ import com.tools.seoultech.timoproject.matching.service.facade.MatchingFacade;
 import com.tools.seoultech.timoproject.matching.service.facade.MyPageFacade;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
 import com.tools.seoultech.timoproject.notification.dto.NotificationRequest;
-import com.tools.seoultech.timoproject.notification.service.NotificationService;
+import com.tools.seoultech.timoproject.notification.service.AsyncNotificationService;
 import com.tools.seoultech.timoproject.notification.enumType.NotificationType;
 import com.tools.seoultech.timoproject.riot.utils.RiotAccountUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @RequiredArgsConstructor
@@ -32,7 +33,7 @@ public class MatchingFacadeImpl implements MatchingFacade {
     private final MyPageFacade myPageFacade;
     private final MyPageMapper myPageMapper;
     private final ChatService chatService;
-    private final NotificationService notificationService;
+    private final AsyncNotificationService asyncNotificationService;
 
     private static final String CHAT_URL_PREFIX = "/chat?tab=chat";
     private static final String MYPAGE_URL = "/mypage";
@@ -65,13 +66,29 @@ public class MatchingFacadeImpl implements MatchingFacade {
 
         if(dto instanceof MatchingDTO.ResponseDuo) {
             RedisDuoPageOnly duoPageData = myPageService.readDuoMyPage(myPageUUID);
-            matchingService.doDuoRejectEvent(myPageUUID);
+            matchingService.deleteDuoMyPage(myPageUUID);
             processMatchReject(duoPageData);
 
         } else if (dto instanceof MatchingDTO.ResponseScrim) {
             RedisScrimPageOnly scrimPageData = myPageService.readScrimMyPage(myPageUUID);
-            matchingService.doScrimRejectEvent(myPageUUID);
+            matchingService.deleteScrimMyPage(myPageUUID);
             processMatchReject(scrimPageData);
+
+        } else {
+            throw new GeneralException("Matching 로직 내부에서 실패했습니다.");
+        }
+    }
+
+    @Override
+    public void doCancelEvent(UUID myPageUUID) throws Exception {
+        MatchingDTO.Response dto = myPageFacade.readMyPage(myPageUUID);
+        if(dto instanceof MatchingDTO.ResponseDuo) {
+            matchingService.deleteDuoMyPage(myPageUUID);
+            log.info("Duo 매칭 취소됨. UUID={}", myPageUUID);
+
+        } else if (dto instanceof MatchingDTO.ResponseScrim) {
+            matchingService.deleteScrimMyPage(myPageUUID);
+            log.info("Scrim 매칭 취소됨. UUID={}", myPageUUID);
 
         } else {
             throw new GeneralException("Matching 로직 내부에서 실패했습니다.");
@@ -151,18 +168,14 @@ public class MatchingFacadeImpl implements MatchingFacade {
                                            NotificationType notificationType, String matchType,
                                            String acceptorName) {
         try {
-            // 채팅방 생성
+            // 채팅방 생성 (동기)
             Long chatRoomId = chatService.createChatRoomForMatch(
                     boardUUID.toString(), acceptorId, requestorId);
 
-            // 알림 전송 (각자에게 상대방 닉네임 포함)
+            // 🔥 비동기 알림 전송
             String redirectUrl = CHAT_URL_PREFIX + chatRoomId;
-
-            // requestor에게는 acceptor 닉네임을 보여줌
-            NotificationRequest requestorRequest = new NotificationRequest(
-                    notificationType, redirectUrl, acceptorName);
-
-            notificationService.sendNotification(requestorId, requestorRequest);
+            asyncNotificationService.sendMatchingResultNotificationAsync(
+                    requestorId, acceptorName, notificationType, redirectUrl);
 
             log.info("매칭 성공 후처리 완료. type={}, chatRoomId={}, acceptor={}",
                     matchType, chatRoomId, acceptorName);
@@ -181,10 +194,9 @@ public class MatchingFacadeImpl implements MatchingFacade {
     private void processMatchRejectCommon(Long requestorId, NotificationType notificationType,
                                           String matchType, String acceptorName) {
         try {
-            // requestor에게 acceptor 닉네임을 포함한 거절 알림 전송
-            NotificationRequest request = new NotificationRequest(
-                    notificationType, MYPAGE_URL, acceptorName);
-            notificationService.sendNotification(requestorId, request);
+            // 🔥 비동기 알림 전송
+            asyncNotificationService.sendMatchingResultNotificationAsync(
+                    requestorId, acceptorName, notificationType, MYPAGE_URL);
 
             log.info("매칭 거절 후처리 완료. type={}, acceptor={}", matchType, acceptorName);
 
