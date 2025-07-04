@@ -16,9 +16,8 @@ import com.tools.seoultech.timoproject.matching.service.MyPageService;
 import com.tools.seoultech.timoproject.matching.service.facade.MyPageFacade;
 import com.tools.seoultech.timoproject.matching.service.mapper.MyPageMapper;
 import com.tools.seoultech.timoproject.member.service.MemberService;
-import com.tools.seoultech.timoproject.notification.dto.NotificationRequest;
 import com.tools.seoultech.timoproject.notification.enumType.NotificationType;
-import com.tools.seoultech.timoproject.notification.service.NotificationService;
+import com.tools.seoultech.timoproject.notification.service.AsyncNotificationService;
 import com.tools.seoultech.timoproject.riot.utils.RiotAccountUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,18 +36,26 @@ public class MyPageFacadeImpl implements MyPageFacade {
     private final MyPageService myPageService;
     private final MyPageMapper myPageMapper;
     private final MemberService memberService;
-    private final NotificationService notificationService;
+    private final AsyncNotificationService asyncNotificationService;
 
 
     @Override
     public MatchingDTO.Response createMyPage(MatchingDTO.Request dto) throws Exception {
         if(dto instanceof MatchingDTO.RequestDuo duoDto) {
             RedisDuoPage entity = myPageService.createDuoMyPage(duoDto);
-            sendMatchingApplyNotification(entity, NotificationType.DUO_APPLY);
+
+            Long acceptorId = entity.getAcceptorId();
+            String requestorNickname = RiotAccountUtil.extractGameNameFromMemberInfo(entity.getRequestorCertifiedMemberInfo());
+            asyncNotificationService.sendMatchingApplyNotificationAsync(acceptorId, requestorNickname, NotificationType.DUO_APPLY);
+
             return myPageMapper.toDuoDto(entity);
         } else if(dto instanceof MatchingDTO.RequestScrim scrimDto) {
             RedisScrimPage entity = myPageService.createScrimMyPage(scrimDto);
-            sendMatchingApplyNotification(entity, NotificationType.SCRIM_APPLY);
+
+            Long acceptorId = entity.getAcceptorId();
+            String requestorNickname = RiotAccountUtil.extractGameNameFromMemberInfo(entity.getRequestorCertifiedMemberInfo());
+            asyncNotificationService.sendMatchingApplyNotificationAsync(acceptorId, requestorNickname, NotificationType.SCRIM_APPLY);
+
             return myPageMapper.toScrimDto(entity);
         }
         throw new GeneralException("마이페이지 요청 dto 데이터 형식이 맞지 않습니다.");
@@ -197,50 +204,4 @@ public class MyPageFacadeImpl implements MyPageFacade {
         myPageService.deletePage(mypageId);
     }
 
-    private void sendMatchingApplyNotification(RedisDuoPage entity, NotificationType notificationType) {
-        try {
-            // Redis 엔티티에서 직접 정보 추출
-            Long acceptorId = entity.getAcceptorId();
-            String requestorNickname = RiotAccountUtil.extractGameNameFromMemberInfo(entity.getRequestorCertifiedMemberInfo());
-
-            // 알림 전송
-            sendNotification(acceptorId, requestorNickname, notificationType);
-
-            log.info("듀오 신청 알림 전송 완료 - acceptorId: {}, requestorNickname: {}",
-                    acceptorId, requestorNickname);
-
-        } catch (Exception e) {
-            log.error("듀오 신청 알림 전송 실패", e);
-        }
-    }
-
-    /**
-     * 매칭 신청 알림 전송 - RedisScrimPage용
-     */
-    private void sendMatchingApplyNotification(RedisScrimPage entity, NotificationType notificationType) {
-        try {
-            // Redis 엔티티에서 직접 정보 추출
-            Long acceptorId = entity.getAcceptorId();
-            String requestorNickname = RiotAccountUtil.extractGameNameFromMemberInfo(entity.getRequestorCertifiedMemberInfo());
-
-            // 알림 전송
-            sendNotification(acceptorId, requestorNickname, notificationType);
-
-            log.info("내전 신청 알림 전송 완료 - acceptorId: {}, requestorNickname: {}",
-                    acceptorId, requestorNickname);
-
-        } catch (Exception e) {
-            log.error("내전 신청 알림 전송 실패", e);
-        }
-    }
-
-    private void sendNotification(Long acceptorId, String requestorNickname, NotificationType notificationType) {
-        NotificationRequest request = new NotificationRequest(
-                notificationType,
-                "/mypage",
-                requestorNickname
-        );
-
-        notificationService.sendNotification(acceptorId, request);
-    }
 }

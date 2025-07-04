@@ -4,6 +4,7 @@ import com.tools.seoultech.timoproject.member.service.MemberService;
 import com.tools.seoultech.timoproject.notification.dto.NotificationChannelRequest;
 import com.tools.seoultech.timoproject.notification.enumType.NotificationChannelType;
 import com.tools.seoultech.timoproject.notification.service.EmailTemplateService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
@@ -26,17 +27,24 @@ public class EmailNotificationChannel implements NotificationChannel {
 
     @Override
     public void send(NotificationChannelRequest request) {
+        // 🔥 비동기로 이메일 전송
+        sendEmailAsync(request);
+    }
+
+    @Async("notificationTaskExecutor")
+    public void sendEmailAsync(NotificationChannelRequest request) {
         if (request.memberEmail() == null) {
             log.warn("이메일 주소가 없어 전송 건너뜀 - memberId: {}", request.memberId());
             return;
         }
 
         try {
-            // 사용자 정보 조회 (username 필요)
+            log.info("이메일 전송 시작 - memberId: {}, type: {}",
+                    request.memberId(), request.type());
+
             Member member = memberService.getById(request.memberId());
             String username = member.getUsername();
 
-            // HTML 템플릿으로 이메일 전송
             emailTemplateService.sendHtmlEmail(request, username);
 
             log.info("이메일 알림 전송 완료 - memberId: {}, type: {}",
