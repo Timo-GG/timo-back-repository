@@ -7,6 +7,7 @@ import com.tools.seoultech.timoproject.auth.univ.UnivRequestDTO;
 import com.tools.seoultech.timoproject.member.domain.entity.Member;
 import com.tools.seoultech.timoproject.member.dto.NotificationEmailResponse;
 import com.tools.seoultech.timoproject.member.dto.UpdateMemberInfoRequest;
+import jakarta.validation.constraints.Email;
 
 public interface MemberService {
 
@@ -36,4 +37,7 @@ public interface MemberService {
     void updateNotificationEmail(Long memberId, String notificationEmail);
     NotificationEmailResponse getNotificationEmailSettings(Long memberId);
     Member save(Member member);
+
+    boolean isUnivEmailCertified(@Email String s);
+
 }

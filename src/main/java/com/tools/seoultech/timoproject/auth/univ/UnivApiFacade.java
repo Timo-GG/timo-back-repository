@@ -1,12 +1,11 @@
 package com.tools.seoultech.timoproject.auth.univ;
 
 
-public interface UnivApiFacade {
-    void checkUniv(UnivRequestDTO requestDto) throws Exception;
-    Boolean certify(UnivRequestDTO requestDto) throws Exception;
-    Boolean verify(UnivRequestDTO requestDto, Integer code) throws Exception;
-    Object getVerifiedUserList() throws Exception;
-    Object checkStatus(UnivRequestDTO requestDto) throws Exception;
+import java.io.IOException;
 
-    void deleteCertifiedUniv(Long memberId) throws Exception;
+public interface UnivApiFacade {
+    void checkUniv(UnivRequestDTO requestDto);
+    Boolean certify(UnivRequestDTO requestDto) throws IOException;
+    Boolean verify(UnivRequestDTO requestDto, Integer code, Long memberId); // ⭐️ 수정
+    void deleteCertifiedUniv(Long memberId);
 }

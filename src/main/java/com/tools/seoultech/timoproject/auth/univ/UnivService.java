@@ -1,6 +1,10 @@
 package com.tools.seoultech.timoproject.auth.univ;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tools.seoultech.timoproject.auth.univ.entity.UnivVerification;
+import com.tools.seoultech.timoproject.auth.univ.entity.University;
+import com.tools.seoultech.timoproject.auth.univ.repository.UnivVerificationRepository;
+import com.tools.seoultech.timoproject.auth.univ.repository.UniversityRepository;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.BusinessException;
 import com.tools.seoultech.timoproject.member.MemberRepository;
@@ -11,10 +15,16 @@ import com.univcert.api.UnivCert;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -22,62 +32,81 @@ public class UnivService {
      @Value("${univ_api_key}")
      private String api_key;
 
+     private final UniversityRepository universityRepository;
+     private final UnivVerificationRepository univVerificationRepository;
+     private final JavaMailSender mailSender;
      private final MemberService memberService;
-     private final MemberRepository memberRepository;
-     private final EntityManager entityManager;
 
-     public void checkUniv(String univName) throws IOException{
-          Map<String, Object> response = UnivCert.check(univName);
-          if(response.get("success").toString().equals("false")){
-               throw new IOException(response.get("message").toString());
-          }
+     @Transactional(readOnly = true)
+     public void checkUniv(String univName) {
+          universityRepository.findByName(univName)
+                  .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_UNIV));
      }
 
-     public Boolean certifyUniv(UnivRequestDTO requestDto) throws IOException {
-          Map<String, Object> response = UnivCert.certify(api_key, requestDto.univEmail(), requestDto.univName(), true);
-          if (response.get("success").toString().equals("false")) {
-               String message = response.get("message").toString();
+     @Transactional
+     public Boolean certifyUniv(UnivRequestDTO requestDto) {
+          University university = universityRepository.findByName(requestDto.univName())
+                  .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_UNIV));
 
-               // 메시지에 따른 구체적인 예외 처리
-               if (message.contains("이미 완료된 요청")) {
-                    throw new BusinessException(ErrorCode.ALREADY_USED_UNIV_ACCOUNT); // 902
-               } else if (message.contains("일치하지 않는 메일 도메인")) {
-                    throw new BusinessException(ErrorCode.MISMATCHED_EMAIL_DOMAIN); // 1001
-               } else {
-                    throw new BusinessException(ErrorCode.FAILED_UNIV_CERTIFY);
-               }
+          if (!requestDto.univEmail().endsWith("@" + university.getDomain())) {
+               throw new BusinessException(ErrorCode.MISMATCHED_EMAIL_DOMAIN);
           }
+
+          if (memberService.isUnivEmailCertified(requestDto.univEmail())) {
+               throw new BusinessException(ErrorCode.ALREADY_USED_UNIV_ACCOUNT);
+          }
+
+          String code = createVerificationCode();
+          univVerificationRepository.findById(requestDto.univEmail())
+                  .ifPresentOrElse(
+                          verification -> verification.updateCode(code),
+                          () -> univVerificationRepository.save(new UnivVerification(requestDto.univEmail(), requestDto.univName(), code))
+                  );
+
+          sendVerificationEmail(requestDto.univEmail(), code);
           return true;
      }
-     public Boolean verifyRequest(UnivRequestDTO requestDto, int code) throws IOException {
-          Map<String, Object> response = UnivCert.certifyCode(api_key, requestDto.univEmail(), requestDto.univName(), code);
-          if (response.get("success").toString().equals("false")) {
-               throw new BusinessException(ErrorCode.FAILED_UNIV_CERTIFY);
-          }
-          return true;
-     }
-     public Object checkStatus(UnivRequestDTO requestDto) throws IOException {
-          Map<String, Object> response = UnivCert.status(api_key, requestDto.univEmail());
-          if(response.get("success").toString().equals("false")){
-               throw new IOException(response.get("message").toString());
-          }
-          return response;
-     }
-     public Object getVerifiedUserList() throws IOException {
-          Map<String, Object> response = UnivCert.list(api_key);
-          if(response.get("success").toString().equals("false")){
-               throw new IOException(response.get("message").toString());
-          }
-          return response;
-     }
 
-     public void deleteCertifiedMember(Long memberId) throws IOException {
+     @Transactional
+     public Boolean verifyRequest(UnivRequestDTO requestDto, int code, Long memberId) {
+          UnivVerification verification = univVerificationRepository.findById(requestDto.univEmail())
+                  .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_CERTIFY_REQUEST));
+
+          if (LocalDateTime.now().isAfter(verification.getExpiresAt())) {
+               throw new BusinessException(ErrorCode.EXPIRED_VERIFICATION_CODE);
+          }
+
+          if (!verification.getCode().equals(String.valueOf(code))) {
+               throw new BusinessException(ErrorCode.INVALID_VERIFICATION_CODE);
+          }
+
+          verification.verify();
+
           Member member = memberService.getById(memberId);
-          UnivCert.clear(api_key, member.getCertifiedUnivInfo().getUnivCertifiedEmail());
-          member = member.toBuilder()
-                  .certifiedUnivInfo(new CertifiedUnivInfo())
-                  .build();
-          memberRepository.save(member);
 
+          CertifiedUnivInfo univInfo = new CertifiedUnivInfo(verification.getEmail(), verification.getUnivName());
+          member.updateCertifiedUnivInfo(univInfo);
+
+          return true;
      }
+
+     @Transactional
+     public void deleteCertifiedMember(Long memberId) {
+          Member member = memberService.getById(memberId);
+          member.clearCertifiedUnivInfo();
+     }
+
+     @Async("notificationTaskExecutor")
+     public void sendVerificationEmail(String email, String code) {
+          SimpleMailMessage message = new SimpleMailMessage();
+          message.setTo(email);
+          message.setSubject("[Timo] 대학교 이메일 인증 코드입니다.");
+          message.setText("인증 코드는 [" + code + "] 입니다. 10분 내에 입력해주세요.");
+          mailSender.send(message);
+     }
+
+     private String createVerificationCode() {
+          return String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
+     }
+
 }

@@ -205,6 +205,14 @@
         }
 
         @Override
+        public boolean isUnivEmailCertified(String univEmail) {
+            if (univEmail == null || univEmail.isBlank()) {
+                return false;
+            }
+            return memberRepository.existsByCertifiedUnivInfo_UnivCertifiedEmail(univEmail);
+        }
+
+        @Override
         @Transactional
         public void updateVerificationType(Long memberId, String verificationType) {
             Member member = getById(memberId);
