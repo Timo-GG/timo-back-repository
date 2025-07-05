@@ -1,6 +1,7 @@
 package com.tools.seoultech.timoproject.notification.channel;
 
 import com.tools.seoultech.timoproject.member.service.MemberService;
+import com.tools.seoultech.timoproject.notification.Notification;
 import com.tools.seoultech.timoproject.notification.dto.NotificationChannelRequest;
 import com.tools.seoultech.timoproject.notification.enumType.NotificationChannelType;
 import com.tools.seoultech.timoproject.notification.service.EmailTemplateService;
@@ -18,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EmailNotificationChannel implements NotificationChannel {
     private final EmailTemplateService emailTemplateService;
-    private final MemberService memberService;
 
     @Override
     public NotificationChannelType getChannelType() {
@@ -26,33 +26,33 @@ public class EmailNotificationChannel implements NotificationChannel {
     }
 
     @Override
-    public void send(NotificationChannelRequest request) {
-        // 🔥 비동기로 이메일 전송
-        sendEmailAsync(request);
+    public void send(Notification notification) {
+
+        sendEmailAsync(notification);
     }
 
     @Async("notificationTaskExecutor")
-    public void sendEmailAsync(NotificationChannelRequest request) {
-        if (request.memberEmail() == null) {
-            log.warn("이메일 주소가 없어 전송 건너뜀 - memberId: {}", request.memberId());
+    public void sendEmailAsync(Notification notification) {
+        Member member = notification.getMember();
+        if (!isEnabled(member, notification.getType())) {
             return;
         }
 
         try {
-            log.info("이메일 전송 시작 - memberId: {}, type: {}",
-                    request.memberId(), request.type());
+            log.info("이메일 전송 시작 - memberId: {}, type: {}", member.getMemberId(), notification.getType());
 
-            Member member = memberService.getById(request.memberId());
+            // ⭐️ Notification 객체에서 직접 사용자 이름과 이메일 추출
             String username = member.getUsername();
+            String emailAddress = member.getEmailForNotification();
 
-            emailTemplateService.sendHtmlEmail(request, username);
+            // emailTemplateService의 메소드도 Notification 객체를 받도록 수정하거나,
+            // 필요한 정보만 넘기도록 수정합니다.
+            emailTemplateService.sendHtmlEmail(notification);
 
-            log.info("이메일 알림 전송 완료 - memberId: {}, type: {}",
-                    request.memberId(), request.type());
+            log.info("이메일 알림 전송 완료 - memberId: {}, type: {}", member.getMemberId(), notification.getType());
 
         } catch (Exception e) {
-            log.error("이메일 전송 실패 - memberId: {}, type: {}",
-                    request.memberId(), request.type(), e);
+            log.error("이메일 전송 실패 - memberId: {}, type: {}", member.getMemberId(), notification.getType(), e);
         }
     }
 
