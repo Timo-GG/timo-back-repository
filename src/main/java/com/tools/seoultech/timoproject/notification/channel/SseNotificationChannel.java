@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.tools.seoultech.timoproject.notification.dto.NotificationChannelRequest;
+import com.tools.seoultech.timoproject.notification.Notification;
 import com.tools.seoultech.timoproject.notification.enumType.NotificationChannelType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -27,16 +27,20 @@ public class SseNotificationChannel implements NotificationChannel {
     }
 
     @Override
-    public void send(NotificationChannelRequest request) {
-        SseEmitter emitter = emitters.get(request.memberId());
+    public void send(Notification notification) {
+        Long memberId = notification.getMember().getMemberId();
+        SseEmitter emitter = emitters.get(memberId);
+
         if (emitter != null) {
             try {
+                NotificationResponse responseDto = NotificationResponse.from(notification);
+
                 emitter.send(SseEmitter.event()
-                        .name(request.type().name())
-                        .data(createNotificationResponse(request)));
+                        .name(responseDto.type().name())
+                        .data(responseDto));
             } catch (IOException e) {
-                log.warn("SSE 전송 실패 - memberId: {}", request.memberId());
-                emitters.remove(request.memberId());
+                log.warn("SSE 전송 실패 - memberId: {}", memberId);
+                emitters.remove(memberId);
             }
         }
     }
@@ -57,14 +61,4 @@ public class SseNotificationChannel implements NotificationChannel {
         return emitter;
     }
 
-    private NotificationResponse createNotificationResponse(NotificationChannelRequest request) {
-        return new NotificationResponse(
-                null,
-                request.type(),
-                request.message(),
-                request.redirectUrl(),
-                false,
-                LocalDateTime.now()
-        );
-    }
 }
