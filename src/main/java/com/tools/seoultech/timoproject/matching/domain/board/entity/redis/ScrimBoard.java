@@ -44,6 +44,6 @@ public class ScrimBoard {
         LocalDateTime now = LocalDateTime.now();
         return new ScrimBoard(UUID.randomUUID(), mapCode, memo, headCount,
                 memberInfo, partyInfo, now, memberId,
-                MatchingCategory.SCRIM, memberInfo.getRankInfo().getTier(), memberInfo.getUnivName());
+                MatchingCategory.SCRIM, memberInfo.getRankInfo().tier(), memberInfo.getUnivName());
     }
 }
