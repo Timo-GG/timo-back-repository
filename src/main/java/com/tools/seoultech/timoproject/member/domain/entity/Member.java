@@ -44,6 +44,7 @@ public class Member {
     private CertifiedUnivInfo certifiedUnivInfo;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(name = "o_auth_provider", length = 20)
     private OAuthProvider oAuthProvider;
 
     @Enumerated(value = EnumType.STRING)
