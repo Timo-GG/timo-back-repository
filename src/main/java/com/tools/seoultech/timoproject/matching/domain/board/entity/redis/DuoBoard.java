@@ -48,7 +48,7 @@ public class DuoBoard {
         return new DuoBoard(UUID.randomUUID(), mapCode, memo, memberInfo,
                 userInfo.getMyPosition(), userInfo.getMyVoice(), userInfo.getMyStyle(), userInfo.getMyStatus(),
                 duoInfo.getOpponentPosition(), duoInfo.getOpponentStyle(),
-                now, memberId, MatchingCategory.DUO, memberInfo.getRankInfo().getTier()
+                now, memberId, MatchingCategory.DUO, memberInfo.getRankInfo().tier()
         );
     }
 }

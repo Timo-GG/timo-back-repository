@@ -14,6 +14,7 @@ import com.tools.seoultech.timoproject.ranking.service.RankingRedisService;
 import com.tools.seoultech.timoproject.ranking.service.RankingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,6 +23,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class RankingFacadeImpl implements RankingFacade {
+    @Value("${ranking.update.batch-size:100}")
+    private int batchSize;
+
+    private static final long API_RATE_LIMIT_DELAY_MS = 2000L;
     private final RankingService rankingService;
     private final RankingRedisService rankingRedisService;
     private final AsyncNotificationService asyncNotificationService;
@@ -131,9 +136,8 @@ public class RankingFacadeImpl implements RankingFacade {
             int failCount = 0;
 
             // 배치 처리 (100명씩)
-            int batchSize = 100;
-            for (int i = 0; i < members.size(); i += batchSize) {
-                int endIndex = Math.min(i + batchSize, members.size());
+            for (int i = 0; i < members.size(); i += this.batchSize) {
+                int endIndex = Math.min(i + this.batchSize, members.size());
                 List<Member> batch = members.subList(i, endIndex);
 
                 log.info("배치 처리 중: {}/{}", endIndex, members.size());
@@ -150,8 +154,8 @@ public class RankingFacadeImpl implements RankingFacade {
                 }
 
                 // API 호출 제한을 위한 딜레이
-                if (i + batchSize < members.size()) {
-                    Thread.sleep(2000); // 2초 대기
+                if (i + this.batchSize < members.size()) {
+                    Thread.sleep(API_RATE_LIMIT_DELAY_MS);
                 }
             }
 

@@ -38,6 +38,13 @@ import java.util.stream.Collectors;
 public class RiotAPIService {
     private static final String DDRAGON_URL = "https://ddragon.leagueoflegends.com";
     private static final String QUEUE_TYPE_SOLO = "RANKED_SOLO_5x5";
+    private static final String DEFAULT_DDRAGON_VERSION = "14.23.1"; // Fallback 버전
+    private static final String UNKNOWN_CHAMPION_NAME = "Unknown";
+    private static final int MATCH_LIST_START_INDEX = 0;
+    private static final int RECENT_MATCH_COUNT = 10;
+    private static final int TOP_CHAMPION_MASTERY_COUNT = 3;
+    private static final long MATCH_SUMMARIES_TIMEOUT_SECONDS = 5L; // 매치 요약 타임아웃 5초
+    private static final long WIN_LOSS_SUMMARY_TIMEOUT_SECONDS = 5L;  // 승패 요약 타임아웃 5초
 
     private final RiotAsiaApiClient asiaApiClient;
     private final RiotKrApiClient krApiClient;
@@ -63,7 +70,7 @@ public class RiotAPIService {
         } catch (Exception e) {
             log.error("DataDragon 버전 조회 실패", e);
         }
-        ddragonVersion = "14.23.1";
+        ddragonVersion = DEFAULT_DDRAGON_VERSION;
         log.info("DataDragon 버전 fallback: {}", ddragonVersion);
     }
 
@@ -127,7 +134,7 @@ public class RiotAPIService {
     public List<String> requestMatchList(String puuid) {
         try {
             String encodedPuuid = encodeUrlParameter(puuid);
-            List<String> matchIds = asiaApiClient.getMatchList(encodedPuuid, 0, 10, api_key);
+            List<String> matchIds = asiaApiClient.getMatchList(encodedPuuid, MATCH_LIST_START_INDEX, RECENT_MATCH_COUNT, api_key);
             log.info("매치 목록 조회 성공: {} 개", matchIds.size());
             return matchIds;
         } catch (Exception e) {
@@ -144,10 +151,10 @@ public class RiotAPIService {
             log.info("챔피언 숙련도 API 응답 받음: {}", puuid);
             return masteryList.stream()
                     .sorted((a, b) -> Integer.compare((int) b.get("championPoints"), (int) a.get("championPoints")))
-                    .limit(3)
+                    .limit(TOP_CHAMPION_MASTERY_COUNT)
                     .map(champ -> {
                         Integer champId = (Integer) champ.get("championId");
-                        return champMap.getOrDefault(champId, "Unknown");
+                        return champMap.getOrDefault(champId, UNKNOWN_CHAMPION_NAME);
                     })
                     .toList();
         } catch (Exception e) {
@@ -156,40 +163,21 @@ public class RiotAPIService {
         }
     }
 
-    // ⭐ 핵심: 병렬 처리로 성능 개선된 매치 요약
     @Transactional
     @PerformanceTimer
     public List<MatchSummaryDTO> getRecentMatchSummaries(String puuid) {
         try {
-            List<String> matchIds = requestMatchList(puuid).stream().limit(10).toList();
+            List<String> matchIds = requestMatchList(puuid);
             if (matchIds.isEmpty()) {
                 log.info("최근 매치 정보가 없습니다: {}", puuid);
                 return Collections.emptyList();
             }
-
             String runeData = requestRuneData();
-
-            // CompletableFuture를 사용한 동시성 처리
             List<CompletableFuture<MatchSummaryDTO>> futures = matchIds.stream()
                     .map(matchId -> CompletableFuture.supplyAsync(() -> {
                         try {
                             DetailMatchInfoDTO detail = requestMatchInfo(matchId, puuid, runeData);
-                            return MatchSummaryDTO.builder()
-                                    .gameDuration(detail.getTime())
-                                    .playedAt(detail.getLastGameEnd())
-                                    .gameMode(detail.getMode())
-                                    .championName(detail.getMyName())
-                                    .championIconUrl(detail.getIcon())
-                                    .championLevel(detail.getChampionLevel() != null ? detail.getChampionLevel() : 0)
-                                    .kills(detail.getKills())
-                                    .deaths(detail.getDeaths())
-                                    .assists(detail.getAssists())
-                                    .isWin(detail.getWin())
-                                    .minionsPerMinute(detail.getMinionskilledPerMin())
-                                    .runes(List.of(detail.getRune3(), detail.getRune4()))
-                                    .summonerSpells(List.of(detail.getSummoner1Id(), detail.getSummoner2Id()))
-                                    .items(detail.getItems())
-                                    .build();
+                            return MatchSummaryDTO.from(detail);
                         } catch (Exception e) {
                             log.error("매치 요약 정보 생성 중 오류 발생: {}", matchId, e);
                             return null;
@@ -197,18 +185,15 @@ public class RiotAPIService {
                     }, riotApiExecutor))
                     .toList();
 
-            // 모든 CompletableFuture 완료 대기
             CompletableFuture<Void> allOf = CompletableFuture.allOf(
                     futures.toArray(new CompletableFuture[0])
             );
-
-            // 결과 수집 (30초 타임아웃)
             List<MatchSummaryDTO> summaries = allOf.thenApply(v ->
-                    futures.stream()
-                            .map(CompletableFuture::join)
-                            .filter(Objects::nonNull)
-                            .toList()
-            ).get(30, TimeUnit.SECONDS);
+                            futures.stream()
+                                    .map(CompletableFuture::join)
+                                    .filter(Objects::nonNull)
+                                    .toList()
+            ).get(MATCH_SUMMARIES_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
             log.info("매치 요약 정보 생성 완료: {} 개", summaries.size());
             return summaries;
@@ -224,13 +209,12 @@ public class RiotAPIService {
 
     public WinLossSummaryDto getRecentWinLossSummary(String puuid) {
         try {
-            List<String> matchIds = requestMatchList(puuid).stream().limit(10).toList();
+            List<String> matchIds = requestMatchList(puuid);
             if (matchIds.isEmpty()) {
                 log.info("최근 매치가 없습니다: {}", puuid);
                 return WinLossSummaryDto.builder().wins(0).losses(0).build();
             }
 
-            // CompletableFuture를 사용한 동시성 처리
             List<CompletableFuture<Boolean>> futures = matchIds.stream()
                     .map(matchId -> CompletableFuture.supplyAsync(() -> {
                         try {
@@ -243,17 +227,16 @@ public class RiotAPIService {
                     }, riotApiExecutor))
                     .toList();
 
-            // 모든 작업 완료 대기 및 결과 수집
             List<Boolean> results = CompletableFuture.allOf(
                     futures.toArray(new CompletableFuture[0])
             ).thenApply(v ->
-                    futures.stream()
-                            .map(CompletableFuture::join)
-                            .filter(Objects::nonNull)
-                            .toList()
-            ).get(20, TimeUnit.SECONDS);
+                            futures.stream()
+                                    .map(CompletableFuture::join)
+                                    .filter(Objects::nonNull)
+                                    .toList()
+                    // ✅ 타임아웃 값을 상수로 대체 및 조정
+            ).get(WIN_LOSS_SUMMARY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
-            // 승패 카운트
             Map<Boolean, Long> winLossCount = results.stream()
                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
@@ -307,28 +290,8 @@ public class RiotAPIService {
         return rankList.stream()
                 .filter(rank -> queueType.equals(rank.get("queueType")))
                 .findFirst()
-                .map(this::buildRankInfoFrom)
-                .orElse(buildUnrankedInfo());
-    }
-
-    private RankInfoDto buildRankInfoFrom(Map<String, Object> rank) {
-        return RankInfoDto.builder()
-                .tier((String) rank.get("tier"))
-                .rank((String) rank.get("rank"))
-                .lp((Integer) rank.get("leaguePoints"))
-                .wins((Integer) rank.get("wins"))
-                .losses((Integer) rank.get("losses"))
-                .build();
-    }
-
-    private RankInfoDto buildUnrankedInfo() {
-        return RankInfoDto.builder()
-                .tier("UNRANKED")
-                .rank("")
-                .lp(0)
-                .wins(0)
-                .losses(0)
-                .build();
+                .map(RankInfoDto::from)
+                .orElseGet(RankInfoDto::unranked);
     }
 
     private RiotAPIException handleApiError(Exception e) {

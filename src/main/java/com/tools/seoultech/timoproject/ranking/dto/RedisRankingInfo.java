@@ -16,7 +16,7 @@ import java.util.List;
 @RedisHash(value = "rankingInfo")
 @Getter
 @ToString
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class RedisRankingInfo implements Serializable {
@@ -87,20 +87,13 @@ public class RedisRankingInfo implements Serializable {
         this.id = memberId.toString();
     }
 
-    public void updateRankingInfo(RankingUpdateRequestDto dto) {
-        if (dto.mbti() != null) this.mbti = dto.mbti();
-        if (dto.memo() != null) this.memo = dto.memo();
-        if (dto.position() != null) this.position = dto.position();
-        if (dto.gender() != null) this.gender = dto.gender();
-        if (dto.department() != null) this.department = dto.department();
-    }
-
     public static RedisRankingInfo from(Long memberId, Member account, RiotRankingDto riotRankingDto) {
         var riotAccount = account.getRiotAccount();
         var univInfo = account.getCertifiedUnivInfo();
         var soloRank = riotRankingDto.soloRankInfo();
 
         return RedisRankingInfo.builder()
+                .id(memberId.toString())
                 .memberId(memberId)
                 .puuid(riotAccount.getPuuid())
                 .gameName(riotAccount.getGameName())
@@ -109,40 +102,25 @@ public class RedisRankingInfo implements Serializable {
                 .tagLine(riotAccount.getTagLine())
                 .university(univInfo.getUnivName())
                 .department(univInfo.getDepartment())
-                .tier(soloRank.getTier())
-                .rank(soloRank.getRank())
-                .lp(soloRank.getLp())
+                .tier(soloRank.tier())
+                .rank(soloRank.rank())
+                .lp(soloRank.lp())
                 .mostChampions(riotRankingDto.most3ChampionNames())
                 .wins(riotRankingDto.recentWinLossSummary().wins())
                 .losses(riotRankingDto.recentWinLossSummary().losses())
-                .score(calculateScore(soloRank.getTier(), soloRank.getRank(), soloRank.getLp()))
+                .score(calculateScore(soloRank.tier(), soloRank.rank(), soloRank.lp()))
                 .build();
     }
 
     public static RedisRankingInfo updateFromRiotAPI(RedisRankingInfo existing, RiotRankingDto riotRankingDto) {
         var soloRank = riotRankingDto.soloRankInfo();
-        int newScore = calculateScore(soloRank.getTier(), soloRank.getRank(), soloRank.getLp());
+        int newScore = calculateScore(soloRank.tier(), soloRank.rank(), soloRank.lp());
 
-        return RedisRankingInfo.builder()
-                // 기존 정보 유지
-                .id(existing.getId())
-                .memberId(existing.getMemberId())
-                .puuid(existing.getPuuid())
-                .gameName(existing.getGameName())
-                .tagLine(existing.getTagLine())
-                .verificationType(existing.getVerificationType())
-                .university(existing.getUniversity())
-                .department(existing.getDepartment())
-                .mbti(existing.getMbti())
-                .position(existing.getPosition())
-                .gender(existing.getGender())
-                .memo(existing.getMemo())
-
-                // Riot API에서 새로 받은 정보로 업데이트
+        return existing.toBuilder()
                 .profileIconUrl(riotRankingDto.profileIconUrl())
-                .tier(soloRank.getTier())
-                .rank(soloRank.getRank())
-                .lp(soloRank.getLp())
+                .tier(soloRank.tier())
+                .rank(soloRank.rank())
+                .lp(soloRank.lp())
                 .mostChampions(riotRankingDto.most3ChampionNames())
                 .wins(riotRankingDto.recentWinLossSummary().wins())
                 .losses(riotRankingDto.recentWinLossSummary().losses())
@@ -151,49 +129,13 @@ public class RedisRankingInfo implements Serializable {
     }
 
     public static RedisRankingInfo updateVerificationType(RedisRankingInfo existing, String newVerificationType) {
-        return RedisRankingInfo.builder()
-                .id(existing.getId())
-                .memberId(existing.getMemberId())
-                .puuid(existing.getPuuid())
-                .gameName(existing.getGameName())
-                .tagLine(existing.getTagLine())
-                .profileIconUrl(existing.getProfileIconUrl())
-                .verificationType(newVerificationType) // 새로운 인증 타입
-                .university(existing.getUniversity())
-                .department(existing.getDepartment())
-                .tier(existing.getTier())
-                .rank(existing.getRank())
-                .lp(existing.getLp())
-                .mostChampions(existing.getMostChampions())
-                .wins(existing.getWins())
-                .losses(existing.getLosses())
-                .score(existing.getScore())
-                .mbti(existing.getMbti())
-                .position(existing.getPosition())
-                .gender(existing.getGender())
-                .memo(existing.getMemo())
+        return existing.toBuilder()
+                .verificationType(newVerificationType)
                 .build();
     }
 
     public static RedisRankingInfo updateUserInfo(RedisRankingInfo existing, RankingUpdateRequestDto dto) {
-        return RedisRankingInfo.builder()
-                .id(existing.getId())
-                .memberId(existing.getMemberId())
-                .puuid(existing.getPuuid())
-                .gameName(existing.getGameName())
-                .tagLine(existing.getTagLine())
-                .profileIconUrl(existing.getProfileIconUrl())
-                .verificationType(existing.getVerificationType())
-                .university(existing.getUniversity())
-                .tier(existing.getTier())
-                .rank(existing.getRank())
-                .lp(existing.getLp())
-                .mostChampions(existing.getMostChampions())
-                .wins(existing.getWins())
-                .losses(existing.getLosses())
-                .score(existing.getScore())
-
-                // 업데이트할 사용자 정보들
+        return existing.toBuilder()
                 .department(dto.department() != null ? dto.department() : existing.getDepartment())
                 .mbti(dto.mbti() != null ? dto.mbti() : existing.getMbti())
                 .position(dto.position() != null ? dto.position() : existing.getPosition())
