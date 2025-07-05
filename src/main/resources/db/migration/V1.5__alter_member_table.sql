@@ -1,0 +1,1 @@
+ALTER TABLE member MODIFY COLUMN o_auth_provider VARCHAR(20);
