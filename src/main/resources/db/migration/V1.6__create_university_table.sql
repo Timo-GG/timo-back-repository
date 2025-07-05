@@ -1,0 +1,6 @@
+CREATE TABLE university
+(
+    id     BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name   VARCHAR(255) NOT NULL UNIQUE,
+    domain VARCHAR(255) NOT NULL
+);
