@@ -50,7 +50,7 @@ public class ChampionCacheService {
             while (fields.hasNext()) {
                 Map.Entry<String, JsonNode> entry = fields.next();
                 String name = entry.getValue().get("id").asText();
-                int key = Integer.parseInt(entry.getValue().get("key").asText()); // 1
+                int key = Integer.parseInt(entry.getValue().get("key").asText());
                 championIdToNameMap.put(key, name);
             }
 

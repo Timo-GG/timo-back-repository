@@ -5,6 +5,7 @@ import java.util.List;
 import com.tools.seoultech.timoproject.notification.Notification;
 import com.tools.seoultech.timoproject.notification.NotificationRepository;
 import com.tools.seoultech.timoproject.notification.dto.NotificationRequest;
+import com.tools.seoultech.timoproject.notification.dto.NotificationResponse;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -35,35 +36,34 @@ public class NotificationService {
 		Member member = memberService.getById(memberId);
 		String formattedMessage = request.getFormattedMessage();
 
-		// 🔥 DB 저장은 동기적으로 (즉시 완료)
+		// DB 저장은 동기적으로 (즉시 완료)
 		Notification notification = Notification.create(member, request, formattedMessage);
-		notificationRepository.save(notification);
+		Notification savedNotification = notificationRepository.save(notification);
 
-		// 🔥 알림 전송은 비동기로 처리
-		sendNotificationAsync(member, request, formattedMessage);
+		// 알림 전송은 비동기로 처리
+		sendNotificationAsync(savedNotification);
 	}
 
 	@Async("notificationTaskExecutor")
-	public void sendNotificationAsync(Member member, NotificationRequest request, String formattedMessage) {
-		log.info("비동기 알림 전송 시작 - memberId: {}, type: {}", member.getMemberId(), request.type());
+	public void sendNotificationAsync(Notification notification) {
+		log.info("비동기 알림 전송 시작 - memberId: {}, notificationId: {}", notification.getMember().getMemberId(), notification.getId());
 
-		NotificationChannelRequest channelRequest =
-				NotificationChannelRequest.from(member, request, formattedMessage);
+		NotificationResponse responseDto = NotificationResponse.from(notification);
 
 		channels.forEach(channel -> {
-			if (channel.isEnabled(member, request.type())) {
+			if (channel.isEnabled(notification.getMember(), notification.getType())) {
 				try {
-					channel.send(channelRequest);
+					channel.send(notification);
 					log.debug("알림 전송 성공 - channel: {}, memberId: {}",
-							channel.getChannelType(), member.getMemberId());
+							channel.getChannelType(), notification.getMember().getMemberId());
 				} catch (Exception e) {
 					log.error("알림 전송 실패 - channel: {}, memberId: {}",
-							channel.getChannelType(), member.getMemberId(), e);
+							channel.getChannelType(), notification.getMember().getMemberId(), e);
 				}
 			}
 		});
 
-		log.info("비동기 알림 전송 완료 - memberId: {}, type: {}", member.getMemberId(), request.type());
+		log.info("비동기 알림 전송 완료 - memberId: {}, notificationId: {}", notification.getMember().getMemberId(),  notification.getId());
 	}
 
 	public List<Notification> getUnreadNotifications(Long memberId) {
