@@ -96,7 +96,7 @@ public class UnivService {
           member.clearCertifiedUnivInfo();
      }
 
-     @Async
+     @Async("notificationTaskExecutor")
      public void sendVerificationEmail(String email, String code) {
           SimpleMailMessage message = new SimpleMailMessage();
           message.setTo(email);
