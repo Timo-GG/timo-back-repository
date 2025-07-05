@@ -70,7 +70,8 @@ public class SwaggerConfig {
                 "com.tools.seoultech.timoproject.auth",
                 "com.tools.seoultech.timoproject.riot",
                 "com.tools.seoultech.timoproject.notification",
-                "com.tools.seoultech.timoproject.review"
+                "com.tools.seoultech.timoproject.review",
+                "com.tools.seoultech.timoproject.auth",
 
         };
         return GroupedOpenApi.builder()
