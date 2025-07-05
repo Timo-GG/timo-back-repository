@@ -104,4 +104,12 @@ public class Member {
     public String getEmailForNotification() {
         return shouldReceiveEmailNotification() ? notificationEmail : null;
     }
+
+    public void updateCertifiedUnivInfo(CertifiedUnivInfo certifiedUnivInfo) {
+        this.certifiedUnivInfo = certifiedUnivInfo;
+    }
+
+    public void clearCertifiedUnivInfo() {
+        this.certifiedUnivInfo = new CertifiedUnivInfo();
+    }
 }
