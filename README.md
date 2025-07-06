@@ -38,3 +38,25 @@
 
 ## ERD
 <img width="1382" alt="스크린샷 2025-06-02 오전 11 05 09" src="https://github.com/user-attachments/assets/e16e650d-7874-4bc5-9b9b-53753a477f0a" />
+
+## 시연영상
+### 전적조회
+![Image](https://github.com/user-attachments/assets/dbf03d7f-12e6-4033-bd86-1bf48a77771c)
+
+### 내전 페이지
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d461b2e1-6c08-4dd4-8eaa-83c0750f8e36" width="47%" />
+  <img src="https://github.com/user-attachments/assets/f5824e18-6b30-4948-8e81-a71e69cde177" width="47%" />
+</p>
+
+### 듀오 페이지
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/1c3b9999-fd33-412c-bb22-2275bf1518a3" width="47%" />
+  <img src="https://github.com/user-attachments/assets/49fd2ae6-a41e-4215-8e5e-fefc6743cdf6" width="47%" />
+</p>
+
+### 내 계정 페이지
+![Image](https://github.com/user-attachments/assets/cba94a9c-b558-435f-9073-c2093228270a)
+
+### 리뷰 페이지
+![Image](https://github.com/user-attachments/assets/2771251b-94bf-40f1-8d62-0367bd20c42e)
