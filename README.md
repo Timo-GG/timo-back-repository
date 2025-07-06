@@ -37,7 +37,11 @@
 **Other** - <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-social&logo=Socket.io&logoColor=white"> 
 
 ## ERD
-<img width="1382" alt="스크린샷 2025-06-02 오전 11 05 09" src="https://github.com/user-attachments/assets/e16e650d-7874-4bc5-9b9b-53753a477f0a" />
+- RDB : 파란색
+- Redis : 자주색
+- Embedded Type : 황토색
+
+<img width="1301" alt="스크린샷 2025-07-06 오후 12 22 25" src="https://github.com/user-attachments/assets/f074dda9-f562-46a9-a26f-932f4300acb7" />
 
 ## 시연영상
 ### 전적조회
