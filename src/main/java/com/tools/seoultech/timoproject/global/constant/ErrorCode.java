@@ -80,12 +80,14 @@ public enum ErrorCode {
     ALREADY_LINKED_RIOT_ACCOUNT(1002, HttpStatus.BAD_REQUEST, "이미 연동되어 있는 라이엇 계정입니다."),
     RIOT_ACCOUNT_INFO_NOT_FOUND(1003, HttpStatus.NOT_FOUND, "라이엇 계정 정보가 존재하지 않습니다."),
     INVALID_EMAIL_FORMAT(1004,HttpStatus.BAD_REQUEST, "유효하지 않은 이메일 형식입니다." ),
-    VERIFICATION_SYNC_FAILED(1005, HttpStatus.INTERNAL_SERVER_ERROR, "인증 타입 동기화에 실패했습니다."), INVALID_VERIFICATION_TYPE(1006, HttpStatus.BAD_REQUEST, "유효하지 않은 인증 타입입니다."),
+    VERIFICATION_SYNC_FAILED(1005, HttpStatus.INTERNAL_SERVER_ERROR, "인증 타입 동기화에 실패했습니다."),
+    INVALID_VERIFICATION_TYPE(1006, HttpStatus.BAD_REQUEST, "유효하지 않은 인증 타입입니다."),
     RIOT_ACCOUNT_NOT_FOUND(1006, HttpStatus.NOT_FOUND, "라이엇 계정 정보가 존재하지 않습니다."),
     NOT_FOUND_UNIV(1007, HttpStatus.NOT_FOUND, "존재하지 않는 학교입니다."),
     NOT_FOUND_CERTIFY_REQUEST(1008, HttpStatus.NOT_FOUND, "인증 요청을 찾을 수 없습니다."),
     EXPIRED_VERIFICATION_CODE(1009, HttpStatus.INTERNAL_SERVER_ERROR, "인증 코드가 만료되었습니다."),
-    INVALID_VERIFICATION_CODE(1010, HttpStatus.BAD_REQUEST, "유효하지 않은 인증 코드입니다.");
+    INVALID_VERIFICATION_CODE(1010, HttpStatus.BAD_REQUEST, "유효하지 않은 인증 코드입니다."),
+    ALREADY_USED_RSO_ACCOUNT(1011, HttpStatus.BAD_REQUEST, "이미 사용중인 RSO 계정입니다.");
 
 
     private final int code;

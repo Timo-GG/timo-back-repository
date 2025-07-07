@@ -232,10 +232,13 @@
 
         public void updateRiotAccountWithRSO(Member member, RiotInfoResponse riotInfo) {
             // 중복된 소환사 puuid 존재 여부 체크
-            if (memberRepository.existsByRiotAccount_PuuidAndMemberIdNot(
-                    riotInfo.getPuuid(), member.getMemberId())) {
-                throw new BusinessException(ErrorCode.ALREADY_USED_RIOT_ACCOUNT);
+            if (memberRepository.existsByRiotAccount_PuuidAndRiotAccount_VerificationTypeAndMemberIdNot(
+                    riotInfo.getPuuid(),
+                    RiotVerificationType.RSO_VERIFIED,
+                    member.getMemberId())) {
+                throw new BusinessException(ErrorCode.ALREADY_USED_RSO_ACCOUNT);
             }
+
 
             // RSO 인증으로 업데이트
             member.updateRiotAccountWithRSO(
