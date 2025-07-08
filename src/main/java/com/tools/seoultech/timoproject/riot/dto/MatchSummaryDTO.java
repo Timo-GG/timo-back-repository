@@ -1,8 +1,9 @@
 package com.tools.seoultech.timoproject.riot.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-public record MatchSummaryDTO(
+public record MatchSummaryDTO (
         String gameDuration,
         String playedAt,
         String gameMode,
@@ -17,7 +18,7 @@ public record MatchSummaryDTO(
         List<String> runes,
         List<String> summonerSpells,
         List<String> items
-) {
+) implements Serializable {
     /**
      * record와 정적 팩토리 메서드의 조합
      * @param detail 원본 상세 매치 정보 DTO
