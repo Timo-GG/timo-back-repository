@@ -65,8 +65,14 @@ public class RiotFacadeImpl implements RiotFacade {
         String runeData = riotAPIService.requestRuneData(); // 룬 데이터는 한 번만 조회
         return matchIds.stream()
                 .map(matchId -> CompletableFuture.supplyAsync(() -> {
-                    DetailMatchInfoDTO detail = riotAPIService.requestMatchInfo(matchId, puuid, runeData);
-                    return MatchSummaryDTO.from(detail);
+                    try {
+                        DetailMatchInfoDTO detail = riotAPIService.requestMatchInfo(matchId, puuid, runeData);
+                        return MatchSummaryDTO.from(detail);
+                    } catch (Exception e) {
+                        // 예외가 발생하면 로그를 남기고, 이 작업의 결과는 null로 반환
+                        log.error("매치({}) 정보 처리 중 오류 발생. 이 매치는 결과에서 제외됩니다.", matchId, e.getMessage());
+                        return null;
+                    }
                 }, riotApiExecutor))
                 .toList();
     }
