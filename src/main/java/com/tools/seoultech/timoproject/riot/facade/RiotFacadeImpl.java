@@ -1,11 +1,13 @@
 package com.tools.seoultech.timoproject.riot.facade;
 
+import com.tools.seoultech.timoproject.global.annotation.PerformanceTimer;
 import com.tools.seoultech.timoproject.global.constant.ErrorCode;
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 import com.tools.seoultech.timoproject.riot.dto.*;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RiotFacadeImpl implements RiotFacade {
@@ -35,6 +38,7 @@ public class RiotFacadeImpl implements RiotFacade {
     }
 
     @Override
+    @PerformanceTimer
     public RecentMatchFullResponse getRecentMatchFullResponse(AccountDto.Request request) {
         // Step 1: 동기 호출로 기본 정보 준비
         AccountDto.Response account = riotAPIService.findUserAccount(request);
