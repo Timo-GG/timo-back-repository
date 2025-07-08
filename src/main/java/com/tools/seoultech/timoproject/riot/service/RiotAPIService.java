@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -86,6 +87,7 @@ public class RiotAPIService {
 
     @Transactional
     @PerformanceTimer
+    @Cacheable(value = "accounts", key = "#dto.gameName + '-' + #dto.tagLine", unless = "#result == null")
     public AccountDto.Response findUserAccount(@Valid AccountDto.Request dto) {
         try {
             String gameName = dto.getGameName();
@@ -100,6 +102,7 @@ public class RiotAPIService {
         }
     }
 
+    @Cacheable(value = "matches", key = "#matchid")
     public MatchInfoDTO requestMatchInfoRaw(String matchid) {
         try {
             String encodedMatchId = encodeUrlParameter(matchid);
@@ -121,6 +124,7 @@ public class RiotAPIService {
         }
     }
 
+    @Cacheable("runeData")
     public String requestRuneData() {
         try {
             String response = dataDragonClient.getRuneData(ddragonVersion);
@@ -132,6 +136,7 @@ public class RiotAPIService {
         }
     }
 
+    @Cacheable(value = "matchLists", key = "#puuid")
     public List<String> requestMatchList(String puuid) {
         try {
             String encodedPuuid = encodeUrlParameter(puuid);
@@ -260,6 +265,7 @@ public class RiotAPIService {
     }
 
     @PerformanceTimer
+    @Cacheable(value = "rankInfo", key = "#puuid")
     public RankInfoDto getSoloRankInfoByPuuid(String puuid) {
         try {
             List<Map<String, Object>> rankList = krApiClient.getRankInfo(puuid, api_key);
@@ -271,6 +277,7 @@ public class RiotAPIService {
     }
 
     @PerformanceTimer
+    @Cacheable(value = "profileIcons", key = "#puuid")
     public String getProfileIconUrlByPuuid(String puuid) {
         try {
             Map<String, Object> data = krApiClient.getSummonerInfo(puuid, api_key);
