@@ -85,6 +85,7 @@ public class RiotAPIService {
     }
 
     @Transactional
+    @PerformanceTimer
     public AccountDto.Response findUserAccount(@Valid AccountDto.Request dto) {
         try {
             String gameName = dto.getGameName();
@@ -258,6 +259,7 @@ public class RiotAPIService {
         }
     }
 
+    @PerformanceTimer
     public RankInfoDto getSoloRankInfoByPuuid(String puuid) {
         try {
             List<Map<String, Object>> rankList = krApiClient.getRankInfo(puuid, api_key);
@@ -268,6 +270,7 @@ public class RiotAPIService {
         }
     }
 
+    @PerformanceTimer
     public String getProfileIconUrlByPuuid(String puuid) {
         try {
             Map<String, Object> data = krApiClient.getSummonerInfo(puuid, api_key);
