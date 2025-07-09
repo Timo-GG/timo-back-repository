@@ -169,50 +169,6 @@ public class RiotAPIService {
         }
     }
 
-    @Transactional
-    @PerformanceTimer
-    public List<MatchSummaryDTO> getRecentMatchSummaries(String puuid) {
-        try {
-            List<String> matchIds = requestMatchList(puuid);
-            if (matchIds.isEmpty()) {
-                log.info("최근 매치 정보가 없습니다: {}", puuid);
-                return Collections.emptyList();
-            }
-            String runeData = requestRuneData();
-            List<CompletableFuture<MatchSummaryDTO>> futures = matchIds.stream()
-                    .map(matchId -> CompletableFuture.supplyAsync(() -> {
-                        try {
-                            DetailMatchInfoDTO detail = requestMatchInfo(matchId, puuid, runeData);
-                            return MatchSummaryDTO.from(detail);
-                        } catch (Exception e) {
-                            log.error("매치 요약 정보 생성 중 오류 발생: {}", matchId, e);
-                            return null;
-                        }
-                    }, riotApiExecutor))
-                    .toList();
-
-            CompletableFuture<Void> allOf = CompletableFuture.allOf(
-                    futures.toArray(new CompletableFuture[0])
-            );
-            List<MatchSummaryDTO> summaries = allOf.thenApply(v ->
-                            futures.stream()
-                                    .map(CompletableFuture::join)
-                                    .filter(Objects::nonNull)
-                                    .toList()
-            ).get(MATCH_SUMMARIES_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-
-            log.info("매치 요약 정보 생성 완료: {} 개", summaries.size());
-            return summaries;
-
-        } catch (TimeoutException e) {
-            log.error("매치 요약 정보 생성 타임아웃", e);
-            throw new RiotAPIException("매치 정보 조회 시간 초과", ErrorCode.API_ACCESS_ERROR);
-        } catch (Exception e) {
-            log.error("최근 매치 요약 정보 생성 중 예외 발생", e);
-            throw new RiotAPIException("최근 매치 요약 정보 생성 실패", ErrorCode.API_ACCESS_ERROR);
-        }
-    }
-
     public WinLossSummaryDto getRecentWinLossSummary(String puuid) {
         try {
             List<String> matchIds = requestMatchList(puuid);

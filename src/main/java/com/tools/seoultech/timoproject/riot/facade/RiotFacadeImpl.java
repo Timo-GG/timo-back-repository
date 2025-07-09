@@ -66,7 +66,7 @@ public class RiotFacadeImpl implements RiotFacade {
     }
 
     private List<CompletableFuture<MatchSummaryDTO>> createMatchSummaryFutures(String puuid, List<String> matchIds) {
-        String runeData = riotAPIService.requestRuneData(); // 룬 데이터는 한 번만 조회
+        String runeData = riotAPIService.requestRuneData();
         return matchIds.stream()
                 .map(matchId -> CompletableFuture.supplyAsync(() -> {
                     try {
