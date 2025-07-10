@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -85,6 +86,8 @@ public class RiotAPIService {
     }
 
     @Transactional
+    @PerformanceTimer
+    @Cacheable(value = "accounts", key = "#dto.gameName + '-' + #dto.tagLine", unless = "#result == null")
     public AccountDto.Response findUserAccount(@Valid AccountDto.Request dto) {
         try {
             String gameName = dto.getGameName();
@@ -99,6 +102,7 @@ public class RiotAPIService {
         }
     }
 
+    @Cacheable(value = "matches", key = "#matchid")
     public MatchInfoDTO requestMatchInfoRaw(String matchid) {
         try {
             String encodedMatchId = encodeUrlParameter(matchid);
@@ -120,6 +124,7 @@ public class RiotAPIService {
         }
     }
 
+    @Cacheable("runeData")
     public String requestRuneData() {
         try {
             String response = dataDragonClient.getRuneData(ddragonVersion);
@@ -131,6 +136,7 @@ public class RiotAPIService {
         }
     }
 
+    @Cacheable(value = "matchLists", key = "#puuid")
     public List<String> requestMatchList(String puuid) {
         try {
             String encodedPuuid = encodeUrlParameter(puuid);
@@ -160,50 +166,6 @@ public class RiotAPIService {
         } catch (Exception e) {
             log.warn("챔피언 숙련도 조회 실패, 빈 리스트 반환", e);
             return Collections.emptyList();
-        }
-    }
-
-    @Transactional
-    @PerformanceTimer
-    public List<MatchSummaryDTO> getRecentMatchSummaries(String puuid) {
-        try {
-            List<String> matchIds = requestMatchList(puuid);
-            if (matchIds.isEmpty()) {
-                log.info("최근 매치 정보가 없습니다: {}", puuid);
-                return Collections.emptyList();
-            }
-            String runeData = requestRuneData();
-            List<CompletableFuture<MatchSummaryDTO>> futures = matchIds.stream()
-                    .map(matchId -> CompletableFuture.supplyAsync(() -> {
-                        try {
-                            DetailMatchInfoDTO detail = requestMatchInfo(matchId, puuid, runeData);
-                            return MatchSummaryDTO.from(detail);
-                        } catch (Exception e) {
-                            log.error("매치 요약 정보 생성 중 오류 발생: {}", matchId, e);
-                            return null;
-                        }
-                    }, riotApiExecutor))
-                    .toList();
-
-            CompletableFuture<Void> allOf = CompletableFuture.allOf(
-                    futures.toArray(new CompletableFuture[0])
-            );
-            List<MatchSummaryDTO> summaries = allOf.thenApply(v ->
-                            futures.stream()
-                                    .map(CompletableFuture::join)
-                                    .filter(Objects::nonNull)
-                                    .toList()
-            ).get(MATCH_SUMMARIES_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-
-            log.info("매치 요약 정보 생성 완료: {} 개", summaries.size());
-            return summaries;
-
-        } catch (TimeoutException e) {
-            log.error("매치 요약 정보 생성 타임아웃", e);
-            throw new RiotAPIException("매치 정보 조회 시간 초과", ErrorCode.API_ACCESS_ERROR);
-        } catch (Exception e) {
-            log.error("최근 매치 요약 정보 생성 중 예외 발생", e);
-            throw new RiotAPIException("최근 매치 요약 정보 생성 실패", ErrorCode.API_ACCESS_ERROR);
         }
     }
 
@@ -258,6 +220,8 @@ public class RiotAPIService {
         }
     }
 
+    @PerformanceTimer
+    @Cacheable(value = "rankInfo", key = "#puuid")
     public RankInfoDto getSoloRankInfoByPuuid(String puuid) {
         try {
             List<Map<String, Object>> rankList = krApiClient.getRankInfo(puuid, api_key);
@@ -268,6 +232,8 @@ public class RiotAPIService {
         }
     }
 
+    @PerformanceTimer
+    @Cacheable(value = "profileIcons", key = "#puuid")
     public String getProfileIconUrlByPuuid(String puuid) {
         try {
             Map<String, Object> data = krApiClient.getSummonerInfo(puuid, api_key);

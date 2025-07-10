@@ -15,18 +15,6 @@ public class RestClientConfig {
     @Value("${api_key}")
     private String apiKey;
 
-    @Bean(name = "riotApiExecutor")
-    public ThreadPoolTaskExecutor riotApiExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(5);
-        executor.setMaxPoolSize(10);
-        executor.setQueueCapacity(20);
-        executor.setThreadNamePrefix("RiotAPI-");
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.setAwaitTerminationSeconds(10);
-        executor.initialize();
-        return executor;
-    }
     // RestClient 설정 (동기식 - 안정성 우선)
     @Bean
     public RestClient restClient() {
