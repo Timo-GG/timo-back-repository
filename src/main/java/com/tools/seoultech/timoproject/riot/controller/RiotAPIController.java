@@ -5,6 +5,7 @@ import com.tools.seoultech.timoproject.riot.dto.*;
 import com.tools.seoultech.timoproject.member.dto.AccountDto;
 
 import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
+import com.tools.seoultech.timoproject.riot.facade.RiotFacade;
 import com.tools.seoultech.timoproject.riot.service.RiotAPIService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -26,16 +27,17 @@ import java.util.Objects;
 @Validated
 @Tag(name = "RiotAPI", description = "Riot API")
 public class RiotAPIController {
+    private final RiotFacade riotFacade;
     private final RiotAPIService bas;
 
-    @GetMapping("/Account")
+    @GetMapping("/account")
     public ResponseEntity<APIDataResponse<AccountDto.Response>> requestAccount(
             @Valid AccountDto.Request dto) throws RiotAPIException, Exception {
         AccountDto.Response response_dto = bas.findUserAccount(dto);
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(response_dto));
     }
 
-    @GetMapping("/MatchV5/matches/matchList")
+    @GetMapping("/match-v5/matches/matchList")
     public ResponseEntity<APIDataResponse<List<String>>> requestMatchList(
             @Valid AccountDto.Request dto) throws RiotAPIException, Exception {
         AccountDto.Response response_dto = bas.findUserAccount(dto);
@@ -43,7 +45,7 @@ public class RiotAPIController {
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(matchList));
     }
 
-    @GetMapping("/MatchV5/matches/matchInfoDTO")
+    @GetMapping("/match-v5/matches/matchInfoDTO")
     public ResponseEntity<APIDataResponse<List<MatchInfoDTO>>> requestMatchV5(
             @Valid AccountDto.Request dto) throws RiotAPIException, Exception {
         String puuid = bas.findUserAccount(dto).getPuuid();
@@ -63,7 +65,7 @@ public class RiotAPIController {
         return ResponseEntity.status(HttpStatus.OK).body(APIDataResponse.of(dto_List));
     }
 
-    @GetMapping("/MatchV5/matches/전적검색")
+    @GetMapping("/match-v5/matches/전적검색")
     public ResponseEntity<APIDataResponse<List<DetailMatchInfoDTO>>> requestMatchInfo(
             @Valid AccountDto.Request dto) throws Exception {
         String puuid = bas.findUserAccount(dto).getPuuid();
@@ -96,27 +98,12 @@ public class RiotAPIController {
     @PostMapping("/recent-match")
     public ResponseEntity<APIDataResponse<RecentMatchFullResponse>> requestRecentMatch(
             @RequestBody AccountDto.Request request) throws Exception {
+        var recentMatchFullResponse = riotFacade.getRecentMatchFullResponse(request);
 
-        AccountDto.Response account = bas.findUserAccount(request);
-        String puuid = account.getPuuid();
-
-        // 병렬 처리로 성능 개선된 메서드 사용
-        List<MatchSummaryDTO> recentMatch = bas.getRecentMatchSummaries(puuid);
-        RankInfoDto rankInfo = bas.getSoloRankInfoByPuuid(puuid);
-        String profileIconUrl = bas.getProfileIconUrlByPuuid(puuid);
-
-        RecentMatchFullResponse response = new RecentMatchFullResponse(
-                account.getGameName(),
-                account.getTagLine(),
-                profileIconUrl,
-                rankInfo,
-                recentMatch
-        );
-
-        return ResponseEntity.ok(APIDataResponse.of(response));
+        return ResponseEntity.ok(APIDataResponse.of(recentMatchFullResponse));
     }
 
-    @PostMapping("/compactHistory")
+    @PostMapping("/compact-history")
     public ResponseEntity<APIDataResponse<CompactPlayerHistory>> requestCompactPlayerHistory(
             @RequestBody AccountDto.Request request) throws Exception {
         AccountDto.Response account = bas.findUserAccount(request);

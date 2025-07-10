@@ -11,11 +11,11 @@ import com.tools.seoultech.timoproject.global.exception.RiotAPIException;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
+import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
-
-import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Getter
 @Builder
 @RequiredArgsConstructor

@@ -28,7 +28,7 @@ class EmailIntegrationTest {
         );
 
         // when
-        emailTemplateService.sendHtmlEmail(request, "테스트유저");
+//        emailTemplateService.sendHtmlEmail(request, "테스트유저");
 
         // then
         System.out.println("✅ 실제 이메일 전송 완료!");

@@ -21,4 +21,16 @@ public class AsyncConfig {
         executor.initialize();
         return executor;
     }
+
+    @Bean(name = "riotApiExecutor")
+    public ThreadPoolTaskExecutor riotApiExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(30);
+        executor.setQueueCapacity(100);
+        executor.setThreadNamePrefix("RiotAPI-");
+        executor.initialize();
+        return executor;
+    }
+
 }
